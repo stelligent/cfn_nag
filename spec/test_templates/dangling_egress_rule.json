@@ -1,0 +1,14 @@
+{
+  "Resources": {
+    "securityGroupEgress2" : {
+      "Type" : "AWS::EC2::SecurityGroupEgress",
+      "Properties" : {
+        "GroupId": "sg-09fb296e",
+        "CidrIp" : "1.2.3.5/32",
+        "FromPort" : 45,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    }
+  }
+}

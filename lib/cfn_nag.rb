@@ -1,5 +1,5 @@
 require_relative 'rule'
-require_relative 'custom_rules/security_group_egress'
+require_relative 'custom_rules/security_group_missing_egress'
 require_relative 'model/cfn_model'
 
 class CfnNag
@@ -13,7 +13,7 @@ class CfnNag
 
     generic_json_rules input_json_path
 
-    #custom_rules
+    custom_rules
 
     puts "failure_count: #{@failure_count}"
     puts "warning_count: #{@warning_count}"
@@ -40,7 +40,8 @@ class CfnNag
       fail 'jq executable must be available in PATH'
     end
 
-    Dir[File.join(__dir__, 'json_rules', '*.rb')].each do |rule_file|
+    Dir[File.join(__dir__, 'json_rules', '*.rb')].sort.each do |rule_file|
+      puts rule_file
       @input_json_path = input_json_path
       eval IO.read(rule_file)
     end
@@ -48,7 +49,9 @@ class CfnNag
 
   def custom_rules
     cfn_model = CfnModel.new.parse(IO.read(@input_json_path))
-    rules = [SecurityGroupEgressRule]
+    rules = [
+      SecurityGroupMissingEgressRule
+    ]
     rules.each do |rule_class|
       rule_class.new.audit(cfn_model)
     end

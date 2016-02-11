@@ -101,4 +101,51 @@ describe CfnModel do
       expect(second_actual_security_group.ingress_rules[1]['CidrIp']).to eq '1.2.3.4/32'
     end
   end
+
+  context 'when resource template creates single security group with no egress rules' do
+    before(:all) do
+      template_name = 'single_security_group_empty_ingress.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns 1 security group' do
+      expect(@cfn_model.security_groups.size).to eq 1
+    end
+
+    it 'returns a security group with no ingress rules' do
+      actual_security_group = @cfn_model.security_groups.first
+
+      expect(actual_security_group.egress_rules.size).to eq 0
+    end
+  end
+
+  context 'when resource template creates dangling egress rule' do
+    before(:all) do
+      template_name = 'dangling_egress_rule.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns 0 security group' do
+      expect(@cfn_model.security_groups.size).to eq 0
+    end
+
+    it 'returns 1 dangling Xgress rule' do
+      expect(@cfn_model.dangling_ingress_or_egress_rules.size).to eq 1
+    end
+  end
+
+  context 'when resource template creates dangling ingress rule' do
+    before(:all) do
+      template_name = 'dangling_ingress_rule.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns 0 security group' do
+      expect(@cfn_model.security_groups.size).to eq 0
+    end
+
+    it 'returns 1 dangling Xgress rule' do
+      expect(@cfn_model.dangling_ingress_or_egress_rules.size).to eq 1
+    end
+  end
 end
