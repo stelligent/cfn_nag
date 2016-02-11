@@ -53,7 +53,7 @@ class CfnNag
       SecurityGroupMissingEgressRule
     ]
     rules.each do |rule_class|
-      rule_class.new.audit(cfn_model)
+      @failure_count += 1 unless rule_class.new.audit(cfn_model)
     end
   end
 end
