@@ -1,0 +1,11 @@
+{
+  "Resources": {
+    "sg": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "VpcId" : "vpc-9f8e9dfa"
+      }
+    }
+  }
+}

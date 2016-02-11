@@ -1,0 +1,9 @@
+#!/usr/bin/env ruby
+require 'trollop'
+require 'cfn_nag'
+
+opts = Trollop::options do
+  opt :input_json, 'Cloudformation template to nag on', type: :string, required: true
+end
+
+exit CfnNag.new.audit(opts[:input_json])

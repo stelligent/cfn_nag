@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "dhcp": {
+      "Type" : "AWS::EC2::DHCPOptions",
+      "Properties": {
+        "DomainNameServers" : [ "10.0.0.1", "10.0.0.2" ]
+      }
+    }
+  }
+}
