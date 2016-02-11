@@ -12,20 +12,6 @@
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
         "GroupDescription" : "some_group_desc2",
-        "SecurityGroupIngress" : [
-          {
-            "CidrIp" : "0.0.0.0/0",
-            "FromPort" : 0,
-            "ToPort" : 36,
-            "IpProtocol" : "tcp"
-          },
-          {
-            "CidrIp" : "1.2.3.4/32",
-            "FromPort" : 45,
-            "ToPort" : 46,
-            "IpProtocol" : "tcp"
-          }
-        ],
         "VpcId" : "vpc-9f8e9dfa"
       }
     },
@@ -47,7 +33,7 @@
       "Type" : "AWS::EC2::SecurityGroupIngress",
       "Properties" : {
         "GroupId": {
-          "Ref": "sg2"
+          "Fn::GetAtt": ["sg2", "GroupId"]
         },
         "CidrIp" : "0.0.0.0/0",
         "FromPort" : 0,

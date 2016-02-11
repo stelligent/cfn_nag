@@ -34,22 +34,6 @@
         ],
         "VpcId" : "vpc-9f8e9dfa"
       }
-    },
-
-    "sge1": {
-      "Type" : "AWS::EC2::SecurityGroupEgress",
-      "Properties" : {
-        "IpProtocol": "tcp",
-        "FromPort": "0",
-        "ToPort": "65535",
-        "CidrIp": "0.0.0.0/0",
-        "GroupId": {
-          "Fn::GetAtt": [
-            "sg",
-            "GroupId"
-          ]
-        }
-      }
     }
   }
 }

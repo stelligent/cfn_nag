@@ -28,25 +28,12 @@ end
 class SecurityGroupIngressParser
 
   def parse(resource_json)
-    security_group_ingress_rule = SecurityGroupIngressRule.new
-
-    properties = resource_json['Properties']
-
-    unless properties['GroupName'].nil?
-      fail 'GroupName is only allowed in EC2-Classic, and we dont play that!'
+    unless resource_json['Properties']['GroupName'].nil?
+      fail "GroupName is only allowed in EC2-Classic, and we dont play that!: #{resource_json}"
     end
 
-    security_group_ingress_rule.group_id = properties['GroupId']
-    security_group_ingress_rule.to_port = properties['ToPort']
-    security_group_ingress_rule.from_port = properties['FromPort']
-    security_group_ingress_rule.ip_protocol = properties['IpProtocol']
-    security_group_ingress_rule.cidr_ip = properties['CidrIp']
-    security_group_ingress_rule
+    resource_json['Properties']
   end
-end
-
-class SecurityGroupIngressRule
-  attr_accessor :to_port, :ip_protocol, :from_port, :cidr_ip, :group_id
 end
 
 class SecurityGroup

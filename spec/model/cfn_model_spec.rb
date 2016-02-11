@@ -1,12 +1,13 @@
 require 'spec_helper'
-require 'cfn_model'
+require 'model/cfn_model'
 
 
 describe CfnModel do
+
   context 'when resource template creates single resource - with no security groups' do
     before(:all) do
       template_name = 'just_dhcp_options.json'
-      @cfn_model = CfnModel.new(File.join(__dir__, 'test_templates', template_name))
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
     it 'returns no security groups' do
@@ -17,7 +18,7 @@ describe CfnModel do
   context 'when resource template creates single security group with no ingress rules' do
     before(:all) do
       template_name = 'single_security_group_empty_ingress.json'
-      @cfn_model = CfnModel.new(File.join(__dir__, 'test_templates', template_name))
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
     it 'returns 1 security group' do
@@ -34,7 +35,7 @@ describe CfnModel do
   context 'when resource template creates single security group with one inline ingress from cidr' do
     before(:all) do
       template_name = 'single_security_group_one_cidr_ingress.json'
-      @cfn_model = CfnModel.new(File.join(__dir__, 'test_templates', template_name))
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
     it 'returns 1 security group' do
@@ -56,7 +57,7 @@ describe CfnModel do
   context 'when resource template creates two security groups with one,two inline ingress from cidr' do
     before(:all) do
       template_name = 'two_security_group_two_cidr_ingress.json'
-      @cfn_model = CfnModel.new(File.join(__dir__, 'test_templates', template_name))
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
     it 'returns 2 security groups' do
@@ -80,7 +81,7 @@ describe CfnModel do
   context 'when resource template creates two security groups with one,two externalized ingress from cidr' do
     before(:all) do
       template_name = 'two_security_group_two_externalized_cidr_ingress.json'
-      @cfn_model = CfnModel.new(File.join(__dir__, 'test_templates', template_name))
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
     it 'returns 2 security groups' do
