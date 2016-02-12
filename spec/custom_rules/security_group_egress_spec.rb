@@ -12,9 +12,9 @@ describe SecurityGroupMissingEgressRule do
 
     it 'fails validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      audit_result = security_group_egress_rule.audit @cfn_model
+      violation_count = security_group_egress_rule.audit @cfn_model
 
-      expect(audit_result).to eq false
+      expect(violation_count).to eq 1
     end
   end
 
@@ -26,13 +26,13 @@ describe SecurityGroupMissingEgressRule do
 
     it 'passes validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      audit_result = security_group_egress_rule.audit @cfn_model
+      violation_count = security_group_egress_rule.audit @cfn_model
 
-      expect(audit_result).to eq true
+      expect(violation_count).to eq 0
     end
   end
 
-  context 'when resource template creates two security groups with one external egress rule' do
+  context 'when resource template creates single security group with two external egress rule' do
     before(:all) do
       template_name = 'single_security_group_two_externalized_egress.json'
       @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
@@ -40,9 +40,9 @@ describe SecurityGroupMissingEgressRule do
 
     it 'fails validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      audit_result = security_group_egress_rule.audit @cfn_model
+      violation_count = security_group_egress_rule.audit @cfn_model
 
-      expect(audit_result).to eq true
+      expect(violation_count).to eq 0
     end
   end
 end
