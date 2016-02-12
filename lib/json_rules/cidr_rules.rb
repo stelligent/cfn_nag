@@ -1,23 +1,27 @@
+##### inline ingress
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|first(select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0"))' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on ingress array.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
+##### external ingress
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.CidrIp? == "0.0.0.0/0")' do |ingress_rules|
   message 'warning', 'Security Group Standalone Ingress found with cidr open to world. This should never be true on instance.  Permissible on ELB', ingress_rules
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")' do |security_groups|
+###### inline egress
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "object"))|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on egress', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|first(select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0"))' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on egress array', security_groups
 end
 
+##### external egress
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.CidrIp? == "0.0.0.0/0")' do |egress_rules|
   message 'warning', 'Security Group Standalone Egress found with cidr open to world.', egress_rules
 end
@@ -27,7 +31,7 @@ warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Pr
   message 'warning', 'Security Group Standalone Ingress cidr found that is not /32', ingress_rules
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and .Properties.CidrIp != null)|select(.Properties.SecurityGroupIngress.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp != null)|select(.Properties.SecurityGroupIngress.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |security_groups|
   message 'warning', 'Security Groups found with cidr that is not /32', security_groups
 end
 
