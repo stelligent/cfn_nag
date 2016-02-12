@@ -1,7 +1,7 @@
 class SecurityGroupParser
 
   # precondition: properties are actually there... other validator takes care
-  def parse(resource_json)
+  def parse(resource_name, resource_json)
     properties = resource_json['Properties']
     security_group = SecurityGroup.new
 
@@ -11,6 +11,7 @@ class SecurityGroupParser
 
     security_group.vpc_id = properties['VpcId']
     security_group.group_description = properties['GroupDescription']
+    security_group.logical_resource_id = resource_name
 
     security_group
   end
@@ -45,11 +46,12 @@ end
 
 class SecurityGroupXgressParser
 
-  def parse(resource_json)
+  def parse(resource_name, resource_json)
     unless resource_json['Properties']['GroupName'].nil?
       fail "GroupName is only allowed in EC2-Classic, and we dont play that!: #{resource_json}"
     end
 
+    resource_json['logical_resource_id'] = resource_name
     resource_json['Properties']
   end
 end

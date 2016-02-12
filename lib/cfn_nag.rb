@@ -8,16 +8,16 @@ class CfnNag
   def audit(input_json_path)
     fail 'not even legit JSON' unless legal_json?(input_json_path)
 
-    @failure_count = 0
+    @violation_count = 0
     @warning_count = 0
 
     generic_json_rules input_json_path
 
     custom_rules
 
-    puts "failure_count: #{@failure_count}"
-    puts "warning_count: #{@warning_count}"
-    @failure_count
+    puts "Violations count: #{@violation_count}"
+    puts "Warnings count: #{@warning_count}"
+    @violation_count
   end
 
   private
@@ -41,7 +41,6 @@ class CfnNag
     end
 
     Dir[File.join(__dir__, 'json_rules', '*.rb')].sort.each do |rule_file|
-      puts rule_file
       @input_json_path = input_json_path
       eval IO.read(rule_file)
     end
@@ -53,7 +52,7 @@ class CfnNag
       SecurityGroupMissingEgressRule
     ]
     rules.each do |rule_class|
-      @failure_count += 1 unless rule_class.new.audit(cfn_model)
+      @violation_count += rule_class.new.audit(cfn_model)
     end
   end
 end

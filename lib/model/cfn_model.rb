@@ -84,7 +84,7 @@ class CfnModel
     resources.each do |resource_name, resource|
       if resource['Type'] == resource_type
         resource_parser = @parser_registry[resource_type].new
-        resources_map[resource_name] = resource_parser.parse(resource)
+        resources_map[resource_name] = resource_parser.parse(resource_name, resource)
       end
     end
     resources_map
@@ -92,7 +92,7 @@ class CfnModel
 end
 
 class SecurityGroup
-  attr_accessor :group_description, :vpc_id
+  attr_accessor :group_description, :vpc_id, :logical_resource_id
   attr_reader :ingress_rules, :egress_rules
 
   def initialize
@@ -110,10 +110,13 @@ class SecurityGroup
 
   def to_s
     <<-END
+    {
+      logical_resource_id: #{@logical_resource_id}
       group_description: #{@group_description}
       vpc_id: #{@vpc_id}
       ingress_rules: #{@ingress_rules}
       egress_rules: #{@egress_rules}
+    }
     END
   end
 end
