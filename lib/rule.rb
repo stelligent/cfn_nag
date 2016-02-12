@@ -1,7 +1,11 @@
+require 'logging'
+
 module Rule
   attr_accessor :input_json_path, :failure_count
 
   def warning(jq_expression)
+    Logging.logger['log'].debug jq_expression
+
     stdout = jq_command(@input_json_path, jq_expression)
     result = $?.exitstatus
     if result == 0
@@ -57,6 +61,8 @@ module Rule
   end
 
   def failing_rule(jq_expression:, fail_if_found:, fatal: false)
+    Logging.logger['log'].debug jq_expression
+
     stdout = jq_command(@input_json_path, jq_expression)
     result = $?.exitstatus
     if (fail_if_found and result == 0) or
@@ -74,7 +80,9 @@ module Rule
 
   def jq_command(input_json_path, jq_expression)
     command = "cat #{input_json_path} | jq '#{jq_expression}' -e"
-    #puts command
+
+    Logging.logger['log'].debug command
+    
     `#{command}`
   end
 end
