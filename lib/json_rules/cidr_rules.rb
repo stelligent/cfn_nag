@@ -2,7 +2,7 @@ warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup")|select(.Prope
   message 'warning', 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and .Properties.SecurityGroupIngress|type == "array")|select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
@@ -14,7 +14,7 @@ warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup")|select(.Prope
   message 'warning', 'Security Groups found with cidr open to world on egress', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and .Properties.SecurityGroupEgress|type == "array")|select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on egress', security_groups
 end
 
@@ -31,7 +31,7 @@ warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and .Propertie
   message 'warning', 'Security Groups found with cidr that is not /32', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and .Properties.SecurityGroupIngress|type == "array")|select(.Properties.SecurityGroupIngress[].CidrIp != null)|select(.Properties.SecurityGroupIngress[].CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$"))' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp != null)|select(.Properties.SecurityGroupIngress[].CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$"))' do |security_groups|
   message 'warning', 'Security Groups found with cidr that is not /32', security_groups
 end
 

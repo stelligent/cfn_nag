@@ -14,7 +14,6 @@ fatal_violation '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress" 
   message('fatal', 'Security Group Egress must have Properties', egress)
 end
 
-
 fatal_violation '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress" and .Properties == null)' do |egress|
   message('fatal', 'Security Group Egress must have Properties', egress)
 end

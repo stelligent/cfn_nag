@@ -69,7 +69,6 @@ module Rule
        (not fail_if_found and result != 0)
       @violation_count ||= 0
       @violation_count += 1
-      puts "VIO: #{@violation_count}"
       yield stdout
 
       if fatal
@@ -82,7 +81,7 @@ module Rule
     command = "cat #{input_json_path} | jq '#{jq_expression}' -e"
 
     Logging.logger['log'].debug command
-    
+
     `#{command}`
   end
 end
