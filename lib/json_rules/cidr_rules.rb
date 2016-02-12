@@ -1,21 +1,21 @@
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup")|select(.Properties.SecurityGroupIngress.CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
-  message 'warning', 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB', security_groups
+  message 'warning', 'Security Groups found with cidr open to world on ingress array.  This should never be true on instance.  Permissible on ELB', security_groups
 end
 
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.CidrIp? == "0.0.0.0/0")' do |ingress_rules|
   message 'warning', 'Security Group Standalone Ingress found with cidr open to world. This should never be true on instance.  Permissible on ELB', ingress_rules
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup")|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")' do |security_groups|
   message 'warning', 'Security Groups found with cidr open to world on egress', security_groups
 end
 
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0")' do |security_groups|
-  message 'warning', 'Security Groups found with cidr open to world on egress', security_groups
+  message 'warning', 'Security Groups found with cidr open to world on egress array', security_groups
 end
 
 warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.CidrIp? == "0.0.0.0/0")' do |egress_rules|

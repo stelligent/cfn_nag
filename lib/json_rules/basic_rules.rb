@@ -18,6 +18,6 @@ fatal_violation '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress" 
   message('fatal', 'Security Group Egress must have Properties', egress)
 end
 
-fatal_violation '((([..|.Ref?]|map(select(. != null)) +  [..|."Fn::GetAtt"?[0]]|map(select(. != null)))) - ([.Resources|keys]|flatten))|if length==0 then false else . end' do |danglers|
+fatal_violation '((([..|.Ref?]|map(select(. != null)) +  [..|."Fn::GetAtt"?[0]]|map(select(. != null)))) - ( ["AWS::AccountId","AWS::StackName","AWS::Region"] + ([.Resources|keys]|flatten) + ([.Parameters|keys]|flatten)))|if length==0 then false else . end' do |danglers|
   message('fatal', 'All Ref and Fn::GetAtt must reference existing logical resource ids', danglers)
 end
