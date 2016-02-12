@@ -20,6 +20,17 @@ class CfnNag
     @violation_count
   end
 
+  def self.configure_logging(opts)
+    logger = Logging.logger['log']
+    if opts[:debug]
+      logger.level = :debug
+    else
+      logger.level = :info
+    end
+
+    logger.add_appenders Logging.appenders.stdout
+  end
+
   private
 
   def legal_json?(input_json_path)

@@ -8,16 +8,5 @@ opts = Trollop::options do
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
 end
 
-def configure_logging(opts)
-  logger = Logging.logger['log']
-  if opts[:debug]
-    logger.level = :debug
-  else
-    logger.level = :info
-  end
-
-  logger.add_appenders Logging.appenders.stdout
-end
-
-configure_logging(opts)
+CfnNag::configure_logging(opts)
 exit CfnNag.new.audit(opts[:input_json])

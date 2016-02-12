@@ -1,9 +1,21 @@
+PATH
+  remote: .
+  specs:
+    cfn-nag (0.0.0)
+      logging (= 2.0.0)
+      trollop (= 2.1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
     diff-lcs (1.2.5)
     docile (1.1.5)
     json (1.8.3)
+    little-plugger (1.1.4)
+    logging (2.0.0)
+      little-plugger (~> 1.1)
+      multi_json (~> 1.10)
+    multi_json (1.11.2)
     rspec (3.4.0)
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
@@ -22,11 +34,13 @@ GEM
       json (~> 1.8)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
+    trollop (2.1.2)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  cfn-nag!
   rspec
   simplecov
 
