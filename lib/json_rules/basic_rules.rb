@@ -3,6 +3,9 @@ fatal_assertion '.Resources|length > 0' do
 end
 
 %w(
+  AWS::IAM::Role
+  AWS::IAM::Policy
+  AWS::IAM::ManagedPolicy
   AWS::IAM::UserToGroupAddition
   AWS::EC2::SecurityGroup
   AWS::EC2::SecurityGroupIngress
