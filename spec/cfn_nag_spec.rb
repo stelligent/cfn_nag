@@ -100,4 +100,17 @@ describe CfnNag do
       expect(violation_count).to eq 0
     end
   end
+
+  context 'when inline iam user has no group membership' do
+    before(:all) do
+      @cfn_nag = CfnNag.new
+    end
+
+    it 'flags a violation' do
+      template_name = 'iam_user_with_no_group.json'
+
+      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      expect(violation_count).to eq 1
+    end
+  end
 end

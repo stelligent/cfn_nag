@@ -1,5 +1,6 @@
 require_relative 'rule'
 require_relative 'custom_rules/security_group_missing_egress'
+require_relative 'custom_rules/user_missing_group'
 require_relative 'model/cfn_model'
 
 class CfnNag
@@ -60,7 +61,8 @@ class CfnNag
   def custom_rules
     cfn_model = CfnModel.new.parse(IO.read(@input_json_path))
     rules = [
-      SecurityGroupMissingEgressRule
+      SecurityGroupMissingEgressRule,
+      UserMissingGroupRule
     ]
     rules.each do |rule_class|
       @violation_count += rule_class.new.audit(cfn_model)

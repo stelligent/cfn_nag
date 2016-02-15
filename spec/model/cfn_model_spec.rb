@@ -182,7 +182,7 @@ describe CfnModel do
       @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
-    it 'returns a single user with group' do
+    it 'returns a single user with two groups' do
       expect(@cfn_model.iam_users.size).to eq 1
       expect(@cfn_model.iam_users.first.logical_resource_id).to eq 'myuser2'
       expect(@cfn_model.iam_users.first.groups.size).to eq 2
