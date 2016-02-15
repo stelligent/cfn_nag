@@ -8,7 +8,7 @@ class UserMissingGroupRule
 
     cfn_model.iam_users.each do |iam_user|
       if iam_user.groups.size == 0
-        message 'warning', 'User is not assigned to a group', iam_user
+        message 'violation', 'User is not assigned to a group', iam_user
         violation_count += 1
       end
     end
