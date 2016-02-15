@@ -14,7 +14,7 @@ class CfnNag
 
     generic_json_rules input_json_path
 
-    custom_rules
+    custom_rules input_json_path
 
     puts "Violations count: #{@violation_count}"
     puts "Warnings count: #{@warning_count}"
@@ -58,8 +58,8 @@ class CfnNag
     end
   end
 
-  def custom_rules
-    cfn_model = CfnModel.new.parse(IO.read(@input_json_path))
+  def custom_rules(input_json_path)
+    cfn_model = CfnModel.new.parse(IO.read(input_json_path))
     rules = [
       SecurityGroupMissingEgressRule,
       UserMissingGroupRule
