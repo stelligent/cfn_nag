@@ -1,15 +1,19 @@
 require 'json'
 require_relative 'security_group_parser'
+require_relative 'iam_user_parser'
 
 # consider a canonical form for template too...
 # always transform optional things into more general forms....
+# although referencing violations becomes tricky then (a la c preprocessor)
 
 class CfnModel
   def initialize
     @parser_registry = {
       'AWS::EC2::SecurityGroup' => SecurityGroupParser,
       'AWS::EC2::SecurityGroupIngress' => SecurityGroupXgressParser,
-      'AWS::EC2::SecurityGroupEgress' => SecurityGroupXgressParser
+      'AWS::EC2::SecurityGroupEgress' => SecurityGroupXgressParser,
+      'AWS::IAM::User' => IamUserParser,
+      'AWS::IAM::UserToGroupAddition' => IamUserToGroupAdditionParser
     }
     @dangling_ingress_or_egress_rules = []
     @dangler = Object.new
@@ -31,18 +35,53 @@ class CfnModel
     @dangling_ingress_or_egress_rules
   end
 
+  def iam_users
+    iam_users_hash = resources_by_type('AWS::IAM::User')
+    wire_user_to_group_additions_to_users(iam_users_hash)
+    iam_users_hash.values
+  end
+
   private
+  #
+  # def is_get_att(object)
+  #   not object['Fn::GetAtt'].nil?
+  # end
+  #
+  # def is_reference(object)
+  #   not object['Ref'].nil?
+  # end
+
+  def resolve_user_logical_resource_id(user)
+    if not user['Ref'].nil?
+      user['Ref']
+    elsif not user['Fn::GetAtt'].nil?
+      fail 'Arn not legal for user to group addition'
+    else
+      @dangler
+    end
+  end
 
   def resolve_group_id(group_id)
     if not group_id['Ref'].nil?
       group_id['Ref']
     elsif not group_id['Fn::GetAtt'].nil?
-      fail unless group_id['Fn::GetAtt'][1] == 'GroupId'
+      fail 'GroupId only legal att on security group resource' unless group_id['Fn::GetAtt'][1] == 'GroupId'
       group_id['Fn::GetAtt'][0]
     else
       @dangling_ingress_or_egress_rules << group_id
       @dangler
     end
+  end
+
+  def wire_user_to_group_additions_to_users(iam_users_hash)
+    resources_by_type('AWS::IAM::UserToGroupAddition').each do |resource_name, user_to_group_addition|
+      user_to_group_addition['Users'].each do |user|
+        unless resolve_user_logical_resource_id(user) == @dangler
+          iam_users_hash[resolve_user_logical_resource_id(user)].add_group user_to_group_addition['GroupName']
+        end
+      end
+    end
+    iam_users_hash
   end
 
   def wire_ingress_rules_to_security_groups(security_groups_hash)
@@ -120,3 +159,26 @@ class SecurityGroup
     END
   end
 end
+
+class IamUser
+  attr_accessor :logical_resource_id
+  attr_reader :groups
+
+  def initialize
+    @groups = []
+  end
+
+  def add_group(group)
+    @groups << group
+  end
+
+  def to_s
+    <<-END
+    {
+      logical_resource_id: #{@logical_resource_id}
+      groups: #{@groups}
+    }
+    END
+  end
+end
+

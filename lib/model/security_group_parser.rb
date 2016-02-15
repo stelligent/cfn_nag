@@ -1,3 +1,5 @@
+require_relative 'cfn_model'
+
 class SecurityGroupParser
 
   # precondition: properties are actually there... other validator takes care
@@ -51,7 +53,11 @@ class SecurityGroupXgressParser
       fail "GroupName is only allowed in EC2-Classic, and we dont play that!: #{resource_json}"
     end
 
-    resource_json['logical_resource_id'] = resource_name
-    resource_json['Properties']
+    xgress = {}
+    xgress['logical_resource_id'] = resource_name
+    resource_json['Properties'].each_pair do |key, value|
+      xgress[key] = value
+    end
+    xgress
   end
 end

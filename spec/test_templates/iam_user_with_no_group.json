@@ -1,0 +1,7 @@
+{
+  "Resources": {
+    "myuser2": {
+      "Type": "AWS::IAM::User"
+    }
+  }
+}

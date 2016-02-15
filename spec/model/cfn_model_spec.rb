@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'model/cfn_model'
-
+require 'set'
 
 describe CfnModel do
 
@@ -146,6 +146,47 @@ describe CfnModel do
 
     it 'returns 1 dangling Xgress rule' do
       expect(@cfn_model.dangling_ingress_or_egress_rules.size).to eq 1
+    end
+  end
+
+  context 'when resource template creates single user - with no group' do
+    before(:all) do
+      template_name = 'iam_user_with_no_group.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns a single user with no groups' do
+      expect(@cfn_model.iam_users.size).to eq 1
+      expect(@cfn_model.iam_users.first.logical_resource_id).to eq 'myuser2'
+      expect(@cfn_model.iam_users.first.groups.size).to eq 0
+    end
+  end
+
+  context 'when resource template creates single user - with one group' do
+    before(:all) do
+      template_name = 'iam_user_with_one_group.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns a single user with group' do
+      expect(@cfn_model.iam_users.size).to eq 1
+      expect(@cfn_model.iam_users.first.logical_resource_id).to eq 'myuser2'
+      expect(@cfn_model.iam_users.first.groups.size).to eq 1
+      expect(@cfn_model.iam_users.first.groups.first).to eq 'group1'
+    end
+  end
+
+  context 'when resource template creates single user - with two groups through addition' do
+    before(:all) do
+      template_name = 'iam_user_with_two_groups_through_addition.json'
+      @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
+    end
+
+    it 'returns a single user with group' do
+      expect(@cfn_model.iam_users.size).to eq 1
+      expect(@cfn_model.iam_users.first.logical_resource_id).to eq 'myuser2'
+      expect(@cfn_model.iam_users.first.groups.size).to eq 2
+      expect(Set.new(@cfn_model.iam_users.first.groups)).to eq Set.new(%w(group1 group2))
     end
   end
 end
