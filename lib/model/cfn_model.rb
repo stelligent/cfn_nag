@@ -25,6 +25,7 @@ class CfnModel
   end
 
   def security_groups
+    fail 'must call parse first' unless @json_hash
     security_groups_hash = resources_by_type('AWS::EC2::SecurityGroup')
     wire_ingress_rules_to_security_groups(security_groups_hash)
     wire_egress_rules_to_security_groups(security_groups_hash)
@@ -32,10 +33,12 @@ class CfnModel
   end
 
   def dangling_ingress_or_egress_rules
+    fail 'must call parse first' unless @json_hash
     @dangling_ingress_or_egress_rules
   end
 
   def iam_users
+    fail 'must call parse first' unless @json_hash
     iam_users_hash = resources_by_type('AWS::IAM::User')
     wire_user_to_group_additions_to_users(iam_users_hash)
     iam_users_hash.values
