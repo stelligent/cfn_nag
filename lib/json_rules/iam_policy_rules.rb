@@ -18,13 +18,13 @@ violation wildcard_action_filter +
 end
 
 violation wildcard_action_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
+          '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
           'select(.Properties.PolicyDocument|wildcard_action) ' do |policies|
   message 'violation', 'IAM policy should not allow * action', policies
 end
 
 violation wildcard_action_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
+          '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
           'select(.Properties.PolicyDocument|wildcard_action) ' do |managed_policies|
   message 'violation', 'IAM managed policy should not allow * action', managed_policies
 end
@@ -62,26 +62,26 @@ allow_not_action_filter =
       'end; '
 
 warning allow_not_action_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
-          'select(.Properties.AssumeRolePolicyDocument|allow_not_action) ' do |iam_roles|
+        '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
+        'select(.Properties.AssumeRolePolicyDocument|allow_not_action) ' do |iam_roles|
   message 'warning', 'IAM role should not allow Allow+NotAction', iam_roles
 end
 
 warning allow_not_action_filter +
-            '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
+        '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
         'select(.Properties.Policies !=null)|select(.Properties.Policies[].PolicyDocument|allow_not_action) ' do |iam_roles|
   message 'warning', 'IAM role should not allow Allow+NotAction', iam_roles
 end
 
 warning allow_not_action_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
-          'select(.Properties.PolicyDocument|allow_not_action) ' do |policies|
+        '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
+        'select(.Properties.PolicyDocument|allow_not_action) ' do |policies|
   message 'warning', 'IAM policy should not allow Allow+NotAction', policies
 end
 
 warning allow_not_action_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
-          'select(.Properties.PolicyDocument|allow_not_action) ' do |managed_policies|
+        '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
+        'select(.Properties.PolicyDocument|allow_not_action) ' do |managed_policies|
   message 'warning', 'IAM managed policy should not allow Allow+NotAction', managed_policies
 end
 
@@ -99,14 +99,14 @@ warning allow_not_resource_filter +
 end
 
 warning allow_not_resource_filter +
-            '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
-          'select(.Properties.PolicyDocument|allow_not_resource) ' do |policies|
+        '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
+        'select(.Properties.PolicyDocument|allow_not_resource) ' do |policies|
   message 'warning', 'IAM policy should not allow Allow+NotResource', policies
 end
 
 warning allow_not_resource_filter +
-            '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
-          'select(.Properties.PolicyDocument|allow_not_resource) ' do |managed_policies|
+        '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
+        'select(.Properties.PolicyDocument|allow_not_resource) ' do |managed_policies|
   message 'warning', 'IAM managed policy should not allow Allow+NotResource', managed_policies
 end
 
@@ -118,7 +118,7 @@ allow_not_principal_filter =
       'end; '
 
 violation allow_not_principal_filter +
-              '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
+          '.Resources[] | select(.Type == "AWS::IAM::Role")|'\
           'select(.Properties.AssumeRolePolicyDocument|allow_not_principal) ' do |iam_roles|
   message 'violation', 'IAM role should not allow Allow+NotPrincipal in its trust policy', iam_roles
 end
