@@ -39,7 +39,7 @@ issues=$(git log ${log_rev_range} --oneline | awk '{print $2}' | grep "${issue_p
 
 echo issues: $issues
 
-git tag -a v${new_version} -m " " -m "Issues with commits, not necessarily closed: ${issues}"
+git tag -a v${new_version} -m "${new_version}" -m "Issues with commits, not necessarily closed: ${issues}"
 
 git push --tags
 
