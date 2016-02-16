@@ -8,6 +8,7 @@ module Rule
 
     stdout = jq_command(@input_json_path, jq_expression)
     result = $?.exitstatus
+    scrape_jq_output_for_error(stdout)
     if result == 0
       @warning_count ||= 0
       @warning_count += 1
@@ -56,6 +57,10 @@ module Rule
 
   private
 
+  def scrape_jq_output_for_error(stdout)
+    fail 'json rule is likely not complete' if stdout.match /jq: error/
+  end
+
   def indent_multiline_string_with_prefix(prefix, multiline_string)
     prefix + ' ' + multiline_string.gsub(/\n/, "\n#{prefix} ")
   end
@@ -65,6 +70,8 @@ module Rule
 
     stdout = jq_command(@input_json_path, jq_expression)
     result = $?.exitstatus
+    scrape_jq_output_for_error(stdout)
+
     if (fail_if_found and result == 0) or
        (not fail_if_found and result != 0)
       @violation_count ||= 0

@@ -22,7 +22,7 @@ fatal_violation '('\
                   ') '\
                   '- '\
                   '('\
-                    '["AWS::AccountId","AWS::StackName","AWS::Region"] + '\
+                    '["AWS::AccountId","AWS::StackName","AWS::Region","AWS::StackId","AWS::NoValue"] + '\
                     '([.Resources|keys]|flatten) + '\
                     '(if .Parameters? then ([.Parameters|keys]|flatten) else [] end)'\
                   ')'\

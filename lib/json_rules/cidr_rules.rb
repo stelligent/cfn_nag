@@ -27,15 +27,15 @@ warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(
 end
 
 # BEWARE with escapes \d -> \\\d because of how the escapes get munged from ruby through to shell
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Properties.CidrIp != null)|select(.Properties.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |ingress_rules|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Properties.CidrIp|type == "string")|select(.Properties.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |ingress_rules|
   message 'warning', 'Security Group Standalone Ingress cidr found that is not /32', ingress_rules
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp != null)|select(.Properties.SecurityGroupIngress.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp|type == "string")|select(.Properties.SecurityGroupIngress.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )' do |security_groups|
   message 'warning', 'Security Groups found with cidr that is not /32', security_groups
 end
 
-warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp != null)|select(.Properties.SecurityGroupIngress[].CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$"))' do |security_groups|
+warning '.Resources[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|select(.Properties.SecurityGroupIngress[].CidrIp|type == "string")|select(.Properties.SecurityGroupIngress[].CidrIp | if .|type=="string" then test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") else false end)' do |security_groups|
   message 'warning', 'Security Groups found with cidr that is not /32', security_groups
 end
 
