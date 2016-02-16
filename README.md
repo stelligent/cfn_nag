@@ -38,7 +38,7 @@ impossible.
 
 In this case, there are two basic steps to creating a custom rule:
 
-1. The CfnModel will likely need to be updated to parse the template and return objects with the necessary information
+1. The `CfnModel` will likely need to be updated to parse the template and return objects with the necessary information
    to make a decision
 2. A rule object should be added under `lib/custom_rules` that can analyse the CfnModel object as needed.  Then the
    list of custom rules needs to be updated in `CfnNag::custom_rules`
@@ -48,6 +48,6 @@ Other
 * Generally speaking - be sure to drive any changes with tests.  i.e. before making a code change, add a test under
   spec that fails, and then develop the code to make it succeed.
 * The simplecov gem is hooked up, so when running `rspec`, inspect `coverage/index.html` to make sure your change is covered by a test.
-* the script `run-end-to-end-random-test.sh` runs AWS sample templates against cfn_nag.  It doesn't measure outcomes, it \
+* the script `run-end-to-end-random-test.sh` runs AWS sample templates against cfn_nag.  It doesn't measure outcomes, it
   just throws the kitchen sink at it and it's up to you to spot check or look for strange results.
 
