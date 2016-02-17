@@ -33,3 +33,10 @@ raw_fatal_violation jq: missing_reference_jq,
                     message: 'All Ref and Fn::GetAtt must reference existing logical resource ids'
 
 
+%w(
+  AWS::EC2::SecurityGroupIngress
+  AWS::EC2::SecurityGroupEgress
+).each do |xgress|
+  fatal_violation jq: "[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == \"#{xgress}\" and .Properties.GroupName != null)]|map(.LogicalResourceId)",
+                  message: "#{xgress} must not have GroupName - EC2 classic is a no-go!"
+end

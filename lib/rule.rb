@@ -11,23 +11,6 @@ module Rule
     "#{resources}| select(.Type == \"#{resource}\")"
   end
 
-  def raw_warning(jq:, message:)
-    Logging.logger['log'].debug jq
-
-    stdout = jq_command(@input_json_path, jq)
-    result = $?.exitstatus
-    scrape_jq_output_for_error(stdout)
-
-    if result == 0
-      @warning_count ||= 0
-      @warning_count += 1
-
-      message(message_type: 'warning',
-              message: message,
-              violating_code: stdout)
-    end
-  end
-
   def warning(jq:, message:)
     Logging.logger['log'].debug jq
 
@@ -121,12 +104,7 @@ module Rule
   private
 
   def parse_logical_resource_ids(stdout)
-    begin
-      JSON.load(stdout)
-    rescue
-      #STDERR.puts 'illegit JSON output?'
-      []
-    end
+    JSON.load(stdout)
   end
 
   def scrape_jq_output_for_error(stdout)

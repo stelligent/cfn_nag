@@ -49,10 +49,6 @@ end
 class SecurityGroupXgressParser
 
   def parse(resource_name, resource_json)
-    unless resource_json['Properties']['GroupName'].nil?
-      fail "GroupName is only allowed in EC2-Classic, and we dont play that!: #{resource_json}"
-    end
-
     xgress = {}
     xgress['logical_resource_id'] = resource_name
     resource_json['Properties'].each_pair do |key, value|
