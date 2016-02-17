@@ -30,11 +30,22 @@ or update existing files if the rule applies to an existing rough category.
 
 For more information on the jq query language, see: https://stedolan.github.io/jq/manual/
 
+There are two kinds of queries you can throw at `jq`:
+
+* The typical query to `jq` should return just a JSON array of logical resource ids.  The `Rule` module
+  will expect this and use this to format result messages properly.  If a query can't be written
+  to return just an array of resource ids, then a "raw" query is probably needed.
+* A "raw" query can have free-form results.  If anything is found/not found per assertion/violation
+  then that determines success/failure and the stdout of jq is emitted as part of the result to the user.
+  This is intended for testing special cases - structural correctness.  Instead of calling `violation`, call
+  `raw_violation`
+  
 Custom Rules
 ------------
 The jq query language is convenient, but can get out of hand pretty quickly.  For some rules that require
 "joining" up different pieces of a Cloudformation template to make a decision, it can be too difficult if not
-impossible.
+impossible.  Some of the existing "basic" jq rules might even deserve a rewrite as a custom rule given how
+complex they turned out to be.
 
 In this case, there are two basic steps to creating a custom rule:
 
@@ -42,6 +53,7 @@ In this case, there are two basic steps to creating a custom rule:
    to make a decision
 2. A rule object should be added under `lib/custom_rules` that can analyse the CfnModel object as needed.  Then the
    list of custom rules needs to be updated in `CfnNag::custom_rules`
+3. The rule object should return a violation count per resource, but only one message.
        
 Other
 -----

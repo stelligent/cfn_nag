@@ -1,14 +1,12 @@
-violation '.Resources[] | select(.Type == "AWS::IAM::User")|'\
-          'select(.Properties.Policies|length > 0) ' do |iam_user|
-  message 'warning', 'IAM user should not have any directly attached policies.  Should be on group', iam_user
-end
+violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::IAM::User")|'\
+              'select(.Properties.Policies|length > 0)]|map(.LogicalResourceId) ',
+          message: 'IAM user should not have any directly attached policies.  Should be on group'
 
-violation '.Resources[] | select(.Type == "AWS::IAM::Policy")|'\
-          'select(.Properties.Users|length > 0) ' do |iam_roles|
-  message 'warning', 'IAM policy should not apply directly to users.  Should be on group', iam_roles
-end
+violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::IAM::Policy")|'\
+              'select(.Properties.Users|length > 0)]|map(.LogicalResourceId) ',
+          message: 'IAM policy should not apply directly to users.  Should be on group'
 
-violation '.Resources[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
-          'select(.Properties.Users|length > 0) ' do |iam_roles|
-  message 'warning', 'IAM policy should not apply directly to users.  Should be on group', iam_roles
-end
+violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
+              'select(.Properties.Users|length > 0)]|map(.LogicalResourceId) ',
+          message: 'IAM policy should not apply directly to users.  Should be on group'
+
