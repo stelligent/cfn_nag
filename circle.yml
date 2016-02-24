@@ -1,0 +1,11 @@
+deployment:
+  rubygems:
+    branch: master
+    commands:
+      - git status
+      - ./publish.sh
+
+
+machine:
+  ruby:
+    version: '2.2.1'
