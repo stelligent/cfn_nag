@@ -12,6 +12,8 @@ Gem::Specification.new do |s|
 
   s.require_paths << 'lib'
 
+  s.required_ruby_version = '~> 2.2'
+  
   s.add_runtime_dependency('logging', '2.0.0')
   s.add_runtime_dependency('trollop', '2.1.2')
 end
