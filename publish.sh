@@ -3,7 +3,6 @@ set -o pipefail
 
 set +x
 if [[ -z ${rubygems_api_key} ]];
-if [[ -z ${rubygems_api_key} ]];
 then
   echo rubygems_api_key must be set in the environment
   exit 1
