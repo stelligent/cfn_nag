@@ -17,6 +17,8 @@ module Rule
   end
 
   def warning(jq:, message:)
+    return if @stop_processing
+
     Logging.logger['log'].debug jq
 
     stdout = jq_command(@input_json_path, jq)
@@ -37,7 +39,7 @@ module Rule
                  fail_if_found: false,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FATAL_VIOLATION,
+                 message_type: Violation::FAILING_VIOLATION,
                  raw: true)
   end
 
@@ -46,7 +48,7 @@ module Rule
                  fail_if_found: false,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FATAL_VIOLATION)
+                 message_type: Violation::FAILING_VIOLATION)
   end
 
   def raw_fatal_violation(jq:, message:)
@@ -54,7 +56,7 @@ module Rule
                  fail_if_found: true,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FATAL_VIOLATION,
+                 message_type: Violation::FAILING_VIOLATION,
                  raw: true)
   end
 
@@ -63,7 +65,7 @@ module Rule
                  fail_if_found: true,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FATAL_VIOLATION)
+                 message_type: Violation::FAILING_VIOLATION)
   end
 
   def violation(jq:, message:)
@@ -143,6 +145,8 @@ module Rule
                    message_type:,
                    fatal: false,
                    raw: false)
+    return if @stop_processing
+
     Logging.logger['log'].debug jq_expression
 
     stdout = jq_command(@input_json_path, jq_expression)
@@ -157,7 +161,7 @@ module Rule
                       violating_code: stdout)
 
         if fatal
-          exit 1
+          @stop_processing = true
         end
       else
         resource_ids = parse_logical_resource_ids(stdout)
@@ -168,7 +172,7 @@ module Rule
                         logical_resource_ids: resource_ids)
 
           if fatal
-            exit 1
+            @stop_processing = true
           end
         end
       end

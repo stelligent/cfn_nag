@@ -4,7 +4,7 @@ require 'cfn_nag'
 require 'logging'
 
 opts = Trollop::options do
-  opt :input_json, 'Cloudformation template to nag on', type: :string, required: true
+  opt :input_json_path, 'Cloudformation template to nag on or directory of templates - all *.json and *.template recursively', type: :io, required: true
   opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
 end
@@ -13,5 +13,5 @@ Trollop::die(:output_format,
              'Must be txt or json') unless %w(txt json).include?(opts[:output_format])
 
 CfnNag::configure_logging(opts)
-exit CfnNag.new.audit(input_json_path: opts[:input_json],
+exit CfnNag.new.audit(input_json_path: opts[:input_json_path],
                       output_format: opts[:output_format])

@@ -10,17 +10,20 @@ class CfnNag
 
   def audit(input_json_path:,
             output_format:'txt')
-    fail 'not even legit JSON' unless legal_json?(input_json_path)
 
-    @violations = []
+    templates = discover_templates(input_json_path)
 
-    generic_json_rules input_json_path
+    aggregate_results = []
+    templates.each do |template|
+      aggregate_results << {
+        filename: template,
+        file_results: audit_file(input_json_path: template)
+      }
+    end
 
-    custom_rules input_json_path
+    results_renderer(output_format).new.render(aggregate_results)
 
-    results_renderer(output_format).new.render(@violations)
-
-    Rule::count_failures(@violations)
+    aggregate_results.inject(0) { |total_failure_count, results| total_failure_count + results[:file_results][:failure_count] }
   end
 
   def self.configure_logging(opts)
@@ -35,6 +38,42 @@ class CfnNag
   end
 
   private
+
+  def audit_file(input_json_path:)
+    fail 'not even legit JSON' unless legal_json?(input_json_path)
+    @stop_processing = false
+    @violations = []
+
+    generic_json_rules input_json_path
+
+    custom_rules input_json_path unless @stop_processing == true
+
+    {
+      failure_count: Rule::count_failures(@violations),
+      violations: @violations
+    }
+  end
+
+  def discover_templates(input_json_path)
+    if ::File.directory? input_json_path
+      templates = find_templates_in_directory(directory: input_json_path)
+    elsif ::File.file? input_json_path
+      templates = [input_json_path]
+    else
+      fail "#{input_json_path} is not a proper path"
+    end
+    templates
+  end
+
+  def find_templates_in_directory(directory:,
+                                  cfn_extensions: %w(json template))
+
+    templates = []
+    cfn_extensions.each do |cfn_extension|
+      templates += Dir[File.join(directory, "**/*.#{cfn_extension}")]
+    end
+    templates
+  end
 
   def results_renderer(output_format)
     registry = {

@@ -2,16 +2,21 @@ require 'rule'
 
 class SimpleStdoutResults
 
-  def render(violations)
-    violations.each do |violation|
-      message message_type: violation.type,
-              message: violation.message,
-              logical_resource_ids: violation.logical_resource_ids,
-              violating_code: violation.violating_code
-    end
+  def render(results)
+    results.each do |result|
+      (1..60).each { print '-' }
+      puts "\n" + result[:filename]
+      (1..60).each { print '-' }
 
-    puts "Violations count: #{Rule::count_warnings(violations)}"
-    puts "Warnings count: #{Rule::count_failures(violations)}"
+      result[:file_results][:violations].each do |violation|
+        message message_type: violation.type,
+                message: violation.message,
+                logical_resource_ids: violation.logical_resource_ids,
+                violating_code: violation.violating_code
+      end
+      puts "\nViolations count: #{Rule::count_failures(result[:file_results][:violations])}"
+      puts "Warnings count: #{Rule::count_warnings(result[:file_results][:violations])}"
+    end
   end
 
   private

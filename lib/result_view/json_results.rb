@@ -1,15 +1,12 @@
 require 'json'
-class JsonResults
 
-  def render(violations)
-    violations_hashes = violations.map do |violation|
-      {
-        type: violation.type,
-        message: violation.message,
-        logical_resource_ids: violation.logical_resource_ids,
-        violating_code: violation.violating_code
-      }
+class JsonResults
+  def render(results)
+
+    hashified_results = results.each do |result|
+      result[:file_results][:violations] = result[:file_results][:violations].map { |violation| violation.to_h }
     end
-    puts JSON.pretty_generate(violations_hashes)
+
+    puts JSON.pretty_generate(hashified_results)
   end
 end

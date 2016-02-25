@@ -13,8 +13,10 @@ rm *.template
 unzip AWSCloudFormation-samples.zip
 popd
 
-for template in $(ls spec/aws_sample_templates/*.template)
-do
-  echo ${template}
-  cfn_nag --input-json ${template};
-done
+#for template in $(ls spec/aws_sample_templates/*.template)
+#do
+#  echo ${template}
+#  cfn_nag --input-json-path ${template};
+#done
+cfn_nag --input-json-path spec/aws_sample_templates \
+        --output-format txt
