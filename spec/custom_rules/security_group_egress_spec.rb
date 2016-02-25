@@ -12,9 +12,9 @@ describe SecurityGroupMissingEgressRule do
 
     it 'fails validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      violation_count = security_group_egress_rule.audit @cfn_model
+      violation = security_group_egress_rule.audit @cfn_model
 
-      expect(violation_count).to eq 1
+      expect(violation).to_not be_nil
     end
   end
 
@@ -26,9 +26,9 @@ describe SecurityGroupMissingEgressRule do
 
     it 'passes validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      violation_count = security_group_egress_rule.audit @cfn_model
+      violation = security_group_egress_rule.audit @cfn_model
 
-      expect(violation_count).to eq 0
+      expect(violation).to be_nil
     end
   end
 
@@ -38,11 +38,12 @@ describe SecurityGroupMissingEgressRule do
       @cfn_model = CfnModel.new.parse(IO.read(File.join(__dir__, '..', 'test_templates', template_name)))
     end
 
-    it 'fails validation' do
+    it 'passes validation' do
       security_group_egress_rule = SecurityGroupMissingEgressRule.new
-      violation_count = security_group_egress_rule.audit @cfn_model
+      violation = security_group_egress_rule.audit @cfn_model
 
-      expect(violation_count).to eq 0
+      puts violation
+      expect(violation).to be_nil
     end
   end
 end

@@ -2,23 +2,25 @@ require_relative 'rule'
 require_relative 'custom_rules/security_group_missing_egress'
 require_relative 'custom_rules/user_missing_group'
 require_relative 'model/cfn_model'
+require_relative 'result_view/simple_stdout_results'
+require_relative 'result_view/json_results'
 
 class CfnNag
   include Rule
 
-  def audit(input_json_path)
+  def audit(input_json_path:,
+            output_format:'txt')
     fail 'not even legit JSON' unless legal_json?(input_json_path)
 
-    @violation_count = 0
-    @warning_count = 0
+    @violations = []
 
     generic_json_rules input_json_path
 
     custom_rules input_json_path
 
-    puts "Violations count: #{@violation_count}"
-    puts "Warnings count: #{@warning_count}"
-    @violation_count
+    results_renderer(output_format).new.render(@violations)
+
+    Rule::count_failures(@violations)
   end
 
   def self.configure_logging(opts)
@@ -33,6 +35,14 @@ class CfnNag
   end
 
   private
+
+  def results_renderer(output_format)
+    registry = {
+      'txt' => SimpleStdoutResults,
+      'json' => JsonResults
+    }
+    registry[output_format]
+  end
 
   def legal_json?(input_json_path)
     begin
@@ -65,7 +75,8 @@ class CfnNag
       UserMissingGroupRule
     ]
     rules.each do |rule_class|
-      @violation_count += rule_class.new.audit(cfn_model)
+      audit_result = rule_class.new.audit(cfn_model)
+      @violations << audit_result unless audit_result.nil?
     end
   end
 end

@@ -12,7 +12,7 @@ describe CfnNag do
     it 'fails fast' do
       template_name = 'rubbish.json'
       expect {
-        @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+        @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       }.to raise_error 'not even legit JSON'
     end
   end
@@ -21,7 +21,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'no_resources.json'
       begin
-        @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+        @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
         fail 'should have exited'
       rescue SystemExit
 
@@ -33,7 +33,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'sg_missing_properties.json'
       begin
-        @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+        @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
         fail 'should have exited'
       rescue SystemExit
 
@@ -46,7 +46,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'single_security_group_empty_ingress.json'
 
-      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      violation_count = @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       expect(violation_count).to eq 1
     end
   end
@@ -56,7 +56,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'single_security_group_empty_ingress.json'
 
-      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      violation_count = @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       expect(violation_count).to eq 1
     end
   end
@@ -65,7 +65,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'two_security_group_two_cidr_ingress.json'
 
-      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      violation_count = @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       expect(violation_count).to eq 2
     end
   end
@@ -75,7 +75,7 @@ describe CfnNag do
     it 'passes validation' do
       template_name = 'multiple_inline_egress.json'
 
-      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      violation_count = @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       expect(violation_count).to eq 0
     end
   end
@@ -85,7 +85,7 @@ describe CfnNag do
     it 'flags a violation' do
       template_name = 'iam_user_with_no_group.json'
 
-      violation_count = @cfn_nag.audit(File.join(__dir__, 'test_templates', template_name))
+      violation_count = @cfn_nag.audit(input_json_path: File.join(__dir__, 'test_templates', template_name))
       expect(violation_count).to eq 1
     end
   end
