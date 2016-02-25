@@ -40,11 +40,17 @@ class CfnNag
   private
 
   def audit_file(input_json_path:)
-    fail 'not even legit JSON' unless legal_json?(input_json_path)
     @stop_processing = false
     @violations = []
 
-    generic_json_rules input_json_path
+    unless legal_json?(input_json_path)
+      @violations << Violation.new(type: Violation::FAILING_VIOLATION,
+                                   message: 'not even legit JSON',
+                                   violating_code: IO.read(input_json_path))
+      @stop_processing = true
+    end
+
+    generic_json_rules input_json_path unless @stop_processing == true
 
     custom_rules input_json_path unless @stop_processing == true
 
@@ -58,7 +64,7 @@ class CfnNag
     if ::File.directory? input_json_path
       templates = find_templates_in_directory(directory: input_json_path)
     elsif ::File.file? input_json_path
-      templates = [input_json_path]
+      templates = [input_json_path.path]
     else
       fail "#{input_json_path} is not a proper path"
     end
