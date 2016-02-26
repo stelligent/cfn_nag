@@ -1,7 +1,7 @@
 require 'json'
 class Violation
-  WARNING = 'warning'
-  FAILING_VIOLATION = 'failing violation'
+  WARNING = 'WARN'
+  FAILING_VIOLATION = 'FAIL'
 
   attr_reader :type, :message, :logical_resource_ids, :violating_code
 
