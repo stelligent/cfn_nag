@@ -178,4 +178,33 @@ describe CfnNag do
   end
 
 
+  context 'cloudfront distro without logging' do
+
+    it 'flags a warning' do
+      template_name = 'cloudfront_distribution_without_logging.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/cloudfront_distribution_without_logging.json'),
+              file_results: {
+                  failure_count: 0,
+                  violations: [
+                      Violation.new(type: Violation::WARNING,
+                                    message: 'CloudFront Distribution should enable access logging',
+                                    logical_resource_ids: %w(rDistribution2),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 0
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
+
+
 end

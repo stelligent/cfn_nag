@@ -1,0 +1,87 @@
+{
+  "Resources": {
+    "rDistribution1": {
+      "Type": "AWS::CloudFront::Distribution",
+      "DependsOn": "S3Bucket",
+      "Properties": {
+        "DistributionConfig": {
+          "Origins": [
+            {
+              "DomainName": "adomainnamethatcouldneverexist.com",
+              "Id": "favoriteColorOrigin",
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "OriginProtocolPolicy": "http-only"
+              }
+            }
+          ],
+
+          "Logging": {
+            "Bucket" : "fakebucketfakebucket.s3.amazonaws.com",
+            "IncludeCookies" : true,
+            "Prefix" : "cfdist"
+          },
+
+          "Enabled": "false",
+
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "favoriteColorOrigin",
+            "SmoothStreaming" : "false",
+            "ForwardedValues": {
+              "QueryString": "true",
+              "Cookies" : { "Forward" : "none" },
+              "Headers": ["*"]
+            },
+            "ViewerProtocolPolicy": "allow-all",
+            "AllowedMethods": ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
+            "CachedMethods": ["HEAD", "GET"]
+          },
+
+          "PriceClass" : "PriceClass_100"
+        }
+      }
+    },
+
+    "rDistribution2": {
+      "Type": "AWS::CloudFront::Distribution",
+      "Properties": {
+        "DistributionConfig": {
+          "Origins": [
+            {
+              "DomainName": "adomainnamethatcouldneverexist2.com",
+              "Id": "favoriteColorOrigin",
+              "CustomOriginConfig": {
+                "HTTPPort": "80",
+                "OriginProtocolPolicy": "http-only"
+              }
+            }
+          ],
+
+          "Enabled": "false",
+
+          "DefaultCacheBehavior": {
+            "TargetOriginId": "favoriteColorOrigin",
+            "SmoothStreaming" : "false",
+            "ForwardedValues": {
+              "QueryString": "true",
+              "Cookies" : { "Forward" : "none" },
+              "Headers": ["*"]
+            },
+            "ViewerProtocolPolicy": "allow-all",
+            "AllowedMethods": ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"],
+            "CachedMethods": ["HEAD", "GET"]
+          },
+
+          "PriceClass" : "PriceClass_100"
+        }
+      }
+    },
+
+    "S3Bucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket"
+      }
+    }
+  }
+}
