@@ -11,19 +11,29 @@ class CfnNag
   def audit(input_json_path:,
             output_format:'txt')
 
+    aggregate_results = audit_results input_json_path: input_json_path,
+                                      output_format: output_format
+
+    aggregate_results.inject(0) { |total_failure_count, results| total_failure_count + results[:file_results][:failure_count] }
+  end
+
+  def audit_results(input_json_path:,
+                    output_format:'txt')
+
     templates = discover_templates(input_json_path)
 
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {
-        filename: template,
-        file_results: audit_file(input_json_path: template)
+          filename: template,
+          file_results: audit_file(input_json_path: template)
       }
     end
 
-    results_renderer(output_format).new.render(aggregate_results)
+    render_results(aggregate_results: aggregate_results,
+                   output_format: output_format)
 
-    aggregate_results.inject(0) { |total_failure_count, results| total_failure_count + results[:file_results][:failure_count] }
+    aggregate_results
   end
 
   def self.configure_logging(opts)
@@ -38,6 +48,10 @@ class CfnNag
   end
 
   private
+
+  def render_results(aggregate_results:,output_format:)
+    results_renderer(output_format).new.render(aggregate_results)
+  end
 
   def audit_file(input_json_path:)
     @stop_processing = false

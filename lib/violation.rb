@@ -30,4 +30,8 @@ class Violation
       violating_code: @violating_code
     }
   end
+
+  def ==(other_violation)
+    other_violation.class == self.class && other_violation.to_h == to_h
+  end
 end
