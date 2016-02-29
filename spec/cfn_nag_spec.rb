@@ -207,4 +207,35 @@ describe CfnNag do
   end
 
 
+  context 'lambda permission with some out of the ordinary items' do
+
+    it 'flags a warning' do
+      template_name = 'lambda_with_wildcard_principal_and_non_invoke_function_permission.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/lambda_with_wildcard_principal_and_non_invoke_function_permission.json'),
+              file_results: {
+                  failure_count: 1,
+                  violations: [
+                      Violation.new(type: Violation::WARNING,
+                                    message: 'Lambda permission beside InvokeFunction might not be what you want?  Not sure!?',
+                                    logical_resource_ids: %w(lambdaPermission),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'Lambda permission principal should not be wildcard',
+                                    logical_resource_ids: %w(lambdaPermission),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 1
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
 end
