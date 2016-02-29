@@ -1,0 +1,95 @@
+{
+  "Resources": {
+    "elb1": {
+      "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties" : {
+        "AvailabilityZones" : [
+          "eu-west-1a"
+        ],
+        "Listeners" : [
+          {
+            "LoadBalancerPort" : "80",
+            "InstancePort" : "80",
+            "Protocol" : "HTTP"
+          }
+        ]
+      }
+    },
+    "elb2": {
+      "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+      "DependsOn": "S3BucketPolicy",
+
+      "Properties" : {
+        "AccessLoggingPolicy": {
+          "Enabled": false,
+          "S3BucketName": "fakebucketfakebucket"
+        },
+        "AvailabilityZones" : [
+          "eu-west-1a"
+        ],
+        "Listeners" : [
+          {
+            "LoadBalancerPort" : "80",
+            "InstancePort" : "80",
+            "Protocol" : "HTTP"
+          }
+        ]
+      }
+    },
+    "elb3": {
+      "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+      "DependsOn": "S3BucketPolicy",
+      "Properties" : {
+        "AccessLoggingPolicy": {
+          "Enabled": true,
+          "S3BucketName": "fakebucketfakebucket",
+          "S3BucketPrefix": "prefix"
+        },
+        "AvailabilityZones" : [
+          "eu-west-1a"
+        ],
+        "Listeners" : [
+          {
+            "LoadBalancerPort" : "80",
+            "InstancePort" : "80",
+            "Protocol" : "HTTP"
+          }
+        ]
+      }
+    },
+    "S3Bucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket"
+      }
+    },
+
+    "S3BucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "S3Bucket"
+        },
+        "PolicyDocument": {
+          "Id": "Policy1429136655940",
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Sid": "Stmt1429136633762",
+              "Action": [
+                "s3:PutObject"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::fakebucketfakebucket/prefix/AWSLogs/111111111111/*",
+              "Principal": {
+                "AWS": [
+                  "156460612806"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

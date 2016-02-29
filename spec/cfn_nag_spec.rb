@@ -114,4 +114,38 @@ describe CfnNag do
       puts actual_aggregate_results
     end
   end
+
+  context 'two load balancers without access logging enabled' do
+
+    it 'flags a warning' do
+      template_name = 'two_load_balancers_with_no_logging.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/two_load_balancers_with_no_logging.json'),
+              file_results: {
+                  failure_count: 0,
+                  violations: [
+                      Violation.new(type: Violation::WARNING,
+                                    message: 'Elastic Load Balancer should have access logging configured',
+                                    logical_resource_ids: %w(elb1),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::WARNING,
+                                    message: 'Elastic Load Balancer should have access logging enabled',
+                                    logical_resource_ids: %w(elb2),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 0
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+
+      puts actual_aggregate_results
+    end
+  end
 end
