@@ -6,6 +6,9 @@ raw_fatal_assertion jq: '.Resources|length > 0',
   AWS::IAM::Role
   AWS::IAM::Policy
   AWS::IAM::ManagedPolicy
+  AWS::S3::BucketPolicy
+  AWS::SQS::QueuePolicy
+  AWS::SNS::TopicPolicy
   AWS::IAM::UserToGroupAddition
   AWS::EC2::SecurityGroup
   AWS::EC2::SecurityGroupIngress
@@ -22,7 +25,7 @@ missing_reference_jq = <<END
     )
     -
     (
-      ["AWS::AccountId","AWS::StackName","AWS::Region","AWS::StackId","AWS::NoValue"] +
+      ["AWS::AccountId","AWS::StackName","AWS::Region","AWS::StackId","AWS::NoValue","AWS::NotificationARNs"] +
       ([.Resources|keys]|flatten) +
       (if .Parameters? then ([.Parameters|keys]|flatten) else [] end)
     )

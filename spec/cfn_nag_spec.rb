@@ -238,4 +238,105 @@ describe CfnNag do
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
+
+  context 'sqs with wildcards', :sqs do
+
+    it 'flags a violation' do
+      template_name = 'sqs_queue_with_wildcards.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/sqs_queue_with_wildcards.json'),
+              file_results: {
+                  failure_count: 2,
+                  violations: [
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'SQS Queue policy should not allow * action',
+                                    logical_resource_ids: %w(mysqspolicy),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'SQS Queue policy should not allow * principal',
+                                    logical_resource_ids: %w(mysqspolicy2),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      #expect(failure_count).to eq 2
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
+
+  context 'sns with wildcards' do
+
+    it 'flags a violation' do
+      template_name = 'sns_topic_with_wildcard_principal.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/sns_topic_with_wildcard_principal.json'),
+              file_results: {
+                  failure_count: 4,
+                  violations: [
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'SNS topic policy should not allow * principal',
+                                    logical_resource_ids: %w(mysnspolicy0 mysnspolicy1),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'SNS topic policy should not allow * AWS principal',
+                                    logical_resource_ids: %w(mysnspolicy2 mysnspolicy3),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 4
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
+
+
+  context 's3 with wildcards', :s3 do
+
+    it 'flags a violation' do
+      template_name = 's3_bucket_with_wildcards.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/s3_bucket_with_wildcards.json'),
+              file_results: {
+                  failure_count: 4,
+                  violations: [
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'S3 Bucket policy should not allow * action',
+                                    logical_resource_ids: %w(S3BucketPolicy S3BucketPolicy2),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'S3 Bucket policy should not allow * principal',
+                                    logical_resource_ids: %w(S3BucketPolicy3),
+                                    violating_code: nil),
+                      Violation.new(type: Violation::FAILING_VIOLATION,
+                                    message: 'S3 Bucket policy should not allow * AWS principal',
+                                    logical_resource_ids: %w(S3BucketPolicy2),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 4
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
 end

@@ -8,16 +8,21 @@ Usage
 =====
 Pretty simple to execute:
 
-    cfn_nag --input-json <path to cloudformation json>
+    cfn_nag --input-json-path <path to cloudformation json>
+    
+The path can be a directory or a particular template.  If it is a directory, all *.json and *.template files underneath
+there recursively will be processed.
+
+The default output format is free-form text, but json output can be selected with the `--output-format json` flag.    
 
 Optionally, a `--debug` flag will dump all the "jq" query command lines to stdout
 
 Results
 -------
-* Explanations of failures are dumped to stdout
-* A fatal violation or violation will return a non-zero exit code.
+* The resultsa are dumped to stdout
+* A failing violation will return a non-zero exit code.
 * A warning will return a zero/success exit code.
-* A fatal violation stops analysis because the template is malformed in some severe way
+* A fatal violation stops analysis (per file) because the template is malformed in some severe way
 
 Development
 ===========

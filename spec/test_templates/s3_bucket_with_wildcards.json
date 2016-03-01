@@ -1,0 +1,93 @@
+{
+  "Resources": {
+    "S3Bucket" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket"
+      }
+    },
+
+    "S3Bucket2" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket2"
+      }
+    },
+
+    "S3Bucket3" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket3"
+      }
+    },
+
+    "S3BucketPolicy": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "S3Bucket"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "*"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::fakebucketfakebucket/*",
+              "Principal": {
+                "AWS": [
+                  "156460612806"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    "S3BucketPolicy2": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "S3Bucket2"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:*"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::fakebucketfakebucket2/*",
+              "Principal": {
+                "AWS": "*"
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    "S3BucketPolicy3": {
+      "Type": "AWS::S3::BucketPolicy",
+      "Properties": {
+        "Bucket": {
+          "Ref": "S3Bucket3"
+        },
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Action": [
+                "s3:PutObject"
+              ],
+              "Effect": "Allow",
+              "Resource": "arn:aws:s3:::fakebucketfakebucket3/*",
+              "Principal": "*"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

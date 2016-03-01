@@ -1,0 +1,59 @@
+{
+  "Resources": {
+    "queue1": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "queue1"
+      }
+    },
+
+    "mysqspolicy" : {
+      "Type" : "AWS::SQS::QueuePolicy",
+      "Properties" : {
+        "PolicyDocument" : {
+          "Id" : "MyQueuePolicy",
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Sid" : "Allow-User-SendMessage",
+            "Effect" : "Allow",
+            "Principal" : {
+              "AWS" : "arn:aws:iam::123123123123:user/some.user"
+            },
+            "Action" : [ "sqs:*" ],
+            "Resource" : "*"
+          } ]
+        },
+        "Queues" : [
+          { "Ref" : "queue1" }
+        ]
+      }
+    },
+
+    "queue2": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "queue2"
+      }
+    },
+
+    "mysqspolicy2" : {
+      "Type" : "AWS::SQS::QueuePolicy",
+      "Properties" : {
+        "PolicyDocument" : {
+          "Id" : "MyQueuePolicy",
+          "Version" : "2012-10-17",
+          "Statement" : [ {
+            "Sid" : "Allow-User-SendMessage",
+            "Effect" : "Allow",
+            "Principal" : "*",
+            "Action" : "sqs:SendMessage",
+            "Resource" : "*"
+          } ]
+        },
+        "Queues" : [
+          { "Ref" : "queue2" }
+        ]
+      }
+    }
+  }
+}
