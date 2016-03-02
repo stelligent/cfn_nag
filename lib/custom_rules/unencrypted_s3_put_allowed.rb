@@ -1,6 +1,11 @@
 require_relative '../violation'
+require 'model/action_parser'
 
 class UnencryptedS3PutObjectAllowedRule
+
+  def rule_text
+    'It appears that the S3 Bucket Policy allows s3:PutObject without server-side encryption'
+  end
 
   def audit(cfn_model)
     logical_resource_ids = []
@@ -15,26 +20,30 @@ class UnencryptedS3PutObjectAllowedRule
 
     if logical_resource_ids.size > 0
       Violation.new(type: Violation::WARNING,
-                    message: 'It appears that the S3 Bucket Policy allows s3:PutObject without server-side encryption',
+                    message: rule_text,
                     logical_resource_ids: logical_resource_ids)
     else
       nil
     end
   end
 
+  private
+
   def blocks_put_object_without_encryption(statement)
     encryption_condition = {
-        'StringNotEquals' => {
-            's3:x-amz-server-side-encryption' => 'AES256'
-        }
+      'StringNotEquals' => {
+        's3:x-amz-server-side-encryption' => 'AES256'
+      }
     }
 
-    if statement.effect == 'Deny' and
-       ActionParser.new.include?(statement.action, 's3:PutObject') and
-       statement.condition.include?(encryption_condition) and
-       statement.principal == '*'
-
-      statement.resource.is_bucket_wildcard?
-    end
+    # this isn't quite complete.  parsing the Resource field can be tricky
+    # looking for a trailing wildcard will likely be right most of the time
+    # but there are a lot of string manipulations to confuse things so...
+    # just warn when we can't find at least the Deny+encryption - they may have an
+    # incomplete Deny (for encryption) and that will slip through
+    statement['Effect'] == 'Deny' and
+        ActionParser.new.include?(actual_action: statement['Action'], action_to_look_for: 's3:PutObject') and
+        S3BucketPolicy::condition_includes?(statement, encryption_condition) and
+        statement['Principal'] == '*'
   end
 end

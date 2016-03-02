@@ -1,6 +1,7 @@
 require 'json'
 require_relative 'security_group_parser'
 require_relative 'iam_user_parser'
+require_relative 's3_bucket_policy_parser'
 
 # consider a canonical form for template too...
 # always transform optional things into more general forms....
@@ -13,7 +14,8 @@ class CfnModel
       'AWS::EC2::SecurityGroupIngress' => SecurityGroupXgressParser,
       'AWS::EC2::SecurityGroupEgress' => SecurityGroupXgressParser,
       'AWS::IAM::User' => IamUserParser,
-      'AWS::IAM::UserToGroupAddition' => IamUserToGroupAdditionParser
+      'AWS::IAM::UserToGroupAddition' => IamUserToGroupAdditionParser,
+      'AWS::S3::BucketPolicy' => S3BucketPolicyParser
     }
     @dangling_ingress_or_egress_rules = []
     @dangler = Object.new
@@ -44,15 +46,12 @@ class CfnModel
     iam_users_hash.values
   end
 
+  def bucket_policies
+    bucket_policy_hash = resources_by_type('AWS::S3::BucketPolicy')
+    bucket_policy_hash.values
+  end
+
   private
-  #
-  # def is_get_att(object)
-  #   not object['Fn::GetAtt'].nil?
-  # end
-  #
-  # def is_reference(object)
-  #   not object['Ref'].nil?
-  # end
 
   def resolve_user_logical_resource_id(user)
     if not user['Ref'].nil?

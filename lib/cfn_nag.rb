@@ -4,6 +4,7 @@ require_relative 'custom_rules/user_missing_group'
 require_relative 'model/cfn_model'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
+require_relative 'custom_rules/unencrypted_s3_put_allowed'
 require 'tempfile'
 
 class CfnNag
@@ -175,7 +176,8 @@ class CfnNag
   def custom_rule_registry
     [
       SecurityGroupMissingEgressRule,
-      UserMissingGroupRule
+      UserMissingGroupRule,
+      UnencryptedS3PutObjectAllowedRule
     ]
   end
 end
