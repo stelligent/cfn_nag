@@ -1,5 +1,5 @@
 raw_fatal_assertion jq: '.Resources|length > 0',
-                    message: 'Must have at least 1 resource'
+                    message: 'A Cloudformation template must have at least 1 resource'
 
 
 %w(

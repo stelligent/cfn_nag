@@ -17,13 +17,15 @@ module Rule
   end
 
   def warning(jq:, message:)
+    @warning_registry << message
+
     return if @stop_processing
 
     Logging.logger['log'].debug jq
 
     stdout = jq_command(@input_json_path, jq)
     result = $?.exitstatus
-    scrape_jq_output_for_error(stdout)
+    scrape_jq_output_for_error(jq, stdout)
 
     resource_ids = parse_logical_resource_ids(stdout)
     new_warnings = resource_ids.size
@@ -39,7 +41,6 @@ module Rule
                  fail_if_found: false,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FAILING_VIOLATION,
                  raw: true)
   end
 
@@ -47,8 +48,7 @@ module Rule
     failing_rule(jq_expression: jq,
                  fail_if_found: false,
                  fatal: true,
-                 message: message,
-                 message_type: Violation::FAILING_VIOLATION)
+                 message: message)
   end
 
   def raw_fatal_violation(jq:, message:)
@@ -56,7 +56,6 @@ module Rule
                  fail_if_found: true,
                  fatal: true,
                  message: message,
-                 message_type: Violation::FAILING_VIOLATION,
                  raw: true)
   end
 
@@ -64,22 +63,19 @@ module Rule
     failing_rule(jq_expression: jq,
                  fail_if_found: true,
                  fatal: true,
-                 message: message,
-                 message_type: Violation::FAILING_VIOLATION)
+                 message: message)
   end
 
   def violation(jq:, message:)
     failing_rule(jq_expression: jq,
                  fail_if_found: true,
-                 message: message,
-                 message_type: Violation::FAILING_VIOLATION)
+                 message: message)
   end
 
   def assertion(jq:, message:)
     failing_rule(jq_expression: jq,
                  fail_if_found: false,
-                 message: message,
-                 message_type: Violation::FAILING_VIOLATION)
+                 message: message)
   end
 
   def self.empty?(array)
@@ -129,8 +125,8 @@ module Rule
     JSON.load(stdout)
   end
 
-  def scrape_jq_output_for_error(stdout)
-    fail 'json rule is likely not complete' if stdout.match /jq: error/
+  def scrape_jq_output_for_error(command, stdout)
+    fail "jq rule is likely not correct: #{command}\n\n#{stdout}" if stdout.include? 'jq: error'
   end
 
   # fail_if_found: this is false for an assertion, true for a violation.  either way this rule ups the "failure" count
@@ -142,21 +138,21 @@ module Rule
   def failing_rule(jq_expression:,
                    fail_if_found:,
                    message:,
-                   message_type:,
                    fatal: false,
                    raw: false)
+    @violation_registry << message
     return if @stop_processing
 
     Logging.logger['log'].debug jq_expression
 
     stdout = jq_command(@input_json_path, jq_expression)
     result = $?.exitstatus
-    scrape_jq_output_for_error(stdout)
+    scrape_jq_output_for_error(jq_expression, stdout)
     if (fail_if_found and result == 0) or
        (not fail_if_found and result != 0)
 
       if raw
-        add_violation(type: message_type,
+        add_violation(type: Violation::FAILING_VIOLATION,
                       message: message,
                       violating_code: stdout)
 
@@ -167,7 +163,7 @@ module Rule
         resource_ids = parse_logical_resource_ids(stdout)
 
         if resource_ids.size > 0
-          add_violation(type: message_type,
+          add_violation(type: Violation::FAILING_VIOLATION,
                         message: message,
                         logical_resource_ids: resource_ids)
 
@@ -181,7 +177,7 @@ module Rule
 
   # the -e will return an exit code
   def jq_command(input_json_path, jq_expression)
-    command = "cat #{input_json_path} | jq '#{jq_expression}' -e"
+    command = "cat #{input_json_path} | jq '#{jq_expression}' -e 2>&1"
 
     Logging.logger['log'].debug command
 

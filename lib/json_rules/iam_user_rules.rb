@@ -8,5 +8,5 @@ violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | sel
 
 violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::IAM::ManagedPolicy")|'\
               'select(.Properties.Users|length > 0)]|map(.LogicalResourceId) ',
-          message: 'IAM policy should not apply directly to users.  Should be on group'
+          message: 'IAM managed policy should not apply directly to users.  Should be on group'
 

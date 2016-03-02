@@ -55,7 +55,7 @@ END
 
 warning jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.AssumeRolePolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
-        message: 'IAM role should not allow Allow+NotAction'
+        message: 'IAM role should not allow Allow+NotAction on trust permissinos'
 
 
 warning jq: allow_not_action_filter +

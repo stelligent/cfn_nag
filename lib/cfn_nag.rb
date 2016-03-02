@@ -4,9 +4,46 @@ require_relative 'custom_rules/user_missing_group'
 require_relative 'model/cfn_model'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
+require 'tempfile'
 
 class CfnNag
   include Rule
+
+  def initialize
+    @warning_registry = []
+    @violation_registry = []
+  end
+
+  def dump_rules
+    dummy_cfn = <<-END
+      {
+        "Resources": {
+          "resource1": {
+            "Type" : "AWS::EC2::DHCPOptions",
+            "Properties": {
+              "DomainNameServers" : [ "10.0.0.1" ]
+            }
+          }
+        }
+      }
+    END
+
+    Tempfile.open('tempfile') do |dummy_cfn_template|
+      dummy_cfn_template.write dummy_cfn
+      dummy_cfn_template.rewind
+      audit_file(input_json_path: dummy_cfn_template.path)
+    end
+
+    custom_rule_registry.each do |rule_class|
+      @violation_registry << rule_class.new.rule_text
+    end
+
+    puts 'WARNING VIOLATIONS:'
+    puts @warning_registry.sort
+    puts
+    puts 'FAILING VIOLATIONS:'
+    puts @violation_registry.sort
+  end
 
   def audit(input_json_path:,
             output_format:'txt')
@@ -129,13 +166,16 @@ class CfnNag
 
   def custom_rules(input_json_path)
     cfn_model = CfnModel.new.parse(IO.read(input_json_path))
-    rules = [
-      SecurityGroupMissingEgressRule,
-      UserMissingGroupRule
-    ]
-    rules.each do |rule_class|
+    custom_rule_registry.each do |rule_class|
       audit_result = rule_class.new.audit(cfn_model)
       @violations << audit_result unless audit_result.nil?
     end
+  end
+
+  def custom_rule_registry
+    [
+      SecurityGroupMissingEgressRule,
+      UserMissingGroupRule
+    ]
   end
 end

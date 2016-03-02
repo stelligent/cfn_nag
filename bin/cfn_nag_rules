@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'cfn_nag'
+
+CfnNag.new.dump_rules

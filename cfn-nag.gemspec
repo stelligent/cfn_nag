@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.name          = 'cfn-nag'
   s.version       = '0.0.0'
   s.bindir        = 'bin'
-  s.executables   = %w(cfn_nag)
+  s.executables   = %w(cfn_nag cfn_nag_rules)
   s.authors       = %w(someguy)
   s.summary       = 'cfn-nag'
   s.description   = 'Auditing tool for Cloudformation templates'

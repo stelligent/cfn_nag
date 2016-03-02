@@ -2,6 +2,10 @@ require_relative '../violation'
 
 class UserMissingGroupRule
 
+  def rule_text
+    'User is not assigned to a group'
+  end
+
   def audit(cfn_model)
     logical_resource_ids = []
     cfn_model.iam_users.each do |iam_user|
@@ -12,7 +16,7 @@ class UserMissingGroupRule
 
     if logical_resource_ids.size > 0
       Violation.new(type: Violation::FAILING_VIOLATION,
-                    message: 'User is not assigned to a group',
+                    message: rule_text,
                     logical_resource_ids: logical_resource_ids)
     else
       nil
