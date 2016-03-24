@@ -2,12 +2,14 @@ require 'rake'
 
 Gem::Specification.new do |s|
   s.name          = 'cfn-nag'
+  s.license       = 'MIT'
   s.version       = '0.0.0'
   s.bindir        = 'bin'
   s.executables   = %w(cfn_nag cfn_nag_rules)
   s.authors       = %w(someguy)
   s.summary       = 'cfn-nag'
-  s.description   = 'Auditing tool for Cloudformation templates'
+  s.description   = 'Auditing tool for CloudFormation templates'
+  s.homepage      = 'https://github.com/stelligent/cfn_nag'
   s.files         = FileList[ 'lib/**/*.rb' ]
 
   s.require_paths << 'lib'

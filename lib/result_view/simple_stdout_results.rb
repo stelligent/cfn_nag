@@ -14,7 +14,7 @@ class SimpleStdoutResults
                 logical_resource_ids: violation.logical_resource_ids,
                 violating_code: violation.violating_code
       end
-      puts "\nViolations count: #{Rule::count_failures(result[:file_results][:violations])}"
+      puts "\nFailures count: #{Rule::count_failures(result[:file_results][:violations])}"
       puts "Warnings count: #{Rule::count_warnings(result[:file_results][:violations])}"
     end
   end

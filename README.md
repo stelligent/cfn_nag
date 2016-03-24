@@ -1,25 +1,33 @@
 Installation
 ============
-For now, you can build and deploy the gem locally with the following convenience script:
+Presuming Ruby 2.2.x is installed, installation is just a matter of:
 
-    ./deploy_local.sh
+    gem install cfn-nag
 
+To install the gem locally with version 0.0.0 to do end-to-end testing, there is a convenience script:
+
+    ./deploy-local.sh
+    
 Usage
 =====
 Pretty simple to execute:
 
     cfn_nag --input-json-path <path to cloudformation json>
     
-The path can be a directory or a particular template.  If it is a directory, all *.json and *.template files underneath
+The path can be a directory or a particular template.  If it is a directory, all \*.json and \*.template files underneath
 there recursively will be processed.
 
 The default output format is free-form text, but json output can be selected with the `--output-format json` flag.    
 
 Optionally, a `--debug` flag will dump all the "jq" query command lines to stdout
 
+To see a list of all the rules the cfn-nag currently supports, there is a command-line utility that will dump them to stdout:
+
+    cfn_nag_rules
+
 Results
 -------
-* The resultsa are dumped to stdout
+* The results are dumped to stdout
 * A failing violation will return a non-zero exit code.
 * A warning will return a zero/success exit code.
 * A fatal violation stops analysis (per file) because the template is malformed in some severe way
