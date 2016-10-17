@@ -7,9 +7,9 @@ Roughly speaking it will look for:
 * Security group rules that are too permissive (wildcards)
 * Access logs that aren't enabled
 * Encryption that isn't enabled
-    
+
 For more background on the tool, please see:  
-  
+
 [Finding Security Problems Early in the Development Process of a CloudFormation Template with "cfn-nag"](https://stelligent.com/2016/04/07/finding-security-problems-early-in-the-development-process-of-a-cloudformation-template-with-cfn-nag/)
 
 Installation
@@ -21,13 +21,13 @@ Presuming Ruby 2.2.x is installed, installation is just a matter of:
 To install the gem locally with version 0.0.0 to do end-to-end testing, there is a convenience script:
 
     ./deploy-local.sh
-    
+
 Usage
 =====
 Pretty simple to execute:
 
     cfn_nag --input-json-path <path to cloudformation json>
-    
+
 The path can be a directory or a particular template.  If it is a directory, all \*.json and \*.template files underneath
 there recursively will be processed.
 
@@ -66,11 +66,11 @@ There are two kinds of queries you can throw at `jq`:
   then that determines success/failure and the stdout of jq is emitted as part of the result to the user.
   This is intended for testing special cases - structural correctness.  Instead of calling `violation`, call
   `raw_violation`
-  
+
 Custom Rules
 ------------
 The jq query language is convenient, but can get out of hand pretty quickly.  For some rules that require
-"joining" up different pieces of a Cloudformation template to make a decision, it can be too difficult if not
+"joining" up different pieces of a CloudFormation template to make a decision, it can be too difficult if not
 impossible.  Some of the existing "basic" jq rules might even deserve a rewrite as a custom rule given how
 complex they turned out to be.
 
@@ -81,7 +81,7 @@ In this case, there are two basic steps to creating a custom rule:
 2. A rule object should be added under `lib/custom_rules` that can analyse the CfnModel object as needed.  Then the
    list of custom rules needs to be updated in `CfnNag::custom_rules`
 3. The rule object should return a violation count per resource, but only one message.
-       
+
 Other
 -----
 * Generally speaking - be sure to drive any changes with tests.  i.e. before making a code change, add a test under
@@ -89,4 +89,3 @@ Other
 * The simplecov gem is hooked up, so when running `rspec`, inspect `coverage/index.html` to make sure your change is covered by a test.
 * the script `run-end-to-end-random-test.sh` runs AWS sample templates against cfn_nag.  It doesn't measure outcomes, it
   just throws the kitchen sink at it and it's up to you to spot check or look for strange results.
-
