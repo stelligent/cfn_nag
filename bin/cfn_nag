@@ -4,7 +4,7 @@ require 'cfn_nag'
 require 'logging'
 
 opts = Trollop::options do
-  opt :input_json_path, 'Cloudformation template to nag on or directory of templates - all *.json and *.template recursively', type: :io, required: true
+  opt :input_json_path, 'CloudFormation template to nag on or directory of templates - all *.json and *.template recursively', type: :io, required: true
   opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
 end

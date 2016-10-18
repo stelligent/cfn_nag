@@ -10,7 +10,7 @@ module Rule
     '.Resources|with_entries(.value.LogicalResourceId = .key)[]'
   end
 
-  # jq to filter Cloudformation resources by Type
+  # jq to filter CloudFormation resources by Type
   # can be used in jq rule definition but... this is probably reducing replication at the cost of opaqueness
   def resources_by_type(resource)
     "#{resources}| select(.Type == \"#{resource}\")"
@@ -184,4 +184,3 @@ module Rule
     `#{command}`
   end
 end
-
