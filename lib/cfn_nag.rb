@@ -163,6 +163,7 @@ class CfnNag
       fail 'jq executable must be available in PATH'
     end
 
+    $STDERR.puts "DIR: #{__dir__}"
     Dir[File.join(__dir__, 'json_rules', '*.rb')].sort.each do |rule_file|
       @input_json = input_json
       eval IO.read(rule_file)
