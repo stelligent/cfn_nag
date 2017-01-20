@@ -85,16 +85,6 @@ class CfnNag
     logger.add_appenders Logging.appenders.stdout
   end
 
-  private
-
-  def render_results(aggregate_results:,output_format:)
-    results_renderer(output_format).new.render(aggregate_results)
-  end
-
-  def audit_file(input_json_path:)
-    audit_template(input_json: IO.read(input_json_path))
-  end
-
   def audit_template(input_json:)
     @stop_processing = false
     @violations = []
@@ -114,6 +104,16 @@ class CfnNag
       failure_count: Rule::count_failures(@violations),
       violations: @violations
     }
+  end
+
+  private
+
+  def render_results(aggregate_results:,output_format:)
+    results_renderer(output_format).new.render(aggregate_results)
+  end
+
+  def audit_file(input_json_path:)
+    audit_template(input_json: IO.read(input_json_path))
   end
 
   def discover_templates(input_json_path)
