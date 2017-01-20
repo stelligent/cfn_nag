@@ -2,7 +2,7 @@ require 'logging'
 require_relative 'violation'
 
 module Rule
-  attr_accessor :input_json_path
+  attr_accessor :input_json
 
   # jq preamble to spit out Resources but as an array of key-value pairs
   # can be used in jq rule definition but... this is probably reducing replication at the cost of opaqueness
@@ -23,7 +23,7 @@ module Rule
 
     Logging.logger['log'].debug jq
 
-    stdout = jq_command(@input_json_path, jq)
+    stdout = jq_command(@input_json, jq)
     result = $?.exitstatus
     scrape_jq_output_for_error(jq, stdout)
 
@@ -145,7 +145,7 @@ module Rule
 
     Logging.logger['log'].debug jq_expression
 
-    stdout = jq_command(@input_json_path, jq_expression)
+    stdout = jq_command(@input_json, jq_expression)
     result = $?.exitstatus
     scrape_jq_output_for_error(jq_expression, stdout)
     if (fail_if_found and result == 0) or
@@ -175,12 +175,16 @@ module Rule
     end
   end
 
+  def quote(string)
+    "'#{string}'"
+  end
+
   # the -e will return an exit code
-  def jq_command(input_json_path, jq_expression)
-    command = "cat #{input_json_path} | jq '#{jq_expression}' -e 2>&1"
-
-    Logging.logger['log'].debug command
-
-    `#{command}`
+  def jq_command(input_json, jq_expression)
+    IO.popen(['jq', jq_expression, '-e'], 'r+', {:err=>[:child, :out]}) do |pipe|
+      pipe << input_json
+      pipe.close_write
+      pipe.readlines.join
+    end
   end
 end

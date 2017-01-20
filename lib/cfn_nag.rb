@@ -92,19 +92,23 @@ class CfnNag
   end
 
   def audit_file(input_json_path:)
+    audit_template(input_json: IO.read(input_json_path))
+  end
+
+  def audit_template(input_json:)
     @stop_processing = false
     @violations = []
 
-    unless legal_json?(input_json_path)
+    unless legal_json?(input_json)
       @violations << Violation.new(type: Violation::FAILING_VIOLATION,
                                    message: 'not even legit JSON',
-                                   violating_code: IO.read(input_json_path))
+                                   violating_code: input_json)
       @stop_processing = true
     end
 
-    generic_json_rules input_json_path unless @stop_processing == true
+    generic_json_rules input_json unless @stop_processing == true
 
-    custom_rules input_json_path unless @stop_processing == true
+    custom_rules input_json unless @stop_processing == true
 
     {
       failure_count: Rule::count_failures(@violations),
@@ -141,9 +145,9 @@ class CfnNag
     registry[output_format]
   end
 
-  def legal_json?(input_json_path)
+  def legal_json?(input_json)
     begin
-      JSON.parse(IO.read(input_json_path))
+      JSON.parse(input_json)
       true
     rescue JSON::ParserError
       return false
@@ -151,22 +155,23 @@ class CfnNag
   end
 
   def command?(command)
-    system("which #{command} > /dev/null 2>&1")
+    not system("#{command} > /dev/null 2>&1").nil?
   end
 
-  def generic_json_rules(input_json_path)
+  def generic_json_rules(input_json)
     unless command? 'jq'
       fail 'jq executable must be available in PATH'
     end
 
+    puts "GENERIC JSON RULES FROM: #{__dir__}"
     Dir[File.join(__dir__, 'json_rules', '*.rb')].sort.each do |rule_file|
-      @input_json_path = input_json_path
+      @input_json = input_json
       eval IO.read(rule_file)
     end
   end
 
-  def custom_rules(input_json_path)
-    cfn_model = CfnModel.new.parse(IO.read(input_json_path))
+  def custom_rules(input_json)
+    cfn_model = CfnModel.new.parse(input_json)
     custom_rule_registry.each do |rule_class|
       audit_result = rule_class.new.audit(cfn_model)
       @violations << audit_result unless audit_result.nil?
