@@ -158,13 +158,22 @@ class CfnNag
     not system("#{command} > /dev/null 2>&1").nil?
   end
 
+  def jruby_in_a_jar?
+    __dir__.start_with? 'uri:classloader'
+  end
+
   def generic_json_rules(input_json)
     unless command? 'jq'
       fail 'jq executable must be available in PATH'
     end
 
-    STDERR.puts "DIR: #{__dir__}"
-    Dir[File.join(__dir__, 'json_rules', '*.rb')].sort.each do |rule_file|
+    if jruby_in_a_jar?
+      rules = %w(basic_rules cfn_rules cidr_rules cloudfront_rules ebs_rules iam_policy_rules iam_user_rules lambda_rules loadbalancer_rules port_rules s3_bucket_rules sns_rules sqs_rules)
+      rules.map { |rule| File.join(__dir__, 'json_rules', rule, '.rb') }
+    else
+      rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
+    end
+    rules.each do |rule_file|
       @input_json = input_json
       eval IO.read(rule_file)
     end
