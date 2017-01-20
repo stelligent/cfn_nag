@@ -175,10 +175,6 @@ module Rule
     end
   end
 
-  def quote(string)
-    "'#{string}'"
-  end
-
   # the -e will return an exit code
   def jq_command(input_json, jq_expression)
     IO.popen(['jq', jq_expression, '-e'], 'r+', {:err=>[:child, :out]}) do |pipe|
