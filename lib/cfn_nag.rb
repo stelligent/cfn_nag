@@ -169,7 +169,7 @@ class CfnNag
 
     if jruby_in_a_jar?
       rules = %w(basic_rules cfn_rules cidr_rules cloudfront_rules ebs_rules iam_policy_rules iam_user_rules lambda_rules loadbalancer_rules port_rules s3_bucket_rules sns_rules sqs_rules)
-      rules = rules.map { |rule| File.join(__dir__, 'json_rules', rule, '.rb') }
+      rules = rules.map { |rule| File.join(__dir__, 'json_rules', "#{rule}.rb") }
       puts "Jruby it is: #{rules}"
     else
       rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
