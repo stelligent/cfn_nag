@@ -167,6 +167,9 @@ class CfnNag
       fail 'jq executable must be available in PATH'
     end
 
+    puts "dir: #{__dir__}"
+    puts "jruby? #{jruby_in_a_jar?}"
+
     if jruby_in_a_jar?
       rules = %w(basic_rules cfn_rules cidr_rules cloudfront_rules ebs_rules iam_policy_rules iam_user_rules lambda_rules loadbalancer_rules port_rules s3_bucket_rules sns_rules sqs_rules)
       rules = rules.map { |rule| File.join(__dir__, 'json_rules', rule, '.rb') }
@@ -174,6 +177,8 @@ class CfnNag
     else
       rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
     end
+
+    puts "rules: #{rules}"
     rules.each do |rule_file|
       @input_json = input_json
       eval open(rule_file).read
