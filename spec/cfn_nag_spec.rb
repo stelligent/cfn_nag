@@ -364,11 +364,11 @@ describe CfnNag do
       template_name = 'igw.json'
 
       failure_count = @cfn_nag.audit(input_json_path: test_template(template_name),
-                                     rule_directories: %w(spec/other_json_rules))
+                                     rule_directories: %w(other_json_rules))
       expect(failure_count).to eq 1
 
       actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name),
-                                                        rule_directories: %w(spec/other_json_rules))
+                                                        rule_directories: %w(other_json_rules))
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
