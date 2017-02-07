@@ -355,7 +355,7 @@ describe CfnNag do
             violations: [
               Violation.new(type: Violation::FAILING_VIOLATION,
                             message: 'Internet Gateways are not allowed',
-                            logical_resource_ids: [File.join(__dir__, 'other_json_rules')])
+                            logical_resource_ids: ['igw'] )
             ]
           }
         }
@@ -368,7 +368,7 @@ describe CfnNag do
       expect(failure_count).to eq 1
 
       actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name),
-                                                        rule_directories: %w(other_json_rules))
+                                                        rule_directories: [File.join(__dir__, 'other_json_rules')])
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
