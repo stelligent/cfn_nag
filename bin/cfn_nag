@@ -7,6 +7,7 @@ opts = Trollop::options do
   opt :input_json_path, 'CloudFormation template to nag on or directory of templates - all *.json and *.template recursively', type: :io, required: true
   opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
+  opt :rule_directory, 'Extra rule directories', type: :strings, require: false, default: [], multi: true
 end
 
 Trollop::die(:output_format,
@@ -14,4 +15,5 @@ Trollop::die(:output_format,
 
 CfnNag::configure_logging(opts)
 exit CfnNag.new.audit(input_json_path: opts[:input_json_path],
-                      output_format: opts[:output_format])
+                      output_format: opts[:output_format],
+                      rule_directories: opts[:rule_directory])

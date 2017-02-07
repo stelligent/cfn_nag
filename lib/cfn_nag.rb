@@ -13,6 +13,11 @@ class CfnNag
   def initialize
     @warning_registry = []
     @violation_registry = []
+    @custom_rule_registry = [
+      SecurityGroupMissingEgressRule,
+      UserMissingGroupRule,
+      UnencryptedS3PutObjectAllowedRule
+    ]
   end
 
   def dump_rules
@@ -47,16 +52,20 @@ class CfnNag
   end
 
   def audit(input_json_path:,
+            rule_directories: [],
             output_format:'txt')
+    validate_extra_rule_directories(rule_directories)
 
     aggregate_results = audit_results input_json_path: input_json_path,
-                                      output_format: output_format
+                                      output_format: output_format,
+                                      rule_directories: rule_directories.flatten
 
     aggregate_results.inject(0) { |total_failure_count, results| total_failure_count + results[:file_results][:failure_count] }
   end
 
   def audit_results(input_json_path:,
-                    output_format:'txt')
+                    output_format:'txt',
+                    rule_directories: [])
 
     templates = discover_templates(input_json_path)
 
@@ -64,7 +73,8 @@ class CfnNag
     templates.each do |template|
       aggregate_results << {
           filename: template,
-          file_results: audit_file(input_json_path: template)
+          file_results: audit_file(input_json_path: template,
+                                   rule_directories: rule_directories)
       }
     end
 
@@ -85,7 +95,7 @@ class CfnNag
     logger.add_appenders Logging.appenders.stdout
   end
 
-  def audit_template(input_json:)
+  def audit_template(input_json:, rule_directories: [])
     @stop_processing = false
     @violations = []
 
@@ -96,7 +106,7 @@ class CfnNag
       @stop_processing = true
     end
 
-    generic_json_rules input_json unless @stop_processing == true
+    generic_json_rules(input_json, rule_directories) unless @stop_processing == true
 
     custom_rules input_json unless @stop_processing == true
 
@@ -108,12 +118,20 @@ class CfnNag
 
   private
 
+  def validate_extra_rule_directories(rule_directories)
+    rule_directories.flatten.each do |rule_directory|
+      fail "Not a real directory #{rule_directory}" unless File.directory? rule_directory
+    end
+  end
+
+
   def render_results(aggregate_results:,output_format:)
     results_renderer(output_format).new.render(aggregate_results)
   end
 
-  def audit_file(input_json_path:)
-    audit_template(input_json: IO.read(input_json_path))
+  def audit_file(input_json_path:, rule_directories:)
+    audit_template(input_json: IO.read(input_json_path),
+                   rule_directories: rule_directories)
   end
 
   def discover_templates(input_json_path)
@@ -162,7 +180,7 @@ class CfnNag
     __dir__.start_with? '/uri:classloader'
   end
 
-  def generic_json_rules(input_json)
+  def generic_json_rules(input_json, rule_directories)
     unless command? 'jq'
       fail 'jq executable must be available in PATH'
     end
@@ -170,7 +188,6 @@ class CfnNag
     if jruby_in_a_jar?
       rules = %w(basic_rules cfn_rules cidr_rules cloudfront_rules ebs_rules iam_policy_rules iam_user_rules lambda_rules loadbalancer_rules port_rules s3_bucket_rules sns_rules sqs_rules)
       rules = rules.map { |rule| File.join(__dir__, 'json_rules', "#{rule}.rb")[1..-1] }
-      puts "Jruby it is: #{rules}"
     else
       rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
     end
@@ -179,21 +196,22 @@ class CfnNag
       @input_json = input_json
       eval IO.read(rule_file)
     end
+
+    rule_directories.each do |rule_directory|
+      rules = Dir[File.join(rule_directory, '*.rb')].sort
+
+      rules.each do |rule_file|
+        @input_json = input_json
+        eval IO.read(rule_file)
+      end
+    end
   end
 
   def custom_rules(input_json)
     cfn_model = CfnModel.new.parse(input_json)
-    custom_rule_registry.each do |rule_class|
+    @custom_rule_registry.each do |rule_class|
       audit_result = rule_class.new.audit(cfn_model)
       @violations << audit_result unless audit_result.nil?
     end
-  end
-
-  def custom_rule_registry
-    [
-      SecurityGroupMissingEgressRule,
-      UserMissingGroupRule,
-      UnencryptedS3PutObjectAllowedRule
-    ]
   end
 end
