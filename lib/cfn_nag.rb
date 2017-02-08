@@ -1,10 +1,8 @@
 require_relative 'rule'
-require_relative 'custom_rules/security_group_missing_egress'
-require_relative 'custom_rules/user_missing_group'
+require_relative 'custom_rule_loader'
 require_relative 'model/cfn_model'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
-require_relative 'custom_rules/unencrypted_s3_put_allowed'
 require 'tempfile'
 
 class CfnNag
@@ -13,11 +11,6 @@ class CfnNag
   def initialize
     @warning_registry = []
     @violation_registry = []
-    @custom_rule_registry = [
-      SecurityGroupMissingEgressRule,
-      UserMissingGroupRule,
-      UnencryptedS3PutObjectAllowedRule
-    ]
   end
 
   def dump_rules
@@ -108,7 +101,7 @@ class CfnNag
 
     generic_json_rules(input_json, rule_directories) unless @stop_processing == true
 
-    custom_rules input_json unless @stop_processing == true
+    @violations += custom_rules input_json unless @stop_processing == true
 
     {
       failure_count: Rule::count_failures(@violations),
@@ -208,10 +201,6 @@ class CfnNag
   end
 
   def custom_rules(input_json)
-    cfn_model = CfnModel.new.parse(input_json)
-    @custom_rule_registry.each do |rule_class|
-      audit_result = rule_class.new.audit(cfn_model)
-      @violations << audit_result unless audit_result.nil?
-    end
+    CustomRuleLoader.new.custom_rules(input_json)
   end
 end

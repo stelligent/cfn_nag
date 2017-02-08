@@ -344,7 +344,7 @@ describe CfnNag do
     end
   end
 
-  context 'igw rule installed in gem', :rule_directory do
+  context 'igw rule in custom rule dir', :rule_directory do
 
     it 'flags a violation' do
       expected_aggregate_results = [
@@ -372,5 +372,18 @@ describe CfnNag do
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
+
+  context 'igw rule not there', :rule_directory do
+
+    it 'flags a violation' do
+      template_name = 'igw.json'
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 0
+
+    end
+  end
+
+
 
 end

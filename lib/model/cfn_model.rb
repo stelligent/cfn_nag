@@ -1,7 +1,5 @@
 require 'json'
-require_relative 'security_group_parser'
-require_relative 'iam_user_parser'
-require_relative 's3_bucket_policy_parser'
+require_relative 'parser_registry'
 
 # consider a canonical form for template too...
 # always transform optional things into more general forms....
@@ -9,14 +7,6 @@ require_relative 's3_bucket_policy_parser'
 
 class CfnModel
   def initialize
-    @parser_registry = {
-      'AWS::EC2::SecurityGroup' => SecurityGroupParser,
-      'AWS::EC2::SecurityGroupIngress' => SecurityGroupXgressParser,
-      'AWS::EC2::SecurityGroupEgress' => SecurityGroupXgressParser,
-      'AWS::IAM::User' => IamUserParser,
-      'AWS::IAM::UserToGroupAddition' => IamUserToGroupAdditionParser,
-      'AWS::S3::BucketPolicy' => S3BucketPolicyParser
-    }
     @dangling_ingress_or_egress_rules = []
     @dangler = Object.new
   end
@@ -25,6 +15,8 @@ class CfnModel
     @json_hash = JSON.load cfn_json_string
     self
   end
+
+
 
   def security_groups
     fail 'must call parse first' unless @json_hash
@@ -49,6 +41,17 @@ class CfnModel
   def bucket_policies
     bucket_policy_hash = resources_by_type('AWS::S3::BucketPolicy')
     bucket_policy_hash.values
+  end
+
+  def resources_by_type(resource_type)
+    resources_map = {}
+    resources.each do |resource_name, resource|
+      if resource['Type'] == resource_type
+        resource_parser = ParserRegistry.instance.registry[resource_type].new
+        resources_map[resource_name] = resource_parser.parse(resource_name, resource)
+      end
+    end
+    resources_map
   end
 
   private
@@ -120,16 +123,7 @@ class CfnModel
     @json_hash['Resources']
   end
 
-  def resources_by_type(resource_type)
-    resources_map = {}
-    resources.each do |resource_name, resource|
-      if resource['Type'] == resource_type
-        resource_parser = @parser_registry[resource_type].new
-        resources_map[resource_name] = resource_parser.parse(resource_name, resource)
-      end
-    end
-    resources_map
-  end
+
 end
 
 class SecurityGroup

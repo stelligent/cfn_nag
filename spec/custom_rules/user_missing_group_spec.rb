@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'custom_rules/security_group_missing_egress'
+require 'custom_rules/user_missing_group'
 
 
 describe UserMissingGroupRule do
