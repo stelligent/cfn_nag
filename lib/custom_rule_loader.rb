@@ -1,5 +1,8 @@
 require_relative 'model/parser_registry'
 require_relative 'model/cfn_model'
+require_relative 'custom_rules/security_group_missing_egress'
+require_relative 'custom_rules/unencrypted_s3_put_allowed'
+require_relative 'custom_rules/user_missing_group'
 
 class CustomRuleLoader
 
