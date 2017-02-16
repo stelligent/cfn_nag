@@ -7,6 +7,14 @@ class UnencryptedS3PutObjectAllowedRule
     'It appears that the S3 Bucket Policy allows s3:PutObject without server-side encryption'
   end
 
+  def rule_type
+    Violation::WARNING
+  end
+
+  def rule_id
+    'W1000'
+  end
+
   def audit(cfn_model)
     logical_resource_ids = []
     cfn_model.bucket_policies.each do |bucket_policy|
@@ -19,7 +27,8 @@ class UnencryptedS3PutObjectAllowedRule
     end
 
     if logical_resource_ids.size > 0
-      Violation.new(type: Violation::WARNING,
+      Violation.new(id: rule_id,
+                    type: rule_type,
                     message: rule_text,
                     logical_resource_ids: logical_resource_ids)
     else

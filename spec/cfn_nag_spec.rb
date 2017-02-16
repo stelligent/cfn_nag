@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'cfn_nag'
-
+require 'profile_loader'
 
 describe CfnNag do
   before(:all) do
@@ -102,7 +102,8 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(type: Violation::WARNING,
+              Violation.new(id: 'W1',
+                            type: Violation::WARNING,
                             message: 'Specifying credentials in the template itself is probably not the safest thing',
                             logical_resource_ids: %w(EC2I4LBA1),
                             violating_code: nil)
@@ -130,15 +131,18 @@ describe CfnNag do
               file_results: {
                   failure_count: 0,
                   violations: [
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W25',
+                                    type: Violation::WARNING,
                                     message: 'Elastic Load Balancer should have access logging configured',
                                     logical_resource_ids: %w(elb1),
                                     violating_code: nil),
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W26',
+                                    type: Violation::WARNING,
                                     message: 'Elastic Load Balancer should have access logging enabled',
                                     logical_resource_ids: %w(elb2),
                                     violating_code: nil),
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W1000',
+                                    type: Violation::WARNING,
                                     message: 'It appears that the S3 Bucket Policy allows s3:PutObject without server-side encryption',
                                     logical_resource_ids: %w(S3BucketPolicy),
                                     violating_code: nil)
@@ -166,11 +170,13 @@ describe CfnNag do
               file_results: {
                   failure_count: 1,
                   violations: [
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W31',
+                                    type: Violation::WARNING,
                                     message: 'S3 Bucket likely should not have a public read acl',
                                     logical_resource_ids: %w(S3BucketRead),
                                     violating_code: nil),
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F14',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'S3 Bucket should not have a public read-write acl',
                                     logical_resource_ids: %w(S3BucketReadWrite),
                                     violating_code: nil)
@@ -199,7 +205,8 @@ describe CfnNag do
               file_results: {
                   failure_count: 0,
                   violations: [
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W10',
+                                    type: Violation::WARNING,
                                     message: 'CloudFront Distribution should enable access logging',
                                     logical_resource_ids: %w(rDistribution2),
                                     violating_code: nil)
@@ -228,11 +235,13 @@ describe CfnNag do
               file_results: {
                   failure_count: 1,
                   violations: [
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W24',
+                                    type: Violation::WARNING,
                                     message: 'Lambda permission beside InvokeFunction might not be what you want?  Not sure!?',
                                     logical_resource_ids: %w(lambdaPermission),
                                     violating_code: nil),
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F13',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'Lambda permission principal should not be wildcard',
                                     logical_resource_ids: %w(lambdaPermission),
                                     violating_code: nil)
@@ -260,11 +269,13 @@ describe CfnNag do
               file_results: {
                   failure_count: 2,
                   violations: [
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F20',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'SQS Queue policy should not allow * action',
                                     logical_resource_ids: %w(mysqspolicy),
                                     violating_code: nil),
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F21',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'SQS Queue policy should not allow * principal',
                                     logical_resource_ids: %w(mysqspolicy2),
                                     violating_code: nil)
@@ -292,11 +303,13 @@ describe CfnNag do
               file_results: {
                   failure_count: 4,
                   violations: [
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F18',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'SNS topic policy should not allow * principal',
                                     logical_resource_ids: %w(mysnspolicy0 mysnspolicy1),
                                     violating_code: nil),
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F19',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'SNS topic policy should not allow * AWS principal',
                                     logical_resource_ids: %w(mysnspolicy2 mysnspolicy3),
                                     violating_code: nil)
@@ -325,15 +338,18 @@ describe CfnNag do
               file_results: {
                   failure_count: 3,
                   violations: [
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F15',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'S3 Bucket policy should not allow * action',
                                     logical_resource_ids: %w(S3BucketPolicy S3BucketPolicy2),
                                     violating_code: nil),
-                      Violation.new(type: Violation::FAILING_VIOLATION,
+                      Violation.new(id: 'F17',
+                                    type: Violation::FAILING_VIOLATION,
                                     message: 'S3 Bucket policy should not allow * AWS principal',
                                     logical_resource_ids: %w(S3BucketPolicy2),
                                     violating_code: nil),
-                      Violation.new(type: Violation::WARNING,
+                      Violation.new(id: 'W1000',
+                                    type: Violation::WARNING,
                                     message: 'It appears that the S3 Bucket Policy allows s3:PutObject without server-side encryption',
                                     logical_resource_ids: %w(S3BucketPolicy S3BucketPolicy2),
                                     violating_code: nil)
@@ -359,7 +375,8 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(type: Violation::FAILING_VIOLATION,
+              Violation.new(id: 'F666',
+                            type: Violation::FAILING_VIOLATION,
                             message: 'Internet Gateways are not allowed',
                             logical_resource_ids: ['igw'] )
             ]
@@ -390,6 +407,43 @@ describe CfnNag do
     end
   end
 
+  context 'template with multiple violation', :filter do
 
+    it 'only flags violations in profile' do
+      template_name = 's3_bucket_with_wildcards.json'
 
+      expected_aggregate_results = [
+        {
+          filename: File.join(__dir__, 'test_templates/s3_bucket_with_wildcards.json'),
+          file_results: {
+            failure_count: 1,
+            violations: [
+              Violation.new(id: 'F17',
+                            type: Violation::FAILING_VIOLATION,
+                            message: 'S3 Bucket policy should not allow * AWS principal',
+                            logical_resource_ids: %w(S3BucketPolicy2),
+                            violating_code: nil),
+
+            ]
+          }
+        }
+      ]
+
+      rule_registry = RuleRegistry.new
+
+      (1..100).each do |num|
+        rule_registry.definition(id: "F#{num}",
+                                 type: Violation::FAILING_VIOLATION,
+                                 message: "fakeo#{num}")
+      end
+
+      @cfn_nag = CfnNag.new(profile_definition: "F17\n")
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      expect(failure_count).to eq 1
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
 end

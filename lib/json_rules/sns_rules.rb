@@ -18,10 +18,12 @@ END
 
 #sns action wildcard doesnt seem to be accepted by sns so dont sweat it
 
-violation jq: sns_wildcard_principal_filter +
+violation id: 'F18',
+          jq: sns_wildcard_principal_filter +
               "[#{resources_by_type('AWS::SNS::TopicPolicy')}|select(.Properties.PolicyDocument|sns_wildcard_principal)]|map(.LogicalResourceId) ",
           message: 'SNS topic policy should not allow * principal'
 
-violation jq: sns_wildcard_aws_principal_filter +
+violation id: 'F19',
+          jq: sns_wildcard_aws_principal_filter +
               "[#{resources_by_type('AWS::SNS::TopicPolicy')}|select(.Properties.PolicyDocument|sns_wildcard_aws_principal)]|map(.LogicalResourceId) ",
           message: 'SNS topic policy should not allow * AWS principal'

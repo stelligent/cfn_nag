@@ -18,19 +18,26 @@ class CustomRuleLoader
     @custom_rule_directory
   end
 
-  def initialize
+  def initialize(rule_registry)
     @custom_rule_registry = [
       SecurityGroupMissingEgressRule,
       UserMissingGroupRule,
       UnencryptedS3PutObjectAllowedRule
     ]
     @violations = []
+    @rule_registry = rule_registry
+    discover_rules
   end
 
   def custom_rules(input_json)
-    discover_rules
+    @violations = []
+
     @custom_rule_registry.each do |rule_class|
       rule = rule_class.new
+      @rule_registry.definition(id: rule.rule_id,
+                                type: rule.rule_type,
+                                message: rule.rule_text)
+
       if rule.respond_to? 'custom_parsers'
         rule.custom_parsers.each do |custom_parser|
           ParserRegistry.instance.add_parser custom_parser[0], custom_parser[1]

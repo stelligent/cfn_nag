@@ -1,5 +1,7 @@
 require_relative 'rule'
 require_relative 'custom_rule_loader'
+require_relative 'rule_registry'
+require_relative 'profile_loader'
 require_relative 'model/cfn_model'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
@@ -8,12 +10,17 @@ require 'tempfile'
 class CfnNag
   include Rule
 
-  def initialize
+  def initialize(profile_definition: nil)
     @warning_registry = []
     @violation_registry = []
+    @rule_registry = RuleRegistry.new
+    @custom_rule_loader = CustomRuleLoader.new(@rule_registry)
+    @profile_definition = profile_definition
   end
 
-  def dump_rules
+  def dump_rules(rule_directories: [])
+    validate_extra_rule_directories(rule_directories)
+
     dummy_cfn = <<-END
       {
         "Resources": {
@@ -30,18 +37,32 @@ class CfnNag
     Tempfile.open('tempfile') do |dummy_cfn_template|
       dummy_cfn_template.write dummy_cfn
       dummy_cfn_template.rewind
-      audit_file(input_json_path: dummy_cfn_template.path, rule_directories: [])
+      audit_file(input_json_path: dummy_cfn_template.path,
+                 rule_directories: rule_directories)
     end
 
-    CustomRuleLoader.new.custom_rule_registry.each do |rule_class|
-      @violation_registry << rule_class.new.rule_text
+    profile = nil
+    unless @profile_definition.nil?
+      profile = ProfileLoader.new(@rule_registry).load(profile_definition: @profile_definition)
     end
 
     puts 'WARNING VIOLATIONS:'
-    puts @warning_registry.sort
-    puts
+    @rule_registry.warnings.sort {|left, right| left.id <=> right.id}.each do |warning|
+      if profile.nil?
+        puts "#{warning.id} #{warning.message}"
+      else
+        puts "#{warning.id} #{warning.message}" if profile.execute_rule?(warning.id)
+      end
+
+    end
     puts 'FAILING VIOLATIONS:'
-    puts @violation_registry.sort
+    @rule_registry.failings.sort {|left, right| left.id <=> right.id}.each do |failing|
+      if profile.nil?
+        puts "#{failing.id} #{failing.message}"
+      else
+        puts "#{failing.id} #{failing.message}" if profile.execute_rule?(failing.id)
+      end
+    end
   end
 
   def audit(input_json_path:,
@@ -88,12 +109,14 @@ class CfnNag
     logger.add_appenders Logging.appenders.stdout
   end
 
-  def audit_template(input_json:, rule_directories: [])
+  def audit_template(input_json:,
+                     rule_directories: [])
     @stop_processing = false
     @violations = []
 
     unless legal_json?(input_json)
-      @violations << Violation.new(type: Violation::FAILING_VIOLATION,
+      @violations << Violation.new(id: 'FATAL',
+                                   type: Violation::FAILING_VIOLATION,
                                    message: 'not even legit JSON',
                                    violating_code: input_json)
       @stop_processing = true
@@ -103,6 +126,8 @@ class CfnNag
 
     @violations += custom_rules input_json unless @stop_processing == true
 
+    @violations = filter_violations_by_profile @violations
+
     {
       failure_count: Rule::count_failures(@violations),
       violations: @violations
@@ -111,6 +136,17 @@ class CfnNag
 
   private
 
+  def filter_violations_by_profile(violations)
+    profile = nil
+    unless @profile_definition.nil?
+      profile = ProfileLoader.new(@rule_registry).load(profile_definition: @profile_definition)
+    end
+
+    violations.reject do |violation|
+      not profile.nil? and not profile.execute_rule?(violation.id)
+    end
+  end
+
   def validate_extra_rule_directories(rule_directories)
     rule_directories.flatten.each do |rule_directory|
       fail "Not a real directory #{rule_directory}" unless File.directory? rule_directory
@@ -118,11 +154,13 @@ class CfnNag
   end
 
 
-  def render_results(aggregate_results:,output_format:)
+  def render_results(aggregate_results:,
+                     output_format:)
     results_renderer(output_format).new.render(aggregate_results)
   end
 
-  def audit_file(input_json_path:, rule_directories:)
+  def audit_file(input_json_path:,
+                 rule_directories:)
     audit_template(input_json: IO.read(input_json_path),
                    rule_directories: rule_directories)
   end
@@ -169,21 +207,11 @@ class CfnNag
     not system("#{command} > /dev/null 2>&1").nil?
   end
 
-  def jruby_in_a_jar?
-    __dir__.start_with? '/uri:classloader'
-  end
-
   def generic_json_rules(input_json, rule_directories)
     unless command? 'jq'
       fail 'jq executable must be available in PATH'
     end
-
-    if jruby_in_a_jar?
-      rules = %w(basic_rules cfn_rules cidr_rules cloudfront_rules ebs_rules iam_policy_rules iam_user_rules lambda_rules loadbalancer_rules port_rules s3_bucket_rules sns_rules sqs_rules)
-      rules = rules.map { |rule| File.join(__dir__, 'json_rules', "#{rule}.rb")[1..-1] }
-    else
-      rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
-    end
+    rules = Dir[File.join(__dir__, 'json_rules', '*.rb')].sort
 
     rules.each do |rule_file|
       @input_json = input_json
@@ -201,6 +229,6 @@ class CfnNag
   end
 
   def custom_rules(input_json)
-    CustomRuleLoader.new.custom_rules(input_json)
+    @custom_rule_loader.custom_rules(input_json)
   end
 end

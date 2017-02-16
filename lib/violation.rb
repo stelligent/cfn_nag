@@ -1,14 +1,17 @@
 require 'json'
+
 class Violation
   WARNING = 'WARN'
   FAILING_VIOLATION = 'FAIL'
 
-  attr_reader :type, :message, :logical_resource_ids, :violating_code
+  attr_reader :id, :type, :message, :logical_resource_ids, :violating_code
 
-  def initialize(type:,
+  def initialize(id:,
+                 type:,
                  message:,
                  logical_resource_ids: nil,
                  violating_code: nil)
+    @id = id
     @type = type
     @message = message
     @logical_resource_ids = logical_resource_ids
@@ -19,11 +22,12 @@ class Violation
   end
 
   def to_s
-    puts "#{@type} #{@message} #{@logical_resource_ids} #{@violating_code}"
+    puts "#{@id} #{@type} #{@message} #{@logical_resource_ids} #{@violating_code}"
   end
 
   def to_h
     {
+      id: @id,
       type: @type,
       message: @message,
       logical_resource_ids: @logical_resource_ids,

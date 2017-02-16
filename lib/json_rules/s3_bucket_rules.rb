@@ -1,8 +1,10 @@
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::S3::Bucket")|'\
+warning id: 'W31',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::S3::Bucket")|'\
               'select(.Properties.AccessControl? == "PublicRead")]|map(.LogicalResourceId) ',
         message: 'S3 Bucket likely should not have a public read acl'
 
-violation jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::S3::Bucket")|'\
+violation id: 'F14',
+          jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::S3::Bucket")|'\
               'select(.Properties.AccessControl? == "PublicReadWrite")]|map(.LogicalResourceId) ',
           message: 'S3 Bucket should not have a public read-write acl'
 
@@ -33,14 +35,17 @@ def s3_wildcard_aws_principal:
 END
 
 
-violation jq: s3_wildcard_action_filter +
+violation id: 'F15',
+          jq: s3_wildcard_action_filter +
               "[#{resources_by_type('AWS::S3::BucketPolicy')}|select(.Properties.PolicyDocument|s3_wildcard_action)]|map(.LogicalResourceId) ",
           message: 'S3 Bucket policy should not allow * action'
 
-violation jq: s3_wildcard_principal_filter +
+violation id: 'F16',
+          jq: s3_wildcard_principal_filter +
               "[#{resources_by_type('AWS::S3::BucketPolicy')}|select(.Properties.PolicyDocument|s3_wildcard_principal)]|map(.LogicalResourceId) ",
           message: 'S3 Bucket policy should not allow * principal'
 
-violation jq: s3_wildcard_aws_principal_filter +
+violation id: 'F17',
+          jq: s3_wildcard_aws_principal_filter +
               "[#{resources_by_type('AWS::S3::BucketPolicy')}|select(.Properties.PolicyDocument|s3_wildcard_aws_principal)]|map(.LogicalResourceId) ",
           message: 'S3 Bucket policy should not allow * AWS principal'

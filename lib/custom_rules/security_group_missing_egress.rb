@@ -6,6 +6,14 @@ class SecurityGroupMissingEgressRule
     'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration'
   end
 
+  def rule_type
+    Violation::FAILING_VIOLATION
+  end
+
+  def rule_id
+    'F1000'
+  end
+
   def audit(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
@@ -15,7 +23,8 @@ class SecurityGroupMissingEgressRule
     end
 
     if logical_resource_ids.size > 0
-      Violation.new(type: Violation::FAILING_VIOLATION,
+      Violation.new(id: rule_id,
+                    type: rule_type,
                     message: rule_text,
                     logical_resource_ids: logical_resource_ids)
     else

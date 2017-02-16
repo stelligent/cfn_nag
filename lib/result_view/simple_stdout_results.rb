@@ -9,7 +9,7 @@ class SimpleStdoutResults
       (1..60).each { print '-' }
 
       result[:file_results][:violations].each do |violation|
-        message message_type: violation.type,
+        message message_type: "#{violation.type} #{violation.id}",
                 message: violation.message,
                 logical_resource_ids: violation.logical_resource_ids,
                 violating_code: violation.violating_code

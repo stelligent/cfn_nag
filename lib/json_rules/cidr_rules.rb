@@ -1,31 +1,38 @@
 ##### inline ingress
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
+warning id: 'W2',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "object"))|select(.Properties.SecurityGroupIngress.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
         message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB'
 
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|first(select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0"))]|map(.LogicalResourceId)',
+warning id: 'W3',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupIngress|type == "array"))|first(select(.Properties.SecurityGroupIngress[].CidrIp? == "0.0.0.0/0"))]|map(.LogicalResourceId)',
         message: 'Security Groups found with cidr open to world on ingress array.  This should never be true on instance.  Permissible on ELB'
 
 ##### external ingress
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
+warning id: 'W4',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
         message: 'Security Group Standalone Ingress found with cidr open to world. This should never be true on instance.  Permissible on ELB'
 
 
 ###### inline egress
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "object"))|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
+warning id: 'W5',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "object"))|select(.Properties.SecurityGroupEgress.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
         message: 'Security Groups found with cidr open to world on egress'
 
 
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|first(select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0"))]|map(.LogicalResourceId)',
+warning id: 'W6',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroup" and (.Properties.SecurityGroupEgress|type == "array"))|first(select(.Properties.SecurityGroupEgress[].CidrIp? == "0.0.0.0/0"))]|map(.LogicalResourceId)',
         message: 'Security Groups found with cidr open to world on egress array'
 
 
 ##### external egress
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
+warning id: 'W7',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
         message: 'Security Group Standalone Egress found with cidr open to world.'
 
 
 # BEWARE with escapes \d -> \\\d because of how the escapes get munged from ruby through to shell
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Properties.CidrIp|type == "string")|select(.Properties.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )]|map(.LogicalResourceId)',
+warning id: 'W8',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Properties.CidrIp|type == "string")|select(.Properties.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )]|map(.LogicalResourceId)',
         message: 'Security Group Standalone Ingress cidr found that is not /32'
 
 non_32_cidr_jq_expression = <<END
@@ -57,5 +64,6 @@ non_32_cidr_jq_expression = <<END
   ]|map(.LogicalResourceId)
 END
 
-warning jq: non_32_cidr_jq_expression,
+warning id: 'W9',
+        jq: non_32_cidr_jq_expression,
         message: 'Security Groups found with cidr that is not /32'

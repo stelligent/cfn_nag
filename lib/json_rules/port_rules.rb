@@ -1,4 +1,5 @@
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
+warning id: 'W27',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
             'select(.Type == "AWS::EC2::SecurityGroup")| '\
             'if (.Properties.SecurityGroupIngress|type == "object") '\
             'then select(.Properties.SecurityGroupIngress.ToPort != .Properties.SecurityGroupIngress.FromPort) '\
@@ -10,10 +11,12 @@ warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
             ']|map(.LogicalResourceId)',
         message:  'Security Groups found ingress with port range instead of just a single port'
 
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.ToPort != .Properties.FromPort)]|map(.LogicalResourceId)',
+warning id: 'W28',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress")|select(.Properties.ToPort != .Properties.FromPort)]|map(.LogicalResourceId)',
         message:  'Security Group ingress with port range instead of just a single port'
 
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
+warning id: 'W29',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
             'select(.Type == "AWS::EC2::SecurityGroup")| '\
             'if (.Properties.SecurityGroupEgress|type == "object") '\
             'then select(.Properties.SecurityGroupEgress.ToPort != .Properties.SecurityGroupEgress.FromPort) '\
@@ -25,5 +28,6 @@ warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | '\
             ']|map(.LogicalResourceId)',
         message:  'Security Groups found egress with port range instead of just a single port'
 
-warning jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.ToPort != .Properties.FromPort)]|map(.LogicalResourceId)',
+warning id: 'W30',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.ToPort != .Properties.FromPort)]|map(.LogicalResourceId)',
         message:  'Security Group egress with port range instead of just a single port'

@@ -6,21 +6,25 @@ def wildcard_action:
   end;
 END
 
-violation jq: wildcard_action_filter +
+violation id: 'F2',
+          jq: wildcard_action_filter +
              "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.AssumeRolePolicyDocument|wildcard_action)]|map(.LogicalResourceId) ",
           message: 'IAM role should not allow * action on its trust policy'
 
-violation jq: wildcard_action_filter +
+violation id: 'F3',
+          jq: wildcard_action_filter +
               "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.Policies !=null)|select(.Properties.Policies[].PolicyDocument|wildcard_action)]|map(.LogicalResourceId)",
           message: 'IAM role should not allow * action on its permissions policy'
 
 
-violation jq: wildcard_action_filter +
+violation id: 'F4',
+          jq: wildcard_action_filter +
               "[#{resources_by_type('AWS::IAM::Policy')}|select(.Properties.PolicyDocument|wildcard_action)]|map(.LogicalResourceId) ",
           message: 'IAM policy should not allow * action'
 
 
-violation jq: wildcard_action_filter +
+violation id: 'F5',
+          jq: wildcard_action_filter +
               "[#{resources_by_type('AWS::IAM::ManagedPolicy')}|select(.Properties.PolicyDocument|wildcard_action)]|map(.LogicalResourceId) ",
           message: 'IAM managed policy should not allow * action'
 
@@ -32,16 +36,19 @@ def wildcard_resource:
   end;
 END
 
-warning jq: wildcard_resource_filter +
+warning id: 'W11',
+        jq: wildcard_resource_filter +
             "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.Policies !=null)|select(.Properties.Policies[].PolicyDocument|wildcard_resource)]|map(.LogicalResourceId)",
         message: 'IAM role should not allow * resource on its permissions policy'
 
 
-warning jq: wildcard_resource_filter +
+warning id: 'W12',
+        jq: wildcard_resource_filter +
             "[#{resources_by_type('AWS::IAM::Policy')}|select(.Properties.PolicyDocument|wildcard_resource)]|map(.LogicalResourceId)",
         message: 'IAM policy should not allow * resource'
 
-warning jq: wildcard_resource_filter +
+warning id: 'W13',
+        jq: wildcard_resource_filter +
             "[#{resources_by_type('AWS::IAM::ManagedPolicy')}|select(.Properties.PolicyDocument|wildcard_resource)]|map(.LogicalResourceId)",
         message: 'IAM managed policy should not allow * resource'
 
@@ -53,34 +60,41 @@ def allow_not_action:
   end;
 END
 
-warning jq: allow_not_action_filter +
+warning id: 'W14',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.AssumeRolePolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'IAM role should not allow Allow+NotAction on trust permissinos'
 
 
-warning jq: allow_not_action_filter +
+warning id: 'W15',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.Policies !=null)|select(.Properties.Policies[].PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'IAM role should not allow Allow+NotAction'
 
 
-warning jq: allow_not_action_filter +
+warning id: 'W16',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::IAM::Policy')}|select(.Properties.PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'IAM policy should not allow Allow+NotAction'
 
 
-warning jq: allow_not_action_filter +
+warning id: 'W17',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::IAM::ManagedPolicy')}|select(.Properties.PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'IAM managed policy should not allow Allow+NotAction'
 
-warning jq: allow_not_action_filter +
+warning id: 'W18',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::SQS::QueuePolicy')}|select(.Properties.PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'SQS Queue policy should not allow Allow+NotAction'
 
-warning jq: allow_not_action_filter +
+warning id: 'W19',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::SNS::TopicPolicy')}|select(.Properties.PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'SNS Topic policy should not allow Allow+NotAction'
 
-warning jq: allow_not_action_filter +
+warning id: 'W20',
+        jq: allow_not_action_filter +
             "[#{resources_by_type('AWS::S3::BucketPolicy')}|select(.Properties.PolicyDocument|allow_not_action)]|map(.LogicalResourceId)",
         message: 'S3 Bucket policy should not allow Allow+NotAction'
 
@@ -92,17 +106,20 @@ def allow_not_resource:
   end;
 END
 
-warning jq: allow_not_resource_filter +
+warning id: 'W21',
+        jq: allow_not_resource_filter +
             "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.Policies !=null)|select(.Properties.Policies[].PolicyDocument|allow_not_resource)]|map(.LogicalResourceId)",
         message: 'IAM role should not allow Allow+NotResource'
 
 
-warning jq: allow_not_resource_filter +
+warning id: 'W22',
+        jq: allow_not_resource_filter +
             "[#{resources_by_type('AWS::IAM::Policy')}|select(.Properties.PolicyDocument|allow_not_resource)]|map(.LogicalResourceId)",
         message: 'IAM policy should not allow Allow+NotResource'
 
 
-warning jq: allow_not_resource_filter +
+warning id: 'W23',
+        jq: allow_not_resource_filter +
            "[#{resources_by_type('AWS::IAM::ManagedPolicy')}|select(.Properties.PolicyDocument|allow_not_resource)]|map(.LogicalResourceId)",
         message: 'IAM managed policy should not allow Allow+NotResource'
 
@@ -115,18 +132,22 @@ def allow_not_principal:
   end;
 END
 
-violation jq: allow_not_principal_filter +
+violation id: 'F6',
+          jq: allow_not_principal_filter +
               "[#{resources_by_type('AWS::IAM::Role')}|select(.Properties.AssumeRolePolicyDocument|allow_not_principal)]|map(.LogicalResourceId)",
           message: 'IAM role should not allow Allow+NotPrincipal in its trust policy'
 
-violation jq: allow_not_principal_filter +
+violation id: 'F7',
+          jq: allow_not_principal_filter +
               "[#{resources_by_type('AWS::SQS::QueuePolicy')}|select(.Properties.PolicyDocument|allow_not_principal)]|map(.LogicalResourceId)",
           message: 'SQS Queue policy should not allow Allow+NotPrincipal'
 
-violation jq: allow_not_principal_filter +
+violation id: 'F8',
+          jq: allow_not_principal_filter +
               "[#{resources_by_type('AWS::SNS::TopicPolicy')}|select(.Properties.PolicyDocument|allow_not_principal)]|map(.LogicalResourceId)",
           message: 'SNS Topic policy should not allow Allow+NotPrincipal'
 
-violation jq: allow_not_principal_filter +
+violation id: 'F9',
+          jq: allow_not_principal_filter +
               "[#{resources_by_type('AWS::S3::BucketPolicy')}|select(.Properties.PolicyDocument|allow_not_principal)]|map(.LogicalResourceId)",
           message: 'S3 Bucket policy should not allow Allow+NotPrincipal'

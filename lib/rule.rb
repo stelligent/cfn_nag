@@ -16,8 +16,10 @@ module Rule
     "#{resources}| select(.Type == \"#{resource}\")"
   end
 
-  def warning(jq:, message:)
-    @warning_registry << message
+  def warning(id:, jq:, message:)
+    warning_def = @rule_registry.definition(id: id,
+                                            type: Violation::WARNING,
+                                            message: message)
 
     return if @stop_processing
 
@@ -30,50 +32,57 @@ module Rule
     resource_ids = parse_logical_resource_ids(stdout)
     new_warnings = resource_ids.size
     if result == 0 and new_warnings > 0
-      add_violation(type: Violation::WARNING,
+      add_violation(id: warning_def.id,
+                    type: Violation::WARNING,
                     message: message,
                     logical_resource_ids: resource_ids)
     end
   end
 
-  def raw_fatal_assertion(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def raw_fatal_assertion(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: false,
                  fatal: true,
                  message: message,
                  raw: true)
   end
 
-  def fatal_assertion(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def fatal_assertion(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: false,
                  fatal: true,
                  message: message)
   end
 
-  def raw_fatal_violation(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def raw_fatal_violation(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: true,
                  fatal: true,
                  message: message,
                  raw: true)
   end
 
-  def fatal_violation(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def fatal_violation(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: true,
                  fatal: true,
                  message: message)
   end
 
-  def violation(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def violation(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: true,
                  message: message)
   end
 
-  def assertion(jq:, message:)
-    failing_rule(jq_expression: jq,
+  def assertion(id:, jq:, message:)
+    failing_rule(id: id,
+                 jq_expression: jq,
                  fail_if_found: false,
                  message: message)
   end
@@ -108,11 +117,17 @@ module Rule
     end
   end
 
-  def add_violation(type:,
+  # this is to record a violation as opposed to "registering" a violation
+  #
+  # not super keen on this looking at it after the fact.... @violations
+  # will have to live in the object this Rule is mixed into i.e. CfnNag
+  def add_violation(id:,
+                    type:,
                     message:,
                     logical_resource_ids: nil,
                     violating_code: nil)
-    violation = Violation.new(type: type,
+    violation = Violation.new(id: id,
+                              type: type,
                               message: message,
                               logical_resource_ids: logical_resource_ids,
                               violating_code: violating_code)
@@ -135,12 +150,17 @@ module Rule
   #      failure count by 1
   #
   # fatal: if true, any match of the rule causes immediate shutdown to avoid more complicated downstream error checking
-  def failing_rule(jq_expression:,
+  def failing_rule(id:,
+                   jq_expression:,
                    fail_if_found:,
                    message:,
                    fatal: false,
                    raw: false)
-    @violation_registry << message
+
+    fail_def =  @rule_registry.definition(id: id,
+                                          type: Violation::FAILING_VIOLATION,
+                                          message: message)
+
     return if @stop_processing
 
     Logging.logger['log'].debug jq_expression
@@ -152,7 +172,8 @@ module Rule
        (not fail_if_found and result != 0)
 
       if raw
-        add_violation(type: Violation::FAILING_VIOLATION,
+        add_violation(id: fail_def.id,
+                      type: Violation::FAILING_VIOLATION,
                       message: message,
                       violating_code: stdout)
 
@@ -163,7 +184,8 @@ module Rule
         resource_ids = parse_logical_resource_ids(stdout)
 
         if resource_ids.size > 0
-          add_violation(type: Violation::FAILING_VIOLATION,
+          add_violation(id: fail_def.id,
+                        type: Violation::FAILING_VIOLATION,
                         message: message,
                         logical_resource_ids: resource_ids)
 

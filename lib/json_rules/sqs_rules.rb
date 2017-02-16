@@ -14,10 +14,12 @@ def sqs_wildcard_principal:
   end;
 END
 
-violation jq: sqs_wildcard_action_filter +
+violation id: 'F20',
+          jq: sqs_wildcard_action_filter +
               "[#{resources_by_type('AWS::SQS::QueuePolicy')}|select(.Properties.PolicyDocument|sqs_wildcard_action)]|map(.LogicalResourceId) ",
           message: 'SQS Queue policy should not allow * action'
 
-violation jq: sqs_wildcard_principal_filter +
+violation id: 'F21',
+          jq: sqs_wildcard_principal_filter +
               "[#{resources_by_type('AWS::SQS::QueuePolicy')}|select(.Properties.PolicyDocument|sqs_wildcard_principal)]|map(.LogicalResourceId) ",
           message: 'SQS Queue policy should not allow * principal'
