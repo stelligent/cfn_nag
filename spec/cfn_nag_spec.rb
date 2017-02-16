@@ -12,6 +12,12 @@ describe CfnNag do
     File.new(File.join(__dir__, 'test_templates', template_name))
   end
 
+  describe '#dump_rules' do
+    it 'should emit all rules to stdout' do
+      @cfn_nag.dump_rules
+    end
+  end
+
   context 'when illegal json is input' do
     it 'fails fast' do
       template_name = 'rubbish.json'

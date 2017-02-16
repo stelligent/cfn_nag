@@ -6,6 +6,8 @@ require_relative 'custom_rules/user_missing_group'
 
 class CustomRuleLoader
 
+  attr_reader :custom_rule_registry
+
   @custom_rule_directory = '/var/lib/cfn_nag_plugins'
 
   def self.custom_rule_directory=(directory)

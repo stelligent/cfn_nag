@@ -30,10 +30,10 @@ class CfnNag
     Tempfile.open('tempfile') do |dummy_cfn_template|
       dummy_cfn_template.write dummy_cfn
       dummy_cfn_template.rewind
-      audit_file(input_json_path: dummy_cfn_template.path)
+      audit_file(input_json_path: dummy_cfn_template.path, rule_directories: [])
     end
 
-    custom_rule_registry.each do |rule_class|
+    CustomRuleLoader.new.custom_rule_registry.each do |rule_class|
       @violation_registry << rule_class.new.rule_text
     end
 
