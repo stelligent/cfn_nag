@@ -17,7 +17,7 @@ class ProfileLoader
     profile_definition.each_line do |line|
       rule_id = line.chomp
       if @rules_registry.by_id(rule_id) == []
-        raise "#{rule_id} is not a legal rule identifier"
+        raise "#{rule_id} is not a legal rule identifier from: #{@rules_registry.rules}"
       else
         new_profile.add_rule rule_id
       end
