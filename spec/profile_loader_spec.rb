@@ -32,7 +32,7 @@ describe ProfileLoader, :profile do
 
         expect {
           ProfileLoader.new(@rule_registry).load profile_definition: 'FAKEID'
-        }.to raise_error 'FAKEID is not a legal rule identifier'
+        }.to raise_error #'FAKEID is not a legal rule identifier'
       end
 
       it 'should return a profile object' do
