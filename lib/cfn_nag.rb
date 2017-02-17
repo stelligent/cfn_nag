@@ -5,6 +5,7 @@ require_relative 'profile_loader'
 require_relative 'model/cfn_model'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
+require_relative 'result_view/rules_view'
 require 'tempfile'
 
 class CfnNag
@@ -46,23 +47,7 @@ class CfnNag
       profile = ProfileLoader.new(@rule_registry).load(profile_definition: @profile_definition)
     end
 
-    puts 'WARNING VIOLATIONS:'
-    @rule_registry.warnings.sort {|left, right| left.id <=> right.id}.each do |warning|
-      if profile.nil?
-        puts "#{warning.id} #{warning.message}"
-      else
-        puts "#{warning.id} #{warning.message}" if profile.execute_rule?(warning.id)
-      end
-
-    end
-    puts 'FAILING VIOLATIONS:'
-    @rule_registry.failings.sort {|left, right| left.id <=> right.id}.each do |failing|
-      if profile.nil?
-        puts "#{failing.id} #{failing.message}"
-      else
-        puts "#{failing.id} #{failing.message}" if profile.execute_rule?(failing.id)
-      end
-    end
+    RulesView.new.emit(@rule_registry, profile)
   end
 
   def audit(input_json_path:,
