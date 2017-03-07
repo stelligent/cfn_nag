@@ -111,7 +111,7 @@ class CfnNag
 
     @violations += custom_rules input_json unless @stop_processing == true
 
-    @violations = filter_violations_by_profile @violations
+    @violations = filter_violations_by_profile @violations unless @stop_processing == true
 
     {
       failure_count: Rule::count_failures(@violations),
