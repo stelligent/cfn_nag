@@ -16,7 +16,9 @@ class CfnModel
     self
   end
 
-
+  def parameters
+    @json_hash['Parameters']
+  end
 
   def security_groups
     fail 'must call parse first' unless @json_hash
