@@ -32,7 +32,7 @@ warning id: 'W7',
 
 # BEWARE with escapes \d -> \\\d because of how the escapes get munged from ruby through to shell
 warning id: 'W8',
-        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress" and .Properties.CidrIp|type == "string")|select(.Properties.CidrIp | test("^\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}\\\.\\\d{1,3}/(?!32)$") )]|map(.LogicalResourceId)',
+        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress") | if(.Properties.CidrIp|type == "string") then select(.Properties.CidrIp|endswith("/32")|not) else (select(.Properties.CidrIp[]|endswith("/32")|not)) end ]|map(.LogicalResourceId)',
         message: 'Security Group Standalone Ingress cidr found that is not /32'
 
 non_32_cidr_jq_expression = <<END
@@ -41,21 +41,12 @@ non_32_cidr_jq_expression = <<END
  select(.Type == "AWS::EC2::SecurityGroup") |
  if (.Properties.SecurityGroupIngress|type == "object")
  then (
-       select(.Properties.SecurityGroupIngress.CidrIp|type == "string")|
-       select(.Properties.SecurityGroupIngress.CidrIp|test("^\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}/(?!32)$"))
+        select(.Properties.SecurityGroupIngress.CidrIp|endswith("/32")|not)
       )
  else (
         if (.Properties.SecurityGroupIngress|type == "array")
         then (
-               select(.Properties.SecurityGroupIngress[].CidrIp|type == "string")|
-               select(.Properties.SecurityGroupIngress[].CidrIp |
-                      (
-                        if (.|type=="string")
-                        then test("^\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}\\\\.\\\\d{1,3}/(?!32)$")
-                        else empty
-                        end
-                      )
-                     )
+               select(.Properties.SecurityGroupIngress[]|select(.CidrIp|endswith("/32")|not))
              )
         else empty
         end

@@ -447,4 +447,62 @@ describe CfnNag do
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
+
+  context 'two security group ingress standalone with non /32 cidr (array and non-array)', :not32 do
+
+    it 'flags a warning' do
+      template_name = 'non_32_cidr_standalone_ingress.json'
+
+      expected_aggregate_results = [
+        {
+          filename: File.join(__dir__, 'test_templates/non_32_cidr_standalone_ingress.json'),
+          file_results: {
+            failure_count: 0,
+            violations: [
+              Violation.new(id: 'W8',
+                            type: Violation::WARNING,
+                            message: 'Security Group Standalone Ingress cidr found that is not /32',
+                            logical_resource_ids: %w(securityGroupIngress2 securityGroupIngress3),
+                            violating_code: nil)
+            ]
+          }
+        }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      #expect(failure_count).to eq 2
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
+
+  context 'two security groups with non /32 cidr (array and non-array)', :not32 do
+
+    it 'flags a warning' do
+      template_name = 'non_32_cidr.json'
+
+      expected_aggregate_results = [
+          {
+              filename: File.join(__dir__, 'test_templates/non_32_cidr.json'),
+              file_results: {
+                  failure_count: 0,
+                  violations: [
+                      Violation.new(id: 'W9',
+                                    type: Violation::WARNING,
+                                    message: 'Security Groups found with cidr that is not /32',
+                                    logical_resource_ids: %w(sg sg2),
+                                    violating_code: nil)
+                  ]
+              }
+          }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      #expect(failure_count).to eq 2
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
 end
