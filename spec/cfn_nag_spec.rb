@@ -267,25 +267,26 @@ describe CfnNag do
           {
               filename: File.join(__dir__, 'test_templates/sqs_queue_with_wildcards.json'),
               file_results: {
-                  failure_count: 2,
+                  failure_count: 7,
                   violations: [
                       Violation.new(id: 'F20',
                                     type: Violation::FAILING_VIOLATION,
                                     message: 'SQS Queue policy should not allow * action',
-                                    logical_resource_ids: %w(mysqspolicy),
+                                    logical_resource_ids: %w(mysqspolicy1 mysqspolicy1b mysqspolicy1c mysqspolicy1d),
                                     violating_code: nil),
                       Violation.new(id: 'F21',
                                     type: Violation::FAILING_VIOLATION,
                                     message: 'SQS Queue policy should not allow * principal',
-                                    logical_resource_ids: %w(mysqspolicy2),
+                                    logical_resource_ids: %w(mysqspolicy2 mysqspolicy2b mysqspolicy2c),
                                     violating_code: nil)
                   ]
               }
           }
       ]
 
+
       failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
-      #expect(failure_count).to eq 2
+      #expect(failure_count).to eq 6
 
       actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
       expect(actual_aggregate_results).to eq expected_aggregate_results

@@ -1,16 +1,16 @@
 sqs_wildcard_action_filter = <<END
 def sqs_wildcard_action:
   if .Statement|type == "object"
-  then select(.Statement.Effect == "Allow" and (if .Statement.Action|type=="string" then (.Statement.Action == "sqs:*") else (.Statement.Action|indices("sqs:*")|length > 0) end))
-  else select(.Statement[]|.Effect == "Allow" and (if .Action|type=="string" then (.Action == "sqs:*") else (.Action|indices("sqs:*")|length > 0) end))
+  then select(.Statement.Effect == "Allow" and (if .Statement.Action|type=="string" then (.Statement.Action | contains("*") ) else (.Statement.Action|contains(["*"])) end))
+  else select(.Statement[]|.Effect == "Allow" and (if .Action|type=="string" then (.Action | contains("*")) else (.Action|contains(["*"])) end))
   end;
 END
 
 sqs_wildcard_principal_filter = <<END
 def sqs_wildcard_principal:
   if .Statement|type == "object"
-  then select(.Statement.Effect == "Allow" and (.Statement.Principal?|type=="string") and (.Statement.Principal == "*") )
-  else select(.Statement[]|.Effect == "Allow" and ((.Principal?|type=="string") and (.Principal == "*")) )
+  then select(.Statement.Effect == "Allow" and (((.Statement.Principal?|type=="string") and (.Statement.Principal|contains("*"))) or ((.Statement.Principal?|type=="object") and (.Statement.Principal|contains({"AWS": "*"}))) ))
+  else select(.Statement[]|.Effect == "Allow" and ( ((.Principal?|type=="string") and (.Principal|contains("*"))) or ((.Principal?|type=="object") and (.Principal|contains({"AWS": "*"}))) )      )
   end;
 END
 
