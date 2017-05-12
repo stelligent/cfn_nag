@@ -46,8 +46,15 @@ non_32_cidr_jq_expression = <<END
  else (
         if (.Properties.SecurityGroupIngress|type == "array")
         then (
-               select(.Properties.SecurityGroupIngress[]|select(.CidrIp|endswith("/32")|not))
-             )
+               select(.Properties.SecurityGroupIngress[]|
+                      if (.CidrIp|type == "string")
+                      then (
+                          select(.CidrIp|endswith("/32")|not)
+                      )
+                      else empty
+                      end
+               )
+        )
         else empty
         end
       )
