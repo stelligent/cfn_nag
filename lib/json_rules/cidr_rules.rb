@@ -29,10 +29,24 @@ warning id: 'W7',
         jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupEgress")|select(.Properties.CidrIp? == "0.0.0.0/0")]|map(.LogicalResourceId)',
         message: 'Security Group Standalone Egress found with cidr open to world.'
 
+non32_cidr_standalone_ingress = <<END
+[.Resources|
+ with_entries(.value.LogicalResourceId = .key)[] |
+ select(.Type == "AWS::EC2::SecurityGroupIngress") |
+ if(.Properties.CidrIp|type == "string")
+ then select(.Properties.CidrIp|endswith("/32")|not)
+ else (
+   if(.Properties.CidrIp|type == "array")
+   then (select(.Properties.CidrIp[]|if (type == "string") then (endswith("/32")|not) else false end))
+   else empty
+   end
+ )
+ end ]|map(.LogicalResourceId)
+END
 
 # BEWARE with escapes \d -> \\\d because of how the escapes get munged from ruby through to shell
 warning id: 'W8',
-        jq: '[.Resources|with_entries(.value.LogicalResourceId = .key)[] | select(.Type == "AWS::EC2::SecurityGroupIngress") | if(.Properties.CidrIp|type == "string") then select(.Properties.CidrIp|endswith("/32")|not) else (select(.Properties.CidrIp[]|endswith("/32")|not)) end ]|map(.LogicalResourceId)',
+        jq: non32_cidr_standalone_ingress,
         message: 'Security Group Standalone Ingress cidr found that is not /32'
 
 non_32_cidr_jq_expression = <<END
@@ -41,12 +55,15 @@ non_32_cidr_jq_expression = <<END
  select(.Type == "AWS::EC2::SecurityGroup") |
  if (.Properties.SecurityGroupIngress|type == "object")
  then (
-        select(.Properties.SecurityGroupIngress.CidrIp|endswith("/32")|not)
+        if (.Properties.SecurityGroupIngress.CidrIp|type == "string")
+        then (select(.Properties.SecurityGroupIngress.CidrIp|endswith("/32")|not))
+        else empty
+        end
       )
  else (
         if (.Properties.SecurityGroupIngress|type == "array")
         then (
-               select(.Properties.SecurityGroupIngress[]|select(.CidrIp|endswith("/32")|not))
+               select(.Properties.SecurityGroupIngress[]|(if (.CidrIp|type == "string") then (select(.CidrIp|endswith("/32")|not)) else empty end))
              )
         else empty
         end

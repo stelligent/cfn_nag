@@ -1,4 +1,10 @@
 {
+  "Parameters": {
+    "somethingSpecial": {
+      "Type": "String"
+    }
+  },
+
   "Resources": {
     "sg": {
       "Type" : "AWS::EC2::SecurityGroup",
@@ -47,6 +53,32 @@
           "Ref": "sg"
         },
         "CidrIp" : "1.2.3.4/24",
+        "FromPort" : 46,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    },
+
+    "securityGroupIngress4" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": {
+          "Ref": "sg"
+        },
+        "CidrIp" :  {"Ref":"somethingSpecial"},
+        "FromPort" : 46,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    },
+
+    "securityGroupIngress5" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": {
+          "Ref": "sg"
+        },
+        "CidrIp" :  ["1.2.3.4/32", {"Ref":"somethingSpecial"}],
         "FromPort" : 46,
         "ToPort" : 46,
         "IpProtocol" : "tcp"
