@@ -1,8 +1,8 @@
 sqs_wildcard_action_filter = <<END
 def sqs_wildcard_action:
   if .Statement|type == "object"
-  then select(.Statement.Effect == "Allow" and (if .Statement.Action|type=="string" then (.Statement.Action | contains("*") ) else (.Statement.Action|contains(["*"])) end))
-  else select(.Statement[]|.Effect == "Allow" and (if .Action|type=="string" then (.Action | contains("*")) else (.Action|contains(["*"])) end))
+  then select(.Statement.Effect == "Allow" and .Statement.Action and (if .Statement.Action|type=="string" then (.Statement.Action | contains("*") ) else (.Statement.Action|contains(["*"])) end))
+  else select(.Statement[]|.Effect == "Allow" and .Action and (if .Action|type=="string" then (.Action | contains("*")) else (.Action|contains(["*"])) end))
   end;
 END
 

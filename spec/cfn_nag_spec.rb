@@ -505,4 +505,36 @@ describe CfnNag do
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
+
+
+  context 'SQS Queue Policy with NotAction', :sqs_not_action do
+
+    it 'flags a warning' do
+      template_name = 'sqs_policy_with_not.json'
+
+      expected_aggregate_results = [
+        {
+          filename: File.join(__dir__, 'test_templates/sqs_policy_with_not.json'),
+          file_results: {
+            failure_count: 0,
+            violations: [
+              Violation.new(id: 'W18',
+                            type: Violation::WARNING,
+                            message: 'SQS Queue policy should not allow Allow+NotAction',
+                            logical_resource_ids: %w(QueuePolicyWithNot QueuePolicyWithNot2),
+                            violating_code: nil)
+            ]
+          }
+        }
+      ]
+
+      failure_count = @cfn_nag.audit(input_json_path: test_template(template_name))
+      #expect(failure_count).to eq 2
+
+      actual_aggregate_results = @cfn_nag.audit_results(input_json_path: test_template(template_name))
+      expect(actual_aggregate_results).to eq expected_aggregate_results
+    end
+  end
+
 end
+
