@@ -206,9 +206,11 @@ class CfnNag
     rule_directories.each do |rule_directory|
       rules = Dir[File.join(rule_directory, '*.rb')].sort
 
-      rules.each do |rule_file|
-        @input_json = input_json
-        eval IO.read(rule_file)
+      if rules.length > 0
+        rules.each do |rule_file|
+          @input_json = input_json
+          eval IO.read(rule_file)
+        end
       end
     end
   end
