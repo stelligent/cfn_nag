@@ -3,7 +3,7 @@ class TemplateDiscovery
     if ::File.directory? input_json_path
       templates = find_templates_in_directory(directory: input_json_path)
     elsif ::File.file? input_json_path
-      templates = [input_json_path]
+      templates = [File.new(input_json_path)]
     else
       fail "#{input_json_path} is not a proper path"
     end

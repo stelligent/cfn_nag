@@ -22,8 +22,8 @@ describe TemplateDiscovery do
       it 'returns array with filename' do
         Tempfile.open('/foo') do |tempfile|
           actual_templates = @template_discovery.discover_templates tempfile.path
-          expected_templates = [tempfile.path]
-          expect(actual_templates).to eq expected_templates
+          expected_templates = [File.new(tempfile.path)]
+          expect(actual_templates.map { |t| t.path }).to eq expected_templates.map { |t| t.path }
         end
       end
     end
