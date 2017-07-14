@@ -41,7 +41,7 @@ class CfnNag
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {
-        filename: template,
+        filename: template.path,
         file_results: audit(cloudformation_string: IO.read(template))
       }
     end
