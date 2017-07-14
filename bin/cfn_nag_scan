@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+require 'trollop'
+require 'cfn-nag'
+require 'logging'
+require 'json'
+
+opts = Trollop::options do
+  opt :input_path, 'CloudFormation template to nag on or directory of templates - all *.json, *.yaml, *.yml and *.template recursively', type: :io, required: true
+  opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
+  opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
+  opt :rule_directory, 'Extra rule directory', type: :io, required: false, default: nil
+  opt :profile_path, 'Path to a profile file', type: :io, required: false, default: nil
+end
+
+Trollop::die(:output_format,
+             'Must be txt or json') unless %w(txt json).include?(opts[:output_format])
+
+CfnNag::configure_logging(opts)
+
+profile_definition = nil
+unless opts[:profile_path].nil?
+  profile_definition = IO.read(opts[:profile_path])
+end
+
+cfn_nag = CfnNag.new(profile_definition: profile_definition,
+                     rule_directory: opts[:rule_directory])
+
+exit cfn_nag.audit_aggregate_across_files_and_render_results(input_path: opts[:input_path],
+                                                             output_format: opts[:output_format])

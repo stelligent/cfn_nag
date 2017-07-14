@@ -1,0 +1,27 @@
+{
+  "Resources": {
+    "queue1": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "queue1"
+      }
+    },
+
+    "QueuePolicyWithNotPrincipal": {
+      "Type":"AWS::SQS::QueuePolicy",
+      "Properties": {
+        "Queues": [{"Ref":"queue1"}],
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": "sqs:SendMessage",
+              "NotPrincipal": {"AWS":"arn:aws:iam::111111111111:user/dave.mustaine"},
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

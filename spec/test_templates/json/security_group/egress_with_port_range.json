@@ -1,0 +1,28 @@
+{
+  "Resources": {
+    "sgOpenEgress": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "SecurityGroupEgress" : {
+          "CidrIp": "10.1.2.3/32",
+          "FromPort": 34,
+          "ToPort": 36,
+          "IpProtocol": "tcp"
+        },
+        "VpcId" : "vpc-9f8e9dfa"
+      }
+    },
+
+    "securityGroupEgress" : {
+      "Type" : "AWS::EC2::SecurityGroupEgress",
+      "Properties" : {
+        "GroupId": "sg-12341234",
+        "CidrIp" : "1.1.1.1/32",
+        "FromPort" : 41,
+        "ToPort" : 45,
+        "IpProtocol" : "tcp"
+      }
+    }
+  }
+}

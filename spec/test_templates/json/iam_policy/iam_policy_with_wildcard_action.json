@@ -1,0 +1,55 @@
+{
+  "Resources": {
+    "SomeGroup": {
+      "Type": "AWS::IAM::Group"
+    },
+
+    "WildcardActionPolicy": {
+      "Type": "AWS::IAM::Policy",
+      "Properties": {
+        "PolicyName": "somePolicy",
+        "PolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "rds:CreateDBInstance",
+                {
+                  "Fn::Join": [
+                    "",
+                    ["rds:Describe", "*", "Groups"]
+                  ]
+                }
+              ],
+              "Resource": {
+                "Fn::Join": [
+                  "",
+                  [
+                    "arn:aws:rds:",
+                    {
+                      "Ref": "AWS::Region"
+                    },
+                    ":",
+                    {
+                      "Ref": "AWS::AccountId"
+                    },
+                    ":db:test*"
+                  ]
+                ]
+              },
+              "Condition": {
+                "StringEquals": {
+                  "rds:DatabaseEngine": "mysql"
+                }
+              }
+            }
+          ]
+        },
+        "Groups": [
+          {"Ref":"SomeGroup"}
+        ]
+      }
+    }
+  }
+}

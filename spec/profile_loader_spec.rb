@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'profile_loader'
-require 'rule_registry'
+require 'cfn-nag/profile_loader'
+require 'cfn-nag/rule_registry'
 require 'set'
 
-describe ProfileLoader, :profile do
+describe ProfileLoader do
 
   describe '#load' do
     context 'empty profile' do

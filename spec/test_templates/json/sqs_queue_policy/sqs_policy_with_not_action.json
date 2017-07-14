@@ -1,0 +1,49 @@
+{
+  "Resources": {
+    "queue1": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "queue1"
+      }
+    },
+
+    "queue2": {
+      "Type": "AWS::SQS::Queue",
+      "Properties": {
+        "QueueName": "queue2"
+      }
+    },
+
+    "QueuePolicyWithNotAction": {
+      "Type":"AWS::SQS::QueuePolicy",
+      "Properties": {
+        "Queues": [{"Ref":"queue1"}],
+        "PolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "NotAction": ["sqs:Break*"],
+              "Principal": {"AWS":"arn:aws:iam::111111111111:user/dave.mustaine"},
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    },
+
+    "QueuePolicyWithNotAction2": {
+      "Type":"AWS::SQS::QueuePolicy",
+      "Properties": {
+        "Queues": [{"Ref":"queue2"}],
+        "PolicyDocument": {
+          "Statement": {
+            "Effect": "Allow",
+            "NotAction": "sqs:Break*",
+            "Principal": {"AWS":"arn:aws:iam::111111111111:user/dave.mustaine"},
+            "Resource": "*"
+          }
+        }
+      }
+    }
+  }
+}

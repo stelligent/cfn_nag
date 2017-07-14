@@ -1,0 +1,224 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "This AWS CloudFormation template that helps you provision the AWS WAF TOR blocking Lambda function. It creates a WebACL, two Rules and two IPSets. You can create more rules and IPSets, and parse their IDs to the function, if you wish. You can execute the Lambda function using Amazon CloudWatch Events on a schedule to automate the updates of the IPSets. You will be billed for the AWS resources used if you create a stack from this template. **NOTICE** Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved. Licensed under the Apache License, Version 2.0 (the License). You may not use this file except in compliance with the License. A copy of the License is located at http://aws.amazon.com/apache2.0/ or in the license file accompanying this file. This file is distributed on an AS IS BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.",
+  "Parameters": {},
+  "Resources": {
+    "WAFIPSet1": {
+      "Type": "AWS::WAF::IPSet",
+      "Properties": {
+        "Name": "IP Set #1"
+      }
+    },
+    "WAFIPSet2": {
+      "Type": "AWS::WAF::IPSet",
+      "Properties": {
+        "Name": "IP Set #2"
+      }
+    },
+    "WAFRule1": {
+      "Type": "AWS::WAF::Rule",
+      "Properties": {
+        "Name": "WAF Rule #1",
+        "MetricName": "WAFRule1",
+        "Predicates": [
+          {
+            "DataId": {
+              "Ref": "WAFIPSet1"
+            },
+            "Type": "IPMatch",
+            "Negated": "false"
+          }
+        ]
+      }
+    },
+    "WAFRule2": {
+      "Type": "AWS::WAF::Rule",
+      "Properties": {
+        "Name": "WAF Rule #2",
+        "MetricName": "WAFRule2",
+        "Predicates": [
+          {
+            "DataId": {
+              "Ref": "WAFIPSet2"
+            },
+            "Type": "IPMatch",
+            "Negated": "false"
+          }
+        ]
+      }
+    },
+    "WAFWebACL": {
+      "Type": "AWS::WAF::WebACL",
+      "Properties": {
+        "Name": "WebACL",
+        "DefaultAction": {
+          "Type": "ALLOW"
+        },
+        "MetricName": "MaliciousRequesters",
+        "Rules": [
+          {
+            "Action": {
+              "Type": "BLOCK"
+            },
+            "Priority": 1,
+            "RuleId": {
+              "Ref": "WAFRule1"
+            }
+          },
+          {
+            "Action": {
+              "Type": "BLOCK"
+            },
+            "Priority": 2,
+            "RuleId": {
+              "Ref": "WAFRule2"
+            }
+          }
+        ]
+      }
+    },
+    "LambdaRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": [
+                  "lambda.amazonaws.com"
+                ]
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "CloudWatchLogs",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "logs:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "WAFGetChangeToken",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "waf:GetChangeToken",
+                  "Resource": "*"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "WAFGetAndUpdateIPSet",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "waf:GetIPSet",
+                    "waf:UpdateIPSet"
+                  ],
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:waf::",
+                          {
+                            "Ref": "AWS::AccountId"
+                          },
+                          ":ipset/",
+                          {
+                            "Ref": "WAFIPSet1"
+                          }
+                        ]
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "arn:aws:waf::",
+                          {
+                            "Ref": "AWS::AccountId"
+                          },
+                          ":ipset/",
+                          {
+                            "Ref": "WAFIPSet2"
+                          }
+                        ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "LambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {
+          "Fn::GetAtt": [
+            "LambdaRole",
+            "Arn"
+          ]
+        },
+        "Code": {
+          "S3Bucket": {
+            "Fn::Join": [
+              ".",
+              [
+                "awswaf",
+                {
+                  "Ref": "AWS::Region"
+                }
+              ]
+            ]
+          },
+          "S3Key": "waf-tor-blocking/lambda.zip"
+        },
+        "Runtime": "nodejs",
+        "MemorySize": "512",
+        "Timeout": "60"
+      }
+    }
+  },
+  "Outputs": {
+    "LambdaEvent": {
+      "Description": "Event JSON for Lambda function",
+      "Value": {
+        "Fn::Join": [
+          "",
+          [
+            "{\"ipSetIds\": [",
+            "\"",
+            {
+              "Ref": "WAFIPSet1"
+            },
+            "\",",
+            "\"",
+            {
+              "Ref": "WAFIPSet2"
+            },
+            "\"",
+            "]}"
+          ]
+        ]
+      }
+    }
+  }
+}

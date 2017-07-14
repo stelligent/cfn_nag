@@ -5,8 +5,8 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
   s.version       = '0.0.0'
   s.bindir        = 'bin'
-  s.executables   = %w(cfn_nag cfn_nag_rules)
-  s.authors       = %w(someguy)
+  s.executables   = %w(cfn_nag cfn_nag_rules cfn_nag_scan)
+  s.authors       = ['Eric Kascic']
   s.summary       = 'cfn-nag'
   s.description   = 'Auditing tool for CloudFormation templates'
   s.homepage      = 'https://github.com/stelligent/cfn_nag'
@@ -18,4 +18,5 @@ Gem::Specification.new do |s|
   
   s.add_runtime_dependency('logging', '2.0.0')
   s.add_runtime_dependency('trollop', '2.1.2')
+  s.add_runtime_dependency('cfn-model', '0.0.5')
 end

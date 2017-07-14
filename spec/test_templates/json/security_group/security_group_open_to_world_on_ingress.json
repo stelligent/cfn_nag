@@ -1,0 +1,38 @@
+{
+  "Resources": {
+    "sgOpenIngress": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "SecurityGroupIngress" : {
+          "CidrIp": "0.0.0.0/0",
+          "FromPort": 34,
+          "ToPort": 34,
+          "IpProtocol": "tcp"
+        },
+        "VpcId" : "vpc-9f8e9dfa"
+      }
+    },
+
+    "sgOpenIngress2": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "VpcId" : "vpc-9f8e9dfa"
+      }
+    },
+
+    "securityGroupIngress" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": {
+          "Ref": "sgOpenIngress2"
+        },
+        "CidrIp" : "0.0.0.0/0",
+        "FromPort" : 46,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    }
+  }
+}
