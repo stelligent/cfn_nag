@@ -37,11 +37,10 @@ class CfnNag
   #
   def audit_aggregate_across_files(input_path:)
     templates = TemplateDiscovery.new.discover_templates(input_path)
-
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {
-        filename: template.path,
+        filename: template,
         file_results: audit(cloudformation_string: IO.read(template))
       }
     end

@@ -1,6 +1,8 @@
 require 'cfn-model'
 require 'logging'
 require_relative 'rule_registry'
+require 'cfn-nag/jmes_path_evaluator'
+require 'cfn-nag/jmes_path_discovery'
 
 ##
 # This object can discover the internal and custom user-provided rules and
@@ -21,6 +23,14 @@ class CustomRuleLoader
                                type: rule.rule_type,
                                message: rule.rule_text)
     end
+
+    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
+      evaluator = JmesPathDiscovery.new rule_registry
+      evaluator.instance_eval do
+        eval IO.read jmespath_file
+      end
+    end
+
     rule_registry
   end
 
@@ -32,6 +42,14 @@ class CustomRuleLoader
     discover_rule_classes(@rule_directory).each do |rule_class|
       audit_result = rule_class.new.audit(cfn_model)
       violations << audit_result unless audit_result.nil?
+    end
+
+    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
+      evaluator = JmesPathEvaluator.new cfn_model
+      evaluator.instance_eval do
+        eval IO.read jmespath_file
+      end
+      violations +=  evaluator.violations
     end
     violations
   end
@@ -68,5 +86,15 @@ class CustomRuleLoader
     Logging.logger['log'].debug "rule_classes: #{rule_classes}"
 
     rule_classes
+  end
+
+  def discover_jmespath_filenames(rule_directory)
+    rule_filenames = []
+    unless rule_directory.nil?
+      rule_filenames += Dir[File.join(rule_directory, '*jmespath.rb')].sort
+    end
+    rule_filenames += Dir[File.join(__dir__, 'custom_rules', '*jmespath.rb')].sort
+    Logging.logger['log'].debug "jmespath_filenames: #{rule_filenames}"
+    rule_filenames
   end
 end
