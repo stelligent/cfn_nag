@@ -1,0 +1,60 @@
+{
+  "Parameters": {
+    "somethingSpecial": {
+      "Type": "String"
+    }
+  },
+
+  "Resources": {
+    "sgDualModel": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "VpcId" : "vpc-9f8e9dfa",
+        "SecurityGroupEgress" : {
+          "CidrIp": "10.1.2.3/32",
+          "FromPort": 34,
+          "ToPort": 34,
+          "IpProtocol": "tcp"
+        }
+      }
+    },
+
+    "securityGroupIngress5" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": {
+          "Ref": "sgDualModel"
+        },
+        "CidrIp" :  "1.2.3.4/32",
+        "FromPort" : 46,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    },
+
+    "securityGroupIngressIp6" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": {
+          "Ref": "sgDualModel"
+        },
+        "CidrIpv6" :  "2001::/64",
+        "FromPort" : 46,
+        "ToPort" : 46,
+        "IpProtocol" : "tcp"
+      }
+    },
+
+    "securityGroupIngress" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": "sg-12341234",
+        "CidrIpv6" : "2001::/99",
+        "FromPort" : 45,
+        "ToPort" : 45,
+        "IpProtocol" : "tcp"
+      }
+    }
+  }
+}

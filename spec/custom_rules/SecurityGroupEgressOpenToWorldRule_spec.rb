@@ -24,4 +24,15 @@ describe SecurityGroupEgressOpenToWorldRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'egress with cidrip of ::/0' do
+    it 'returns offending logical resource id' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/security_group/ip6_security_group_egress_open_to_world.yml')
+
+      actual_logical_resource_ids = SecurityGroupEgressOpenToWorldRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w(InstanceSecurityGroup InstanceSecurityGroup2 InstanceSecurityGroup3 securityGroupEgress)
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end

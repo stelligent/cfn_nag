@@ -20,4 +20,5 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('trollop', '2.1.2')
   s.add_runtime_dependency('cfn-model', '0.0.8')
   s.add_runtime_dependency('jmespath', '1.3.1')
+  s.add_runtime_dependency('netaddr', '1.5.1')
 end

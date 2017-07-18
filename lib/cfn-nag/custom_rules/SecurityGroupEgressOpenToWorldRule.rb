@@ -1,7 +1,9 @@
 require 'cfn-nag/violation'
 require_relative 'base'
+require 'cfn-nag/ip_addr'
 
 class SecurityGroupEgressOpenToWorldRule < BaseRule
+  include IpAddr
 
   def rule_text
     'Security Groups found with cidr open to world on egress'
@@ -21,8 +23,7 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
       violating_egresses = security_group.securityGroupEgress.select do |egress|
-        # only care about literals.  if a Hash/Ref not going to chase it down given likely a Parameter with external val
-        egress.cidrIp.is_a?(String) && egress.cidrIp == '0.0.0.0/0'
+        ip4_open?(egress) || ip6_open?(egress)
       end
 
       unless violating_egresses.empty?
@@ -31,7 +32,7 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
     end
 
     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-      standalone_egress.cidrIp.is_a?(String) && standalone_egress.cidrIp == '0.0.0.0/0'
+      ip4_open?(standalone_egress) || ip6_open?(standalone_egress)
     end
 
     logical_resource_ids + violating_egresses.map { |egress| egress.logical_resource_id}

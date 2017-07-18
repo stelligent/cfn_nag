@@ -1,0 +1,113 @@
+---
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: default
+      Tags:
+        - Key: Name
+          Value: IPv6
+
+  VPCIPv6:
+    Type: AWS::EC2::VPCCidrBlock
+    Properties:
+      AmazonProvidedIpv6CidrBlock: true
+      VpcId: !Ref VPC
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: false
+      VpcId: !Ref VPC
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  SubnetIPv6:
+    Type: AWS::EC2::SubnetCidrBlock
+    DependsOn:
+      - VPC
+      - VPCIPv6
+    Properties:
+      Ipv6CidrBlock:
+        "Fn::Join":
+            - ""
+            - - !Select [0, !Split [ "::", !Select [0, !GetAtt VPC.Ipv6CidrBlocks] ]]
+              - "::dead:beef/64"
+      SubnetId: !Ref Subnet
+
+  RouteSubnet:
+    Type: "AWS::EC2::SubnetRouteTableAssociation"
+    DependsOn:
+      - RouteTable
+      - Subnet
+    Properties:
+      RouteTableId: !Ref RouteTable
+      SubnetId: !Ref Subnet
+
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Subnet
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable SSH and IPsec
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIpv6: 0000:0000:0000:0000:0000:0000:0000:0000/0
+
+  InstanceSecurityGroup2:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Subnet
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable SSH and IPsec
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIpv6: 0000::/0
+
+  InstanceSecurityGroup3:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Subnet
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable SSH and IPsec
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIpv6: ::/0
+
+  InstanceSecurityGroup4:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Subnet
+    Properties:
+      VpcId: !Ref VPC
+      GroupDescription: Enable SSH and IPsec
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIpv6: 2001:800::/21
+
+  securityGroupIngress:
+    Type: "AWS::EC2::SecurityGroupIngress"
+    Properties:
+      GroupId: "sg-12341234"
+      CidrIpv6: ::/0
+      FromPort: 46
+      ToPort: 46
+      IpProtocol: "tcp"
