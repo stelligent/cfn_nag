@@ -17,14 +17,14 @@ echo :rubygems_api_key: ${rubygems_api_key} > ~/.gem/credentials
 set -ex
 chmod 0600 ~/.gem/credentials
 
-current_version=$(ruby -e 'tags=`git tag -l v0\.2\.*`' \
-                       -e 'p tags.lines.map { |tag| tag.sub(/v0.2./, "").chomp.to_i }.max')
+current_version=$(ruby -e 'tags=`git tag -l v0\.3\.*`' \
+                       -e 'p tags.lines.map { |tag| tag.sub(/v0.3./, "").chomp.to_i }.max')
 
 if [[ ${current_version} == nil ]];
 then
-  new_version='0.2.0'
+  new_version='0.3.0'
 else
-  new_version=0.2.$((current_version+1))
+  new_version=0.3.$((current_version+1))
 fi
 
 sed -i "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
@@ -40,7 +40,7 @@ if [[ ${current_version} == nil ]];
 then
   log_rev_range=${head}
 else
-  log_rev_range="v0.2.${current_version}..${head}"
+  log_rev_range="v0.3.${current_version}..${head}"
 fi
 
 issues=$(git log ${log_rev_range} --oneline | awk '{print $2}' | grep "${issue_prefix}" | uniq)
