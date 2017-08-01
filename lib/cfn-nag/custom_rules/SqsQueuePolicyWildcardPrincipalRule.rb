@@ -19,7 +19,7 @@ class SqsQueuePolicyWildcardPrincipalRule < BaseRule
     logical_resource_ids = []
 
     cfn_model.resources_by_type('AWS::SQS::QueuePolicy').each do |topic_policy|
-      if !topic_policy.policyDocument.wildcard_allowed_principals.empty?
+      if !topic_policy.policy_document.wildcard_allowed_principals.empty?
         logical_resource_ids << topic_policy.logical_resource_id
       end
     end

@@ -17,7 +17,7 @@ class SnsTopicPolicyNotPrincipalRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_policies = cfn_model.resources_by_type('AWS::SNS::TopicPolicy').select do |policy|
-      !policy.policyDocument.allows_not_principal.empty?
+      !policy.policy_document.allows_not_principal.empty?
     end
 
     violating_policies.map { |policy| policy.logical_resource_id }

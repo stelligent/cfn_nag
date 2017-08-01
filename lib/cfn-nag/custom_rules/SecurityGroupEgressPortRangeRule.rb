@@ -20,7 +20,7 @@ class SecurityGroupEgressPortRangeRule < BaseRule
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
-      violating_egresses = security_group.securityGroupEgress.select do |egress|
+      violating_egresses = security_group.egresses.select do |egress|
         egress.fromPort != egress.toPort
       end
 

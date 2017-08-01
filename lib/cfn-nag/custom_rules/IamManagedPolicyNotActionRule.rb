@@ -17,7 +17,7 @@ class IamManagedPolicyNotActionRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_policies = cfn_model.resources_by_type('AWS::IAM::ManagedPolicy').select do |policy|
-      !policy.policyDocument.allows_not_action.empty?
+      !policy.policy_document.allows_not_action.empty?
     end
 
     violating_policies.map { |policy| policy.logical_resource_id }

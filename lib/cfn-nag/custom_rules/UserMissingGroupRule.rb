@@ -18,7 +18,7 @@ class UserMissingGroupRule < BaseRule
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.iam_users.each do |iam_user|
-      if iam_user.groups.empty?
+      if iam_user.group_names.empty?
         logical_resource_ids << iam_user.logical_resource_id
       end
     end

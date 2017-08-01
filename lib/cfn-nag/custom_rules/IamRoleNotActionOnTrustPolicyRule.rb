@@ -17,7 +17,7 @@ class IamRoleNotActionOnTrustPolicyRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      !role.assumeRolePolicyDocument.allows_not_action.empty?
+      !role.assume_role_policy_document.allows_not_action.empty?
     end
 
     violating_roles.map { |role| role.logical_resource_id }

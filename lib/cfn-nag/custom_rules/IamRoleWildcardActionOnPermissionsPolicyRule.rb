@@ -17,8 +17,8 @@ class IamRoleWildcardActionOnPermissionsPolicyRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      violating_policies = role.policies.select do |policy|
-        !policy.policyDocument.wildcard_allowed_actions.empty?
+      violating_policies = role.policy_objects.select do |policy|
+        !policy.policy_document.wildcard_allowed_actions.empty?
       end
       !violating_policies.empty?
     end
