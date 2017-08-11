@@ -1,4 +1,4 @@
-<img src="raw/master/logo.png" width="150">
+<img src="logo.png?raw=true" width="150">
 <br/>
 
 Background
