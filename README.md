@@ -1,4 +1,4 @@
-<img src="https://github.com/stelligent/cfn_nag/raw/master/logo.png" width="150">
+<img src="raw/master/logo.png" width="150">
 <br/>
 
 Background
