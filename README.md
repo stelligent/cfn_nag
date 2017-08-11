@@ -1,3 +1,6 @@
+<img src="https://github.com/stelligent/cfn_nag/raw/master/logo.png" width="150">
+<br/>
+
 Background
 ==========
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
