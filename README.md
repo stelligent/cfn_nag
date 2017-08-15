@@ -1,3 +1,6 @@
+<img src="logo.png?raw=true" width="150">
+<br/>
+
 Background
 ==========
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
