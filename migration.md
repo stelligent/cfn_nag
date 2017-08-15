@@ -87,6 +87,9 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
    * policyDocument fields are fairly complex, so they are mapped to a PolicyDocument with some query and
      convenience methods rules can use versus having to implement themselves (potentially in multiple places)
   
+   For a "synthetic" field like this, one computed by cfn-model versus being mapped from the underlying document,
+   the original mapped field still holds its original content, while a new field is added with the computed
+   value.
      
      
      
