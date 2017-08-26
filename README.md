@@ -1,8 +1,7 @@
 <img src="logo.png?raw=true" width="150">
 <br/>
 
-Background
-==========
+# Background
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
 Roughly speaking it will look for:
 
@@ -15,14 +14,12 @@ For more background on the tool, please see:
 
 [Finding Security Problems Early in the Development Process of a CloudFormation Template with "cfn-nag"](https://stelligent.com/2016/04/07/finding-security-problems-early-in-the-development-process-of-a-cloudformation-template-with-cfn-nag/)
 
-Installation
-============
+# Installation
 Presuming Ruby 2.2.x is installed, installation is just a matter of:
 
     gem install cfn-nag
 
-Usage
-=====
+# Usage
 Pretty simple to execute:
 
     cfn_nag_scan --input-path <path to cloudformation json>
@@ -38,13 +35,17 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
     cfn_nag_rules
 
-Results
--------
+## Results
 * The results are dumped to stdout
 * A failing violation will return a non-zero exit code.
 * A warning will return a zero/success exit code.
 * A fatal violation stops analysis (per file) because the template is malformed in some severe way
 
-Development
-===========
-work in progress - just did some major re-work on the internals
+# Development
+
+## New Rules
+
+To author new rules, see [migration.md](migration.md) for some details on defining a new rule.
+
+Any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Otherwise, 
+just define rules locally on the filesystem and include via `rule_directory`
