@@ -24,4 +24,15 @@ describe EbsVolumeHasSseRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'EBS volume with encryption false - string' do
+    it 'returns offending logical resource id' do
+      cfn_model = CfnParser.new.parse read_test_template('json/ec2_volume/ebs_volume_without_encryption_string.json')
+
+      actual_logical_resource_ids = EbsVolumeHasSseRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w(NewVolumeA)
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
