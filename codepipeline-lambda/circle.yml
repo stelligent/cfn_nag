@@ -1,0 +1,44 @@
+deployment:
+  rubygems:
+    branch: master
+    commands:
+      - git status
+      - ./publish.sh
+
+
+machine:
+  ruby:
+    version: '2.2.1'
+
+workflows:
+  version: 2
+  cfn-nag-lambda:
+    jobs:
+      - build
+          steps:
+            docker:
+              - image: circleci/java:8
+            - checkout
+            - run: mvn install
+
+#      - store_distro:
+#          requires:
+#            - build
+#          steps:
+#            - run: aws s3api put-object xxx
+
+#      - deploy_new_lambda
+#          requires:
+#            - store_distro
+#
+#      - infrastructure-tests
+#          requires:
+#            - deploy_new_lambda
+#      - e2e-tests
+#          requires:
+#            - deploy_new_lambda
+#
+#      - blue_green_lambda
+#          requires:
+#            - infrastructure-tests
+#            - e2e-tests

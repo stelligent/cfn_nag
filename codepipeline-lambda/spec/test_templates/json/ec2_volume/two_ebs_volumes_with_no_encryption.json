@@ -1,0 +1,23 @@
+{
+  "Resources": {
+    "NewVolume1": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "Size": "100",
+        "VolumeType": "io1",
+        "Iops": "100",
+        "AvailabilityZone": "us-east-1c"
+      }
+    },
+    "NewVolume2": {
+      "Type": "AWS::EC2::Volume",
+      "Properties": {
+        "Size": "100",
+        "VolumeType": "io1",
+        "Encrypted": false,
+        "Iops": "100",
+        "AvailabilityZone": "us-east-1c"
+      }
+    }
+  }
+}
