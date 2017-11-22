@@ -10,6 +10,8 @@ opts = Trollop::options do
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
   opt :rule_directory, 'Extra rule directory', type: :io, required: false, default: nil
   opt :profile_path, 'Path to a profile file', type: :io, required: false, default: nil
+  opt :allow_suppression, 'Allow using Metadata to suppress violations', type: :boolean, required: false, default: true
+  opt :print_suppression, 'Emit suppressions to stderr', type: :boolean, required: false, default: false
 end
 
 Trollop::die(:output_format,
@@ -23,7 +25,9 @@ unless opts[:profile_path].nil?
 end
 
 cfn_nag = CfnNag.new(profile_definition: profile_definition,
-                     rule_directory: opts[:rule_directory])
+                     rule_directory: opts[:rule_directory],
+                     allow_suppression: opts[:allow_suppression],
+                     print_suppression: opts[:print_suppression])
 
 exit cfn_nag.audit_aggregate_across_files_and_render_results(input_path: opts[:input_path],
                                                              output_format: opts[:output_format])

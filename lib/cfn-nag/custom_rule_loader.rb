@@ -9,8 +9,12 @@ require 'cfn-nag/jmes_path_discovery'
 # apply these rules to a CfnModel object
 #
 class CustomRuleLoader
-  def initialize(rule_directory: nil)
+  def initialize(rule_directory: nil,
+                 allow_suppression: true,
+                 print_suppression: false)
     @rule_directory = rule_directory
+    @allow_suppression = allow_suppression
+    @print_suppression = print_suppression
     validate_extra_rule_directory rule_directory
   end
 
@@ -34,13 +38,19 @@ class CustomRuleLoader
     rule_registry
   end
 
+
   def execute_custom_rules(cfn_model)
     Logging.logger['log'].debug "cfn_model: #{cfn_model}"
 
     violations = []
 
+    validate_cfn_nag_metadata(cfn_model)
+
     discover_rule_classes(@rule_directory).each do |rule_class|
-      audit_result = rule_class.new.audit(cfn_model)
+      filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
+                                                                       rule_id: rule_class.new.rule_id,
+                                                                       allow_suppression: @allow_suppression
+      audit_result = rule_class.new.audit(filtered_cfn_model)
       violations << audit_result unless audit_result.nil?
     end
 
@@ -55,6 +65,66 @@ class CustomRuleLoader
   end
 
   private
+
+  def rules_to_suppress(resource)
+    if resource.metadata && resource.metadata['cfn_nag'] && resource.metadata['cfn_nag']['rules_to_suppress']
+      resource.metadata['cfn_nag']['rules_to_suppress']
+    else
+      nil
+    end
+  end
+
+  def validate_cfn_nag_metadata(cfn_model)
+    mangled_metadatas = []
+    cfn_model.resources.each do |logical_resource_id, resource|
+      resource_rules_to_suppress = rules_to_suppress resource
+      if resource_rules_to_suppress.nil?
+        next
+      else
+        mangled_rules = resource_rules_to_suppress.select do |rule_to_suppress|
+          rule_to_suppress['id'].nil?
+        end
+        unless mangled_rules.empty?
+          mangled_metadatas << [logical_resource_id, mangled_rules]
+        end
+      end
+    end
+    mangled_metadatas.each do |mangled_metadata|
+      logical_resource_id = mangled_metadata.first
+      mangled_rules = mangled_metadata[1]
+
+      STDERR.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
+    end
+  end
+
+  def suppress_resource?(rules_to_suppress, rule_id, logical_resource_id)
+    found_suppression_rule = rules_to_suppress.find do |rule_to_suppress|
+      next if rule_to_suppress['id'].nil?
+      rule_to_suppress['id'] == rule_id
+    end
+    if found_suppression_rule && @print_suppression
+      STDERR.puts "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
+    end
+    !found_suppression_rule.nil?
+  end
+
+  def cfn_model_with_suppressed_resources_removed(cfn_model:,
+                                                  rule_id:,
+                                                  allow_suppression:)
+    return cfn_model unless allow_suppression
+
+    cfn_model = cfn_model.copy
+
+    cfn_model.resources.delete_if do |logical_resource_id, resource|
+      rules_to_suppress = rules_to_suppress resource
+      if rules_to_suppress.nil?
+        false
+      else
+        suppress_resource?(rules_to_suppress, rule_id, logical_resource_id)
+      end
+    end
+    cfn_model
+  end
 
   def validate_extra_rule_directory(rule_directory)
     unless rule_directory.nil?

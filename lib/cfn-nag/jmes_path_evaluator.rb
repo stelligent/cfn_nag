@@ -1,6 +1,9 @@
 require 'jmespath'
 require 'logging'
 
+##
+# THIS DOES NOT RESPECT SUPPRESSIONS!!!!!!
+##
 class JmesPathEvaluator
   def initialize(cfn_model)
     @cfn_model = cfn_model

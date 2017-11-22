@@ -1,0 +1,42 @@
+---
+Resources:
+  sgOpenIngress:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: some_group_desc
+      VpcId: vpc-da3c10bc
+
+  securityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: sgOpenIngress
+      CidrIp: 0.0.0.0/0
+      FromPort: 46
+      ToPort: 46
+      IpProtocol: tcp
+
+
+  sgOpenIngress2:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: some_group_desc
+      VpcId: vpc-da3c10bc
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W2
+            reason: This security group is attached to internet-facing ELB
+          - id: W9
+            reason: Trying to prove a point
+          - id: F1000
+            reason: To enable sensitive data exfiltration ;)
+  securityGroupIngress2:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId:
+        Ref: sgOpenIngress2
+      CidrIp: 0.0.0.0/0
+      FromPort: 46
+      ToPort: 46
+      IpProtocol: tcp
