@@ -62,11 +62,12 @@ class CfnNag
 
     begin
       cfn_model = CfnParser.new.parse cloudformation_string
-    rescue ParserError => parser_error
+    rescue Psych::SyntaxError, ParserError => parser_error
       violations << Violation.new(id: 'FATAL',
                                   type: Violation::FAILING_VIOLATION,
                                   message: parser_error.to_s)
       stop_processing = true
+
     end
 
     violations += @custom_rule_loader.execute_custom_rules(cfn_model) unless stop_processing == true

@@ -1,0 +1,9 @@
+Mappings:
+  MyMap:
+    MyKey: Ref: AWS::NoValue
+
+Resources:
+  fred:
+    Type: AWS::S3::Bucket
+    Properties:
+      Name: fred
