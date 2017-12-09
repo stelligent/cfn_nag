@@ -3,8 +3,11 @@ require 'trollop'
 require 'cfn-nag'
 require 'logging'
 require 'json'
+require 'rubygems/specification'
 
 opts = Trollop::options do
+  version Gem::Specification.find_by_name('cfn-nag').version
+
   opt :input_path, 'CloudFormation template to nag on or directory of templates - all *.json, *.yaml, *.yml and *.template recursively', type: :io, required: true
   opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
   opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
