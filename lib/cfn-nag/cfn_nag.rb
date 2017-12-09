@@ -11,11 +11,13 @@ class CfnNag
   def initialize(profile_definition: nil,
                  rule_directory: nil,
                  allow_suppression: true,
-                 print_suppression: false)
+                 print_suppression: false,
+                 isolate_custom_rule_exceptions: false)
     @rule_directory = rule_directory
     @custom_rule_loader = CustomRuleLoader.new(rule_directory: rule_directory,
                                                allow_suppression: allow_suppression,
-                                               print_suppression: print_suppression)
+                                               print_suppression: print_suppression,
+                                               isolate_custom_rule_exceptions: isolate_custom_rule_exceptions)
     @profile_definition = profile_definition
   end
 

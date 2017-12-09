@@ -11,10 +11,12 @@ require 'cfn-nag/jmes_path_discovery'
 class CustomRuleLoader
   def initialize(rule_directory: nil,
                  allow_suppression: true,
-                 print_suppression: false)
+                 print_suppression: false,
+                 isolate_custom_rule_exceptions: false)
     @rule_directory = rule_directory
     @allow_suppression = allow_suppression
     @print_suppression = print_suppression
+    @isolate_custom_rule_exceptions = isolate_custom_rule_exceptions
     validate_extra_rule_directory rule_directory
   end
 
@@ -47,11 +49,19 @@ class CustomRuleLoader
     validate_cfn_nag_metadata(cfn_model)
 
     discover_rule_classes(@rule_directory).each do |rule_class|
-      filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
-                                                                       rule_id: rule_class.new.rule_id,
-                                                                       allow_suppression: @allow_suppression
-      audit_result = rule_class.new.audit(filtered_cfn_model)
-      violations << audit_result unless audit_result.nil?
+      begin
+        filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
+                                                                         rule_id: rule_class.new.rule_id,
+                                                                         allow_suppression: @allow_suppression
+        audit_result = rule_class.new.audit(filtered_cfn_model)
+        violations << audit_result unless audit_result.nil?
+      rescue Exception => exception
+        if @isolate_custom_rule_exceptions
+          STDERR.puts exception
+        else
+          raise exception
+        end
+      end
     end
 
     discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
