@@ -24,7 +24,7 @@
 
   <dependency>
     <groupId>org.jruby</groupId>
-    <artifactId>jruby</artifactId>
+    <artifactId>jruby-complete</artifactId>
     <version>9.1.13.0</version>
   </dependency>
 
