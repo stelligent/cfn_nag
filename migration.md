@@ -107,14 +107,14 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
 There are two general methods for placing custom rules:
 
 1. Placement into the `custom_rules` directory that is installed with the cfn-nag gem
-  * Choosing this method requires the least amount of changes to your code relative to the examples seen on this page.
-  * If you need to know where the directory is on your filesystem, you can run `gem contents cfn-nag | grep custom_rules`.
-  * Rules will automatically be included in subsequent executions of `cfn_nag_scan`.  This can be verified by running `cfn_nag_rules`.
+    * Choosing this method requires the least amount of changes to your code relative to the examples seen on this page.
+    * If you need to know where the directory is on your filesystem, you can run `gem contents cfn-nag | grep custom_rules`.
+    * Rules will automatically be included in subsequent executions of `cfn_nag_scan`.  This can be verified by running `cfn_nag_rules`.
 2. Placement into a custom directory of your choice
-  * Choosing this method gives you slightly more flexiblity around saving rules wherever you'd like them to be, but requires a couple small tweaks to normal execution:
-   * You'll need to modify the import of the BaseRule class ***from*** `require_relative 'base'` ***to*** `require 'cfn-nag/custom_rules/base'`.
-   * When executing the scan of a template, you'll need to use the `-r` or `--rules-directory` switch to specify your own custom rules directory.
-   * An example execution might look like this: `cfn_nag_scan -r ./example_rules my-cfn-template.yaml`
+    * Choosing this method gives you slightly more flexiblity around saving rules wherever you'd like them to be, but requires a couple small tweaks to normal execution:
+     * You'll need to modify the import of the BaseRule class ***from*** `require_relative 'base'` ***to*** `require 'cfn-nag/custom_rules/base'`.
+     * When executing the scan of a template, you'll need to use the `-r` or `--rules-directory` switch to specify your own custom rules directory.
+     * An example execution might look like this: `cfn_nag_scan -r ./example_rules my-cfn-template.yaml`
 
 ## Contributing Rules to the Community
 
