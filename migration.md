@@ -69,7 +69,11 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
 
    There are a few important details to mapping:
    * Any top-level attribute in the Properties block of a Resource will be an attribute of the returned object.
+<<<<<<< HEAD
      * Attributes/properties are returned in camelCase.
+=======
+     * Attributes are returned in camel case.
+>>>>>>> 7ac44b6d5a183b17bd34b434cab1c96eba562ac6
      * For example, if dealing with an object type of 'AWS::RDS:;DBCluster', and needing to write logic against the 'StorageEncrypted' property, then an example `audit_impl` might look like this:
      * `def audit_impl(cfn_model)
        violating_rdscluster = cfn_model.resources_by_type('AWS::RDS::DBCluster').select do |cluster|
@@ -97,6 +101,7 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
    the original mapped field still holds its original content, while a new field is added with the computed
    value.
 
+<<<<<<< HEAD
 ## Where to Place Rule Files
 
 There are two general methods for placing custom rules:
@@ -114,3 +119,6 @@ There are two general methods for placing custom rules:
 ## Contributing Rules to the Community
 
 For any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Please be sure to use a unique `rule_id` and write the rule according section 1 of the above "Where to Place Rule Files" area.
+=======
+
+>>>>>>> 7ac44b6d5a183b17bd34b434cab1c96eba562ac6
