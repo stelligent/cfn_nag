@@ -47,5 +47,5 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
 To author new rules, see [migration.md](migration.md) for some details on defining a new rule.
 
-Any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Otherwise, 
-just define rules locally on the filesystem and include via `rule_directory`
+Any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Otherwise,
+just define rules locally on the filesystem and include via `--rule_directory` when running `cfn_nag_scan`
