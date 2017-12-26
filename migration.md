@@ -37,7 +37,7 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
 
         class IamManagedPolicyNotActionRule < BaseRule
 
-2. Define methods that describe some of the bookkeeping for the rule, like whether it is a WARNING_VIOLATION/FAILING_VIOLATION, its
+2. Define methods that describe some of the bookkeeping for the rule, like whether it is a WARNING/FAILING_VIOLATION, its
    unique identifier among rules, and error text shown when it matches:
 
         def rule_text
@@ -45,7 +45,7 @@ There are three areas that have changed enough from 0.0.x to 0.1.x to cause trou
         end
 
         def rule_type
-          Violation::WARNING_VIOLATION
+          Violation::WARNING
         end
 
         def rule_id
