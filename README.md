@@ -31,6 +31,8 @@ The default output format is free-form text, but json output can be selected wit
 
 Optionally, a `--debug` flag will dump information about the internals of rule loading.
 
+Run with `--help` for a full listing of supported switches.
+
 To see a list of all the rules the cfn-nag currently supports, there is a command-line utility that will dump them to stdout:
 
     cfn_nag_rules
@@ -44,8 +46,4 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 # Development
 
 ## New Rules
-
-To author new rules, see [migration.md](migration.md) for some details on defining a new rule.
-
-Any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Otherwise, 
-just define rules locally on the filesystem and include via `rule_directory`
+To author new rules for your own use and/or community contribution, see [migration.md](migration.md) for details.
