@@ -19,7 +19,13 @@ class CloudFormationAuthenticationRule < BaseRule
     cfn_model.raw_model['Resources'].each do |resource_name, resource|
       unless resource['Metadata'].nil?
         if !resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
-          logical_resource_ids << resource_name
+
+          resource['Metadata']['AWS::CloudFormation::Authentication'].each do |auth_name, auth|
+            if !auth['accessKeyId'].nil? && !auth['password'].nil? && !auth['secretKey'].nil?
+              logical_resource_ids << auth_name
+            end
+          end
+
         end
       end
     end
