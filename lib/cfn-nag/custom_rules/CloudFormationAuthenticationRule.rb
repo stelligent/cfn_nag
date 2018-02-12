@@ -21,7 +21,7 @@ class CloudFormationAuthenticationRule < BaseRule
         if !resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
 
           resource['Metadata']['AWS::CloudFormation::Authentication'].each do |auth_name, auth|
-            if !auth['accessKeyId'].nil? && !auth['password'].nil? && !auth['secretKey'].nil?
+            if !auth['accessKeyId'].nil? || !auth['password'].nil? || !auth['secretKey'].nil?
               logical_resource_ids << auth_name
             end
           end
