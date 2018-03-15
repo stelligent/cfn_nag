@@ -16,10 +16,10 @@ class RDSInstancePubliclyAccessibleRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::RDS::DBInstance').select do |instance|
+    violating_rdsinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance').select do |instance|
         instance.publiclyAccessible && instance.publiclyAccessible.to_s.downcase == 'true'
     end
 
-    violating_policies.map { |policy| policy.logical_resource_id }
+    violating_rdsinstances.map { |instance| instance.logical_resource_id }
   end
 end
