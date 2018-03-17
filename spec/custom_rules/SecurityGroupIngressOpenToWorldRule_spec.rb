@@ -35,4 +35,16 @@ describe SecurityGroupIngressOpenToWorldRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'security group with ingress rules open to world via IP6: ::/0 - but in external json', :new do
+    it 'returns offending logical resource id' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/security_group/bad_cidr_in_parameter.yml'),
+                                      IO.read(test_template_path('yaml/security_group/bad_cidr.json'))
+
+      actual_logical_resource_ids = SecurityGroupIngressOpenToWorldRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w(InstanceSecurityGroup)
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end

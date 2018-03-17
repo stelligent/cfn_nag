@@ -27,8 +27,9 @@ class CfnNag
   # Return an aggregate failure count (for exit code usage)
   #
   def audit_aggregate_across_files_and_render_results(input_path:,
-                                                      output_format:'txt')
-    aggregate_results = audit_aggregate_across_files input_path: input_path
+                                                      output_format:'txt',
+                                                      parameter_values_path: nil)
+    aggregate_results = audit_aggregate_across_files input_path: input_path, parameter_values_path: parameter_values_path
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -41,13 +42,15 @@ class CfnNag
   ##
   # Given a file or directory path, return aggregate results
   #
-  def audit_aggregate_across_files(input_path:)
+  def audit_aggregate_across_files(input_path:, parameter_values_path: nil)
+    parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
     templates = TemplateDiscovery.new.discover_templates(input_path)
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {
         filename: template,
-        file_results: audit(cloudformation_string: IO.read(template))
+        file_results: audit(cloudformation_string: IO.read(template),
+                            parameter_values_string: parameter_values_string)
       }
     end
     aggregate_results
@@ -56,14 +59,16 @@ class CfnNag
   ##
   # Given cloudformation json/yml, run all the rules against it
   #
+  # Optionally include JSON with Parameters key to substitute into cfn_model.parameters
+  #
   # Return a hash with failure count
   #
-  def audit(cloudformation_string:)
+  def audit(cloudformation_string:, parameter_values_string: nil)
     stop_processing = false
     violations = []
 
     begin
-      cfn_model = CfnParser.new.parse cloudformation_string
+      cfn_model = CfnParser.new.parse cloudformation_string, parameter_values_string
     rescue Psych::SyntaxError, ParserError => parser_error
       violations << Violation.new(id: 'FATAL',
                                   type: Violation::FAILING_VIOLATION,

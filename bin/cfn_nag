@@ -14,6 +14,7 @@ opts = Trollop::options do
   opt :print_suppression, 'Emit suppressions to stderr', type: :boolean, required: false, default: false
   opt :rule_directory, 'Extra rule directory', type: :io, required: false, default: nil
   opt :profile_path, 'Path to a profile file', type: :io, required: false, default: nil
+  opt :parameter_values_path, 'Path to a JSON file to pull Parameter values from', type: :io, required: false, default: nil
   opt :isolate_custom_rule_exceptions, 'Isolate custom rule exceptions - just emit the exception without stack trace and keep chugging', type: :boolean, required: false, default: false
 end
 
@@ -22,6 +23,11 @@ CfnNag::configure_logging(opts)
 profile_definition = nil
 unless opts[:profile_path].nil?
   profile_definition = IO.read(opts[:profile_path])
+end
+
+parameter_values_string = nil
+unless opts[:parameter_values_path].nil?
+  parameter_values_string = IO.read(opts[:parameter_values_path])
 end
 
 cfn_nag = CfnNag.new(profile_definition: profile_definition,
@@ -33,7 +39,7 @@ cfn_nag = CfnNag.new(profile_definition: profile_definition,
 # trollop appears to pop args off of ARGV
 # ARGF concatenates which we don't want
 if ARGV.size == 0
-  results = cfn_nag.audit(cloudformation_string: STDIN.read)
+  results = cfn_nag.audit(cloudformation_string: STDIN.read, parameter_values_string: parameter_values_string)
 
   results[:violations] = results[:violations].map { |violation| violation.to_h }
   puts JSON.pretty_generate(results)
@@ -41,7 +47,7 @@ if ARGV.size == 0
 else
   total_failure_count = 0
   ARGV.each do |file_name|
-    results = cfn_nag.audit(cloudformation_string: IO.read(file_name))
+    results = cfn_nag.audit(cloudformation_string: IO.read(file_name), parameter_values_string: parameter_values_string)
 
     total_failure_count += results[:failure_count]
     results[:violations] = results[:violations].map { |violation| violation.to_h }
