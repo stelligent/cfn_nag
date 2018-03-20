@@ -3,7 +3,7 @@
     "AmbiguousDb": {
       "Type": "AWS::RDS::DBInstance",
       "Properties": {
-        "SourceDBInstanceIdentifier": "sampleDbInstance",
+        "SourceDBInstanceIdentifier": "sampleDbInstance"
       }
     }
   }
