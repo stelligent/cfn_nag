@@ -5,20 +5,36 @@ require 'logging'
 require 'json'
 require 'rubygems/specification'
 
-opts = Trollop::options do
-  usage '[options] <cloudformation template path ...>|<cloudformation template in STDIN>'
+opts = Trollop.options do
+  usage '[options] <cloudformation template path ...>|' \
+        '<cloudformation template in STDIN>'
   version Gem::Specification.find_by_name('cfn-nag').version
 
-  opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
-  opt :allow_suppression, 'Allow using Metadata to suppress violations', type: :boolean, required: false, default: true
-  opt :print_suppression, 'Emit suppressions to stderr', type: :boolean, required: false, default: false
-  opt :rule_directory, 'Extra rule directory', type: :io, required: false, default: nil
-  opt :profile_path, 'Path to a profile file', type: :io, required: false, default: nil
-  opt :parameter_values_path, 'Path to a JSON file to pull Parameter values from', type: :io, required: false, default: nil
-  opt :isolate_custom_rule_exceptions, 'Isolate custom rule exceptions - just emit the exception without stack trace and keep chugging', type: :boolean, required: false, default: false
+  opt :debug, 'Enable debug output', type: :boolean, required: false,
+                                     default: false
+  opt :allow_suppression,
+      'Allow using Metadata to suppress violations',
+      type: :boolean, required: false, default: true
+  opt :print_suppression, 'Emit suppressions to stderr', type: :boolean,
+                                                         required: false,
+                                                         default: false
+  opt :rule_directory, 'Extra rule directory', type: :io,
+                                               required: false,
+                                               default: nil
+  opt :profile_path, 'Path to a profile file', type: :io,
+                                               required: false,
+                                               default: nil
+  opt :parameter_values_path,
+      'Path to a JSON file to pull Parameter values from', type: :io,
+                                                           required: false,
+                                                           default: nil
+  opt :isolate_custom_rule_exceptions,
+      'Isolate custom rule exceptions - just emit the exception ' \
+      'without stack trace and keep chugging',
+      type: :boolean, required: false, default: false
 end
 
-CfnNag::configure_logging(opts)
+CfnNag.configure_logging(opts)
 
 profile_definition = nil
 unless opts[:profile_path].nil?
@@ -34,7 +50,8 @@ cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      rule_directory: opts[:rule_directory],
                      allow_suppression: opts[:allow_suppression],
                      print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions])
+                     isolate_custom_rule_exceptions:
+                     opts[:isolate_custom_rule_exceptions])
 
 # trollop appears to pop args off of ARGV
 # ARGF concatenates which we don't want
