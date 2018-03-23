@@ -3,7 +3,7 @@ require 'trollop'
 require 'cfn-nag'
 require 'rubygems/specification'
 
-opts = Trollop::options do
+opts = Trollop.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
   opt :rule_directory, 'Extra rule directories', type: :io, required: false, default: nil
