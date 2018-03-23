@@ -33,24 +33,26 @@ describe ProfileLoader do
       end
 
       it 'should return a profile object' do
-        new_profile = ProfileLoader.new(@rule_registry).load profile_definition: "id1\nid2"
+        new_profile = ProfileLoader.new(@rule_registry)
+                                   .load profile_definition: "id1\nid2"
         expect(new_profile.rule_ids).to eq Set.new %w[id1 id2]
       end
     end
 
     context 'load profile using rule dump format' do
       before(:all) do
-        @rule_view_output = <<END
+        @rule_view_output = <<OUTPUT
 WARNING VIOLATIONS:
 
 FAILING VIOLATIONS:
 id1 fakeo
 id2 fakeo2
-END
+OUTPUT
       end
 
       it 'should parse the rule dump format' do
-        new_profile = ProfileLoader.new(@rule_registry).load profile_definition: @rule_view_output
+        new_profile = ProfileLoader.new(@rule_registry)
+                                   .load profile_definition: @rule_view_output
         expect(new_profile.rule_ids).to eq Set.new %w[id1 id2]
       end
     end
