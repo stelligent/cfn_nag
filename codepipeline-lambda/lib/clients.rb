@@ -1,5 +1,6 @@
 require 'aws-sdk'
 
+# CodePipeline Client container
 module Clients
   def codepipeline
     Aws::CodePipeline::Client.new
