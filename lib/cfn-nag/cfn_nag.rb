@@ -27,7 +27,7 @@ class CfnNag
   # Return an aggregate failure count (for exit code usage)
   #
   def audit_aggregate_across_files_and_render_results(input_path:,
-                                                      output_format:'txt',
+                                                      output_format: 'txt',
                                                       parameter_values_path: nil)
     aggregate_results = audit_aggregate_across_files input_path: input_path, parameter_values_path: parameter_values_path
 
@@ -74,7 +74,6 @@ class CfnNag
                                   type: Violation::FAILING_VIOLATION,
                                   message: parser_error.to_s)
       stop_processing = true
-
     end
 
     violations += @custom_rule_loader.execute_custom_rules(cfn_model) unless stop_processing == true
@@ -89,11 +88,11 @@ class CfnNag
 
   def self.configure_logging(opts)
     logger = Logging.logger['log']
-    if opts[:debug]
-      logger.level = :debug
-    else
-      logger.level = :info
-    end
+    logger.level = if opts[:debug]
+                     :debug
+                   else
+                     :info
+                   end
 
     logger.add_appenders Logging.appenders.stdout
   end

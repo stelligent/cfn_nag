@@ -35,7 +35,6 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
       ip4_cidr_range?(standalone_ingress) || ip6_cidr_range?(standalone_ingress)
     end
 
-    logical_resource_ids + violating_ingresses.map { |ingress| ingress.logical_resource_id}
+    logical_resource_ids + violating_ingresses.map(&:logical_resource_id)
   end
 end
-

@@ -19,19 +19,19 @@ class Violation < RuleDefinition
   end
 
   def to_h
-    super.to_h.merge({
+    super.to_h.merge(
       logical_resource_ids: @logical_resource_ids
-    })
+    )
   end
 
   def self.count_warnings(violations)
     violations.inject(0) do |count, violation|
       if violation.type == Violation::WARNING
-        if empty?(violation.logical_resource_ids)
-          count += 1
-        else
-          count += violation.logical_resource_ids.size
-        end
+        count += if empty?(violation.logical_resource_ids)
+                   1
+                 else
+                   violation.logical_resource_ids.size
+                 end
       end
       count
     end
@@ -40,11 +40,11 @@ class Violation < RuleDefinition
   def self.count_failures(violations)
     violations.inject(0) do |count, violation|
       if violation.type == Violation::FAILING_VIOLATION
-        if empty?(violation.logical_resource_ids)
-          count += 1
-        else
-          count += violation.logical_resource_ids.size
-        end
+        count += if empty?(violation.logical_resource_ids)
+                   1
+                 else
+                   violation.logical_resource_ids.size
+                 end
       end
       count
     end
@@ -53,6 +53,6 @@ class Violation < RuleDefinition
   private
 
   def self.empty?(array)
-    array.nil? || array.size ==0
+    array.nil? || array.empty?
   end
 end

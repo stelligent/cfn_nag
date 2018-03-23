@@ -19,6 +19,6 @@ class CloudFrontDistributionAccessLoggingRule < BaseRule
       distribution.distributionConfig['Logging'].nil?
     end
 
-    violating_distributions.map { |distribution| distribution.logical_resource_id }
+    violating_distributions.map(&:logical_resource_id)
   end
 end

@@ -1,14 +1,12 @@
 require_relative 'profile'
 
 class ProfileLoader
-
   def initialize(rules_registry)
     @rules_registry = rules_registry
   end
 
   def load(profile_definition:)
-
-    if profile_definition.nil? or profile_definition.strip == ''
+    if profile_definition.nil? || (profile_definition.strip == '')
       raise 'Empty profile'
     end
 

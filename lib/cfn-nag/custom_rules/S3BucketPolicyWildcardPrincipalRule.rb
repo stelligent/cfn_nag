@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class S3BucketPolicyWildcardPrincipalRule < BaseRule
-
   def rule_text
     'S3 Bucket policy should not allow * principal'
   end

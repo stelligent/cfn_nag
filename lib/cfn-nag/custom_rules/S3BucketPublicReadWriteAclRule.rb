@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class S3BucketPublicReadWriteAclRule < BaseRule
-
   def rule_text
     'S3 Bucket should not have a public read-write acl'
   end

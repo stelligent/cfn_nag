@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class UserMissingGroupRule < BaseRule
-
   def rule_text
     'User is not assigned to a group'
   end

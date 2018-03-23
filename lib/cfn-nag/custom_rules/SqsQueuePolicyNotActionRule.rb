@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SqsQueuePolicyNotActionRule < BaseRule
-
   def rule_text
     'SQS Queue policy should not allow Allow+NotAction'
   end
@@ -20,6 +19,6 @@ class SqsQueuePolicyNotActionRule < BaseRule
       !policy.policy_document.allows_not_action.empty?
     end
 
-    violating_policies.map { |policy| policy.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

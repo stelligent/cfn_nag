@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SnsTopicPolicyWildcardPrincipalRule < BaseRule
-
   def rule_text
     'SNS topic policy should not allow * principal'
   end

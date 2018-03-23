@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class RDSInstancePubliclyAccessibleRule < BaseRule
-
   def rule_text
     'RDS instance should not be publicly accessible'
   end
@@ -20,6 +19,6 @@ class RDSInstancePubliclyAccessibleRule < BaseRule
       instance.publiclyAccessible.nil? || instance.publiclyAccessible.to_s.downcase == 'true'
     end
 
-    violating_rdsinstances.map { |instance| instance.logical_resource_id }
+    violating_rdsinstances.map(&:logical_resource_id)
   end
 end

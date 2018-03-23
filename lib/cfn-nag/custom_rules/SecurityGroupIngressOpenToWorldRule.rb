@@ -4,7 +4,7 @@ require 'cfn-nag/ip_addr'
 
 class SecurityGroupIngressOpenToWorldRule < BaseRule
   include IpAddr
-  
+
   def rule_text
     'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB'
   end
@@ -35,6 +35,6 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
       ip4_open?(standalone_ingress) || ip6_open?(standalone_ingress)
     end
 
-    logical_resource_ids + violating_ingresses.map { |ingress| ingress.logical_resource_id}
+    logical_resource_ids + violating_ingresses.map(&:logical_resource_id)
   end
 end

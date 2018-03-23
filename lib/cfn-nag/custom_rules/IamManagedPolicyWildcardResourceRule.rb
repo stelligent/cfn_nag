@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class IamManagedPolicyWildcardResourceRule < BaseRule
-
   def rule_text
     'IAM managed policy should not allow * resource'
   end
@@ -20,6 +19,6 @@ class IamManagedPolicyWildcardResourceRule < BaseRule
       !policy.policy_document.wildcard_allowed_resources.empty?
     end
 
-    violating_policies.map { |policy| policy.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

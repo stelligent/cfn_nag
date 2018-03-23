@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class S3BucketPolicyNotPrincipalRule < BaseRule
-
   def rule_text
     'S3 Bucket policy should not allow Allow+NotPrincipal'
   end
@@ -20,6 +19,6 @@ class S3BucketPolicyNotPrincipalRule < BaseRule
       !policy.policy_document.allows_not_principal.empty?
     end
 
-    violating_policies.map { |policy| policy.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

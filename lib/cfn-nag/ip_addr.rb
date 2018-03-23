@@ -6,7 +6,6 @@ module IpAddr
     ingress.cidrIp.is_a?(String) && ingress.cidrIp == '0.0.0.0/0'
   end
 
-
   def ip6_open?(ingress)
     normalized_cidr_ip6 = normalize_cidr_ip6(ingress)
     return false if normalized_cidr_ip6.nil?

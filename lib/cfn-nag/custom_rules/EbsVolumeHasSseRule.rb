@@ -19,6 +19,6 @@ class EbsVolumeHasSseRule < BaseRule
       volume.encrypted.nil? || volume.encrypted.to_s.downcase == 'false'
     end
 
-    violating_volumes.map { |violating_user| violating_user.logical_resource_id }
+    violating_volumes.map(&:logical_resource_id)
   end
 end

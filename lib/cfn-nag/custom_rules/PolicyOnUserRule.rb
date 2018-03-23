@@ -19,6 +19,6 @@ class PolicyOnUserRule < BaseRule
       policy.users.size > 0
     end
 
-    violating_policies.map { |violating_user| violating_user.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

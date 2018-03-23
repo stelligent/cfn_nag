@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SecurityGroupEgressPortRangeRule < BaseRule
-
   def rule_text
     'Security Groups found egress with port range instead of just a single port'
   end
@@ -33,6 +32,6 @@ class SecurityGroupEgressPortRangeRule < BaseRule
       standalone_egress.fromPort != standalone_egress.toPort
     end
 
-    logical_resource_ids + violating_egresses.map { |egress| egress.logical_resource_id}
+    logical_resource_ids + violating_egresses.map(&:logical_resource_id)
   end
 end

@@ -35,6 +35,6 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
       ip4_open?(standalone_egress) || ip6_open?(standalone_egress)
     end
 
-    logical_resource_ids + violating_egresses.map { |egress| egress.logical_resource_id}
+    logical_resource_ids + violating_egresses.map(&:logical_resource_id)
   end
 end

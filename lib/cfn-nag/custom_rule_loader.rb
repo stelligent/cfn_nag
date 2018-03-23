@@ -40,7 +40,6 @@ class CustomRuleLoader
     rule_registry
   end
 
-
   def execute_custom_rules(cfn_model)
     Logging.logger['log'].debug "cfn_model: #{cfn_model}"
 
@@ -69,7 +68,7 @@ class CustomRuleLoader
       evaluator.instance_eval do
         eval IO.read jmespath_file
       end
-      violations +=  evaluator.violations
+      violations += evaluator.violations
     end
     violations
   end
@@ -138,7 +137,7 @@ class CustomRuleLoader
 
   def validate_extra_rule_directory(rule_directory)
     unless rule_directory.nil?
-      fail "Not a real directory #{rule_directory}" unless File.directory? rule_directory
+      raise "Not a real directory #{rule_directory}" unless File.directory? rule_directory
     end
   end
 

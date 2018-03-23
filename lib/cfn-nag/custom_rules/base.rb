@@ -1,11 +1,10 @@
 require 'cfn-nag/violation'
 
 class BaseRule
-
   ##
   # Returns a collection of logical resource ids
   #
-  def audit_impl(cfn_model)
+  def audit_impl(_cfn_model)
     raise 'must implement in subclass'
   end
 

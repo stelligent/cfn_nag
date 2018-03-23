@@ -20,6 +20,6 @@ class LambdaPermissionWildcardPrincipalRule < BaseRule
       LambdaPrincipal.wildcard? lambda_permission.principal
     end
 
-    violating_lambdas.map { |violating_lambda| violating_lambda.logical_resource_id }
+    violating_lambdas.map(&:logical_resource_id)
   end
 end

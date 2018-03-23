@@ -19,6 +19,6 @@ class ElasticLoadBalancerAccessLoggingRule < BaseRule
       elb.accessLoggingPolicy.nil? || elb.accessLoggingPolicy['Enabled'] != true
     end
 
-    violating_elbs.map { |violating_user| violating_user.logical_resource_id }
+    violating_elbs.map(&:logical_resource_id)
   end
 end

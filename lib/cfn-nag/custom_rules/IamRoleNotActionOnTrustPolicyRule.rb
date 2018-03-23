@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class IamRoleNotActionOnTrustPolicyRule < BaseRule
-
   def rule_text
     'IAM role should not allow Allow+NotAction on trust permissions'
   end
@@ -20,6 +19,6 @@ class IamRoleNotActionOnTrustPolicyRule < BaseRule
       !role.assume_role_policy_document.allows_not_action.empty?
     end
 
-    violating_roles.map { |role| role.logical_resource_id }
+    violating_roles.map(&:logical_resource_id)
   end
 end

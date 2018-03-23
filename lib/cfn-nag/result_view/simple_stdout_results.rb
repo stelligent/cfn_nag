@@ -1,12 +1,11 @@
 require 'cfn-nag/violation'
 
 class SimpleStdoutResults
-
   def render(results)
     results.each do |result|
-      (1..60).each { print '-' }
+      60.times { print '-' }
       puts "\n" + result[:filename]
-      (1..60).each { print '-' }
+      60.times { print '-' }
 
       result[:file_results][:violations].each do |violation|
         message message_type: "#{violation.type} #{violation.id}",
@@ -24,11 +23,9 @@ class SimpleStdoutResults
               message:,
               logical_resource_ids: nil)
 
-    if logical_resource_ids == []
-      logical_resource_ids = nil
-    end
+    logical_resource_ids = nil if logical_resource_ids == []
 
-    (1..60).each { print '-' }
+    60.times { print '-' }
     puts
     puts "| #{message_type.upcase}"
     puts '|'

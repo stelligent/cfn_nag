@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SqsQueuePolicyWildcardActionRule < BaseRule
-
   def rule_text
     'SQS Queue policy should not allow * action'
   end

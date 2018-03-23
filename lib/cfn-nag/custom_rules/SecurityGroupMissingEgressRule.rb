@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SecurityGroupMissingEgressRule < BaseRule
-
   def rule_text
     'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration'
   end

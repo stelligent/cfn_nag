@@ -1,6 +1,6 @@
 class RuleDefinition
-  WARNING = 'WARN'
-  FAILING_VIOLATION = 'FAIL'
+  WARNING = 'WARN'.freeze
+  FAILING_VIOLATION = 'FAIL'.freeze
 
   attr_reader :id, :type, :message
 
@@ -12,9 +12,7 @@ class RuleDefinition
     @message = message
 
     [@id, @type, @message].each do |required|
-      if required.nil?
-        raise 'No parameters to Violation constructor can be nil'
-      end
+      raise 'No parameters to Violation constructor can be nil' if required.nil?
     end
   end
 

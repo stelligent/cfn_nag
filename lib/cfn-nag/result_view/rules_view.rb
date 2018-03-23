@@ -1,9 +1,7 @@
 class RulesView
-
   def emit(rule_registry, profile)
-
     puts 'WARNING VIOLATIONS:'
-    rule_registry.warnings.sort {|left, right| sort_id(left, right) }.each do |warning|
+    rule_registry.warnings.sort { |left, right| sort_id(left, right) }.each do |warning|
       if profile.nil?
         puts "#{warning.id} #{warning.message}"
       else
@@ -12,7 +10,7 @@ class RulesView
     end
     puts
     puts 'FAILING VIOLATIONS:'
-    rule_registry.failings.sort {|left, right| sort_id(left, right) }.each do |failing|
+    rule_registry.failings.sort { |left, right| sort_id(left, right) }.each do |failing|
       if profile.nil?
         puts "#{failing.id} #{failing.message}"
       else
@@ -24,7 +22,7 @@ class RulesView
   private
 
   def sort_id(left, right)
-    if left.id.match /[FW][0-9]+/ and right.id.match /[FW][0-9]+/
+    if left.id.match(/[FW][0-9]+/) && right.id.match(/[FW][0-9]+/)
       left.id[1..-1].to_i <=> right.id[1..-1].to_i
     else
       left.id <=> right.id
