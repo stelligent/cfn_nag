@@ -8,7 +8,7 @@ describe S3BucketPublicReadWriteAclRule do
       cfn_model = CfnParser.new.parse read_test_template('json/s3_bucket/buckets_with_insecure_acl.json')
 
       actual_logical_resource_ids = S3BucketPublicReadWriteAclRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(S3BucketReadWrite)
+      expected_logical_resource_ids = %w[S3BucketReadWrite]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

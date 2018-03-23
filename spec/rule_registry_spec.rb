@@ -66,7 +66,6 @@ describe RuleRegistry do
         ]
         expect(@rule_registry.warnings).to eq expected_rules
       end
-
     end
 
     describe '#failures' do

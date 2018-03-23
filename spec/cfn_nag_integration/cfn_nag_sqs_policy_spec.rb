@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
@@ -21,7 +21,7 @@ describe CfnNag do
               Violation.new(id: 'W18',
                             type: Violation::WARNING,
                             message: 'SQS Queue policy should not allow Allow+NotAction',
-                            logical_resource_ids: %w(QueuePolicyWithNotAction QueuePolicyWithNotAction2))
+                            logical_resource_ids: %w[QueuePolicyWithNotAction QueuePolicyWithNotAction2])
             ]
           }
         }
@@ -32,4 +32,3 @@ describe CfnNag do
     end
   end
 end
-

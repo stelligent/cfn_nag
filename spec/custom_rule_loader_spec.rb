@@ -40,10 +40,9 @@ class FakeRule < BaseRule
   end
 end
 END
-        @custom_rule_directory = Dir.mktmpdir(%w(custom_rule loader))
+        @custom_rule_directory = Dir.mktmpdir(%w[custom_rule loader])
         File.open(File.join(@custom_rule_directory, 'FakeRule.rb'), 'w+') { |file| file.write fake_rule }
         @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
-
       end
 
       after(:each) do
@@ -70,7 +69,7 @@ END
           Violation.new(id: 'W9933',
                         type: Violation::WARNING,
                         message: 'this is fake rule text',
-                        logical_resource_ids: %w(hardwired1 hardwired2))
+                        logical_resource_ids: %w[hardwired1 hardwired2])
         ]
 
         expect(actual_violations).to eq expected_violations

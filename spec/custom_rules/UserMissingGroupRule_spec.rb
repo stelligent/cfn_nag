@@ -3,7 +3,6 @@ require 'cfn-nag/custom_rules/UserMissingGroupRule'
 require 'cfn-model'
 
 describe UserMissingGroupRule do
-
   context 'when resource template creates iam user with no group' do
     before(:all) do
       template_name = 'json/iam_user/iam_user_with_no_group.json'

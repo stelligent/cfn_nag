@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
@@ -21,7 +21,7 @@ describe CfnNag do
               Violation.new(id: 'F2000',
                             type: Violation::FAILING_VIOLATION,
                             message: 'User is not assigned to a group',
-                            logical_resource_ids: %w(myuser2)),
+                            logical_resource_ids: %w[myuser2])
             ]
           }
         }
@@ -32,6 +32,3 @@ describe CfnNag do
     end
   end
 end
-
-
-

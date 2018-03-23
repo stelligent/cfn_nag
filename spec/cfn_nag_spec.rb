@@ -93,7 +93,7 @@ describe CfnNag do
                 Violation.new(id: 'F16',
                               type: Violation::FAILING_VIOLATION,
                               message: 'S3 Bucket policy should not allow * principal',
-                              logical_resource_ids: %w(S3BucketPolicy2))
+                              logical_resource_ids: %w[S3BucketPolicy2])
 
               ]
             }
@@ -130,15 +130,15 @@ describe CfnNag do
               Violation.new(id: 'W9',
                             type: Violation::WARNING,
                             message: 'Security Groups found with ingress cidr that is not /32',
-                            logical_resource_ids: %w(sgOpenIngress)),
+                            logical_resource_ids: %w[sgOpenIngress]),
               Violation.new(id: 'W2',
                             type: Violation::WARNING,
                             message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                            logical_resource_ids: %w(sgOpenIngress)),
+                            logical_resource_ids: %w[sgOpenIngress]),
               Violation.new(id: 'F1000',
                             type: Violation::FAILING_VIOLATION,
                             message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                            logical_resource_ids: %w(sgOpenIngress))
+                            logical_resource_ids: %w[sgOpenIngress])
             ]
           }
         }
@@ -150,9 +150,9 @@ Suppressing W2 on sgOpenIngress2 for reason: This security group is attached to 
 Suppressing F1000 on sgOpenIngress2 for reason: To enable sensitive data exfiltration ;)
 END
       actual_aggregate_results = nil
-      expect {
+      expect do
         actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(input_path: test_template_path(template_name))
-      }.to output(expected_stderr).to_stderr_from_any_process
+      end.to output(expected_stderr).to_stderr_from_any_process
 
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
@@ -173,15 +173,15 @@ END
               Violation.new(id: 'W9',
                             type: Violation::WARNING,
                             message: 'Security Groups found with ingress cidr that is not /32',
-                            logical_resource_ids: %w(sgOpenIngress sgOpenIngress2)),
+                            logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]),
               Violation.new(id: 'W2',
                             type: Violation::WARNING,
                             message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                            logical_resource_ids: %w(sgOpenIngress sgOpenIngress2)),
+                            logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]),
               Violation.new(id: 'F1000',
                             type: Violation::FAILING_VIOLATION,
                             message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                            logical_resource_ids: %w(sgOpenIngress sgOpenIngress2))
+                            logical_resource_ids: %w[sgOpenIngress sgOpenIngress2])
             ]
           }
         }
@@ -214,7 +214,7 @@ END
             violations: [
               Violation.new(id: 'FATAL',
                             type: Violation::FAILING_VIOLATION,
-                            message: '(<unknown>): mapping values are not allowed in this context at line 3 column 15'),
+                            message: '(<unknown>): mapping values are not allowed in this context at line 3 column 15')
             ]
           }
         }

@@ -8,7 +8,7 @@ describe S3BucketPolicyNotPrincipalRule do
       cfn_model = CfnParser.new.parse read_test_template('json/s3_bucket_policy/s3_bucket_policy_with_not_principal.json')
 
       actual_logical_resource_ids = S3BucketPolicyNotPrincipalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(S3BucketPolicy)
+      expected_logical_resource_ids = %w[S3BucketPolicy]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

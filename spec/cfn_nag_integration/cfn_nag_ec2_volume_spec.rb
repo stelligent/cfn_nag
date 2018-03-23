@@ -3,13 +3,12 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
   context 'EBS volumes without encryption', :ebs do
     it 'flags a violation' do
-
       template_name = 'json/ec2_volume/two_ebs_volumes_with_no_encryption.json'
 
       expected_aggregate_results = [
@@ -21,7 +20,7 @@ describe CfnNag do
               Violation.new(id: 'F1',
                             type: Violation::FAILING_VIOLATION,
                             message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w(NewVolume1 NewVolume2))
+                            logical_resource_ids: %w[NewVolume1 NewVolume2])
             ]
           }
         }
@@ -34,7 +33,6 @@ describe CfnNag do
 
   context 'EBS volumes with encryption', :ebs do
     it 'flags a violation' do
-
       template_name = 'json/ec2_volume/ebs_volume_with_encryption.json'
 
       expected_aggregate_results = [
@@ -53,4 +51,3 @@ describe CfnNag do
     end
   end
 end
-

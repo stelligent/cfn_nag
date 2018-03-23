@@ -8,7 +8,7 @@ describe EbsVolumeHasSseRule do
       cfn_model = CfnParser.new.parse read_test_template('json/ec2_volume/two_ebs_volumes_with_no_encryption.json')
 
       actual_logical_resource_ids = EbsVolumeHasSseRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(NewVolume1 NewVolume2)
+      expected_logical_resource_ids = %w[NewVolume1 NewVolume2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -30,7 +30,7 @@ describe EbsVolumeHasSseRule do
       cfn_model = CfnParser.new.parse read_test_template('json/ec2_volume/ebs_volume_without_encryption_string.json')
 
       actual_logical_resource_ids = EbsVolumeHasSseRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(NewVolumeA)
+      expected_logical_resource_ids = %w[NewVolumeA]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -42,7 +42,7 @@ describe EbsVolumeHasSseRule do
                                       IO.read('spec/test_templates/json/ec2_volume/ebs_volume_parameters.json')
 
       actual_logical_resource_ids = EbsVolumeHasSseRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(NewVolumeA)
+      expected_logical_resource_ids = %w[NewVolumeA]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

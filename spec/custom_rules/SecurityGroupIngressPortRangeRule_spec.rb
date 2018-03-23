@@ -8,7 +8,7 @@ describe SecurityGroupIngressPortRangeRule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/single_security_group_one_cidr_ingress.json')
 
       actual_logical_resource_ids = SecurityGroupIngressPortRangeRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(sg)
+      expected_logical_resource_ids = %w[sg]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -19,7 +19,7 @@ describe SecurityGroupIngressPortRangeRule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/dangling_ingress_rule.json')
 
       actual_logical_resource_ids = SecurityGroupIngressPortRangeRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(danglingIngress)
+      expected_logical_resource_ids = %w[danglingIngress]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

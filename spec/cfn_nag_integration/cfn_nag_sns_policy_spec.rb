@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
@@ -21,7 +21,7 @@ describe CfnNag do
               Violation.new(id: 'F18',
                             type: Violation::FAILING_VIOLATION,
                             message: 'SNS topic policy should not allow * principal',
-                            logical_resource_ids: %w(mysnspolicy0 mysnspolicy1 mysnspolicy2 mysnspolicy3)),
+                            logical_resource_ids: %w[mysnspolicy0 mysnspolicy1 mysnspolicy2 mysnspolicy3])
             ]
           }
         }
@@ -32,4 +32,3 @@ describe CfnNag do
     end
   end
 end
-

@@ -8,7 +8,7 @@ describe CloudFormationAuthenticationRule do
       cfn_model = CfnParser.new.parse read_test_template('json/ec2_instance/cfn_authentication.json')
 
       actual_logical_resource_ids = CloudFormationAuthenticationRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(EC2I4LBA1)
+      expected_logical_resource_ids = %w[EC2I4LBA1]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

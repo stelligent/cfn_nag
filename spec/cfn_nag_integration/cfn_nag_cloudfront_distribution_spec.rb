@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
@@ -20,7 +20,7 @@ describe CfnNag do
               Violation.new(id: 'W10',
                             type: Violation::WARNING,
                             message: 'CloudFront Distribution should enable access logging',
-                            logical_resource_ids: %w(rDistribution2))
+                            logical_resource_ids: %w[rDistribution2])
             ]
           }
         }
@@ -31,6 +31,3 @@ describe CfnNag do
     end
   end
 end
-
-
-

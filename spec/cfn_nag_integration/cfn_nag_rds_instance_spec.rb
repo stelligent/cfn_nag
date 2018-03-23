@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag::configure_logging({debug: false})
+    CfnNag.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
@@ -20,7 +20,7 @@ describe CfnNag do
               Violation.new(id: 'F22',
                             type: Violation::FAILING_VIOLATION,
                             message: 'RDS instance should not be publicly accessible',
-                            logical_resource_ids: %w(PublicDB))
+                            logical_resource_ids: %w[PublicDB])
             ]
           }
         }
@@ -31,6 +31,3 @@ describe CfnNag do
     end
   end
 end
-
-
-

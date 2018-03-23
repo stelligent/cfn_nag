@@ -8,7 +8,7 @@ describe IamRoleNotActionOnTrustPolicyRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iam_role/iam_role_not_action_on_trust.json')
 
       actual_logical_resource_ids = IamRoleNotActionOnTrustPolicyRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(NotActionTrustRole)
+      expected_logical_resource_ids = %w[NotActionTrustRole]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

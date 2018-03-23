@@ -11,10 +11,10 @@ describe TemplateDiscovery do
 
   describe '#discover_templates' do
     context 'illegitimate path' do
-      it 'raises an error'   do
-        expect {
+      it 'raises an error' do
+        expect do
           @template_discovery.discover_templates '/an/impossible/path/to/find'
-        }.to raise_error '/an/impossible/path/to/find is not a proper path'
+        end.to raise_error '/an/impossible/path/to/find is not a proper path'
       end
     end
 
@@ -41,12 +41,12 @@ describe TemplateDiscovery do
 
           actual_templates = @template_discovery.discover_templates temp_directory
 
-          expected_templates = %W(
+          expected_templates = %W[
             #{temp_directory}/secondlevel/foo1.yml
             #{temp_directory}/secondlevel/foo2.yaml
             #{temp_directory}/foo3.template
             #{temp_directory}/foo4.json
-          )
+          ]
           expect(Set.new(actual_templates)).to eq Set.new(expected_templates)
         ensure
           FileUtils.rm_rf temp_directory
@@ -55,4 +55,3 @@ describe TemplateDiscovery do
     end
   end
 end
-

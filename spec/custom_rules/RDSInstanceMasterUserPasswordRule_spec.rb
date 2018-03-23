@@ -8,7 +8,7 @@ describe RDSInstanceMasterUserPasswordRule, :rule do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_no_echo_password.json')
 
       actual_logical_resource_ids = RDSInstanceMasterUserPasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w()
+      expected_logical_resource_ids = %w[]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -19,7 +19,7 @@ describe RDSInstanceMasterUserPasswordRule, :rule do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_literal_password.json')
 
       actual_logical_resource_ids = RDSInstanceMasterUserPasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(BadDb)
+      expected_logical_resource_ids = %w[BadDb]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -30,7 +30,7 @@ describe RDSInstanceMasterUserPasswordRule, :rule do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_plain_parameter.json')
 
       actual_logical_resource_ids = RDSInstanceMasterUserPasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(BadDb3)
+      expected_logical_resource_ids = %w[BadDb3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -41,7 +41,7 @@ describe RDSInstanceMasterUserPasswordRule, :rule do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_no_echo_with_default_password.json')
 
       actual_logical_resource_ids = RDSInstanceMasterUserPasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(BadDb2)
+      expected_logical_resource_ids = %w[BadDb2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

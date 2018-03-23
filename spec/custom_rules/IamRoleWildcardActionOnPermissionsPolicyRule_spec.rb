@@ -8,7 +8,7 @@ describe IamRoleWildcardActionOnPermissionsPolicyRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iam_role/iam_role_with_wildcard_action.json')
 
       actual_logical_resource_ids = IamRoleWildcardActionOnPermissionsPolicyRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(WildcardActionRole)
+      expected_logical_resource_ids = %w[WildcardActionRole]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

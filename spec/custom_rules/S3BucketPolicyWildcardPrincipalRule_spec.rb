@@ -8,7 +8,7 @@ describe S3BucketPolicyWildcardPrincipalRule do
       cfn_model = CfnParser.new.parse read_test_template('json/s3_bucket_policy/s3_bucket_with_wildcards.json')
 
       actual_logical_resource_ids = S3BucketPolicyWildcardPrincipalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(S3BucketPolicy2)
+      expected_logical_resource_ids = %w[S3BucketPolicy2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

@@ -26,9 +26,9 @@ F1 EBS volume should have server-side encryption enabled
 F9 S3 Bucket policy should not allow Allow+NotPrincipal
 END
 
-      expect {
+      expect do
         @rule_dumper.dump_rules
-      }.to output(expected_output).to_stdout
+      end.to output(expected_output).to_stdout
     end
   end
 end
