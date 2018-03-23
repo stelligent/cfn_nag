@@ -2,6 +2,7 @@ require 'cfn-nag'
 require 'json'
 require_relative 'clients'
 
+# Invoke on API Gateway
 class ApiGatewayInvoker
   include Clients
 
