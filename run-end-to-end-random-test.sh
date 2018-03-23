@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-rvm use 2.2.1
+rvm use 2.2.9
 rvm --force gemset delete cfn_nag
 rvm gemset use cfn_nag --create
 
