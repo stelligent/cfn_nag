@@ -21,7 +21,9 @@ describe TemplateDiscovery do
     context 'input path is file' do
       it 'returns array with filename' do
         Tempfile.open('/foo') do |tempfile|
-          actual_templates = @template_discovery.discover_templates tempfile.path
+          actual_templates = @template_discovery.discover_templates(
+            tempfile.path
+          )
           expected_templates = [tempfile.path]
           expect(actual_templates).to eq expected_templates
         end
@@ -33,13 +35,21 @@ describe TemplateDiscovery do
         begin
           temp_directory = "/tmp/testing#{Time.now.to_i}"
           FileUtils.mkdir_p "#{temp_directory}/secondlevel"
-          File.open("#{temp_directory}/secondlevel/foo1.yml", 'w+') { |f| f.write 'foo1' }
-          File.open("#{temp_directory}/secondlevel/foo2.yaml", 'w+') { |f| f.write 'foo2' }
-          File.open("#{temp_directory}/foo3.template", 'w+') { |f| f.write 'foo3' }
+          File.open("#{temp_directory}/secondlevel/foo1.yml", 'w+') do |f|
+            f.write 'foo1'
+          end
+          File.open("#{temp_directory}/secondlevel/foo2.yaml", 'w+') do |f|
+            f.write 'foo2'
+          end
+          File.open("#{temp_directory}/foo3.template", 'w+') do |f|
+            f.write 'foo3'
+          end
           File.open("#{temp_directory}/foo4.json", 'w+') { |f| f.write 'foo4' }
           File.open("#{temp_directory}/foo5", 'w+') { |f| f.write 'foo5' }
 
-          actual_templates = @template_discovery.discover_templates temp_directory
+          actual_templates = @template_discovery.discover_templates(
+            temp_directory
+          )
 
           expected_templates = %W[
             #{temp_directory}/secondlevel/foo1.yml
