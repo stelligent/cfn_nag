@@ -17,16 +17,20 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              Violation.new(id: 'F1',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w[NewVolume1 NewVolume2])
+              Violation.new(
+                id: 'F1', type: Violation::FAILING_VIOLATION,
+                message:
+                'EBS volume should have server-side encryption enabled',
+                logical_resource_ids: %w[NewVolume1 NewVolume2]
+              )
             ]
           }
         }
       ]
 
-      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(input_path: test_template_path(template_name))
+      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(
+        input_path: test_template_path(template_name)
+      )
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
@@ -40,13 +44,14 @@ describe CfnNag do
           filename: test_template_path(template_name),
           file_results: {
             failure_count: 0,
-            violations: [
-            ]
+            violations: []
           }
         }
       ]
 
-      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(input_path: test_template_path(template_name))
+      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(
+        input_path: test_template_path(template_name)
+      )
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
