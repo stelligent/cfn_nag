@@ -1,7 +1,7 @@
 require 'cfn-nag/violation'
 
+# Plaintext summary of failures/warnings
 class PlainTextSummary
-
   def render(audit_results)
     @results = ''
     warning_count = 0
