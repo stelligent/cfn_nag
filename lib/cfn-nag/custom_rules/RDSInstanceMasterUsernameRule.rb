@@ -32,7 +32,7 @@ class RDSInstanceMasterUsernameRule < BaseRule
       end
     end
 
-     violating_rdsinstances.map { |instance| instance.logical_resource_id }
+    violating_rdsinstances.map(&:logical_resource_id)
   end
 
   private
