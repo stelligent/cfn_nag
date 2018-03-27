@@ -54,7 +54,7 @@ cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      opts[:isolate_custom_rule_exceptions])
 
 total_failure_count = 0
-until ARGF.closed?
+until ARGF.closed? || ARGF.eof?
   results = cfn_nag.audit(cloudformation_string: ARGF.file.read,
                           parameter_values_string: parameter_values_string)
   ARGF.close
