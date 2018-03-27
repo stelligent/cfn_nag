@@ -16,6 +16,9 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '~> 2.2'
 
+  s.add_development_dependency('rspec', '~> 3.4')
+  s.add_development_dependency('simplecov', '~> 0.11')
+
   s.add_runtime_dependency('cfn-model', '0.1.22')
   s.add_runtime_dependency('jmespath', '1.3.1')
   s.add_runtime_dependency('logging', '2.2.2')
