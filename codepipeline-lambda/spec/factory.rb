@@ -1,7 +1,8 @@
 def no_violations_cfn_templates
   [
     {
-      name: 'spec/test_templates/json/ec2_volume/ebs_volume_with_encryption.json',
+      name:
+      'spec/test_templates/json/ec2_volume/ebs_volume_with_encryption.json',
       contents: <<END
 {
   "Resources": {
@@ -25,7 +26,8 @@ end
 def json_templates_zip_file_contents
   [
     {
-      name: 'spec/test_templates/json/ec2_volume/ebs_volume_with_encryption.json',
+      name:
+      'spec/test_templates/json/ec2_volume/ebs_volume_with_encryption.json',
       contents: <<END
 {
   "Resources": {
@@ -44,7 +46,9 @@ def json_templates_zip_file_contents
 END
     },
     {
-      name: 'spec/test_templates/json/ec2_volume/ebs_volume_without_encryption_string.json',
+      name:
+      'spec/test_templates/json/ec2_volume/' \
+      'ebs_volume_without_encryption_string.json',
       contents: <<END
 {
   "Resources": {
@@ -63,7 +67,9 @@ END
 END
     },
     {
-      name: 'spec/test_templates/json/ec2_volume/two_ebs_volumes_with_no_encryption.json',
+      name:
+      'spec/test_templates/json/ec2_volume/' \
+      'two_ebs_volumes_with_no_encryption.json',
       contents: <<END
 {
   "Resources": {

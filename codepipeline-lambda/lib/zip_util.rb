@@ -8,7 +8,9 @@ class ZipUtil
 
     Zip::File.open(zip_file_path) do |zip_file|
       entries = zip_file.glob(file_path_within_zip)
-      raise "#{file_path_within_zip} not found in #{zip_file.entries}" if entries.empty?
+      if entries.empty?
+        raise "#{file_path_within_zip} not found in #{zip_file.entries}"
+      end
 
       entries.each do |entry|
         file_contents << {
