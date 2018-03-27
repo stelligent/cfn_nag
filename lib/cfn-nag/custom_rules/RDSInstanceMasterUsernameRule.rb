@@ -38,7 +38,7 @@ class RDSInstanceMasterUsernameRule < BaseRule
   private
 
   def to_boolean(string)
-    if string.to_s.downcase == 'true'
+    if string.to_s.casecmp('true').zero?
       true
     else
       false
