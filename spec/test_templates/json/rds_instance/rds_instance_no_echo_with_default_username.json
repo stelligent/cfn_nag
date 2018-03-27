@@ -1,0 +1,20 @@
+{
+  "Parameters": {
+    "Username": {
+      "Type": "String",
+      "NoEcho": "true",
+      "Default": "shameshame"
+    }
+  },
+  "Resources": {
+    "BadDb2": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "SourceDBInstanceIdentifier": "sampleDbInstance",
+        "MasterUsername": {
+          "Ref": "Username"
+        }
+      }
+    }
+  }
+}

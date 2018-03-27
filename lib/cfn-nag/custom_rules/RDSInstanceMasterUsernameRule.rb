@@ -1,9 +1,10 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class RDSInstanceMasterUserPasswordRule < BaseRule
+class RDSInstanceMasterUsernameRule < BaseRule
+
   def rule_text
-    'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended'
+    'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended'
   end
 
   def rule_type
@@ -11,7 +12,7 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
   end
 
   def rule_id
-    'F23'
+    'F24'
   end
 
   # one word of warning... if somebody applies parameter values via JSON.... this will compare that....
@@ -19,14 +20,14 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
   # bother checking synthesized_value? that would be the indicator.....
   def audit_impl(cfn_model)
     violating_rdsinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance').select do |instance|
-      if instance.masterUserPassword.nil?
+      if instance.masterUsername.nil?
         false
       else
-        !references_no_echo_parameter_without_default?(cfn_model, instance.masterUserPassword)
+        !references_no_echo_parameter_without_default?(cfn_model, instance.masterUsername)
       end
     end
 
-    violating_rdsinstances.map(&:logical_resource_id)
+     violating_rdsinstances.map { |instance| instance.logical_resource_id }
   end
 
   private
@@ -39,12 +40,11 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
     end
   end
 
-  def references_no_echo_parameter_without_default?(cfn_model, master_user_password)
-    # i feel like i've written this mess somewhere before
-    if master_user_password.is_a? Hash
-      if master_user_password.key? 'Ref'
-        if cfn_model.parameters.key? master_user_password['Ref']
-          parameter = cfn_model.parameters[master_user_password['Ref']]
+  def references_no_echo_parameter_without_default?(cfn_model, master_username)
+    if master_username.is_a? Hash
+      if master_username.has_key? 'Ref'
+        if cfn_model.parameters.has_key? master_username['Ref']
+          parameter = cfn_model.parameters[master_username['Ref']]
 
           return to_boolean(parameter.noEcho) && parameter.default.nil?
         else
