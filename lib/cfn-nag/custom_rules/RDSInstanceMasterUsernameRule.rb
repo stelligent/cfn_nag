@@ -47,8 +47,8 @@ class RDSInstanceMasterUsernameRule < BaseRule
 
   def references_no_echo_parameter_without_default?(cfn_model, master_username)
     if master_username.is_a? Hash
-      if master_username.has_key? 'Ref'
-        if cfn_model.parameters.has_key? master_username['Ref']
+      if master_username.key? 'Ref'
+        if cfn_model.parameters.key? master_username['Ref']
           parameter = cfn_model.parameters[master_username['Ref']]
 
           return to_boolean(parameter.noEcho) && parameter.default.nil?
