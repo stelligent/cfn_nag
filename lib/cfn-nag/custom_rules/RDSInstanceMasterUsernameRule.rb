@@ -1,6 +1,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
+# cfn_nag rules related to RDS Instance master username
 class RDSInstanceMasterUsernameRule < BaseRule
 
   def rule_text
