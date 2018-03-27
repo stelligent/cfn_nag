@@ -65,9 +65,10 @@ fi
 
 export issues=""$(git log ${log_rev_range} --oneline | awk '{print $2}' | grep "${issue_prefix}" | uniq)
 
-git tag -a "v${GEM_VERSION}" -m "${GEM_VERSION}" -m "Issues with commits, not necessarily closed: ${issues}"
-
-git push --tags
+if [ $tagged_commit = 0 ]; then
+  git tag -a "v${GEM_VERSION}" -m "${GEM_VERSION}" -m "Issues with commits, not necessarily closed: ${issues}"
+  git push --tags
+fi
 
 # gemspec respects GEM_VERSION envvar
 gem build cfn-nag.gemspec
