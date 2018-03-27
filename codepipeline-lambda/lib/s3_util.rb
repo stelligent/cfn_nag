@@ -2,6 +2,7 @@ require 'aws-sdk'
 require 'tempfile'
 require_relative 'clients'
 
+# S3 utility methods
 class S3Util
   include Clients
 
@@ -15,7 +16,8 @@ class S3Util
 
     tempfile = "/tmp/s3util#{Time.now.to_i}#{Time.now.to_i}"
     File.open(tempfile, 'wb') do |file|
-      s3(region: bucket_region).get_object(bucket: bucket_name, key: object_key) do |chunk|
+      s3(region: bucket_region).get_object(bucket: bucket_name,
+                                           key: object_key) do |chunk|
         file.write(chunk)
       end
     end
