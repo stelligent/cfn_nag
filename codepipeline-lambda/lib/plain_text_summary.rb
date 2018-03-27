@@ -4,11 +4,11 @@ require 'cfn-nag/violation'
 class PlainTextSummary
   def render(audit_results)
     @results = ''
-    warning_count = 0
-    fail_count = 0
+    warning_count = fail_count = 0
     audit_results.each do |audit_result|
-      fail_count += Violation.count_failures(audit_result[:audit_result][:violations])
-      warning_count += Violation.count_warnings(audit_result[:audit_result][:violations])
+      violations = audit_result[:audit_result][:violations]
+      fail_count += Violation.count_failures violations
+      warning_count += Violation.count_warnings violations
     end
     @results += "Failures count: #{fail_count}#{nl}"
     @results += "Warnings count: #{warning_count}#{nl}"
