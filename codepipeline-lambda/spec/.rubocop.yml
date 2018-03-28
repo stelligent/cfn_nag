@@ -1,0 +1,7 @@
+# specs tend to have long blocks
+Metrics/BlockLength:
+  Max: 250
+Naming/FileName:
+  Enabled: false
+Layout/IndentHeredoc:
+  Enabled: false
