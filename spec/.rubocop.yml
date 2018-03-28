@@ -1,5 +1,5 @@
 # specs tend to have long blocks
 Metrics/BlockLength:
-  Max: 150
+  Max: 200
 Naming/FileName:
   Enabled: false
