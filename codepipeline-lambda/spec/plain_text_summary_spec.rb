@@ -11,10 +11,13 @@ describe PlainTextSummary do
           audit_result: {
             failure_count: 2,
             violations: [
-              Violation.new(id: 'F1',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w(NewVolume1 NewVolume2))
+              Violation.new(
+                id: 'F1',
+                type: Violation::FAILING_VIOLATION,
+                message:
+                'EBS volume should have server-side encryption enabled',
+                logical_resource_ids: %w[NewVolume1 NewVolume2]
+              )
             ]
           }
         },
@@ -30,10 +33,13 @@ describe PlainTextSummary do
           audit_result: {
             failure_count: 0,
             violations: [
-              Violation.new(id: 'F1',
-                            type: Violation::WARNING,
-                            message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w(NewVolume1))
+              Violation.new(
+                id: 'F1',
+                type: Violation::WARNING,
+                message:
+                'EBS volume should have server-side encryption enabled',
+                logical_resource_ids: %w[NewVolume1]
+              )
             ]
           }
         },
@@ -42,20 +48,23 @@ describe PlainTextSummary do
           audit_result: {
             failure_count: 1,
             violations: [
-              Violation.new(id: 'F1',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w(NewVolume1))
+              Violation.new(
+                id: 'F1',
+                type: Violation::FAILING_VIOLATION,
+                message:
+                'EBS volume should have server-side encryption enabled',
+                logical_resource_ids: %w[NewVolume1]
+              )
             ]
           }
-        },
+        }
       ]
 
       actual_summary = PlainTextSummary.new.render audit_results
-      expected_summary = <<END
+      expected_summary = <<SUMMARY
 Failures count: 3
 Warnings count: 1
-END
+SUMMARY
       expect(actual_summary).to eq expected_summary
     end
   end

@@ -14,10 +14,11 @@ class CfnNag
                  print_suppression: false,
                  isolate_custom_rule_exceptions: false)
     @rule_directory = rule_directory
-    @custom_rule_loader = CustomRuleLoader.new(rule_directory: rule_directory,
-                                               allow_suppression: allow_suppression,
-                                               print_suppression: print_suppression,
-                                               isolate_custom_rule_exceptions: isolate_custom_rule_exceptions)
+    @custom_rule_loader = CustomRuleLoader.new(
+      rule_directory: rule_directory, allow_suppression: allow_suppression,
+      print_suppression: print_suppression,
+      isolate_custom_rule_exceptions: isolate_custom_rule_exceptions
+    )
     @profile_definition = profile_definition
   end
 
@@ -26,10 +27,12 @@ class CfnNag
   #
   # Return an aggregate failure count (for exit code usage)
   #
-  def audit_aggregate_across_files_and_render_results(input_path:,
-                                                      output_format: 'txt',
-                                                      parameter_values_path: nil)
-    aggregate_results = audit_aggregate_across_files input_path: input_path, parameter_values_path: parameter_values_path
+  def audit_aggregate_across_files_and_render_results(
+    input_path:, output_format: 'txt', parameter_values_path: nil
+  )
+    aggregate_results = \
+      audit_aggregate_across_files input_path: input_path,
+                                   parameter_values_path: parameter_values_path
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -43,7 +46,8 @@ class CfnNag
   # Given a file or directory path, return aggregate results
   #
   def audit_aggregate_across_files(input_path:, parameter_values_path: nil)
-    parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
+    parameter_values_string = \
+      parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
     templates = TemplateDiscovery.new.discover_templates(input_path)
     aggregate_results = []
     templates.each do |template|
@@ -59,7 +63,8 @@ class CfnNag
   ##
   # Given cloudformation json/yml, run all the rules against it
   #
-  # Optionally include JSON with Parameters key to substitute into cfn_model.parameters
+  # Optionally include JSON with Parameters key to substitute into
+  # cfn_model.parameters
   #
   # Return a hash with failure count
   #
@@ -68,7 +73,8 @@ class CfnNag
     violations = []
 
     begin
-      cfn_model = CfnParser.new.parse cloudformation_string, parameter_values_string
+      cfn_model = CfnParser.new.parse cloudformation_string,
+                                      parameter_values_string
     rescue Psych::SyntaxError, ParserError => parser_error
       violations << Violation.new(id: 'FATAL',
                                   type: Violation::FAILING_VIOLATION,
@@ -76,9 +82,10 @@ class CfnNag
       stop_processing = true
     end
 
-    violations += @custom_rule_loader.execute_custom_rules(cfn_model) unless stop_processing == true
-
-    violations = filter_violations_by_profile violations unless stop_processing == true
+    unless stop_processing == true
+      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+      violations = filter_violations_by_profile violations
+    end
 
     {
       failure_count: Violation.count_failures(violations),
@@ -102,7 +109,8 @@ class CfnNag
   def filter_violations_by_profile(violations)
     profile = nil
     unless @profile_definition.nil?
-      profile = ProfileLoader.new(@custom_rule_loader.rule_definitions).load(profile_definition: @profile_definition)
+      profile = ProfileLoader.new(@custom_rule_loader.rule_definitions)
+                             .load(profile_definition: @profile_definition)
     end
 
     violations.reject do |violation|
