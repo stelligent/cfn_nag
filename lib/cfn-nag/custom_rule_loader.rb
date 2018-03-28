@@ -141,9 +141,8 @@ class CustomRuleLoader
   end
 
   def validate_extra_rule_directory(rule_directory)
-    unless rule_directory.nil?
-      raise "Not a real directory #{rule_directory}" unless File.directory? rule_directory
-    end
+    return true if rule_directory.nil? || File.directory?(rule_directory)
+    raise "Not a real directory #{rule_directory}"
   end
 
   def discover_rule_filenames(rule_directory)
