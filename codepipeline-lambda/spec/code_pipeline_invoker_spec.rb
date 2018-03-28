@@ -11,7 +11,7 @@ describe CodePipelineInvoker do
       }
     }
     expect($lambdaContext).to receive(:getAwsRequestId)
-                          .and_return '1234'
+      .and_return '1234'
 
     @stubbed_codepipeline = Aws::CodePipeline::Client.new(stub_responses: true)
     @stubbed_codepipeline.stub_responses(:put_job_failure_result, {})
@@ -22,7 +22,7 @@ describe CodePipelineInvoker do
     allow(@code_pipeline_invoker).to receive(:log) { |message| puts message }
 
     allow(@code_pipeline_invoker).to receive(:codepipeline)
-                                 .and_return(@stubbed_codepipeline)
+      .and_return(@stubbed_codepipeline)
   end
 
   context 'when the audit raises an error' do
@@ -30,12 +30,12 @@ describe CodePipelineInvoker do
 
 
       expect(@code_pipeline_invoker).to receive(:audit_impl)
-                                    .and_raise('cause a failure')
+        .and_raise('cause a failure')
 
       # this expectatoin is what we care most about
       expect(@stubbed_codepipeline).to receive(:put_job_failure_result)
-                                   .exactly(1)
-                                   .times
+        .exactly(1)
+        .times
 
       # expectations are above us
       @code_pipeline_invoker.audit
@@ -45,13 +45,13 @@ describe CodePipelineInvoker do
   context 'when there are failing violations' do
     it 'marks the job result as a success' do
       expect(CodePipelineUtil).to receive(:retrieve_files_within_input_artifact)
-                              .with(any_args)
-                              .and_return(json_templates_zip_file_contents)
+        .with(any_args)
+        .and_return(json_templates_zip_file_contents)
 
       # this expectatoin is what we care most about
       expect(@stubbed_codepipeline).to receive(:put_job_failure_result)
-                                   .exactly(1)
-                                   .times
+        .exactly(1)
+        .times
 
       # expectations are above us
       @code_pipeline_invoker.audit
@@ -61,13 +61,13 @@ describe CodePipelineInvoker do
   context 'when there are no failing violations' do
     it 'marks the job result as a failure' do
       expect(CodePipelineUtil).to receive(:retrieve_files_within_input_artifact)
-                              .with(any_args)
-                              .and_return(no_violations_cfn_templates)
+        .with(any_args)
+        .and_return(no_violations_cfn_templates)
 
       # this expectatoin is what we care most about
       expect(@stubbed_codepipeline).to receive(:put_job_success_result)
-                                   .exactly(1)
-                                   .times
+        .exactly(1)
+        .times
 
       # expectations are above us
       @code_pipeline_invoker.audit
