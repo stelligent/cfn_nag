@@ -19,7 +19,7 @@ class ProfileLoader
         rule_id = rule_line_match.captures.first
         if @rules_registry.by_id(rule_id) == nil
           raise "#{rule_id} is not a legal rule identifier from: " \
-                "#{@rules_registry.rules.map { |rule| rule.id }}"
+                "#{@rules_registry.rules.map(&:id)}"
         else
           new_profile.add_rule rule_id
         end
