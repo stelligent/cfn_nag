@@ -15,9 +15,10 @@ class EbsVolumeHasSseRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_volumes = cfn_model.resources_by_type('AWS::EC2::Volume').select do |volume|
-      volume.encrypted.nil? || volume.encrypted.to_s.downcase == 'false'
-    end
+    violating_volumes = \
+      cfn_model.resources_by_type('AWS::EC2::Volume').select do |volume|
+        volume.encrypted.nil? || volume.encrypted.to_s.downcase == 'false'
+      end
 
     violating_volumes.map(&:logical_resource_id)
   end

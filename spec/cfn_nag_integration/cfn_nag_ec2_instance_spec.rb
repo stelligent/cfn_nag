@@ -17,16 +17,22 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(id: 'W1',
-                            type: Violation::WARNING,
-                            message: 'Specifying credentials in the template itself is probably not the safest thing',
-                            logical_resource_ids: %w[EC2I4LBA1])
+              Violation.new(
+                id: 'W1', type: Violation::WARNING,
+                message:
+                'Specifying credentials in the template itself is ' \
+                'probably not the safest thing',
+                logical_resource_ids: %w[EC2I4LBA1]
+              )
             ]
           }
         }
       ]
 
-      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(input_path: test_template_path(template_name))
+      actual_aggregate_results = \
+        @cfn_nag.audit_aggregate_across_files(
+          input_path: test_template_path(template_name)
+        )
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end

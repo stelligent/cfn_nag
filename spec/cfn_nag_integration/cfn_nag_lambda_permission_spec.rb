@@ -9,7 +9,9 @@ describe CfnNag do
 
   context 'lambda permission with some out of the ordinary items', :lambda do
     it 'flags a warning' do
-      template_name = 'json/lambda_permission/lambda_with_wildcard_principal_and_non_invoke_function_permission.json'
+      template_name = \
+        'json/lambda_permission/' \
+        'lambda_with_wildcard_principal_and_non_invoke_function_permission.json'
 
       expected_aggregate_results = [
         {
@@ -19,19 +21,24 @@ describe CfnNag do
             violations: [
               Violation.new(id: 'F3',
                             type: Violation::FAILING_VIOLATION,
-                            message: 'IAM role should not allow * action on its permissions policy',
+                            message: 'IAM role should not allow * action on ' \
+                                     'its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole]),
               Violation.new(id: 'W11',
                             type: Violation::WARNING,
-                            message: 'IAM role should not allow * resource on its permissions policy',
+                            message: 'IAM role should not allow * resource ' \
+                                     'on its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole]),
               Violation.new(id: 'W24',
                             type: Violation::WARNING,
-                            message: 'Lambda permission beside InvokeFunction might not be what you want?  Not sure!?',
+                            message: 'Lambda permission beside ' \
+                                     'InvokeFunction might not be what you ' \
+                                     'want?  Not sure!?',
                             logical_resource_ids: %w[lambdaPermission]),
               Violation.new(id: 'F13',
                             type: Violation::FAILING_VIOLATION,
-                            message: 'Lambda permission principal should not be wildcard',
+                            message: 'Lambda permission principal should ' \
+                                     'not be wildcard',
                             logical_resource_ids: %w[lambdaPermission])
             ]
           }

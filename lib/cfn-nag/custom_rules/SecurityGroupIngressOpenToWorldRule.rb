@@ -6,7 +6,8 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
   include IpAddr
 
   def rule_text
-    'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB'
+    'Security Groups found with cidr open to world on ingress.  ' \
+    'This should never be true on instance.  Permissible on ELB'
   end
 
   def rule_type
@@ -18,7 +19,8 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
   end
 
   ##
-  # This will behave slightly different than the legacy jq based rule which was targeted against inline ingress only
+  # This will behave slightly different than the legacy jq based rule
+  # which was targeted against inline ingress only
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|

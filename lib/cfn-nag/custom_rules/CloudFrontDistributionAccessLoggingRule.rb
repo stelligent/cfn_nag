@@ -15,9 +15,11 @@ class CloudFrontDistributionAccessLoggingRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_distributions = cfn_model.resources_by_type('AWS::CloudFront::Distribution').select do |distribution|
-      distribution.distributionConfig['Logging'].nil?
-    end
+    violating_distributions = \
+      cfn_model.resources_by_type('AWS::CloudFront::Distribution')
+               .select do |distribution|
+        distribution.distributionConfig['Logging'].nil?
+      end
 
     violating_distributions.map(&:logical_resource_id)
   end

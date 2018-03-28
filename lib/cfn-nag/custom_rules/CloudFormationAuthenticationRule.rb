@@ -3,7 +3,8 @@ require_relative 'base'
 
 class CloudFormationAuthenticationRule < BaseRule
   def rule_text
-    'Specifying credentials in the template itself is probably not the safest thing'
+    'Specifying credentials in the template itself ' \
+    'is probably not the safest thing'
   end
 
   def rule_type
