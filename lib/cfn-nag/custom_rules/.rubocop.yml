@@ -1,2 +1,4 @@
 Naming/FileName:
   Enabled: false
+LineLength:
+  Max: 120
