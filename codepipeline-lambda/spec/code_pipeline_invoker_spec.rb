@@ -27,8 +27,6 @@ describe CodePipelineInvoker do
 
   context 'when the audit raises an error' do
     it 'marks the job result as a failure' do
-
-
       expect(@code_pipeline_invoker).to receive(:audit_impl)
         .and_raise('cause a failure')
 
