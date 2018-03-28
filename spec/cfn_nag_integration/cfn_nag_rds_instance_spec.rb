@@ -73,7 +73,8 @@ describe CfnNag do
 
   context 'RDS instances with non-encrypted credentials' do
     it 'flags a violation' do
-      template_name = 'json/rds_instance/rds_instances_with_public_credentials.json'
+      template_name =
+        'json/rds_instance/rds_instances_with_public_credentials.json'
 
       expected_aggregate_results = [
         {
@@ -81,20 +82,29 @@ describe CfnNag do
           file_results: {
             failure_count: 4,
             violations: [
-              Violation.new(id: 'F23',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
-                            logical_resource_ids: %w(BadDb1 BadDb2)),
-              Violation.new(id: 'F24',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended',
-                            logical_resource_ids: %w(BadDb1 BadDb2))
+              Violation.new(
+                id: 'F23', type: Violation::FAILING_VIOLATION,
+                message:
+                'RDS instance master user password must be Ref to NoEcho ' \
+                'Parameter. Default credentials are not recommended',
+                logical_resource_ids: %w[BadDb1 BadDb2]
+              ),
+              Violation.new(
+                id: 'F24', type: Violation::FAILING_VIOLATION,
+                message: 'RDS instance master username must be Ref to ' \
+                         'NoEcho Parameter. Default credentials are not ' \
+                         'recommended',
+                logical_resource_ids: %w[BadDb1 BadDb2]
+              )
             ]
           }
         }
       ]
 
-      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files(input_path: test_template_path(template_name))
+      actual_aggregate_results = \
+        @cfn_nag.audit_aggregate_across_files(
+          input_path: test_template_path(template_name)
+        )
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
