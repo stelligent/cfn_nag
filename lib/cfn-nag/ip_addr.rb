@@ -13,7 +13,8 @@ module IpAddr
 
     # only care about literals.  if a Hash/Ref not going to chase it down
     # given likely a Parameter with external val
-    (NetAddr::CIDRv6.create(normalized_cidr_ip6) == NetAddr::CIDRv6.create('::/0'))
+    (NetAddr::CIDRv6.create(normalized_cidr_ip6) ==
+     NetAddr::CIDRv6.create('::/0'))
   end
 
   def ip4_cidr_range?(ingress)
