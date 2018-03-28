@@ -105,7 +105,8 @@ class CustomRuleLoader
       logical_resource_id = mangled_metadata.first
       mangled_rules = mangled_metadata[1]
 
-      STDERR.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
+      STDERR.puts "#{logical_resource_id} has missing cfn_nag " \
+                  "suppression rule id: #{mangled_rules}"
     end
   end
 
@@ -115,7 +116,8 @@ class CustomRuleLoader
       rule_to_suppress['id'] == rule_id
     end
     if found_suppression_rule && @print_suppression
-      STDERR.puts "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
+      STDERR.puts "Suppressing #{rule_id} on #{logical_resource_id} " \
+                  "for reason: #{found_suppression_rule['reason']}"
     end
     !found_suppression_rule.nil?
   end
@@ -175,7 +177,9 @@ class CustomRuleLoader
     unless rule_directory.nil?
       rule_filenames += Dir[File.join(rule_directory, '*jmespath.rb')].sort
     end
-    rule_filenames += Dir[File.join(__dir__, 'custom_rules', '*jmespath.rb')].sort
+    rule_filenames += Dir[File.join(__dir__,
+                                    'custom_rules',
+                                    '*jmespath.rb')].sort
     Logging.logger['log'].debug "jmespath_filenames: #{rule_filenames}"
     rule_filenames
   end
