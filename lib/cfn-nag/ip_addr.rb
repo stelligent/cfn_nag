@@ -39,7 +39,7 @@ module IpAddr
   #
   def normalize_cidr_ip6(ingress)
     if ingress.cidrIpv6.is_a?(Symbol)
-      ":#{ingress.cidrIpv6.to_s}"
+      ":#{ingress.cidrIpv6}"
     elsif ingress.cidrIpv6.is_a?(String)
       ingress.cidrIpv6
     end
