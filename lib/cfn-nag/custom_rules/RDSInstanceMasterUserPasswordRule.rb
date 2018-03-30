@@ -32,11 +32,7 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
   private
 
   def to_boolean(string)
-    if string.to_s.downcase == 'true'
-      true
-    else
-      false
-    end
+    string.to_s.downcase == 'true'
   end
 
   def references_no_echo_parameter_without_default?(cfn_model, master_user_password)
