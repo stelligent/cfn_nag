@@ -45,6 +45,33 @@ class CustomRuleLoader
 
     validate_cfn_nag_metadata(cfn_model)
 
+    filter_rule_classes cfn_model, violations
+
+    filter_jmespath_filenames cfn_model, violations
+
+    violations
+  end
+
+  private
+
+  def rule_registry_from_rule_class(rule_class)
+    rule = rule_class.new
+    { id: rule.rule_id,
+      type: rule.rule_type,
+      message: rule.rule_text }
+  end
+
+  def filter_jmespath_filenames(cfn_model, violations)
+    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
+      evaluator = JmesPathEvaluator.new cfn_model
+      evaluator.instance_eval do
+        eval IO.read jmespath_file
+      end
+      violations += evaluator.violations
+    end
+  end
+
+  def filter_rule_classes(cfn_model, violations)
     discover_rule_classes(@rule_directory).each do |rule_class|
       begin
         filtered_cfn_model = cfn_model_with_suppressed_resources_removed \
