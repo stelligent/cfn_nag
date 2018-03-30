@@ -80,11 +80,12 @@ class CfnNag
                                     parameter_values_string
     violations += @custom_rule_loader.execute_custom_rules(cfn_model)
     violations = filter_violations_by_profile violations
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
   rescue Psych::SyntaxError, ParserError => parser_error
     violations << Violation.new(id: 'FATAL',
                                 type: Violation::FAILING_VIOLATION,
                                 message: parser_error.to_s)
-  ensure
     { failure_count: Violation.count_failures(violations),
       violations: violations }
   end
