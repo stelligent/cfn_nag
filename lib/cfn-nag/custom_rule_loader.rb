@@ -81,8 +81,6 @@ class CustomRuleLoader
        resource.metadata['cfn_nag']['rules_to_suppress']
 
       resource.metadata['cfn_nag']['rules_to_suppress']
-    else
-      nil
     end
   end
 

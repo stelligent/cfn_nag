@@ -20,8 +20,6 @@ class BaseRule
                     type: rule_type,
                     message: rule_text,
                     logical_resource_ids: logical_resource_ids)
-    else
-      nil
     end
   end
 end

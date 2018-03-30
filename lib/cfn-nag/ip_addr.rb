@@ -42,8 +42,6 @@ module IpAddr
       ":#{ingress.cidrIpv6.to_s}"
     elsif ingress.cidrIpv6.is_a?(String)
       ingress.cidrIpv6
-    else
-      nil
     end
   end
 end
