@@ -18,9 +18,7 @@ class S3BucketPublicReadWriteAclRule < BaseRule
     logical_resource_ids = []
 
     cfn_model.resources_by_type('AWS::S3::Bucket').each do |bucket|
-      if bucket.accessControl == 'PublicReadWrite'
-        logical_resource_ids << bucket.logical_resource_id
-      end
+      logical_resource_ids << bucket.logical_resource_id if bucket.accessControl == 'PublicReadWrite'
     end
 
     logical_resource_ids

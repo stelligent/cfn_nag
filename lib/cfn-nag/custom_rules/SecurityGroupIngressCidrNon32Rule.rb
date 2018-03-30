@@ -26,9 +26,7 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
         ip4_cidr_range?(ingress) || ip6_cidr_range?(ingress)
       end
 
-      unless violating_ingresses.empty?
-        logical_resource_ids << security_group.logical_resource_id
-      end
+      logical_resource_ids << security_group.logical_resource_id unless violating_ingresses.empty?
     end
 
     violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|

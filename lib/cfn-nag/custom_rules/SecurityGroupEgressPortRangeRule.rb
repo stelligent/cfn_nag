@@ -23,9 +23,7 @@ class SecurityGroupEgressPortRangeRule < BaseRule
         egress.fromPort == egress.toPort
       end
 
-      unless violating_egresses.empty?
-        logical_resource_ids << security_group.logical_resource_id
-      end
+      logical_resource_ids << security_group.logical_resource_id unless violating_egresses.empty?
     end
 
     violating_egresses = cfn_model.standalone_egress.reject do |standalone_egress|
