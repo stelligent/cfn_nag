@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/ruby:2.2.9-browsers
     steps:
@@ -17,7 +17,26 @@ jobs:
       - run:
           name: Rspec tests
           command: bundle exec rspec --color --require spec_helper spec
+  publish:
+    docker:
+      - image: circleci/ruby:2.2.9-browsers
+    steps:
+      - checkout
+      - run:
+          name: Bundle install
+          command: bundle check || bundle install
       - run:
           name: Publish gem
           command: bash ./publish.sh
 
+workflows:
+  version: 2
+  test-and-push:
+    jobs:
+      - test
+      - push:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
