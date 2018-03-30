@@ -31,10 +31,10 @@ jobs:
 
 workflows:
   version: 2
-  test-and-push:
+  test-and-publish:
     jobs:
       - test
-      - push:
+      - publish:
           requires:
             - test
           filters:
