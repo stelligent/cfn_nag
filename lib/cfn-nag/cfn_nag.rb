@@ -7,6 +7,7 @@ require_relative 'result_view/json_results'
 require 'cfn-model'
 require 'logging'
 
+# Top-level CfnNag class for running profiles
 class CfnNag
   def initialize(profile_definition: nil,
                  rule_directory: nil,

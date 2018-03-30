@@ -1,6 +1,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
+# Rule class to ensure a CF distribution has logging
 class CloudFrontDistributionAccessLoggingRule < BaseRule
   def rule_text
     'CloudFront Distribution should enable access logging'

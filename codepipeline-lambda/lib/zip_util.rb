@@ -1,5 +1,6 @@
 require 'zip'
 
+# Utility methods for dealing with zipfiles
 class ZipUtil
   def self.read_files_from_zip(zip_file_path, file_path_within_zip)
     file_contents = []

@@ -1,5 +1,6 @@
 require 'cfn-nag/violation'
 
+# Base class all Rules should subclass
 class BaseRule
   ##
   # Returns a collection of logical resource ids
