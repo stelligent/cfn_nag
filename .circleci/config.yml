@@ -36,7 +36,7 @@ workflows:
       - test
       - push:
           requires:
-            - build
+            - test
           filters:
             branches:
               only: master
