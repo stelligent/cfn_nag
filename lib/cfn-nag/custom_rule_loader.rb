@@ -84,18 +84,7 @@ class CustomRuleLoader
         STDERR.puts exception
       end
     end
-
-    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
-      evaluator = JmesPathEvaluator.new cfn_model
-      evaluator.instance_eval do
-        eval IO.read jmespath_file
-      end
-      violations += evaluator.violations
-    end
-    violations
   end
-
-  private
 
   def rules_to_suppress(resource)
     if resource.metadata &&
@@ -106,19 +95,18 @@ class CustomRuleLoader
     end
   end
 
+  # XXX given mangled_metadatas is never used or returned,
+  # STDERR emit can be moved to unless block
   def validate_cfn_nag_metadata(cfn_model)
     mangled_metadatas = []
     cfn_model.resources.each do |logical_resource_id, resource|
       resource_rules_to_suppress = rules_to_suppress resource
-      if resource_rules_to_suppress.nil?
-        next
-      else
-        mangled_rules = resource_rules_to_suppress.select do |rule_to_suppress|
-          rule_to_suppress['id'].nil?
-        end
-        unless mangled_rules.empty?
-          mangled_metadatas << [logical_resource_id, mangled_rules]
-        end
+      next if resource_rules_to_suppress.nil?
+      mangled_rules = resource_rules_to_suppress.select do |rule_to_suppress|
+        rule_to_suppress['id'].nil?
+      end
+      unless mangled_rules.empty?
+        mangled_metadatas << [logical_resource_id, mangled_rules]
       end
     end
     mangled_metadatas.each do |mangled_metadata|
