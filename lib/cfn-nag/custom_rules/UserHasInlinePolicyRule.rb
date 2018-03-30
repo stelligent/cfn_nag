@@ -15,8 +15,8 @@ class UserHasInlinePolicyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_users = cfn_model.iam_users.select do |iam_user|
-      !iam_user.policy_objects.empty?
+    violating_users = cfn_model.iam_users.reject do |iam_user|
+      iam_user.policy_objects.empty?
     end
 
     violating_users.map(&:logical_resource_id)

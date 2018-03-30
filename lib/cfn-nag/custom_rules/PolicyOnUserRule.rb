@@ -15,8 +15,8 @@ class PolicyOnUserRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').select do |policy|
-      !policy.users.empty?
+    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').reject do |policy|
+      policy.users.empty?
     end
 
     violating_policies.map(&:logical_resource_id)
