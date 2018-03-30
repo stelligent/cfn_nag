@@ -43,6 +43,8 @@ class CfnNag
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
+
   ##
   # Given a file or directory path, return aggregate results
   #
@@ -60,6 +62,9 @@ class CfnNag
     end
     aggregate_results
   end
+  # rubocop:enable Metrics/MethodLength
+
+  # rubocop:disable Metrics/MethodLength
 
   ##
   # Given cloudformation json/yml, run all the rules against it
@@ -93,6 +98,7 @@ class CfnNag
       violations: violations
     }
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.configure_logging(opts)
     logger = Logging.logger['log']
