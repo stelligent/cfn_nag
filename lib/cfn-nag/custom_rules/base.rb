@@ -15,7 +15,7 @@ class BaseRule
   def audit(cfn_model)
     logical_resource_ids = audit_impl(cfn_model)
 
-    if !logical_resource_ids.empty?
+    unless logical_resource_ids.empty?
       Violation.new(id: rule_id,
                     type: rule_type,
                     message: rule_text,
