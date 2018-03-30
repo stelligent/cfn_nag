@@ -16,7 +16,7 @@ class ManagedPolicyOnUserRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_policies = cfn_model.resources_by_type('AWS::IAM::ManagedPolicy').select do |policy|
-      policy.users.size > 0
+      !policy.users.empty?
     end
 
     violating_policies.map(&:logical_resource_id)
