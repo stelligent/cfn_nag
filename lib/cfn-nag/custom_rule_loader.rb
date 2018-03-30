@@ -24,10 +24,8 @@ class CustomRuleLoader
     rule_registry = RuleRegistry.new
 
     discover_rule_classes(@rule_directory).each do |rule_class|
-      rule = rule_class.new
-      rule_registry.definition(id: rule.rule_id,
-                               type: rule.rule_type,
-                               message: rule.rule_text)
+      rule_registry
+        .definition(**rule_registry_from_rule_class(rule_class))
     end
 
     discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
