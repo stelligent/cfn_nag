@@ -114,7 +114,7 @@ class CfnNag
     end
 
     violations.reject do |violation|
-      (not profile.nil?) && (not profile.execute_rule?(violation.id))
+      !profile.nil? && !profile.execute_rule?(violation.id)
     end
   end
 
