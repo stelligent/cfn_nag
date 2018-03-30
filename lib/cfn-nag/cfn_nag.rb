@@ -75,28 +75,18 @@ class CfnNag
   # Return a hash with failure count
   #
   def audit(cloudformation_string:, parameter_values_string: nil)
-    stop_processing = false
     violations = []
-
-    begin
-      cfn_model = CfnParser.new.parse cloudformation_string,
-                                      parameter_values_string
-    rescue Psych::SyntaxError, ParserError => parser_error
-      violations << Violation.new(id: 'FATAL',
-                                  type: Violation::FAILING_VIOLATION,
-                                  message: parser_error.to_s)
-      stop_processing = true
-    end
-
-    unless stop_processing == true
-      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
-      violations = filter_violations_by_profile violations
-    end
-
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
+    cfn_model = CfnParser.new.parse cloudformation_string,
+                                    parameter_values_string
+    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+    violations = filter_violations_by_profile violations
+  rescue Psych::SyntaxError, ParserError => parser_error
+    violations << Violation.new(id: 'FATAL',
+                                type: Violation::FAILING_VIOLATION,
+                                message: parser_error.to_s)
+  ensure
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
   end
   # rubocop:enable Metrics/MethodLength
 
