@@ -32,12 +32,17 @@ class CodePipelineInvoker
 
   private
 
-  def audit_impl(job_id)
+  def retrieve_cloudformation_entries
     cloudformation_entries = \
       CodePipelineUtil.retrieve_files_within_input_artifact(
         codepipeline_event: lambda_inputs['CodePipeline.job']
       )
     log "cloudformation_entries: #{cloudformation_entries}"
+    cloudformation_entries
+  end
+
+  def audit_impl(job_id)
+    cloudformation_entries = retrieve_cloudformation_entries
 
     cfn_nag = CfnNag.new
 
