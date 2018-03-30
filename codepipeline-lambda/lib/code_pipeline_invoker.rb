@@ -65,6 +65,7 @@ class CodePipelineInvoker
     { external_execution_id: $lambdaContext.getAwsRequestId }
   end
 
+  # rubocop:disable Metrics/MethodLength
   def put_job_result(job_id,
                      audit_results)
     log PlainTextResults.new.render audit_results
@@ -82,4 +83,5 @@ class CodePipelineInvoker
       }, job_id: job_id
     end
   end
+  # rubocop:enable Metrics/MethodLength
 end
