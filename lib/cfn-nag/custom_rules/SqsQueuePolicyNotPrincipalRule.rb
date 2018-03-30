@@ -15,8 +15,8 @@ class SqsQueuePolicyNotPrincipalRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::SQS::QueuePolicy').select do |policy|
-      !policy.policy_document.allows_not_principal.empty?
+    violating_policies = cfn_model.resources_by_type('AWS::SQS::QueuePolicy').reject do |policy|
+      policy.policy_document.allows_not_principal.empty?
     end
 
     violating_policies.map(&:logical_resource_id)

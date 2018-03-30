@@ -17,8 +17,8 @@ class IamManagedPolicyWildcardActionRule < BaseRule
   def audit_impl(cfn_model)
     violating_policies = \
       cfn_model.resources_by_type('AWS::IAM::ManagedPolicy')
-               .select do |policy|
-        !policy.policy_document.wildcard_allowed_actions.empty?
+               .reject do |policy|
+        policy.policy_document.wildcard_allowed_actions.empty?
       end
 
     violating_policies.map(&:logical_resource_id)
