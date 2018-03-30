@@ -1,6 +1,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
+# Rule to ensure credentials are not specified in template
 class CloudFormationAuthenticationRule < BaseRule
   def rule_text
     'Specifying credentials in the template itself ' \

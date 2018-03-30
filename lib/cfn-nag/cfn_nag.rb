@@ -7,6 +7,7 @@ require_relative 'result_view/json_results'
 require 'cfn-model'
 require 'logging'
 
+# Top-level CfnNag class for running profiles
 class CfnNag
   def initialize(profile_definition: nil,
                  rule_directory: nil,
@@ -42,6 +43,8 @@ class CfnNag
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
+
   ##
   # Given a file or directory path, return aggregate results
   #
@@ -59,6 +62,9 @@ class CfnNag
     end
     aggregate_results
   end
+  # rubocop:enable Metrics/MethodLength
+
+  # rubocop:disable Metrics/MethodLength
 
   ##
   # Given cloudformation json/yml, run all the rules against it
@@ -69,29 +75,21 @@ class CfnNag
   # Return a hash with failure count
   #
   def audit(cloudformation_string:, parameter_values_string: nil)
-    stop_processing = false
     violations = []
-
-    begin
-      cfn_model = CfnParser.new.parse cloudformation_string,
-                                      parameter_values_string
-    rescue Psych::SyntaxError, ParserError => parser_error
-      violations << Violation.new(id: 'FATAL',
-                                  type: Violation::FAILING_VIOLATION,
-                                  message: parser_error.to_s)
-      stop_processing = true
-    end
-
-    unless stop_processing == true
-      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
-      violations = filter_violations_by_profile violations
-    end
-
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
+    cfn_model = CfnParser.new.parse cloudformation_string,
+                                    parameter_values_string
+    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+    violations = filter_violations_by_profile violations
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
+  rescue Psych::SyntaxError, ParserError => parser_error
+    violations << Violation.new(id: 'FATAL',
+                                type: Violation::FAILING_VIOLATION,
+                                message: parser_error.to_s)
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.configure_logging(opts)
     logger = Logging.logger['log']
