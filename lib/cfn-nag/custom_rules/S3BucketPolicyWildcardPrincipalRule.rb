@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class S3BucketPolicyWildcardPrincipalRule < BaseRule
-
   def rule_text
     'S3 Bucket policy should not allow * principal'
   end
@@ -19,7 +18,7 @@ class S3BucketPolicyWildcardPrincipalRule < BaseRule
     logical_resource_ids = []
 
     cfn_model.resources_by_type('AWS::S3::BucketPolicy').each do |topic_policy|
-      if !topic_policy.policy_document.wildcard_allowed_principals.empty?
+      unless topic_policy.policy_document.wildcard_allowed_principals.empty?
         logical_resource_ids << topic_policy.logical_resource_id
       end
     end

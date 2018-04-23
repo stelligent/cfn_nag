@@ -3,14 +3,15 @@ require 'cfn-nag/rule_definition'
 require 'cfn-nag/rule_registry'
 require 'fileutils'
 
-
 describe CustomRuleLoader do
   describe '#rule_definitions' do
     context 'no external rule directory' do
       it 'returns RuleRegistry with internal definitions' do
         actual_rule_registry = CustomRuleLoader.new.rule_definitions
 
-        non_rules = actual_rule_registry.rules.select { |rule_definition| !rule_definition.is_a? RuleDefinition}
+        non_rules = actual_rule_registry.rules.reject do |rule_definition|
+          rule_definition.is_a? RuleDefinition
+        end
         expect(non_rules).to eq []
         expect(actual_rule_registry.rules.size).to be > 10
       end
@@ -18,7 +19,7 @@ describe CustomRuleLoader do
 
     context 'external rule directory' do
       before(:each) do
-        fake_rule = <<END
+        fake_rule = <<RULE
 require 'cfn-nag/custom_rules/base'
 require 'cfn-nag/violation'
 
@@ -39,11 +40,13 @@ class FakeRule < BaseRule
     %w(hardwired1 hardwired2)
   end
 end
-END
-        @custom_rule_directory = Dir.mktmpdir(%w(custom_rule loader))
-        File.open(File.join(@custom_rule_directory, 'FakeRule.rb'), 'w+') { |file| file.write fake_rule }
-        @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
-
+RULE
+        @custom_rule_directory = Dir.mktmpdir(%w[custom_rule loader])
+        File.open(File.join(@custom_rule_directory,
+                            'FakeRule.rb'),
+                  'w+') { |file| file.write fake_rule }
+        @custom_rule_loader = \
+          CustomRuleLoader.new(rule_directory: @custom_rule_directory)
       end
 
       after(:each) do
@@ -52,9 +55,9 @@ END
 
       it 'includes external rule definition' do
         actual_rule_registry = @custom_rule_loader.rule_definitions
-        expected_rule_definition = RuleDefinition.new id: 'W9933',
-                                                      message: 'this is fake rule text',
-                                                      type: RuleDefinition::WARNING
+        expected_rule_definition = \
+          RuleDefinition.new id: 'W9933', message: 'this is fake rule text',
+                             type: RuleDefinition::WARNING
 
         actual_rule_definition = actual_rule_registry.by_id 'W9933'
         expect(actual_rule_definition).to eq expected_rule_definition
@@ -70,7 +73,7 @@ END
           Violation.new(id: 'W9933',
                         type: Violation::WARNING,
                         message: 'this is fake rule text',
-                        logical_resource_ids: %w(hardwired1 hardwired2))
+                        logical_resource_ids: %w[hardwired1 hardwired2])
         ]
 
         expect(actual_violations).to eq expected_violations

@@ -8,7 +8,7 @@ describe IamManagedPolicyWildcardResourceRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iam_managed_policy/iam_managed_policy_with_wildcard_resource.json')
 
       actual_logical_resource_ids = IamManagedPolicyWildcardResourceRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(CreateTestDBPolicy4)
+      expected_logical_resource_ids = %w[CreateTestDBPolicy4]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

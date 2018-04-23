@@ -11,10 +11,12 @@ describe PlainTextResults do
           audit_result: {
             failure_count: 1,
             violations: [
-              Violation.new(id: 'F1',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'EBS volume should have server-side encryption enabled',
-                            logical_resource_ids: %w(NewVolume1 NewVolume2))
+              Violation.new(
+                id: 'F1', type: Violation::FAILING_VIOLATION,
+                message:
+                'EBS volume should have server-side encryption enabled',
+                logical_resource_ids: %w[NewVolume1 NewVolume2]
+              )
             ]
           }
         },

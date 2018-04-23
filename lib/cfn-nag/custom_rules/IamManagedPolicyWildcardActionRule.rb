@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class IamManagedPolicyWildcardActionRule < BaseRule
-
   def rule_text
     'IAM managed policy should not allow * action'
   end
@@ -16,10 +15,12 @@ class IamManagedPolicyWildcardActionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::IAM::ManagedPolicy').select do |policy|
-      !policy.policy_document.wildcard_allowed_actions.empty?
-    end
+    violating_policies = \
+      cfn_model.resources_by_type('AWS::IAM::ManagedPolicy')
+               .reject do |policy|
+        policy.policy_document.wildcard_allowed_actions.empty?
+      end
 
-    violating_policies.map { |policy| policy.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

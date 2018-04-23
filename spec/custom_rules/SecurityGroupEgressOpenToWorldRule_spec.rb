@@ -8,7 +8,7 @@ describe SecurityGroupEgressOpenToWorldRule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/security_group_open_to_world_on_egress.json')
 
       actual_logical_resource_ids = SecurityGroupEgressOpenToWorldRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(sgOpenEgress sgOpenEgress2)
+      expected_logical_resource_ids = %w[sgOpenEgress sgOpenEgress2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -19,7 +19,7 @@ describe SecurityGroupEgressOpenToWorldRule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/standalone_egress_open_to_world.json')
 
       actual_logical_resource_ids = SecurityGroupEgressOpenToWorldRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(securityGroupEgress)
+      expected_logical_resource_ids = %w[securityGroupEgress]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -30,7 +30,7 @@ describe SecurityGroupEgressOpenToWorldRule do
       cfn_model = CfnParser.new.parse read_test_template('yaml/security_group/ip6_security_group_egress_open_to_world.yml')
 
       actual_logical_resource_ids = SecurityGroupEgressOpenToWorldRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(InstanceSecurityGroup InstanceSecurityGroup2 InstanceSecurityGroup3 securityGroupEgress)
+      expected_logical_resource_ids = %w[InstanceSecurityGroup InstanceSecurityGroup2 InstanceSecurityGroup3 securityGroupEgress]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

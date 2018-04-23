@@ -7,6 +7,7 @@ require_relative 'result_view/json_results'
 require 'cfn-model'
 require 'logging'
 
+# Top-level CfnNag class for running profiles
 class CfnNag
   def initialize(profile_definition: nil,
                  rule_directory: nil,
@@ -14,10 +15,11 @@ class CfnNag
                  print_suppression: false,
                  isolate_custom_rule_exceptions: false)
     @rule_directory = rule_directory
-    @custom_rule_loader = CustomRuleLoader.new(rule_directory: rule_directory,
-                                               allow_suppression: allow_suppression,
-                                               print_suppression: print_suppression,
-                                               isolate_custom_rule_exceptions: isolate_custom_rule_exceptions)
+    @custom_rule_loader = CustomRuleLoader.new(
+      rule_directory: rule_directory, allow_suppression: allow_suppression,
+      print_suppression: print_suppression,
+      isolate_custom_rule_exceptions: isolate_custom_rule_exceptions
+    )
     @profile_definition = profile_definition
   end
 
@@ -26,9 +28,12 @@ class CfnNag
   #
   # Return an aggregate failure count (for exit code usage)
   #
-  def audit_aggregate_across_files_and_render_results(input_path:,
-                                                      output_format:'txt')
-    aggregate_results = audit_aggregate_across_files input_path: input_path
+  def audit_aggregate_across_files_and_render_results(
+    input_path:, output_format: 'txt', parameter_values_path: nil
+  )
+    aggregate_results = \
+      audit_aggregate_across_files input_path: input_path,
+                                   parameter_values_path: parameter_values_path
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -38,57 +43,61 @@ class CfnNag
     end
   end
 
+  # rubocop:disable Metrics/MethodLength
+
   ##
   # Given a file or directory path, return aggregate results
   #
-  def audit_aggregate_across_files(input_path:)
+  def audit_aggregate_across_files(input_path:, parameter_values_path: nil)
+    parameter_values_string = \
+      parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
     templates = TemplateDiscovery.new.discover_templates(input_path)
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {
         filename: template,
-        file_results: audit(cloudformation_string: IO.read(template))
+        file_results: audit(cloudformation_string: IO.read(template),
+                            parameter_values_string: parameter_values_string)
       }
     end
     aggregate_results
   end
+  # rubocop:enable Metrics/MethodLength
+
+  # rubocop:disable Metrics/MethodLength
 
   ##
   # Given cloudformation json/yml, run all the rules against it
   #
+  # Optionally include JSON with Parameters key to substitute into
+  # cfn_model.parameters
+  #
   # Return a hash with failure count
   #
-  def audit(cloudformation_string:)
-    stop_processing = false
+  def audit(cloudformation_string:, parameter_values_string: nil)
     violations = []
-
-    begin
-      cfn_model = CfnParser.new.parse cloudformation_string
-    rescue Psych::SyntaxError, ParserError => parser_error
-      violations << Violation.new(id: 'FATAL',
-                                  type: Violation::FAILING_VIOLATION,
-                                  message: parser_error.to_s)
-      stop_processing = true
-
-    end
-
-    violations += @custom_rule_loader.execute_custom_rules(cfn_model) unless stop_processing == true
-
-    violations = filter_violations_by_profile violations unless stop_processing == true
-
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
+    cfn_model = CfnParser.new.parse cloudformation_string,
+                                    parameter_values_string
+    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+    violations = filter_violations_by_profile violations
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
+  rescue Psych::SyntaxError, ParserError => parser_error
+    violations << Violation.new(id: 'FATAL',
+                                type: Violation::FAILING_VIOLATION,
+                                message: parser_error.to_s)
+    { failure_count: Violation.count_failures(violations),
+      violations: violations }
   end
+  # rubocop:enable Metrics/MethodLength
 
   def self.configure_logging(opts)
     logger = Logging.logger['log']
-    if opts[:debug]
-      logger.level = :debug
-    else
-      logger.level = :info
-    end
+    logger.level = if opts[:debug]
+                     :debug
+                   else
+                     :info
+                   end
 
     logger.add_appenders Logging.appenders.stdout
   end
@@ -98,11 +107,12 @@ class CfnNag
   def filter_violations_by_profile(violations)
     profile = nil
     unless @profile_definition.nil?
-      profile = ProfileLoader.new(@custom_rule_loader.rule_definitions).load(profile_definition: @profile_definition)
+      profile = ProfileLoader.new(@custom_rule_loader.rule_definitions)
+                             .load(profile_definition: @profile_definition)
     end
 
     violations.reject do |violation|
-      not profile.nil? and not profile.execute_rule?(violation.id)
+      !profile.nil? && !profile.execute_rule?(violation.id)
     end
   end
 

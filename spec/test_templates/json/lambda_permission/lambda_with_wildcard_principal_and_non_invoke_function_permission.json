@@ -15,7 +15,7 @@
             "};"
           ]]}
         },
-        "Runtime": "nodejs"
+        "Runtime": "nodejs6.10"
       }
     },
 
@@ -27,6 +27,19 @@
           "Ref": "AppendItemToListFunction"
         },
         "Principal": "*",
+        "SourceAccount": "806199016981",
+        "SourceArn": "arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"
+      }
+    },
+
+    "lambdaPermission2": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Ref": "AppendItemToListFunction"
+        },
+        "Principal": 555555555555,
         "SourceAccount": "806199016981",
         "SourceArn": "arn:aws:sns:us-east-1:806199016981:AmazonIpSpaceChanged"
       }

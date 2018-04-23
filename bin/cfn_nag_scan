@@ -5,23 +5,39 @@ require 'logging'
 require 'json'
 require 'rubygems/specification'
 
-opts = Trollop::options do
+opts = Trollop.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
-  opt :input_path, 'CloudFormation template to nag on or directory of templates - all *.json, *.yaml, *.yml and *.template recursively', type: :io, required: true
-  opt :output_format, 'Format of results: [txt, json]', type: :string, default: 'txt'
-  opt :debug, 'Enable debug output', type: :boolean, required: false, default: false
-  opt :rule_directory, 'Extra rule directory', type: :io, required: false, default: nil
-  opt :profile_path, 'Path to a profile file', type: :io, required: false, default: nil
-  opt :allow_suppression, 'Allow using Metadata to suppress violations', type: :boolean, required: false, default: true
-  opt :print_suppression, 'Emit suppressions to stderr', type: :boolean, required: false, default: false
-  opt :isolate_custom_rule_exceptions, 'Isolate custom rule exceptions - just emit the exception without stack trace and keep chugging', type: :boolean, required: false, default: false
+  opt :input_path, 'CloudFormation template to nag on or directory of ' \
+                   'templates - all *.json, *.yaml, *.yml and *.template ' \
+                   'recursively', type: :io, required: true
+  opt :output_format, 'Format of results: [txt, json]',
+      type: :string, default: 'txt'
+  opt :debug, 'Enable debug output',
+      type: :boolean, required: false, default: false
+  opt :rule_directory, 'Extra rule directory',
+      type: :io, required: false, default: nil
+  opt :profile_path, 'Path to a profile file',
+      type: :io, required: false, default: nil
+  opt :parameter_values_path,
+      'Path to a JSON file to pull Parameter values from',
+      type: :io, required: false, default: nil
+  opt :allow_suppression, 'Allow using Metadata to suppress violations',
+      type: :boolean, required: false, default: true
+  opt :print_suppression, 'Emit suppressions to stderr',
+      type: :boolean, required: false, default: false
+  opt :isolate_custom_rule_exceptions,
+      'Isolate custom rule exceptions - just emit the exception without ' \
+      'stack trace and keep chugging',
+      type: :boolean, required: false, default: false
 end
 
-Trollop::die(:output_format,
-             'Must be txt or json') unless %w(txt json).include?(opts[:output_format])
+unless %w[txt json].include?(opts[:output_format])
+  Trollop.die(:output_format,
+              'Must be txt or json')
+end
 
-CfnNag::configure_logging(opts)
+CfnNag.configure_logging(opts)
 
 profile_definition = nil
 unless opts[:profile_path].nil?
@@ -32,7 +48,10 @@ cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      rule_directory: opts[:rule_directory],
                      allow_suppression: opts[:allow_suppression],
                      print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions])
+                     isolate_custom_rule_exceptions:
+                     opts[:isolate_custom_rule_exceptions])
 
-exit cfn_nag.audit_aggregate_across_files_and_render_results(input_path: opts[:input_path],
-                                                             output_format: opts[:output_format])
+exit cfn_nag.audit_aggregate_across_files_and_render_results(
+  input_path: opts[:input_path], output_format: opts[:output_format],
+  parameter_values_path: opts[:parameter_values_path]
+)

@@ -5,9 +5,9 @@ require 'cfn-nag/custom_rules/base'
 describe BaseRule do
   describe '#audit_impl' do
     it 'raises an error' do
-      expect {
+      expect do
         BaseRule.new.audit_impl nil
-      }.to raise_error 'must implement in subclass'
+      end.to raise_error 'must implement in subclass'
     end
   end
 
@@ -16,7 +16,7 @@ describe BaseRule do
       it 'returns nil' do
         base_rule = BaseRule.new
         expect(base_rule).to receive(:audit_impl)
-                         .and_return([])
+          .and_return([])
 
         dontcare = double('cfn_model')
 
@@ -42,18 +42,17 @@ describe BaseRule do
         end
 
         expect(base_rule).to receive(:audit_impl)
-                               .and_return( %w(r1 r2 r3))
+          .and_return(%w[r1 r2 r3])
 
         dontcare = double('cfn_model')
 
         expected_violation = Violation.new(id: 'F3333',
                                            type: Violation::FAILING_VIOLATION,
                                            message: 'This is an epic fail!',
-                                           logical_resource_ids: %w(r1 r2 r3))
+                                           logical_resource_ids: %w[r1 r2 r3])
 
         expect(base_rule.audit(dontcare)).to eq expected_violation
       end
     end
   end
-
 end

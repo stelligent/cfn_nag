@@ -3,12 +3,10 @@ require 'cfn-nag/custom_rules/SecurityGroupMissingEgressRule'
 require 'cfn-model'
 
 describe SecurityGroupMissingEgressRule do
-
   context 'when resource template creates single security group with no egress rules' do
     before(:all) do
       template_name = 'json/security_group/single_security_group_empty_ingress.json'
       @cfn_model = CfnParser.new.parse read_test_template(template_name)
-
     end
 
     it 'fails validation' do

@@ -1,0 +1,18 @@
+{
+  "Parameters": {
+    "Password": {
+      "Type": "String"
+    }
+  },
+  "Resources": {
+    "BadDb3": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "SourceDBInstanceIdentifier": "sampleDbInstance",
+        "MasterUserPassword": {
+          "Ref": "Password"
+        }
+      }
+    }
+  }
+}

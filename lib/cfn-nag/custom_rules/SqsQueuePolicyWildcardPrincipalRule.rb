@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SqsQueuePolicyWildcardPrincipalRule < BaseRule
-
   def rule_text
     'SQS Queue policy should not allow * principal'
   end
@@ -19,7 +18,7 @@ class SqsQueuePolicyWildcardPrincipalRule < BaseRule
     logical_resource_ids = []
 
     cfn_model.resources_by_type('AWS::SQS::QueuePolicy').each do |topic_policy|
-      if !topic_policy.policy_document.wildcard_allowed_principals.empty?
+      unless topic_policy.policy_document.wildcard_allowed_principals.empty?
         logical_resource_ids << topic_policy.logical_resource_id
       end
     end

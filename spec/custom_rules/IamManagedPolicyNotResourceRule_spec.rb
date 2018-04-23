@@ -8,7 +8,7 @@ describe IamManagedPolicyNotResourceRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iam_managed_policy/iam_managed_policy_with_not_resource.json')
 
       actual_logical_resource_ids = IamManagedPolicyNotResourceRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(CreateTestDBPolicy2)
+      expected_logical_resource_ids = %w[CreateTestDBPolicy2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

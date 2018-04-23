@@ -8,7 +8,7 @@ describe SecurityGroupIngressCidrNon32Rule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/non_32_cidr_standalone_ingress.json')
 
       actual_logical_resource_ids = SecurityGroupIngressCidrNon32Rule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(sg)
+      expected_logical_resource_ids = %w[sg]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -19,7 +19,7 @@ describe SecurityGroupIngressCidrNon32Rule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/dangling_ingress_rule.json')
 
       actual_logical_resource_ids = SecurityGroupIngressCidrNon32Rule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(danglingIngress)
+      expected_logical_resource_ids = %w[danglingIngress]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -30,7 +30,7 @@ describe SecurityGroupIngressCidrNon32Rule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/non_32_cidr_with_ip6.json')
 
       actual_logical_resource_ids = SecurityGroupIngressCidrNon32Rule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(sgDualModel securityGroupIngress)
+      expected_logical_resource_ids = %w[sgDualModel securityGroupIngress]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

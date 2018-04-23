@@ -1,0 +1,11 @@
+{
+  "Resources": {
+    "PublicDB": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "SourceDBInstanceIdentifier": "sampleDbInstance",
+        "PubliclyAccessible": false
+      }
+    }
+  }
+}

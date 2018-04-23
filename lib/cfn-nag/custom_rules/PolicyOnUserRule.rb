@@ -15,10 +15,10 @@ class PolicyOnUserRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').select do |policy|
-      policy.users.size > 0
+    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').reject do |policy|
+      policy.users.empty?
     end
 
-    violating_policies.map { |violating_user| violating_user.logical_resource_id }
+    violating_policies.map(&:logical_resource_id)
   end
 end

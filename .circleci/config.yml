@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/ruby:2.2.9-browsers
+    steps:
+      - checkout
+      - run:
+          name: Which bundler?
+          command: bundle -v
+      - run:
+          name: Bundle install
+          command: bundle check || bundle install
+      - run:
+          name: Rubocop lint
+          command: bundle exec rubocop -D || echo Looks like you failed a lint
+      - run:
+          name: Rspec tests
+          command: bundle exec rspec --color --require spec_helper spec
+  publish:
+    docker:
+      - image: circleci/ruby:2.2.9-browsers
+    steps:
+      - checkout
+      - run:
+          name: Bundle install
+          command: bundle check || bundle install
+      - run:
+          name: Publish gem
+          command: bash ./publish.sh
+
+workflows:
+  version: 2
+  test-and-publish:
+    jobs:
+      - test
+      - publish:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master

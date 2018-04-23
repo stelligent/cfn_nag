@@ -1,11 +1,11 @@
 require 'cfn-nag/violation'
 
+# Base class all Rules should subclass
 class BaseRule
-
   ##
   # Returns a collection of logical resource ids
   #
-  def audit_impl(cfn_model)
+  def audit_impl(_cfn_model)
     raise 'must implement in subclass'
   end
 
@@ -15,14 +15,10 @@ class BaseRule
   #
   def audit(cfn_model)
     logical_resource_ids = audit_impl(cfn_model)
-
-    if !logical_resource_ids.empty?
-      Violation.new(id: rule_id,
-                    type: rule_type,
-                    message: rule_text,
-                    logical_resource_ids: logical_resource_ids)
-    else
-      nil
-    end
+    return if logical_resource_ids.empty?
+    Violation.new(id: rule_id,
+                  type: rule_type,
+                  message: rule_text,
+                  logical_resource_ids: logical_resource_ids)
   end
 end

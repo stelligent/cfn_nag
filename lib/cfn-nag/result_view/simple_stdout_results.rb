@@ -1,20 +1,34 @@
 require 'cfn-nag/violation'
 
+# Print results to STDOUT
 class SimpleStdoutResults
+  def message_violations(violations)
+    violations.each do |violation|
+      message message_type: "#{violation.type} #{violation.id}",
+              message: violation.message,
+              logical_resource_ids: violation.logical_resource_ids
+    end
+  end
+
+  def print_failures(violations)
+    puts "\nFailures count: #{Violation.count_failures(violations)}"
+  end
+
+  def print_warnings(violations)
+    puts "Warnings count: #{Violation.count_warnings(violations)}"
+  end
 
   def render(results)
     results.each do |result|
-      (1..60).each { print '-' }
+      60.times { print '-' }
       puts "\n" + result[:filename]
-      (1..60).each { print '-' }
+      60.times { print '-' }
 
-      result[:file_results][:violations].each do |violation|
-        message message_type: "#{violation.type} #{violation.id}",
-                message: violation.message,
-                logical_resource_ids: violation.logical_resource_ids
-      end
-      puts "\nFailures count: #{Violation.count_failures(result[:file_results][:violations])}"
-      puts "Warnings count: #{Violation.count_warnings(result[:file_results][:violations])}"
+      violations = result[:file_results][:violations]
+
+      message_violations violations
+      print_failures violations
+      print_warnings violations
     end
   end
 
@@ -24,11 +38,9 @@ class SimpleStdoutResults
               message:,
               logical_resource_ids: nil)
 
-    if logical_resource_ids == []
-      logical_resource_ids = nil
-    end
+    logical_resource_ids = nil if logical_resource_ids == []
 
-    (1..60).each { print '-' }
+    60.times { print '-' }
     puts
     puts "| #{message_type.upcase}"
     puts '|'

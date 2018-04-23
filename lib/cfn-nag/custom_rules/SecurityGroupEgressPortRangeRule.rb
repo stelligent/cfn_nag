@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class SecurityGroupEgressPortRangeRule < BaseRule
-
   def rule_text
     'Security Groups found egress with port range instead of just a single port'
   end
@@ -20,19 +19,17 @@ class SecurityGroupEgressPortRangeRule < BaseRule
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
-      violating_egresses = security_group.egresses.select do |egress|
-        egress.fromPort != egress.toPort
+      violating_egresses = security_group.egresses.reject do |egress|
+        egress.fromPort == egress.toPort
       end
 
-      unless violating_egresses.empty?
-        logical_resource_ids << security_group.logical_resource_id
-      end
+      logical_resource_ids << security_group.logical_resource_id unless violating_egresses.empty?
     end
 
-    violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-      standalone_egress.fromPort != standalone_egress.toPort
+    violating_egresses = cfn_model.standalone_egress.reject do |standalone_egress|
+      standalone_egress.fromPort == standalone_egress.toPort
     end
 
-    logical_resource_ids + violating_egresses.map { |egress| egress.logical_resource_id}
+    logical_resource_ids + violating_egresses.map(&:logical_resource_id)
   end
 end

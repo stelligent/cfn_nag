@@ -15,7 +15,8 @@ class CfnNagRuleDumper
 
     profile = nil
     unless @profile_definition.nil?
-      profile = ProfileLoader.new(rule_registry).load(profile_definition: @profile_definition)
+      profile = ProfileLoader.new(rule_registry)
+                             .load(profile_definition: @profile_definition)
     end
 
     RulesView.new.emit(rule_registry, profile)

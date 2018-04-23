@@ -26,15 +26,13 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
         ip4_open?(egress) || ip6_open?(egress)
       end
 
-      unless violating_egresses.empty?
-        logical_resource_ids << security_group.logical_resource_id
-      end
+      logical_resource_ids << security_group.logical_resource_id unless violating_egresses.empty?
     end
 
     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
       ip4_open?(standalone_egress) || ip6_open?(standalone_egress)
     end
 
-    logical_resource_ids + violating_egresses.map { |egress| egress.logical_resource_id}
+    logical_resource_ids + violating_egresses.map(&:logical_resource_id)
   end
 end

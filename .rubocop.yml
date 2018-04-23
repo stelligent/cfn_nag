@@ -1,0 +1,4 @@
+AllCops:
+  TargetRubyVersion: 2.2
+Layout/IndentHeredoc:
+  Enabled: false

@@ -8,7 +8,7 @@ describe IamPolicyNotActionRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iam_policy/iam_policy_with_not_action.json')
 
       actual_logical_resource_ids = IamPolicyNotActionRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(NotActionPolicy)
+      expected_logical_resource_ids = %w[NotActionPolicy]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

@@ -11,17 +11,19 @@ describe TemplateDiscovery do
 
   describe '#discover_templates' do
     context 'illegitimate path' do
-      it 'raises an error'   do
-        expect {
+      it 'raises an error' do
+        expect do
           @template_discovery.discover_templates '/an/impossible/path/to/find'
-        }.to raise_error '/an/impossible/path/to/find is not a proper path'
+        end.to raise_error '/an/impossible/path/to/find is not a proper path'
       end
     end
 
     context 'input path is file' do
       it 'returns array with filename' do
         Tempfile.open('/foo') do |tempfile|
-          actual_templates = @template_discovery.discover_templates tempfile.path
+          actual_templates = @template_discovery.discover_templates(
+            tempfile.path
+          )
           expected_templates = [tempfile.path]
           expect(actual_templates).to eq expected_templates
         end
@@ -33,20 +35,28 @@ describe TemplateDiscovery do
         begin
           temp_directory = "/tmp/testing#{Time.now.to_i}"
           FileUtils.mkdir_p "#{temp_directory}/secondlevel"
-          File.open("#{temp_directory}/secondlevel/foo1.yml", 'w+') { |f| f.write 'foo1' }
-          File.open("#{temp_directory}/secondlevel/foo2.yaml", 'w+') { |f| f.write 'foo2' }
-          File.open("#{temp_directory}/foo3.template", 'w+') { |f| f.write 'foo3' }
+          File.open("#{temp_directory}/secondlevel/foo1.yml", 'w+') do |f|
+            f.write 'foo1'
+          end
+          File.open("#{temp_directory}/secondlevel/foo2.yaml", 'w+') do |f|
+            f.write 'foo2'
+          end
+          File.open("#{temp_directory}/foo3.template", 'w+') do |f|
+            f.write 'foo3'
+          end
           File.open("#{temp_directory}/foo4.json", 'w+') { |f| f.write 'foo4' }
           File.open("#{temp_directory}/foo5", 'w+') { |f| f.write 'foo5' }
 
-          actual_templates = @template_discovery.discover_templates temp_directory
+          actual_templates = @template_discovery.discover_templates(
+            temp_directory
+          )
 
-          expected_templates = %W(
+          expected_templates = %W[
             #{temp_directory}/secondlevel/foo1.yml
             #{temp_directory}/secondlevel/foo2.yaml
             #{temp_directory}/foo3.template
             #{temp_directory}/foo4.json
-          )
+          ]
           expect(Set.new(actual_templates)).to eq Set.new(expected_templates)
         ensure
           FileUtils.rm_rf temp_directory
@@ -55,4 +65,3 @@ describe TemplateDiscovery do
     end
   end
 end
-

@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class IamRoleNotResourceOnPermissionsPolicyRule < BaseRule
-
   def rule_text
     'IAM role should not allow Allow+NotResource'
   end
@@ -16,13 +15,13 @@ class IamRoleNotResourceOnPermissionsPolicyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      violating_policies = role.policy_objects.select do |policy|
-        !policy.policy_document.allows_not_resource.empty?
+    violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').reject do |role|
+      violating_policies = role.policy_objects.reject do |policy|
+        policy.policy_document.allows_not_resource.empty?
       end
-      !violating_policies.empty?
+      violating_policies.empty?
     end
 
-    violating_roles.map { |role| role.logical_resource_id }
+    violating_roles.map(&:logical_resource_id)
   end
 end

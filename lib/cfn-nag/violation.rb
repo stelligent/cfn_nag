@@ -1,5 +1,6 @@
 require_relative 'rule_definition'
 
+# Rule definition for violations
 class Violation < RuleDefinition
   attr_reader :logical_resource_ids
 
@@ -15,44 +16,46 @@ class Violation < RuleDefinition
   end
 
   def to_s
-    "#{super.to_s} #{@logical_resource_ids}"
+    "#{super} #{@logical_resource_ids}"
   end
 
   def to_h
-    super.to_h.merge({
+    super.to_h.merge(
       logical_resource_ids: @logical_resource_ids
-    })
+    )
   end
 
-  def self.count_warnings(violations)
-    violations.inject(0) do |count, violation|
-      if violation.type == Violation::WARNING
-        if empty?(violation.logical_resource_ids)
-          count += 1
-        else
-          count += violation.logical_resource_ids.size
+  class << self
+    def count_warnings(violations)
+      violations.inject(0) do |count, violation|
+        if violation.type == Violation::WARNING
+          count += if empty?(violation.logical_resource_ids)
+                     1
+                   else
+                     violation.logical_resource_ids.size
+                   end
         end
+        count
       end
-      count
     end
-  end
 
-  def self.count_failures(violations)
-    violations.inject(0) do |count, violation|
-      if violation.type == Violation::FAILING_VIOLATION
-        if empty?(violation.logical_resource_ids)
-          count += 1
-        else
-          count += violation.logical_resource_ids.size
+    def count_failures(violations)
+      violations.inject(0) do |count, violation|
+        if violation.type == Violation::FAILING_VIOLATION
+          count += if empty?(violation.logical_resource_ids)
+                     1
+                   else
+                     violation.logical_resource_ids.size
+                   end
         end
+        count
       end
-      count
     end
-  end
 
-  private
+    private
 
-  def self.empty?(array)
-    array.nil? || array.size ==0
+    def empty?(array)
+      array.nil? || array.empty?
+    end
   end
 end

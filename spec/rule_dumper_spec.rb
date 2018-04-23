@@ -18,17 +18,17 @@ describe CfnNagRuleDumper do
     end
 
     it 'emits list of rules' do
-      expected_output = <<END
+      expected_output = <<OUTPUTSTRING
 WARNING VIOLATIONS:
 
 FAILING VIOLATIONS:
 F1 EBS volume should have server-side encryption enabled
 F9 S3 Bucket policy should not allow Allow+NotPrincipal
-END
+OUTPUTSTRING
 
-      expect {
+      expect do
         @rule_dumper.dump_rules
-      }.to output(expected_output).to_stdout
+      end.to output(expected_output).to_stdout
     end
   end
 end

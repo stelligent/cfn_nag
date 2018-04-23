@@ -5,7 +5,6 @@ require 'cfn-nag/result_view/rules_view'
 require 'set'
 
 describe ProfileLoader do
-
   describe '#load' do
     before(:all) do
       @rule_registry = RuleRegistry.new
@@ -19,45 +18,42 @@ describe ProfileLoader do
     end
 
     context 'empty profile' do
-
       it 'should raise an error' do
-
-        expect {
+        expect do
           ProfileLoader.new(nil).load profile_definition: ''
-        }.to raise_error 'Empty profile'
+        end.to raise_error 'Empty profile'
       end
     end
 
     context 'non-existent rule number' do
-
       it 'should raise an error' do
-
-        expect {
+        expect do
           ProfileLoader.new(@rule_registry).load profile_definition: 'FAKEID1'
-        }.to raise_error #'FAKEID is not a legal rule identifier'
+        end.to raise_error # 'FAKEID is not a legal rule identifier'
       end
 
       it 'should return a profile object' do
-
-        new_profile = ProfileLoader.new(@rule_registry).load profile_definition: "id1\nid2"
-        expect(new_profile.rule_ids).to eq Set.new %w(id1 id2)
+        new_profile = ProfileLoader.new(@rule_registry)
+                                   .load profile_definition: "id1\nid2"
+        expect(new_profile.rule_ids).to eq Set.new %w[id1 id2]
       end
     end
 
     context 'load profile using rule dump format' do
       before(:all) do
-        @rule_view_output = <<END
+        @rule_view_output = <<OUTPUT
 WARNING VIOLATIONS:
 
 FAILING VIOLATIONS:
 id1 fakeo
 id2 fakeo2
-END
+OUTPUT
       end
 
       it 'should parse the rule dump format' do
-        new_profile = ProfileLoader.new(@rule_registry).load profile_definition: @rule_view_output
-        expect(new_profile.rule_ids).to eq Set.new %w(id1 id2)
+        new_profile = ProfileLoader.new(@rule_registry)
+                                   .load profile_definition: @rule_view_output
+        expect(new_profile.rule_ids).to eq Set.new %w[id1 id2]
       end
     end
   end

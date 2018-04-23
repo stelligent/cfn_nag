@@ -8,7 +8,7 @@ describe SnsTopicPolicyWildcardPrincipalRule do
       cfn_model = CfnParser.new.parse read_test_template('json/sns_topic_policy/sns_topic_with_wildcard_principal.json')
 
       actual_logical_resource_ids = SnsTopicPolicyWildcardPrincipalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w(mysnspolicy0 mysnspolicy1 mysnspolicy2 mysnspolicy3)
+      expected_logical_resource_ids = %w[mysnspolicy0 mysnspolicy1 mysnspolicy2 mysnspolicy3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

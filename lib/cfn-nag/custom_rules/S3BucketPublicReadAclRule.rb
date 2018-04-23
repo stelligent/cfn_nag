@@ -2,7 +2,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class S3BucketPublicReadAclRule < BaseRule
-
   def rule_text
     'S3 Bucket likely should not have a public read acl'
   end
@@ -19,9 +18,7 @@ class S3BucketPublicReadAclRule < BaseRule
     logical_resource_ids = []
 
     cfn_model.resources_by_type('AWS::S3::Bucket').each do |bucket|
-      if bucket.accessControl == 'PublicRead'
-        logical_resource_ids << bucket.logical_resource_id
-      end
+      logical_resource_ids << bucket.logical_resource_id if bucket.accessControl == 'PublicRead'
     end
 
     logical_resource_ids
