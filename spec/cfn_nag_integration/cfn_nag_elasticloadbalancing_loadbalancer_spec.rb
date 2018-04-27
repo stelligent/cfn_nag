@@ -9,8 +9,7 @@ describe CfnNag do
 
   context 'two load balancers without access logging enabled' do
     it 'flags a warning' do
-      template_name = 'json/elasticloadbalancing_loadbalancer/' \
-                      'two_load_balancers_with_no_logging.json'
+      template_name = 'json/elasticloadbalancing_loadbalancer/two_load_balancers_with_no_logging.json'
 
       expected_aggregate_results = [
         {
@@ -29,10 +28,7 @@ describe CfnNag do
         }
       ]
 
-      actual_aggregate_results = \
-        @cfn_nag.audit_aggregate_across_files(
-          input_path: test_template_path(template_name)
-        )
+      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files input_path: test_template_path(template_name)
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end

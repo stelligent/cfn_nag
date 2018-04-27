@@ -45,8 +45,7 @@ RULE
         File.open(File.join(@custom_rule_directory,
                             'FakeRule.rb'),
                   'w+') { |file| file.write fake_rule }
-        @custom_rule_loader = \
-          CustomRuleLoader.new(rule_directory: @custom_rule_directory)
+        @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
       end
 
       after(:each) do
@@ -55,9 +54,9 @@ RULE
 
       it 'includes external rule definition' do
         actual_rule_registry = @custom_rule_loader.rule_definitions
-        expected_rule_definition = \
-          RuleDefinition.new id: 'W9933', message: 'this is fake rule text',
-                             type: RuleDefinition::WARNING
+        expected_rule_definition = RuleDefinition.new id: 'W9933',
+                                                      message: 'this is fake rule text',
+                                                      type: RuleDefinition::WARNING
 
         actual_rule_definition = actual_rule_registry.by_id 'W9933'
         expect(actual_rule_definition).to eq expected_rule_definition

@@ -31,9 +31,8 @@ class CfnNag
   def audit_aggregate_across_files_and_render_results(
     input_path:, output_format: 'txt', parameter_values_path: nil
   )
-    aggregate_results = \
-      audit_aggregate_across_files input_path: input_path,
-                                   parameter_values_path: parameter_values_path
+    aggregate_results = audit_aggregate_across_files input_path: input_path,
+                                                     parameter_values_path: parameter_values_path
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -49,8 +48,7 @@ class CfnNag
   # Given a file or directory path, return aggregate results
   #
   def audit_aggregate_across_files(input_path:, parameter_values_path: nil)
-    parameter_values_string = \
-      parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
+    parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
     templates = TemplateDiscovery.new.discover_templates(input_path)
     aggregate_results = []
     templates.each do |template|

@@ -12,8 +12,7 @@ describe CfnNag do
     context 'json output' do
       it 'renders json results' do
         @cfn_nag.audit_aggregate_across_files_and_render_results(
-          input_path: test_template_path('json/s3_bucket_policy/' \
-                                         's3_bucket_with_wildcards.json'),
+          input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
           output_format: 'json'
         )
         # measuring stdout assertion here is going to be a pain and maybe
@@ -25,8 +24,7 @@ describe CfnNag do
     context 'txt output' do
       it 'renders json results' do
         @cfn_nag.audit_aggregate_across_files_and_render_results(
-          input_path: test_template_path('json/s3_bucket_policy/' \
-                                         's3_bucket_with_wildcards.json'),
+          input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
           output_format: 'txt'
         )
         # measuring stdout assertion here is going to be a pain and maybe
@@ -147,22 +145,17 @@ describe CfnNag do
             violations: [
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
-                message:
-                'Security Groups found with ingress cidr that is not /32',
+                message: 'Security Groups found with ingress cidr that is not /32',
                 logical_resource_ids: %w[sgOpenIngress]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
-                message:
-                'Security Groups found with cidr open to world on ingress.  ' \
-                'This should never be true on instance.  Permissible on ELB',
+                message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
                 logical_resource_ids: %w[sgOpenIngress]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message:
-                'Missing egress rule means all traffic is allowed outbound.  '\
-                'Make this explicit if it is desired configuration',
+                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
                 logical_resource_ids: %w[sgOpenIngress]
               )
             ]
@@ -187,8 +180,7 @@ EXPECTEDSTDERR
     end
   end
 
-  context 'when template has suppression metadata and ' \
-          'suppression is disallowed' do
+  context 'when template has suppression metadata and suppression is disallowed' do
     it 'ignores rules on suppressed resources' do
       @cfn_nag = CfnNag.new(allow_suppression: false)
 
@@ -202,22 +194,17 @@ EXPECTEDSTDERR
             violations: [
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
-                message:
-                'Security Groups found with ingress cidr that is not /32',
+                message: 'Security Groups found with ingress cidr that is not /32',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
-                message:
-                'Security Groups found with cidr open to world on ingress.  ' \
-                'This should never be true on instance.  Permissible on ELB',
+                message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message:
-                'Missing egress rule means all traffic is allowed outbound.  '\
-                'Make this explicit if it is desired configuration',
+                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
               )
             ]
@@ -237,15 +224,12 @@ EXPECTEDSTDERR
     it 'raises an error' do
       template_name = 'yaml/security_group/sg_with_mangled_metadata.yml'
 
-      expect do
+      expect {
         _ = @cfn_nag.audit_aggregate_across_files(
           input_path: test_template_path(template_name)
         )
-      end.to output(
-        'sgOpenIngress2 has missing cfn_nag suppression rule id: ' \
-        '[{"reason"=>"This security group is attached to internet-facing ' \
-        'ELB"}]' + "\n"
-      ).to_stderr_from_any_process
+      }.to output('sgOpenIngress2 has missing cfn_nag suppression rule id: [{"reason"=>"This security group is attached to internet-facing ELB"}]' + "\n")
+       .to_stderr_from_any_process
     end
   end
 
@@ -260,10 +244,9 @@ EXPECTEDSTDERR
             failure_count: 1,
             violations: [
               Violation.new(
-                id: 'FATAL', type: Violation::FAILING_VIOLATION,
-                message:
-                '(<unknown>): mapping values are not allowed in this context ' \
-                'at line 3 column 15'
+                id: 'FATAL',
+                type: Violation::FAILING_VIOLATION,
+                message: '(<unknown>): mapping values are not allowed in this context at line 3 column 15'
               )
             ]
           }

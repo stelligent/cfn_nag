@@ -6,8 +6,7 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
   include IpAddr
 
   def rule_text
-    'Security Groups found with cidr open to world on ingress.  ' \
-    'This should never be true on instance.  Permissible on ELB'
+    'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB'
   end
 
   def rule_type

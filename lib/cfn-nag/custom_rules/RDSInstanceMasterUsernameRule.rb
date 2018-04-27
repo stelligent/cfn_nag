@@ -4,8 +4,7 @@ require_relative 'base'
 # cfn_nag rules related to RDS Instance master username
 class RDSInstanceMasterUsernameRule < BaseRule
   def rule_text
-    'RDS instance master username must be Ref to NoEcho Parameter. ' \
-    'Default credentials are not recommended'
+    'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended'
   end
 
   def rule_type

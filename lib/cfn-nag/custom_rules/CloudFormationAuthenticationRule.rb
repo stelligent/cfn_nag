@@ -4,8 +4,7 @@ require_relative 'base'
 # Rule to ensure credentials are not specified in template
 class CloudFormationAuthenticationRule < BaseRule
   def rule_text
-    'Specifying credentials in the template itself ' \
-    'is probably not the safest thing'
+    'Specifying credentials in the template itself is probably not the safest thing'
   end
 
   def rule_type

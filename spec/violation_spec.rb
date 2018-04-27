@@ -5,12 +5,9 @@ describe Violation do
     it 'emits attributes' do
       violation = Violation.new(id: 'F99',
                                 type: Violation::FAILING_VIOLATION,
-                                message: 'EBS volume should have server-side ' \
-                                         'encryption enabled',
+                                message: 'EBS volume should have server-side encryption enabled',
                                 logical_resource_ids: %w[NewVolume1 NewVolume2])
-      expect(violation.to_s).to eq 'F99 FAIL EBS volume should have ' \
-                                   'server-side encryption enabled ' \
-                                   '["NewVolume1", "NewVolume2"]'
+      expect(violation.to_s).to eq 'F99 FAIL EBS volume should have server-side encryption enabled ["NewVolume1", "NewVolume2"]'
     end
   end
 
@@ -19,14 +16,12 @@ describe Violation do
       it 'return false' do
         v1 = Violation.new(id: 'F1',
                            type: Violation::FAILING_VIOLATION,
-                           message: 'EBS volume should have server-side ' \
-                                    'encryption enabled',
+                           message: 'EBS volume should have server-side encryption enabled',
                            logical_resource_ids: %w[NewVolume1 NewVolume2])
 
         v2 = Violation.new(id: 'F2',
                            type: Violation::FAILING_VIOLATION,
-                           message: 'EBS volume should have server-side ' \
-                                    'encryption enabled',
+                           message: 'EBS volume should have server-side encryption enabled',
                            logical_resource_ids: %w[NewVolume1 NewVolume2])
 
         expect(v1).to_not eq v2
@@ -37,14 +32,12 @@ describe Violation do
       it 'return true' do
         v1 = Violation.new(id: 'F1',
                            type: Violation::FAILING_VIOLATION,
-                           message: 'EBS volume should have server-side ' \
-                                    'encryption enabled',
+                           message: 'EBS volume should have server-side encryption enabled',
                            logical_resource_ids: %w[NewVolume1 NewVolume2])
 
         v2 = Violation.new(id: 'F1',
                            type: Violation::FAILING_VIOLATION,
-                           message: 'EBS volume should have server-side ' \
-                                    'encryption enabled',
+                           message: 'EBS volume should have server-side encryption enabled',
                            logical_resource_ids: %w[NewVolume1 NewVolume2])
 
         expect(v1).to eq v2
@@ -58,8 +51,7 @@ describe Violation do
         violations = [
           Violation.new(id: 'F1',
                         type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side ' \
-                                 'encryption enabled',
+                        message: 'EBS volume should have server-side encryption enabled',
                         logical_resource_ids: %w[NewVolume1 NewVolume2]),
           Violation.new(id: 'F2',
                         type: Violation::FAILING_VIOLATION,
@@ -75,8 +67,7 @@ describe Violation do
         violations = [
           Violation.new(id: 'F1',
                         type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side ' \
-                                 'encryption enabled',
+                        message: 'EBS volume should have server-side encryption enabled',
                         logical_resource_ids: %w[NewVolume1 NewVolume2]),
           Violation.new(id: 'F2',
                         type: Violation::FAILING_VIOLATION,
@@ -132,8 +123,7 @@ describe Violation do
         violations = [
           Violation.new(id: 'F1',
                         type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side ' \
-                                 'encryption enabled',
+                        message: 'EBS volume should have server-side encryption enabled',
                         logical_resource_ids: %w[NewVolume1 NewVolume2]),
           Violation.new(id: 'F2',
                         type: Violation::FAILING_VIOLATION,
