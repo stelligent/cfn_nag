@@ -18,6 +18,9 @@ For more background on the tool, please see:
 Presuming Ruby 2.2.x is installed, installation is just a matter of:
 
     gem install cfn-nag
+    
+# Pipeline
+To run `cfn_nag` as an action in CodePipeline, you can deploy via the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:923120264911:applications~cfn-nag-pipeline).
 
 # Usage
 Pretty simple to execute:
