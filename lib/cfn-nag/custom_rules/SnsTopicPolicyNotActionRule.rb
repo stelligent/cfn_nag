@@ -15,8 +15,8 @@ class SnsTopicPolicyNotActionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::SNS::TopicPolicy').reject do |policy|
-      policy.policy_document.allows_not_action.empty?
+    violating_policies = cfn_model.resources_by_type('AWS::SNS::TopicPolicy').select do |policy|
+      !policy.policy_document.allows_not_action.empty?
     end
 
     violating_policies.map(&:logical_resource_id)
