@@ -19,10 +19,10 @@
       }
     },
 
-    "lambdaPermission": {
+    "lambdaPermissionDeleteAlias": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
-        "Action": "lambda:InvokeFunction",
+        "Action": "lambda:DeleteAlias",
         "FunctionName": {
           "Ref": "AppendItemToListFunction"
         },

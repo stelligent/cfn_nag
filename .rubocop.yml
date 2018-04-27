@@ -2,3 +2,7 @@ AllCops:
   TargetRubyVersion: 2.2
 Layout/IndentHeredoc:
   Enabled: false
+
+# not a bad notion except when you are actually trying to select things that are not(something)
+Style/InverseMethods:
+  Enabled: false

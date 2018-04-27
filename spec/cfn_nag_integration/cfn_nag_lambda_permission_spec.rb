@@ -29,12 +29,6 @@ describe CfnNag do
                             message: 'IAM role should not allow * resource ' \
                                      'on its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole]),
-              Violation.new(id: 'W24',
-                            type: Violation::WARNING,
-                            message: 'Lambda permission beside ' \
-                                     'InvokeFunction might not be what you ' \
-                                     'want?  Not sure!?',
-                            logical_resource_ids: %w[lambdaPermission]),
               Violation.new(id: 'F13',
                             type: Violation::FAILING_VIOLATION,
                             message: 'Lambda permission principal should ' \
