@@ -28,11 +28,13 @@ class CfnNag
   #
   # Return an aggregate failure count (for exit code usage)
   #
-  def audit_aggregate_across_files_and_render_results(
-    input_path:, output_format: 'txt', parameter_values_path: nil
-  )
+  def audit_aggregate_across_files_and_render_results(input_path:,
+                                                      output_format: 'txt',
+                                                      parameter_values_path: nil,
+                                                      template_pattern:  '..*\.json|..*\.yaml|..*\.yml|..*\.template')
     aggregate_results = audit_aggregate_across_files input_path: input_path,
-                                                     parameter_values_path: parameter_values_path
+                                                     parameter_values_path: parameter_values_path,
+                                                     template_pattern:  template_pattern
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -47,9 +49,12 @@ class CfnNag
   ##
   # Given a file or directory path, return aggregate results
   #
-  def audit_aggregate_across_files(input_path:, parameter_values_path: nil)
+  def audit_aggregate_across_files(input_path:,
+                                   parameter_values_path: nil,
+                                   template_pattern:  '..*\.json|..*\.yaml|..*\.yml|..*\.template')
     parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
-    templates = TemplateDiscovery.new.discover_templates(input_path)
+    templates = TemplateDiscovery.new.discover_templates(input_json_path: input_path,
+                                                         template_pattern: template_pattern)
     aggregate_results = []
     templates.each do |template|
       aggregate_results << {

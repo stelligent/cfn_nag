@@ -9,7 +9,7 @@ opts = Trollop.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
   opt :input_path,
-      'CloudFormation template to nag on or directory of templates - all *.json, *.yaml, *.yml and *.template recursively',
+      'CloudFormation template to nag on or directory of templates.  Default is all *.json, *.yaml, *.yml and *.template recursively, but can be constrained by --template-pattern',
       type: :io,
       required: true
   opt :output_format,
@@ -51,6 +51,11 @@ opts = Trollop.options do
       type: :boolean,
       required: false,
       default: false
+  opt :template_pattern,
+      'Within the --input-path, match files to scan against this regular expression',
+      type: :string,
+      required: false,
+      default: '..*\.json|..*\.yaml|..*\.yml|..*\.template'
 end
 
 unless %w[txt json].include?(opts[:output_format])
@@ -69,10 +74,10 @@ cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      rule_directory: opts[:rule_directory],
                      allow_suppression: opts[:allow_suppression],
                      print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions:
-                     opts[:isolate_custom_rule_exceptions])
+                     isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions])
 
 exit cfn_nag.audit_aggregate_across_files_and_render_results(
   input_path: opts[:input_path], output_format: opts[:output_format],
-  parameter_values_path: opts[:parameter_values_path]
+  parameter_values_path: opts[:parameter_values_path],
+  template_pattern: opts[:template_pattern]
 )

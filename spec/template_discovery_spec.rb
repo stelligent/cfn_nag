@@ -13,7 +13,7 @@ describe TemplateDiscovery do
     context 'illegitimate path' do
       it 'raises an error' do
         expect do
-          @template_discovery.discover_templates '/an/impossible/path/to/find'
+          @template_discovery.discover_templates input_json_path: '/an/impossible/path/to/find'
         end.to raise_error '/an/impossible/path/to/find is not a proper path'
       end
     end
@@ -22,7 +22,7 @@ describe TemplateDiscovery do
       it 'returns array with filename' do
         Tempfile.open('/foo') do |tempfile|
           actual_templates = @template_discovery.discover_templates(
-            tempfile.path
+            input_json_path: tempfile.path
           )
           expected_templates = [tempfile.path]
           expect(actual_templates).to eq expected_templates
@@ -48,7 +48,7 @@ describe TemplateDiscovery do
           File.open("#{temp_directory}/foo5", 'w+') { |f| f.write 'foo5' }
 
           actual_templates = @template_discovery.discover_templates(
-            temp_directory
+            input_json_path: temp_directory
           )
 
           expected_templates = %W[
