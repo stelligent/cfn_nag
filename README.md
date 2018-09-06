@@ -133,6 +133,20 @@ Failures count: 0
 Warnings count: 0
 ```
 
+Alternatively, if you have existing Cloudformation templates for which you would like to suppress warnings. 
+Edit ignore.yml in the custom_rule folder.
+Add the Ids of any rules you want to globally suppress to this file
+
+Eg:
+
+```yaml
+RulesToSuppress:
+  - id: F18
+    reason: We allow this policy
+  - id: F1000
+    reason: This rule is not valid for the environment we are deploying to.
+```
+
 # Development
 
 ## New Rules

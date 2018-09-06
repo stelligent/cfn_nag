@@ -1,0 +1,5 @@
+# uncomment below to suppress a rule for all files checked.
+#RulesToSuppress:
+#  - id: W3
+#    reason: example reason to suppress a rule
+  

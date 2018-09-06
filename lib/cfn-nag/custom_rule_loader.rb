@@ -3,6 +3,7 @@ require 'logging'
 require_relative 'rule_registry'
 require 'cfn-nag/jmes_path_evaluator'
 require 'cfn-nag/jmes_path_discovery'
+require 'yaml'
 
 ##
 # This object can discover the internal and custom user-provided rules and
@@ -92,7 +93,16 @@ class CustomRuleLoader
        resource.metadata['cfn_nag']['rules_to_suppress']
 
       resource.metadata['cfn_nag']['rules_to_suppress']
+    end    
+  end
+
+  def read_global_rules_to_suppress()    
+    global_rules = {}
+    ignore_file_path = File.join(__dir__, 'custom_rules', 'ignore.yml')    
+    if File.file?(ignore_file_path)
+      global_rules = YAML.load_file(ignore_file_path)      
     end
+    global_rules.fetch('RulesToSuppress',{})
   end
 
   # XXX given mangled_metadatas is never used or returned,
@@ -134,9 +144,12 @@ class CustomRuleLoader
     return cfn_model unless allow_suppression
 
     cfn_model = cfn_model.copy
+    rules_to_suppress = read_global_rules_to_suppress   
 
-    cfn_model.resources.delete_if do |logical_resource_id, resource|
-      rules_to_suppress = rules_to_suppress resource
+    cfn_model.resources.delete_if do |logical_resource_id, resource|      
+      resource_rules_to_suppress = rules_to_suppress resource
+      !rules_to_suppress ? rules_to_suppress.merge(resource_rules_to_suppress) : resource_rules_to_suppress 
+
       if rules_to_suppress.nil?
         false
       else

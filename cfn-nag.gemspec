@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.summary       = 'cfn-nag'
   s.description   = 'Auditing tool for CloudFormation templates'
   s.homepage      = 'https://github.com/stelligent/cfn_nag'
-  s.files         = FileList['lib/**/*.rb']
+  s.files         = FileList['lib/**/*.rb', 'lib/**/*.yml']
 
   s.require_paths << 'lib'
 
