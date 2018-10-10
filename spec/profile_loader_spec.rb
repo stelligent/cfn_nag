@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'cfn-nag/violation'
 require 'cfn-nag/profile_loader'
 require 'cfn-nag/rule_registry'
 require 'cfn-nag/result_view/rules_view'

@@ -2,18 +2,21 @@ require 'cfn-nag/custom_rule_loader'
 require 'cfn-nag/rule_definition'
 require 'cfn-nag/rule_registry'
 require 'fileutils'
+require 'tmpdir'
+require 'yaml'
 
 describe CustomRuleLoader do
   describe '#rule_definitions' do
+
     context 'no external rule directory' do
       it 'returns RuleRegistry with internal definitions' do
         actual_rule_registry = CustomRuleLoader.new.rule_definitions
 
-        non_rules = actual_rule_registry.rules.select do |rule_definition|
-          !rule_definition.is_a? RuleDefinition
-        end
-        expect(non_rules).to eq []
-        expect(actual_rule_registry.rules.size).to be > 10
+         non_rules = actual_rule_registry.rules.select do |rule_definition|
+           !rule_definition.is_a? RuleDefinition
+         end
+         expect(non_rules).to eq []
+         expect(actual_rule_registry.rules.size).to be > 10
       end
     end
 
@@ -42,10 +45,8 @@ class FakeRule < BaseRule
 end
 RULE
         @custom_rule_directory = Dir.mktmpdir(%w[custom_rule loader])
-        File.open(File.join(@custom_rule_directory,
-                            'FakeRule.rb'),
-                  'w+') { |file| file.write fake_rule }
-        @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
+        File.open(File.join(@custom_rule_directory, 'FakeRule.rb'), 'w+') { |file| file.write fake_rule }
+        @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory, allow_suppression: false)
       end
 
       after(:each) do
@@ -67,16 +68,18 @@ RULE
         # for rules that mess with direct model
         cfn_model.raw_model = { 'Resources' => {} }
 
-        actual_violations = @custom_rule_loader.execute_custom_rules cfn_model
-        expected_violations = [
-          Violation.new(id: 'W9933',
-                        type: Violation::WARNING,
-                        message: 'this is fake rule text',
-                        logical_resource_ids: %w[hardwired1 hardwired2])
-        ]
+         actual_violations = @custom_rule_loader.execute_custom_rules cfn_model
+         expected_violations = [
+           Violation.new(id: 'W9933',
+                         type: Violation::WARNING,
+                         message: 'this is fake rule text',
+                         logical_resource_ids: %w[hardwired1 hardwired2])
+         ]
 
-        expect(actual_violations).to eq expected_violations
+         expect(actual_violations).to eq expected_violations
       end
+
     end
+
   end
 end
