@@ -39,7 +39,9 @@ class CustomRuleLoader
   end
 
   def execute_custom_rules(cfn_model)
-    Logging.logger['log'].debug "cfn_model: #{cfn_model}"
+    if Logging.logger['log'].debug?
+      Logging.logger['log'].debug "cfn_model: #{cfn_model}"
+    end
 
     violations = []
 
