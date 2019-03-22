@@ -133,6 +133,34 @@ Failures count: 0
 Warnings count: 0
 ```
 
+# Setting Template Parameter Values
+CloudFormation Template Parameters can present a problem for static analysis as the values are specified at the point
+of deployment.  In other words, the values aren't available when the static analysis is done - static analysis
+can only look at the "code" that is in front of it.  Therefore a security group ingress rule of 0.0.0.0/0 won't
+be flagged if the cidr is parameterized and the 0.0.0.0/0 is passed in at deploy time.
+
+To allow for checking parameter values, a user can specify the parameter values in a JSON file passed on the command line
+to both `cfn_nag` and `cfn_nag_scan` with the `--parameter-values-path=<filename/uri>` flag.  
+
+The format of the JSON is a single key "Parameters" whose value is a dictionary with each key/value pair mapping to 
+the Parameters like such:
+
+```json
+{
+  "Parameters": {
+    "Cidr": "0.0.0.0/0"
+  }
+}
+```
+
+will fill in "0.0.0.0/0" to the following Parameter:
+
+```yaml
+Parameters: 
+  Cidr:
+    Type: String
+```
+
 # Development
 
 ## New Rules
