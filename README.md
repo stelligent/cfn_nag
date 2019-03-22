@@ -161,6 +161,11 @@ Parameters:
     Type: String
 ```
 
+_BEWARE_ that if there are extra parameters in the JSON they are quietly ignored (to allow `cfn_nag_scan` to apply
+the same JSON across all the templates)
+
+If the JSON is malformed or doesn't meet the above specification, then parsing will fail with FATAL violation.
+
 # Development
 
 ## New Rules

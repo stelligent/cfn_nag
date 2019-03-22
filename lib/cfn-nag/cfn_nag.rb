@@ -91,6 +91,14 @@ class CfnNag
                                 message: parser_error.to_s)
     { failure_count: Violation.count_failures(violations),
       violations: violations }
+  rescue JSON::ParserError => json_parameters_error
+    violations << Violation.new(id: 'FATAL',
+                                type: Violation::FAILING_VIOLATION,
+                                message: "JSON Parameter values parse error: #{json_parameters_error.to_s}")
+    {
+      failure_count: Violation.count_failures(violations),
+      violations: violations
+    }
   end
   # rubocop:enable Metrics/MethodLength
 
