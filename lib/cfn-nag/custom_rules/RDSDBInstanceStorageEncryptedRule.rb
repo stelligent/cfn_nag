@@ -11,7 +11,7 @@ class RDSDBInstanceStorageEncryptedRule < BaseRule
   end
 
   def rule_id
-    'F26'
+    'F27'
   end
 
   def audit_impl(cfn_model)
