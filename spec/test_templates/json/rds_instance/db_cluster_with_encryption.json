@@ -1,0 +1,11 @@
+{
+  "Resources": {
+    "RDSCluster" : {
+      "Type" : "AWS::RDS::DBCluster",
+      "Properties" : {
+        "Engine" : "aurora",
+        "StorageEncrypted": "true"
+      }
+    }
+  }
+}
