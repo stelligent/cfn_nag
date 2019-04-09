@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-model'
 require 'logging'
 require_relative 'rule_registry'
@@ -39,9 +41,7 @@ class CustomRuleLoader
   end
 
   def execute_custom_rules(cfn_model)
-    if Logging.logger['log'].debug?
-      Logging.logger['log'].debug "cfn_model: #{cfn_model}"
-    end
+    Logging.logger['log'].debug "cfn_model: #{cfn_model}" if Logging.logger['log'].debug?
 
     violations = []
 
@@ -75,17 +75,16 @@ class CustomRuleLoader
 
   def filter_rule_classes(cfn_model, violations)
     discover_rule_classes(@rule_directory).each do |rule_class|
-      begin
-        filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
-                                                                         rule_id: rule_class.new.rule_id,
-                                                                         allow_suppression: @allow_suppression
-        audit_result = rule_class.new.audit(filtered_cfn_model)
-        violations << audit_result unless audit_result.nil?
-      rescue Exception => exception
-        raise exception unless @isolate_custom_rule_exceptions
-        STDERR.puts exception
-      end
+      filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
+                                                                       rule_id: rule_class.new.rule_id,
+                                                                       allow_suppression: @allow_suppression
+      audit_result = rule_class.new.audit(filtered_cfn_model)
+      violations << audit_result unless audit_result.nil?
     end
+  rescue Exception => e
+    raise e unless @isolate_custom_rule_exceptions
+
+    warn e
   end
 
   def rules_to_suppress(resource)
@@ -104,28 +103,28 @@ class CustomRuleLoader
     cfn_model.resources.each do |logical_resource_id, resource|
       resource_rules_to_suppress = rules_to_suppress resource
       next if resource_rules_to_suppress.nil?
+
       mangled_rules = resource_rules_to_suppress.select do |rule_to_suppress|
         rule_to_suppress['id'].nil?
       end
-      unless mangled_rules.empty?
-        mangled_metadatas << [logical_resource_id, mangled_rules]
-      end
+      mangled_metadatas << [logical_resource_id, mangled_rules] unless mangled_rules.empty?
     end
     mangled_metadatas.each do |mangled_metadata|
       logical_resource_id = mangled_metadata.first
       mangled_rules = mangled_metadata[1]
 
-      STDERR.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
+      warn "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
     end
   end
 
   def suppress_resource?(rules_to_suppress, rule_id, logical_resource_id)
     found_suppression_rule = rules_to_suppress.find do |rule_to_suppress|
       next if rule_to_suppress['id'].nil?
+
       rule_to_suppress['id'] == rule_id
     end
     if found_suppression_rule && @print_suppression
-      STDERR.puts "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
+      warn "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
     end
     !found_suppression_rule.nil?
   end
@@ -150,14 +149,13 @@ class CustomRuleLoader
 
   def validate_extra_rule_directory(rule_directory)
     return true if rule_directory.nil? || File.directory?(rule_directory)
+
     raise "Not a real directory #{rule_directory}"
   end
 
   def discover_rule_filenames(rule_directory)
     rule_filenames = []
-    unless rule_directory.nil?
-      rule_filenames += Dir[File.join(rule_directory, '*Rule.rb')].sort
-    end
+    rule_filenames += Dir[File.join(rule_directory, '*Rule.rb')].sort unless rule_directory.nil?
     rule_filenames += Dir[File.join(__dir__, 'custom_rules', '*Rule.rb')].sort
     Logging.logger['log'].debug "rule_filenames: #{rule_filenames}"
     rule_filenames
@@ -181,9 +179,7 @@ class CustomRuleLoader
 
   def discover_jmespath_filenames(rule_directory)
     rule_filenames = []
-    unless rule_directory.nil?
-      rule_filenames += Dir[File.join(rule_directory, '*jmespath.rb')].sort
-    end
+    rule_filenames += Dir[File.join(rule_directory, '*jmespath.rb')].sort unless rule_directory.nil?
     rule_filenames += Dir[File.join(__dir__,
                                     'custom_rules',
                                     '*jmespath.rb')].sort

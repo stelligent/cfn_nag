@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/custom_rule_loader'
 require 'cfn-nag/rule_definition'
 require 'cfn-nag/rule_registry'
@@ -9,8 +11,8 @@ describe CustomRuleLoader do
       it 'returns RuleRegistry with internal definitions' do
         actual_rule_registry = CustomRuleLoader.new.rule_definitions
 
-        non_rules = actual_rule_registry.rules.select do |rule_definition|
-          !rule_definition.is_a? RuleDefinition
+        non_rules = actual_rule_registry.rules.reject do |rule_definition|
+          rule_definition.is_a? RuleDefinition
         end
         expect(non_rules).to eq []
         expect(actual_rule_registry.rules.size).to be > 10

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 
 # Base class all Rules should subclass
@@ -16,6 +18,7 @@ class BaseRule
   def audit(cfn_model)
     logical_resource_ids = audit_impl(cfn_model)
     return if logical_resource_ids.empty?
+
     Violation.new(id: rule_id,
                   type: rule_type,
                   message: rule_text,

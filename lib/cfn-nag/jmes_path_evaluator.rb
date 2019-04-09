@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'jmespath'
 require 'logging'
 
@@ -37,12 +39,12 @@ class JmesPathEvaluator
     logical_resource_ids = JMESPath.search(jmespath,
                                            flatten(@cfn_model.raw_model))
 
-    unless logical_resource_ids.empty?
-      @warnings << Violation.new(id: id,
-                                 type: violation_type,
-                                 message: message,
-                                 logical_resource_ids: logical_resource_ids)
-    end
+    return unless logical_resource_ids.empty?
+
+    @warnings << Violation.new(id: id,
+                               type: violation_type,
+                               message: message,
+                               logical_resource_ids: logical_resource_ids)
   end
 
   def flatten(hash)

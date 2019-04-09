@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 require_relative 'base'
 
@@ -36,21 +38,11 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
   end
 
   def references_no_echo_parameter_without_default?(cfn_model, master_user_password)
-    # i feel like i've written this mess somewhere before
-    if master_user_password.is_a? Hash
-      if master_user_password.key? 'Ref'
-        if cfn_model.parameters.key? master_user_password['Ref']
-          parameter = cfn_model.parameters[master_user_password['Ref']]
+    return false unless master_user_password.is_a? Hash
+    return false unless master_user_password.key? 'Ref'
+    return false unless cfn_model.parameters.key? master_user_password['Ref']
 
-          return to_boolean(parameter.noEcho) && parameter.default.nil?
-        else
-          return false
-        end
-      else
-        return false
-      end
-    end
-    # String or anything weird will fall through here
-    false
+    parameter = cfn_model.parameters[master_user_password['Ref']]
+    to_boolean(parameter.noEcho) && parameter.default.nil?
   end
 end

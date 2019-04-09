@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-model'
 require 'cfn-nag/custom_rules/SnsTopicPolicyNotPrincipalRule'

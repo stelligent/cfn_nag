@@ -1,4 +1,4 @@
-require 'rake'
+# frozen_string_literal: true
 
 Gem::Specification.new do |s|
   s.name          = 'cfn-nag'
@@ -10,11 +10,11 @@ Gem::Specification.new do |s|
   s.summary       = 'cfn-nag'
   s.description   = 'Auditing tool for CloudFormation templates'
   s.homepage      = 'https://github.com/stelligent/cfn_nag'
-  s.files         = FileList['lib/**/*.rb']
+  s.files         = Dir.glob('lib/**/*.rb')
 
   s.require_paths << 'lib'
 
-  s.required_ruby_version = '~> 2.2'
+  s.required_ruby_version = '>= 2.4'
 
   s.add_development_dependency('rspec', '~> 3.4')
   s.add_development_dependency('rubocop')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-nag/profile_loader'
 require 'cfn-nag/rule_registry'

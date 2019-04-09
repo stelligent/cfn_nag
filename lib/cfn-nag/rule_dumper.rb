@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'custom_rule_loader'
 require_relative 'profile_loader'
 require_relative 'result_view/rules_view'

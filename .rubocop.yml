@@ -1,8 +1,34 @@
 AllCops:
-  TargetRubyVersion: 2.2
-Layout/IndentHeredoc:
+  TargetRubyVersion: 2.4
+  Exclude:
+    - 'spec/**/*'
+
+Style/Documentation:
   Enabled: false
 
-# not a bad notion except when you are actually trying to select things that are not(something)
-Style/InverseMethods:
+Metrics/LineLength:
   Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 15
+
+Metrics/ClassLength:
+  Enabled: false
+
+Security/Eval:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 16
+
+Lint/RescueException:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Metrics/BlockLength:
+  Max: 50

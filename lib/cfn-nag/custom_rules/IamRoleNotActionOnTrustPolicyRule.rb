@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 require_relative 'base'
 
@@ -15,8 +17,8 @@ class IamRoleNotActionOnTrustPolicyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      !role.assume_role_policy_document.allows_not_action.empty?
+    violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').reject do |role|
+      role.assume_role_policy_document.allows_not_action.empty?
     end
 
     violating_roles.map(&:logical_resource_id)

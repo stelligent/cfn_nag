@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 require_relative 'base'
 
@@ -15,8 +17,8 @@ class SnsTopicPolicyNotPrincipalRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::SNS::TopicPolicy').select do |policy|
-      !policy.policy_document.allows_not_principal.empty?
+    violating_policies = cfn_model.resources_by_type('AWS::SNS::TopicPolicy').reject do |policy|
+      policy.policy_document.allows_not_principal.empty?
     end
 
     violating_policies.map(&:logical_resource_id)

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# rubocop:disable Lint/UnusedMethodArgument
 class JmesPathDiscovery
   def initialize(rule_registry)
     @rule_registry = rule_registry
@@ -15,3 +18,4 @@ class JmesPathDiscovery
                               message: message)
   end
 end
+# rubocop:enable Lint/UnusedMethodArgument

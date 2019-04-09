@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'trollop'
 require 'cfn-nag'
 require 'logging'
@@ -66,9 +68,7 @@ end
 CfnNag.configure_logging(opts)
 
 profile_definition = nil
-unless opts[:profile_path].nil?
-  profile_definition = IO.read(opts[:profile_path])
-end
+profile_definition = IO.read(opts[:profile_path]) unless opts[:profile_path].nil?
 
 cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      rule_directory: opts[:rule_directory],

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class RuleDefinition
-  WARNING = 'WARN'.freeze
-  FAILING_VIOLATION = 'FAIL'.freeze
+  WARNING = 'WARN'
+  FAILING_VIOLATION = 'FAIL'
 
   attr_reader :id, :type, :message
 
@@ -28,7 +30,7 @@ class RuleDefinition
     }
   end
 
-  def ==(other_violation)
-    other_violation.class == self.class && other_violation.to_h == to_h
+  def ==(other)
+    other.class == self.class && other.to_h == to_h
   end
 end

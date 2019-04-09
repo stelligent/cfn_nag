@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 require_relative 'base'
 
@@ -17,15 +19,12 @@ class CloudFormationAuthenticationRule < BaseRule
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.raw_model['Resources'].each do |resource_name, resource|
-      unless resource['Metadata'].nil?
-        unless resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
+      next if resource['Metadata'].nil?
+      next if resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
 
-          resource['Metadata']['AWS::CloudFormation::Authentication'].each do |auth_name, auth|
-            if potentially_sensitive_credentials? auth
-              logical_resource_ids << resource_name
-            end
-          end
-
+      resource['Metadata']['AWS::CloudFormation::Authentication'].each do |_auth_name, auth|
+        if potentially_sensitive_credentials? auth
+          logical_resource_ids << resource_name
         end
       end
     end
