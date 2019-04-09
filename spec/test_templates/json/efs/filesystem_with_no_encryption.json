@@ -1,0 +1,8 @@
+{
+  "Resources": {
+    "filesystem": {
+      "Type": "AWS::EFS::FileSystem",
+      "Properties": {}
+    }
+  }
+}

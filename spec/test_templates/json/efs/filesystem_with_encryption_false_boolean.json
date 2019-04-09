@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "filesystem": {
+      "Type": "AWS::EFS::FileSystem",
+      "Properties": {
+        "Encrypted": false
+      }
+    }
+  }
+}
