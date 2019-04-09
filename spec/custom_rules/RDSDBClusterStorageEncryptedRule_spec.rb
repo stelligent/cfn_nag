@@ -3,7 +3,7 @@ require 'cfn-model'
 require 'cfn-nag/custom_rules/RDSDBClusterStorageEncryptedRule'
 
 describe RDSDBClusterStorageEncryptedRule do
-  context 'DB Instance without encryption' do
+  context 'DB Cluster without encryption' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template(
         'json/rds_instance/db_cluster_with_no_encryption.json'
@@ -16,7 +16,7 @@ describe RDSDBClusterStorageEncryptedRule do
     end
   end
 
-  context 'DB Instance with encryption' do
+  context 'DB Cluster with encryption' do
     it 'returns empty list' do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/db_cluster_with_encryption.json')
 
@@ -27,7 +27,7 @@ describe RDSDBClusterStorageEncryptedRule do
     end
   end
 
-  context 'DB Instance with encryption set to false string' do
+  context 'DB Cluster with encryption set to false string' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/db_cluster_with_encryption_false.json')
 
@@ -38,7 +38,7 @@ describe RDSDBClusterStorageEncryptedRule do
     end
   end
 
-  context 'DB Instance with encryption set to false boolean' do
+  context 'DB Cluster with encryption set to false boolean' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/db_cluster_with_encryption_false_boolean.json')
 
