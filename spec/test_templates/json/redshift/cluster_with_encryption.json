@@ -1,0 +1,20 @@
+{
+  "Resources": {
+    "myCluster": {
+      "Type": "AWS::Redshift::Cluster",
+      "Properties": {
+        "DBName": "mydb",
+        "MasterUsername": "master",
+        "NodeType": "ds2.xlarge",
+        "ClusterType": "single-node",
+        "Encrypted": "true",
+        "Tags": [
+          {
+            "Key": "foo",
+            "Value": "bar"
+          }
+        ]
+      }
+    }
+  }
+}
