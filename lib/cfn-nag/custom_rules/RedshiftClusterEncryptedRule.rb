@@ -3,7 +3,7 @@ require_relative 'base'
 
 class RedshiftClusterEncryptedRule < BaseRule
   def rule_text
-    'EFS FileSystem should have encryption enabled'
+    'Redshift Cluster should have encryption enabled'
   end
 
   def rule_type
