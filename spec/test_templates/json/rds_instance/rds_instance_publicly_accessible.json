@@ -4,7 +4,8 @@
             "Type": "AWS::RDS::DBInstance",
             "Properties": {
                 "SourceDBInstanceIdentifier": "sampleDbInstance",
-                "PubliclyAccessible": true
+                "PubliclyAccessible": true,
+                "StorageEncrypted": "true"
             }
         }
     }

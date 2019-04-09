@@ -1,0 +1,16 @@
+{
+  "Resources": {
+    "MyDB" : {
+      "Type" : "AWS::RDS::DBInstance",
+      "Properties" : {
+        "AllocatedStorage" : "100",
+        "DBInstanceClass" : "db.m1.small",
+        "Engine" : "MySQL",
+        "EngineVersion" : "5.6.13",
+        "Iops" : "1000",
+        "PubliclyAccessible": "false",
+        "StorageEncrypted": "true"
+      }
+    }
+  }
+}
