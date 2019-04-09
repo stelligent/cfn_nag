@@ -1,0 +1,11 @@
+{
+  "Resources": {
+    "workspace1" : {
+      "Type" : "AWS::WorkSpaces::Workspace",
+      "Properties" : {
+        "UserName" : "test",
+        "UserVolumeEncryptionEnabled": "false"
+      }
+    }
+  }
+}
