@@ -3,7 +3,7 @@ require 'cfn-model'
 require 'cfn-nag/custom_rules/EFSFileSystemEncryptedRule'
 
 describe EFSFileSystemEncryptedRule do
-  context 'Replication Group without encryption' do
+  context 'Filesystem without encryption' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template(
         'json/efs/filesystem_with_no_encryption.json'
@@ -16,7 +16,7 @@ describe EFSFileSystemEncryptedRule do
     end
   end
 
-  context 'Replication Group with encryption' do
+  context 'Filesystem with encryption' do
     it 'returns empty list' do
       cfn_model = CfnParser.new.parse read_test_template('json/efs/filesystem_with_encryption.json')
 
@@ -27,7 +27,7 @@ describe EFSFileSystemEncryptedRule do
     end
   end
 
-  context 'Replication Group with encryption set to false string' do
+  context 'Filesystem with encryption set to false string' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template('json/efs/filesystem_with_encryption_false.json')
 
@@ -38,7 +38,7 @@ describe EFSFileSystemEncryptedRule do
     end
   end
 
-  context 'Replication Group with encryption set to false boolean' do
+  context 'Filesystem with encryption set to false boolean' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template('json/efs/filesystem_with_encryption_false_boolean.json')
 
