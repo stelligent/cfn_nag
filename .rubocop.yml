@@ -1,8 +1,88 @@
 AllCops:
   TargetRubyVersion: 2.5
-Layout/IndentHeredoc:
+  Exclude:
+    - 'spec/**/*'
+
+Style/FrozenStringLiteralComment:
   Enabled: false
 
-# not a bad notion except when you are actually trying to select things that are not(something)
+Performance/RegexpMatch:
+  Enabled: false
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Naming/BinaryOperatorParameterName:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Lint/UnusedMethodArgument:
+  Enabled: false
+
+Naming/FileName:
+  Enabled: false
+
 Style/InverseMethods:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/AbcSize:
+  Max: 16
+
+Security/Eval:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Style/StderrPuts:
+  Enabled: false
+
+Style/RedundantBegin:
+  Enabled: false
+
+Lint/RescueException:
+  Enabled: false
+
+Layout/LeadingBlankLines:
+  Enabled: false
+
+Layout/TrailingBlankLines:
+  Enabled: false
+
+Style/SafeNavigation:
+  Enabled: false
+
+Lint/UnusedBlockArgument:
+  Enabled: false
+
+Layout/ExtraSpacing:
+  Enabled: false
+
+Layout/AlignHash:
+  Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
+
+Lint/StringConversionInInterpolation:
+  Enabled: false
+
+Style/Next:
   Enabled: false
