@@ -15,10 +15,10 @@ For more background on the tool, please see:
 [Finding Security Problems Early in the Development Process of a CloudFormation Template with "cfn-nag"](https://stelligent.com/2016/04/07/finding-security-problems-early-in-the-development-process-of-a-cloudformation-template-with-cfn-nag/)
 
 # Installation
-Presuming Ruby 2.2.x is installed, installation is just a matter of:
+Presuming Ruby 2.5.x is installed, installation is just a matter of:
 
     gem install cfn-nag
-    
+
 # Pipeline
 To run `cfn_nag` as an action in CodePipeline, you can deploy via the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:923120264911:applications~cfn-nag-pipeline).
 
@@ -142,7 +142,7 @@ be flagged if the cidr is parameterized and the 0.0.0.0/0 is passed in at deploy
 To allow for checking parameter values, a user can specify the parameter values in a JSON file passed on the command line
 to both `cfn_nag` and `cfn_nag_scan` with the `--parameter-values-path=<filename/uri>` flag.  
 
-The format of the JSON is a single key "Parameters" whose value is a dictionary with each key/value pair mapping to 
+The format of the JSON is a single key "Parameters" whose value is a dictionary with each key/value pair mapping to
 the Parameters like such:
 
 ```json
@@ -156,7 +156,7 @@ the Parameters like such:
 will fill in "0.0.0.0/0" to the following Parameter:
 
 ```yaml
-Parameters: 
+Parameters:
   Cidr:
     Type: String
 ```
