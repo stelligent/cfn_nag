@@ -86,3 +86,6 @@ Lint/StringConversionInInterpolation:
 
 Style/Next:
   Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
