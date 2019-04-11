@@ -12,7 +12,7 @@ Gem::Specification.new do |s|
 
   s.require_paths << 'lib'
 
-  s.required_ruby_version = '>= 2.5'
+  s.required_ruby_version = '>= 2.2'
 
   s.add_development_dependency('rspec', '~> 3.4')
   s.add_development_dependency('rubocop')
