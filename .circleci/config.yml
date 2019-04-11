@@ -2,7 +2,7 @@ version: 2
 jobs:
   test:
     docker:
-      - image: circleci/ruby:2.2.9-browsers
+      - image: circleci/ruby:2.5.5-browsers
     steps:
       - checkout
       - run:
@@ -19,7 +19,7 @@ jobs:
           command: bundle exec rspec --color --require spec_helper spec
   publish:
     docker:
-      - image: circleci/ruby:2.2.9-browsers
+      - image: circleci/ruby:2.5.5-browsers
     steps:
       - checkout
       - run:
