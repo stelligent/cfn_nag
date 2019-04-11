@@ -13,7 +13,7 @@ jobs:
           command: bundle check || bundle install
       - run:
           name: Rubocop lint
-          command: bundle exec rubocop -D || echo Looks like you failed a lint
+          command: bundle exec rubocop -D
       - run:
           name: Rspec tests
           command: bundle exec rspec --color --require spec_helper spec
