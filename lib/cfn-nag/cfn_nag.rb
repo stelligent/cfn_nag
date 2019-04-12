@@ -64,6 +64,19 @@ class CfnNag
     aggregate_results
   end
 
+  def audit_result(violations)
+    {
+      failure_count: Violation.count_failures(violations),
+      violations: violations
+    }
+  end
+
+  def fatal_violation(message)
+    Violation.new(id: 'FATAL',
+                  type: Violation::FAILING_VIOLATION,
+                  message: message)
+  end
+
   ##
   # Given cloudformation json/yml, run all the rules against it
   #
@@ -74,26 +87,20 @@ class CfnNag
   #
   def audit(cloudformation_string:, parameter_values_string: nil)
     violations = []
-    cfn_model = CfnParser.new.parse cloudformation_string,
-                                    parameter_values_string
-    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
-    violations = filter_violations_by_profile violations
-    { failure_count: Violation.count_failures(violations),
-      violations: violations }
-  rescue Psych::SyntaxError, ParserError => parser_error
-    violations << Violation.new(id: 'FATAL',
-                                type: Violation::FAILING_VIOLATION,
-                                message: parser_error.to_s)
-    { failure_count: Violation.count_failures(violations),
-      violations: violations }
-  rescue JSON::ParserError => json_parameters_error
-    violations << Violation.new(id: 'FATAL',
-                                type: Violation::FAILING_VIOLATION,
-                                message: "JSON Parameter values parse error: #{json_parameters_error.to_s}")
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
+
+    begin
+      cfn_model = CfnParser.new.parse cloudformation_string,
+                                      parameter_values_string
+      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+      violations = filter_violations_by_profile violations
+    rescue Psych::SyntaxError, ParserError => parser_error
+      violations << fatal_violation(parser_error.to_s)
+    rescue JSON::ParserError => json_parameters_error
+      error = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
+      violations << fatal_violation(error)
+    end
+
+    audit_result(violations)
   end
 
   def self.configure_logging(opts)
