@@ -22,7 +22,7 @@ class CloudFormationAuthenticationRule < BaseRule
       unless resource['Metadata'].nil?
         unless resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
 
-          resource['Metadata']['AWS::CloudFormation::Authentication'].each do |auth_name, auth|
+          resource['Metadata']['AWS::CloudFormation::Authentication'].each do |_auth_name, auth|
             if potentially_sensitive_credentials? auth
               logical_resource_ids << resource_name
             end
