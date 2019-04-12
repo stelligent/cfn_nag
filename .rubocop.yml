@@ -37,7 +37,7 @@ Style/InverseMethods:
   Enabled: false
 
 Metrics/MethodLength:
-  Enabled: false
+  Max: 15
 
 Metrics/AbcSize:
   Max: 16
