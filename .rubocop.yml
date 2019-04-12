@@ -60,22 +60,10 @@ Style/RedundantBegin:
 Lint/RescueException:
   Enabled: false
 
-Layout/LeadingBlankLines:
-  Enabled: false
-
-Layout/TrailingBlankLines:
-  Enabled: false
-
 Style/SafeNavigation:
   Enabled: false
 
 Lint/UnusedBlockArgument:
-  Enabled: false
-
-Layout/ExtraSpacing:
-  Enabled: false
-
-Layout/AlignHash:
   Enabled: false
 
 Naming/RescuedExceptionsVariableName:
