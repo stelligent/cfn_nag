@@ -64,14 +64,14 @@ class CfnNag
     aggregate_results
   end
 
-  def violations_to_json(violations)
+  def audit_result(violations)
     {
       failure_count: Violation.count_failures(violations),
       violations: violations
     }
   end
 
-  def generate_fatal_violation(message)
+  def fatal_violation(message)
     Violation.new(id: 'FATAL',
                   type: Violation::FAILING_VIOLATION,
                   message: message)
@@ -94,13 +94,13 @@ class CfnNag
       violations += @custom_rule_loader.execute_custom_rules(cfn_model)
       violations = filter_violations_by_profile violations
     rescue Psych::SyntaxError, ParserError => parser_error
-      violations << generate_fatal_violation(parser_error.to_s)
+      violations << fatal_violation(parser_error.to_s)
     rescue JSON::ParserError => json_parameters_error
       error = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
-      violations << generate_fatal_violation(error)
+      violations << fatal_violation(error)
     end
 
-    violations_to_json(violations)
+    audit_result(violations)
   end
 
   def self.configure_logging(opts)
