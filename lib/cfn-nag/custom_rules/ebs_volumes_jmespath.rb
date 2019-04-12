@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 # failure(id: 'F8888',
 #         jmespath:

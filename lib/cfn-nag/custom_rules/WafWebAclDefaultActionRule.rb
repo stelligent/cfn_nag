@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copy
 # "MyWebACL": {
 #   "Type": "AWS::WAF::WebACL",

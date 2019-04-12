@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class RuleDefinition
-  WARNING = 'WARN'.freeze
-  FAILING_VIOLATION = 'FAIL'.freeze
+  WARNING = 'WARN'
+  FAILING_VIOLATION = 'FAIL'
 
   attr_reader :id, :type, :message
 
