@@ -15,7 +15,8 @@ class SecurityGroupEgressPortRangeRule < BaseRule
   end
 
   ##
-  # This will behave slightly different than the legacy jq based rule which was targeted against inline ingress only
+  # This will behave slightly different than the legacy jq based rule which was
+  # targeted against inline ingress only
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
@@ -23,7 +24,8 @@ class SecurityGroupEgressPortRangeRule < BaseRule
         egress.fromPort != egress.toPort
       end
 
-      logical_resource_ids << security_group.logical_resource_id unless violating_egresses.empty?
+      next if violating_egresses.empty?
+      logical_resource_ids << security_group.logical_resource_id
     end
 
     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|

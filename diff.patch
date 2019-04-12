@@ -1,0 +1,107 @@
+diff --git a/.rubocop.yml b/.rubocop.yml
+index 0b284e0..e48a426 100644
+--- a/.rubocop.yml
++++ b/.rubocop.yml
+@@ -37,7 +37,7 @@ Style/InverseMethods:
+   Enabled: false
+ 
+ Metrics/MethodLength:
+-  Enabled: false
++  Max: 15
+ 
+ Metrics/AbcSize:
+   Max: 16
+diff --git a/lib/cfn-nag/cfn_nag.rb b/lib/cfn-nag/cfn_nag.rb
+index 8010a66..67a7d5c 100644
+--- a/lib/cfn-nag/cfn_nag.rb
++++ b/lib/cfn-nag/cfn_nag.rb
+@@ -64,6 +64,19 @@ class CfnNag
+     aggregate_results
+   end
+ 
++  def violations_to_json(violations)
++    {
++      failure_count: Violation.count_failures(violations),
++      violations: violations
++    }
++  end
++
++  def generate_fatal_violation(message)
++    Violation.new(id: 'FATAL',
++                  type: Violation::FAILING_VIOLATION,
++                  message: message)
++  end
++
+   ##
+   # Given cloudformation json/yml, run all the rules against it
+   #
+@@ -74,26 +87,20 @@ class CfnNag
+   #
+   def audit(cloudformation_string:, parameter_values_string: nil)
+     violations = []
+-    cfn_model = CfnParser.new.parse cloudformation_string,
+-                                    parameter_values_string
+-    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+-    violations = filter_violations_by_profile violations
+-    { failure_count: Violation.count_failures(violations),
+-      violations: violations }
+-  rescue Psych::SyntaxError, ParserError => parser_error
+-    violations << Violation.new(id: 'FATAL',
+-                                type: Violation::FAILING_VIOLATION,
+-                                message: parser_error.to_s)
+-    { failure_count: Violation.count_failures(violations),
+-      violations: violations }
+-  rescue JSON::ParserError => json_parameters_error
+-    violations << Violation.new(id: 'FATAL',
+-                                type: Violation::FAILING_VIOLATION,
+-                                message: "JSON Parameter values parse error: #{json_parameters_error.to_s}")
+-    {
+-      failure_count: Violation.count_failures(violations),
+-      violations: violations
+-    }
++
++    begin
++      cfn_model = CfnParser.new.parse cloudformation_string,
++                                      parameter_values_string
++      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
++      violations = filter_violations_by_profile violations
++    rescue Psych::SyntaxError, ParserError => parser_error
++      violations << generate_fatal_violation(parser_error.to_s)
++    rescue JSON::ParserError => json_parameters_error
++      error = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
++      violations << generate_fatal_violation(error)
++    end
++
++    violations_to_json(violations)
+   end
+ 
+   def self.configure_logging(opts)
+diff --git a/lib/cfn-nag/custom_rule_loader.rb b/lib/cfn-nag/custom_rule_loader.rb
+index a7ed9df..7259123 100644
+--- a/lib/cfn-nag/custom_rule_loader.rb
++++ b/lib/cfn-nag/custom_rule_loader.rb
+@@ -97,9 +97,7 @@ class CustomRuleLoader
+     end
+   end
+ 
+-  # XXX given mangled_metadatas is never used or returned,
+-  # STDERR emit can be moved to unless block
+-  def validate_cfn_nag_metadata(cfn_model)
++  def collect_mangled_metadata(cfn_model)
+     mangled_metadatas = []
+     cfn_model.resources.each do |logical_resource_id, resource|
+       resource_rules_to_suppress = rules_to_suppress resource
+@@ -111,6 +109,13 @@ class CustomRuleLoader
+         mangled_metadatas << [logical_resource_id, mangled_rules]
+       end
+     end
++    mangled_metadatas
++  end
++
++  # XXX given mangled_metadatas is never used or returned,
++  # STDERR emit can be moved to unless block
++  def validate_cfn_nag_metadata(cfn_model)
++    mangled_metadatas = collect_mangled_metadata(cfn_model)
+     mangled_metadatas.each do |mangled_metadata|
+       logical_resource_id = mangled_metadata.first
+       mangled_rules = mangled_metadata[1]

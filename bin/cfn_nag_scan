@@ -8,8 +8,20 @@ require 'rubygems/specification'
 opts = Trollop.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
+  input_path_message = 'CloudFormation template to nag on or directory of ' \
+                       'templates.  Default is all *.json, *.yaml, *.yml ' \
+                       'and *.template recursively, but can be constrained ' \
+                       'by --template-pattern'
+
+  custom_rule_exceptions_message = 'Isolate custom rule exceptions - just ' \
+                                   'emit the exception without stack trace ' \
+                                   'and keep chugging'
+
+  template_pattern_message = 'Within the --input-path, match files to scan ' \
+                             'against this regular expression'
+
   opt :input_path,
-      'CloudFormation template to nag on or directory of templates.  Default is all *.json, *.yaml, *.yml and *.template recursively, but can be constrained by --template-pattern',
+      input_path_message,
       type: :io,
       required: true
   opt :output_format,
@@ -47,12 +59,12 @@ opts = Trollop.options do
       required: false,
       default: false
   opt :isolate_custom_rule_exceptions,
-      'Isolate custom rule exceptions - just emit the exception without stack trace and keep chugging',
+      custom_rule_exceptions_message,
       type: :boolean,
       required: false,
       default: false
   opt :template_pattern,
-      'Within the --input-path, match files to scan against this regular expression',
+      template_pattern_message,
       type: :string,
       required: false,
       default: '..*\.json|..*\.yaml|..*\.yml|..*\.template'
@@ -70,11 +82,12 @@ unless opts[:profile_path].nil?
   profile_definition = IO.read(opts[:profile_path])
 end
 
+exceptions = opts[:isolate_custom_rule_exceptions]
 cfn_nag = CfnNag.new(profile_definition: profile_definition,
                      rule_directory: opts[:rule_directory],
                      allow_suppression: opts[:allow_suppression],
                      print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions])
+                     isolate_custom_rule_exceptions: exceptions)
 
 exit cfn_nag.audit_aggregate_across_files_and_render_results(
   input_path: opts[:input_path], output_format: opts[:output_format],

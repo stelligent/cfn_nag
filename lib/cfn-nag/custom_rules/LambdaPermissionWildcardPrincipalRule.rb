@@ -16,7 +16,8 @@ class LambdaPermissionWildcardPrincipalRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_lambdas = cfn_model.resources_by_type('AWS::Lambda::Permission').select do |lambda_permission|
+    resources = cfn_model.resources_by_type('AWS::Lambda::Permission')
+    violating_lambdas = resources.select do |lambda_permission|
       LambdaPrincipal.wildcard? lambda_permission.principal
     end
 

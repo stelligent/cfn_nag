@@ -3,7 +3,8 @@ require_relative 'base'
 
 class LambdaPermissionInvokeFunctionActionRule < BaseRule
   def rule_text
-    'Lambda permission beside InvokeFunction might not be what you want?  Not sure!?'
+    'Lambda permission beside InvokeFunction might not be what you want? ' \
+    'Not sure!?'
   end
 
   def rule_type
@@ -15,7 +16,8 @@ class LambdaPermissionInvokeFunctionActionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_lambdas = cfn_model.resources_by_type('AWS::Lambda::Permission').select do |lambda_permission|
+    resources = cfn_model.resources_by_type('AWS::Lambda::Permission')
+    violating_lambdas = resources.select do |lambda_permission|
       lambda_permission.action != 'lambda:InvokeFunction'
     end
 

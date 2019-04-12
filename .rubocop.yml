@@ -16,7 +16,7 @@ Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
 Metrics/LineLength:
-  Enabled: false
+  Max: 100
 
 Style/Documentation:
   Enabled: false

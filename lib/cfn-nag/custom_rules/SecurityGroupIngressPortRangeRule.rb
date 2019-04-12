@@ -3,7 +3,8 @@ require_relative 'base'
 
 class SecurityGroupIngressPortRangeRule < BaseRule
   def rule_text
-    'Security Groups found ingress with port range instead of just a single port'
+    'Security Groups found ingress with port range instead of just a single ' \
+    'port'
   end
 
   def rule_type
@@ -15,7 +16,8 @@ class SecurityGroupIngressPortRangeRule < BaseRule
   end
 
   ##
-  # This will behave slightly different than the legacy jq based rule which was targeted against inline ingress only
+  # This will behave slightly different than the legacy jq based rule which was
+  # targeted against inline ingress only
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
@@ -23,10 +25,12 @@ class SecurityGroupIngressPortRangeRule < BaseRule
         ingress.fromPort != ingress.toPort
       end
 
-      logical_resource_ids << security_group.logical_resource_id unless violating_ingresses.empty?
+      next if violating_ingresses.empty?
+      logical_resource_ids << security_group.logical_resource_id
     end
 
-    violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
+    ingress_rules = cfn_model.standalone_ingress
+    violating_ingresses = ingress_rules.select do |standalone_ingress|
       standalone_ingress.fromPort != standalone_ingress.toPort
     end
 

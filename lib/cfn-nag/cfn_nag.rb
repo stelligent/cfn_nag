@@ -28,6 +28,7 @@ class CfnNag
   #
   # Return an aggregate failure count (for exit code usage)
   #
+  # rubocop:disable Metrics/LineLength
   def audit_aggregate_across_files_and_render_results(input_path:,
                                                       output_format: 'txt',
                                                       parameter_values_path: nil,
@@ -43,6 +44,7 @@ class CfnNag
       total_failure_count + results[:file_results][:failure_count]
     end
   end
+  # rubocop:enable Metrics/LineLength
 
   ##
   # Given a file or directory path, return aggregate results
@@ -87,9 +89,10 @@ class CfnNag
     { failure_count: Violation.count_failures(violations),
       violations: violations }
   rescue JSON::ParserError => json_parameters_error
+    message = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
     violations << Violation.new(id: 'FATAL',
                                 type: Violation::FAILING_VIOLATION,
-                                message: "JSON Parameter values parse error: #{json_parameters_error.to_s}")
+                                message: message)
     {
       failure_count: Violation.count_failures(violations),
       violations: violations

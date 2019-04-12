@@ -3,7 +3,8 @@ require_relative 'base'
 
 class RDSInstanceMasterUserPasswordRule < BaseRule
   def rule_text
-    'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended'
+    'RDS instance master user password must be Ref to NoEcho Parameter. ' \
+    'Default credentials are not recommended'
   end
 
   def rule_type
@@ -14,15 +15,18 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
     'F23'
   end
 
-  # one word of warning... if somebody applies parameter values via JSON.... this will compare that....
-  # probably shouldn't be doing that though - if it's NoEcho there's a good reason
+  # one word of warning... if somebody applies parameter values via JSON....
+  # this will compare that....
+  # probably shouldn't be doing that though if it's NoEcho there's a good reason
   # bother checking synthesized_value? that would be the indicator.....
   def audit_impl(cfn_model)
-    violating_rdsinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance').select do |instance|
+    resources = cfn_model.resources_by_type('AWS::RDS::DBInstance')
+    violating_rdsinstances = resources.select do |instance|
       if instance.masterUserPassword.nil?
         false
       else
-        !references_no_echo_parameter_without_default?(cfn_model, instance.masterUserPassword)
+        !no_echo_parameter_without_default?(cfn_model,
+                                            instance.masterUserPassword)
       end
     end
 
@@ -35,7 +39,7 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
     string.to_s.casecmp('true').zero?
   end
 
-  def references_no_echo_parameter_without_default?(cfn_model, master_user_password)
+  def no_echo_parameter_without_default?(cfn_model, master_user_password)
     # i feel like i've written this mess somewhere before
     if master_user_password.is_a? Hash
       if master_user_password.key? 'Ref'

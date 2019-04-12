@@ -18,7 +18,8 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
   end
 
   ##
-  # This will behave slightly different than the legacy jq based rule which was targeted against inline ingress only
+  # This will behave slightly different than the legacy jq based rule which was
+  # targeted against inline ingress only
   def audit_impl(cfn_model)
     logical_resource_ids = []
     cfn_model.security_groups.each do |security_group|
@@ -26,10 +27,12 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
         ip4_cidr_range?(ingress) || ip6_cidr_range?(ingress)
       end
 
-      logical_resource_ids << security_group.logical_resource_id unless violating_ingresses.empty?
+      next if violating_ingresses.empty?
+      logical_resource_ids << security_group.logical_resource_id
     end
 
-    violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
+    ingress_rules = cfn_model.standalone_ingress
+    violating_ingresses = ingress_rules.select do |standalone_ingress|
       ip4_cidr_range?(standalone_ingress) || ip6_cidr_range?(standalone_ingress)
     end
 

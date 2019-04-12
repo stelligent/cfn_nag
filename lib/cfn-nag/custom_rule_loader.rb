@@ -75,10 +75,13 @@ class CustomRuleLoader
 
   def filter_rule_classes(cfn_model, violations)
     discover_rule_classes(@rule_directory).each do |rule_class|
+      params = {
+        cfn_model: cfn_model,
+        rule_id: rule_class.new.rule_id,
+        allow_suppression: @allow_suppression
+      }
       begin
-        filtered_cfn_model = cfn_model_with_suppressed_resources_removed cfn_model: cfn_model,
-                                                                         rule_id: rule_class.new.rule_id,
-                                                                         allow_suppression: @allow_suppression
+        filtered_cfn_model = cfn_model_with_suppressed_resources_removed params
         audit_result = rule_class.new.audit(filtered_cfn_model)
         violations << audit_result unless audit_result.nil?
       rescue Exception => exception
@@ -115,7 +118,9 @@ class CustomRuleLoader
       logical_resource_id = mangled_metadata.first
       mangled_rules = mangled_metadata[1]
 
-      STDERR.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
+      message = "#{logical_resource_id} has missing cfn_nag suppression " \
+                "rule id: #{mangled_rules}"
+      STDERR.puts message
     end
   end
 
@@ -125,7 +130,9 @@ class CustomRuleLoader
       rule_to_suppress['id'] == rule_id
     end
     if found_suppression_rule && @print_suppression
-      STDERR.puts "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
+      message = "Suppressing #{rule_id} on #{logical_resource_id} for " \
+                "reason: #{found_suppression_rule['reason']}"
+      STDERR.puts message
     end
     !found_suppression_rule.nil?
   end

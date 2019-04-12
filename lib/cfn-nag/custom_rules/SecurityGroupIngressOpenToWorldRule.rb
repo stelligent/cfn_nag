@@ -6,7 +6,8 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
   include IpAddr
 
   def rule_text
-    'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB'
+    'Security Groups found with cidr open to world on ingress.  This should ' \
+    'never be true on instance.  Permissible on ELB'
   end
 
   def rule_type
@@ -27,10 +28,12 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
         ip4_open?(ingress) || ip6_open?(ingress)
       end
 
-      logical_resource_ids << security_group.logical_resource_id unless violating_ingresses.empty?
+      next if violating_ingresses.empty?
+      logical_resource_ids << security_group.logical_resource_id
     end
 
-    violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
+    ingress_rules = cfn_model.standalone_ingress
+    violating_ingresses = ingress_rules.select do |standalone_ingress|
       ip4_open?(standalone_ingress) || ip6_open?(standalone_ingress)
     end
 
