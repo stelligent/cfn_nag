@@ -99,9 +99,7 @@ class CustomRuleLoader
     end
   end
 
-  # XXX given mangled_metadatas is never used or returned,
-  # STDERR emit can be moved to unless block
-  def validate_cfn_nag_metadata(cfn_model)
+  def collect_mangled_metadata(cfn_model)
     mangled_metadatas = []
     cfn_model.resources.each do |logical_resource_id, resource|
       resource_rules_to_suppress = rules_to_suppress resource
@@ -113,6 +111,13 @@ class CustomRuleLoader
         mangled_metadatas << [logical_resource_id, mangled_rules]
       end
     end
+    mangled_metadatas
+  end
+
+  # XXX given mangled_metadatas is never used or returned,
+  # STDERR emit can be moved to unless block
+  def validate_cfn_nag_metadata(cfn_model)
+    mangled_metadatas = collect_mangled_metadata(cfn_model)
     mangled_metadatas.each do |mangled_metadata|
       logical_resource_id = mangled_metadata.first
       mangled_rules = mangled_metadata[1]
