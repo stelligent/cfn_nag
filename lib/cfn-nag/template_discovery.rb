@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Container for discovering templates
 class TemplateDiscovery
   # input_json_path can be a directory, filename, or File

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # View rules warnings/failings
 class RulesView
   def emit(rule_registry, profile)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'custom_rule_loader'
 require_relative 'rule_registry'
 require_relative 'profile_loader'
@@ -32,10 +34,10 @@ class CfnNag
   def audit_aggregate_across_files_and_render_results(input_path:,
                                                       output_format: 'txt',
                                                       parameter_values_path: nil,
-                                                      template_pattern:  '..*\.json|..*\.yaml|..*\.yml|..*\.template')
+                                                      template_pattern: '..*\.json|..*\.yaml|..*\.yml|..*\.template')
     aggregate_results = audit_aggregate_across_files input_path: input_path,
                                                      parameter_values_path: parameter_values_path,
-                                                     template_pattern:  template_pattern
+                                                     template_pattern: template_pattern
 
     render_results(aggregate_results: aggregate_results,
                    output_format: output_format)
@@ -51,7 +53,7 @@ class CfnNag
   #
   def audit_aggregate_across_files(input_path:,
                                    parameter_values_path: nil,
-                                   template_pattern:  '..*\.json|..*\.yaml|..*\.yml|..*\.template')
+                                   template_pattern: '..*\.json|..*\.yaml|..*\.yml|..*\.template')
     parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
     templates = TemplateDiscovery.new.discover_templates(input_json_path: input_path,
                                                          template_pattern: template_pattern)
@@ -76,27 +78,20 @@ class CfnNag
   #
   def audit(cloudformation_string:, parameter_values_string: nil)
     violations = []
-    cfn_model = CfnParser.new.parse cloudformation_string,
-                                    parameter_values_string
-    violations += @custom_rule_loader.execute_custom_rules(cfn_model)
-    violations = filter_violations_by_profile violations
-    { failure_count: Violation.count_failures(violations),
-      violations: violations }
-  rescue Psych::SyntaxError, ParserError => parser_error
-    violations << Violation.new(id: 'FATAL',
-                                type: Violation::FAILING_VIOLATION,
-                                message: parser_error.to_s)
-    { failure_count: Violation.count_failures(violations),
-      violations: violations }
-  rescue JSON::ParserError => json_parameters_error
-    message = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
-    violations << Violation.new(id: 'FATAL',
-                                type: Violation::FAILING_VIOLATION,
-                                message: message)
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
+
+    begin
+      cfn_model = CfnParser.new.parse cloudformation_string,
+                                      parameter_values_string
+      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+      violations = filter_violations_by_profile violations
+    rescue Psych::SyntaxError, ParserError => parser_error
+      violations << fatal_violation(parser_error.to_s)
+    rescue JSON::ParserError => json_parameters_error
+      error = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
+      violations << fatal_violation(error)
+    end
+
+    audit_result(violations)
   end
 
   def self.configure_logging(opts)
@@ -111,6 +106,19 @@ class CfnNag
   end
 
   private
+
+  def audit_result(violations)
+    {
+      failure_count: Violation.count_failures(violations),
+      violations: violations
+    }
+  end
+
+  def fatal_violation(message)
+    Violation.new(id: 'FATAL',
+                  type: Violation::FAILING_VIOLATION,
+                  message: message)
+  end
 
   def filter_violations_by_profile(violations)
     profile = nil

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JmesPathDiscovery
   def initialize(rule_registry)
     @rule_registry = rule_registry

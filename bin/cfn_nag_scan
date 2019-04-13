@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'trollop'
 require 'cfn-nag'
 require 'logging'
@@ -82,15 +84,17 @@ unless opts[:profile_path].nil?
   profile_definition = IO.read(opts[:profile_path])
 end
 
-exceptions = opts[:isolate_custom_rule_exceptions]
-cfn_nag = CfnNag.new(profile_definition: profile_definition,
-                     rule_directory: opts[:rule_directory],
-                     allow_suppression: opts[:allow_suppression],
-                     print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions: exceptions)
+cfn_nag = CfnNag.new(
+  profile_definition: profile_definition,
+  rule_directory: opts[:rule_directory],
+  allow_suppression: opts[:allow_suppression],
+  print_suppression: opts[:print_suppression],
+  isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions]
+)
 
 exit cfn_nag.audit_aggregate_across_files_and_render_results(
-  input_path: opts[:input_path], output_format: opts[:output_format],
+  input_path: opts[:input_path],
+  output_format: opts[:output_format],
   parameter_values_path: opts[:parameter_values_path],
   template_pattern: opts[:template_pattern]
 )

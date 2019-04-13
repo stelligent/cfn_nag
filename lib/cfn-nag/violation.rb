@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'rule_definition'
 
 # Rule definition for violations

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-nag/violation'
 require 'cfn-model/model/lambda_principal'
 require_relative 'base'

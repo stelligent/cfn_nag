@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
+
 require 'trollop'
 require 'cfn-nag'
 require 'logging'
@@ -63,12 +65,13 @@ unless opts[:parameter_values_path].nil?
   parameter_values_string = IO.read(opts[:parameter_values_path])
 end
 
-cfn_nag = CfnNag.new(profile_definition: profile_definition,
-                     rule_directory: opts[:rule_directory],
-                     allow_suppression: opts[:allow_suppression],
-                     print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions:
-                     opts[:isolate_custom_rule_exceptions])
+cfn_nag = CfnNag.new(
+  profile_definition: profile_definition,
+  rule_directory: opts[:rule_directory],
+  allow_suppression: opts[:allow_suppression],
+  print_suppression: opts[:print_suppression],
+  isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions]
+)
 
 total_failure_count = 0
 until ARGF.closed? || ARGF.eof?
