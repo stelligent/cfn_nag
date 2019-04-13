@@ -8,7 +8,12 @@ require 'json'
 require 'rubygems/specification'
 
 opts = Trollop.options do
-  usage '[options] <cloudformation template path ...>|<cloudformation template in STDIN>'
+  options_message = '[options] <cloudformation template path ...>|' \
+                    '<cloudformation template in STDIN>'
+  custom_rule_exceptions_message = 'Isolate custom rule exceptions - ' \
+                                   'just emit the exception without stack ' \
+                                   ' trace and keep chugging'
+  usage options_message
   version Gem::Specification.find_by_name('cfn-nag').version
 
   opt :debug,
@@ -42,7 +47,7 @@ opts = Trollop.options do
       required: false,
       default: nil
   opt :isolate_custom_rule_exceptions,
-      'Isolate custom rule exceptions - just emit the exception without stack trace and keep chugging',
+      custom_rule_exceptions_message,
       type: :boolean,
       required: false,
       default: false
@@ -60,12 +65,13 @@ unless opts[:parameter_values_path].nil?
   parameter_values_string = IO.read(opts[:parameter_values_path])
 end
 
-cfn_nag = CfnNag.new(profile_definition: profile_definition,
-                     rule_directory: opts[:rule_directory],
-                     allow_suppression: opts[:allow_suppression],
-                     print_suppression: opts[:print_suppression],
-                     isolate_custom_rule_exceptions:
-                     opts[:isolate_custom_rule_exceptions])
+cfn_nag = CfnNag.new(
+  profile_definition: profile_definition,
+  rule_directory: opts[:rule_directory],
+  allow_suppression: opts[:allow_suppression],
+  print_suppression: opts[:print_suppression],
+  isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions]
+)
 
 total_failure_count = 0
 until ARGF.closed? || ARGF.eof?

@@ -17,7 +17,9 @@ class RDSInstancePubliclyAccessibleRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_rdsinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance').select do |instance|
+    rds_dbinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance')
+
+    violating_rdsinstances = rds_dbinstances.select do |instance|
       instance.publiclyAccessible.nil? || instance.publiclyAccessible.to_s.casecmp('true').zero?
     end
 

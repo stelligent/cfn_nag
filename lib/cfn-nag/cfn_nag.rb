@@ -66,19 +66,6 @@ class CfnNag
     aggregate_results
   end
 
-  def audit_result(violations)
-    {
-      failure_count: Violation.count_failures(violations),
-      violations: violations
-    }
-  end
-
-  def fatal_violation(message)
-    Violation.new(id: 'FATAL',
-                  type: Violation::FAILING_VIOLATION,
-                  message: message)
-  end
-
   ##
   # Given cloudformation json/yml, run all the rules against it
   #
@@ -117,6 +104,19 @@ class CfnNag
   end
 
   private
+
+  def audit_result(violations)
+    {
+      failure_count: Violation.count_failures(violations),
+      violations: violations
+    }
+  end
+
+  def fatal_violation(message)
+    Violation.new(id: 'FATAL',
+                  type: Violation::FAILING_VIOLATION,
+                  message: message)
+  end
 
   def filter_violations_by_profile(violations)
     profile = nil
