@@ -18,12 +18,10 @@ class SecurityGroupMissingEgressRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    logical_resource_ids = []
-    cfn_model.security_groups.each do |security_group|
-      next unless security_group.egresses.empty?
-      logical_resource_ids << security_group.logical_resource_id
+    violating_security_groups = cfn_model.security_groups.select do |security_group|
+      security_group.egresses.empty?
     end
 
-    logical_resource_ids
+    violating_security_groups.map(&:logical_resource_id)
   end
 end

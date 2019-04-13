@@ -23,21 +23,18 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
   # This will behave slightly different than the legacy jq based rule which was
   # targeted against inline ingress only
   def audit_impl(cfn_model)
-    logical_resource_ids = []
-    cfn_model.security_groups.each do |security_group|
+    violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_egresses = security_group.egresses.select do |egress|
         ip4_open?(egress) || ip6_open?(egress)
       end
 
-      next if violating_egresses.empty?
-      logical_resource_ids << security_group.logical_resource_id
+      !violating_egresses.empty?
     end
 
-    egress_rules = cfn_model.standalone_egress
-    violating_egresses = egress_rules.select do |standalone_egress|
+    violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
       ip4_open?(standalone_egress) || ip6_open?(standalone_egress)
     end
 
-    logical_resource_ids + violating_egresses.map(&:logical_resource_id)
+    violating_security_groups.map(&:logical_resource_id) + violating_egresses.map(&:logical_resource_id)
   end
 end

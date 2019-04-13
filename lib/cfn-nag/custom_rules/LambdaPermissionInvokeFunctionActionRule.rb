@@ -18,11 +18,11 @@ class LambdaPermissionInvokeFunctionActionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::Lambda::Permission')
-    violating_lambdas = resources.select do |lambda_permission|
+    lambda_permissions = cfn_model.resources_by_type('AWS::Lambda::Permission')
+    violating_lambda_permissions = lambda_permissions.select do |lambda_permission|
       lambda_permission.action != 'lambda:InvokeFunction'
     end
 
-    violating_lambdas.map(&:logical_resource_id)
+    violating_lambda_permissions.map(&:logical_resource_id)
   end
 end

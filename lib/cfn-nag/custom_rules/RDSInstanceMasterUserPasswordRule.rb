@@ -22,8 +22,8 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
   # probably shouldn't be doing that though if it's NoEcho there's a good reason
   # bother checking synthesized_value? that would be the indicator.....
   def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::RDS::DBInstance')
-    violating_rdsinstances = resources.select do |instance|
+    rds_dbinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance')
+    violating_rdsinstances = rds_dbinstances.select do |instance|
       if instance.masterUserPassword.nil?
         false
       else

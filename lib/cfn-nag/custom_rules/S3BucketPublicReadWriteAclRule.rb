@@ -17,13 +17,10 @@ class S3BucketPublicReadWriteAclRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    logical_resource_ids = []
-
-    cfn_model.resources_by_type('AWS::S3::Bucket').each do |bucket|
-      next unless bucket.accessControl == 'PublicReadWrite'
-      logical_resource_ids << bucket.logical_resource_id
+    violating_buckets = cfn_model.resources_by_type('AWS::S3::Bucket').select do |bucket|
+      bucket.accessControl == 'PublicReadWrite'
     end
 
-    logical_resource_ids
+    violating_buckets.map(&:logical_resource_id)
   end
 end

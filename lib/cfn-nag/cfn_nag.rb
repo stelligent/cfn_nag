@@ -30,7 +30,6 @@ class CfnNag
   #
   # Return an aggregate failure count (for exit code usage)
   #
-  # rubocop:disable Metrics/LineLength
   def audit_aggregate_across_files_and_render_results(input_path:,
                                                       output_format: 'txt',
                                                       parameter_values_path: nil,
@@ -46,7 +45,6 @@ class CfnNag
       total_failure_count + results[:file_results][:failure_count]
     end
   end
-  # rubocop:enable Metrics/LineLength
 
   ##
   # Given a file or directory path, return aggregate results
