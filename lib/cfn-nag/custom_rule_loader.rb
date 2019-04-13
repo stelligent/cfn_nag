@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'cfn-model'
 require 'logging'
 require_relative 'rule_registry'

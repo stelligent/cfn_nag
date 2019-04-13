@@ -3,9 +3,6 @@ AllCops:
   Exclude:
     - 'spec/**/*'
 
-Style/FrozenStringLiteralComment:
-  Enabled: false
-
 Performance/RegexpMatch:
   Enabled: false
 

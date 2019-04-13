@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'custom_rule_loader'
 require_relative 'rule_registry'
 require_relative 'profile_loader'
