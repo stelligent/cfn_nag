@@ -3,22 +3,13 @@ AllCops:
   Exclude:
     - 'spec/**/*'
 
-Performance/RegexpMatch:
-  Enabled: false
-
 Style/IfUnlessModifier:
-  Enabled: false
-
-Layout/EmptyLineAfterGuardClause:
   Enabled: false
 
 Metrics/LineLength:
   Max: 120
 
 Style/Documentation:
-  Enabled: false
-
-Naming/BinaryOperatorParameterName:
   Enabled: false
 
 Style/GuardClause:
@@ -39,37 +30,19 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 16
 
-Security/Eval:
-  Enabled: false
-
-Metrics/ClassLength:
-  Enabled: false
-
-Metrics/BlockLength:
-  Enabled: false
-
 Style/StderrPuts:
   Enabled: false
 
-Style/RedundantBegin:
-  Enabled: false
-
 Lint/RescueException:
-  Enabled: false
-
-Style/SafeNavigation:
   Enabled: false
 
 Lint/UnusedBlockArgument:
   Enabled: false
 
 Naming/RescuedExceptionsVariableName:
-  Enabled: false
+  PreferredName: exception
 
 Lint/StringConversionInInterpolation:
-  Enabled: false
-
-Style/Next:
   Enabled: false
 
 Gemspec/RequiredRubyVersion:

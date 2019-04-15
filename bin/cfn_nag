@@ -7,6 +7,7 @@ require 'logging'
 require 'json'
 require 'rubygems/specification'
 
+# rubocop:disable Metrics/BlockLength
 opts = Trollop.options do
   options_message = '[options] <cloudformation template path ...>|' \
                     '<cloudformation template in STDIN>'
@@ -52,6 +53,7 @@ opts = Trollop.options do
       required: false,
       default: false
 end
+# rubocop:enable Metrics/BlockLength
 
 CfnNag.configure_logging(opts)
 
