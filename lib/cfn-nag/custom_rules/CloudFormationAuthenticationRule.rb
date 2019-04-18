@@ -17,21 +17,22 @@ class CloudFormationAuthenticationRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    logical_resource_ids = []
-    cfn_model.raw_model['Resources'].each do |resource_name, resource|
-      unless resource['Metadata'].nil?
-        unless resource['Metadata']['AWS::CloudFormation::Authentication'].nil?
-
-          resource['Metadata']['AWS::CloudFormation::Authentication'].each do |_auth_name, auth|
-            if potentially_sensitive_credentials? auth
-              logical_resource_ids << resource_name
-            end
-          end
-
-        end
-      end
+    violating_resources = cfn_model.raw_model['Resources'].select do |_resource_name, resource|
+      resource_has_authentication?(resource) && resource_has_sensitive_credentials?(resource)
     end
-    logical_resource_ids
+    violating_resources.keys
+  end
+
+  private
+
+  def resource_has_sensitive_credentials?(resource)
+    resource['Metadata']['AWS::CloudFormation::Authentication'].find do |_auth_name, auth|
+      potentially_sensitive_credentials? auth
+    end
+  end
+
+  def resource_has_authentication?(resource)
+    resource['Metadata'] && resource['Metadata']['AWS::CloudFormation::Authentication']
   end
 
   def potentially_sensitive_credentials?(auth)
