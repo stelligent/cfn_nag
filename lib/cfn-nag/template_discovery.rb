@@ -10,6 +10,7 @@ class TemplateDiscovery
                                          template_pattern: template_pattern)
     end
     return [render_path(input_json_path)] if ::File.file? input_json_path
+
     raise "#{input_json_path} is not a proper path"
   end
 
@@ -17,6 +18,7 @@ class TemplateDiscovery
 
   def render_path(path)
     return path.path if path.is_a? File
+
     path
   end
 
@@ -25,7 +27,7 @@ class TemplateDiscovery
 
     templates = []
     Dir[File.join(directory, '**/**')].each do |file_name|
-      if file_name.match(template_pattern)
+      if file_name.match?(template_pattern)
         templates << file_name
       end
     end
