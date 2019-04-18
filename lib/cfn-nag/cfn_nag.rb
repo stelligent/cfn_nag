@@ -82,8 +82,8 @@ class CfnNag
                                       parameter_values_string
       violations += @custom_rule_loader.execute_custom_rules(cfn_model)
       violations = filter_violations_by_profile violations
-    rescue Psych::SyntaxError, ParserError => exception
-      violations << fatal_violation(exception.to_s)
+    rescue Psych::SyntaxError, ParserError => parser_error
+      violations << fatal_violation(parser_error.to_s)
     rescue JSON::ParserError => json_parameters_error
       error = "JSON Parameter values parse error: #{json_parameters_error}"
       violations << fatal_violation(error)
