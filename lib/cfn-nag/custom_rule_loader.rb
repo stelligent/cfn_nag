@@ -85,7 +85,7 @@ class CustomRuleLoader
         )
         audit_result = rule_class.new.audit(filtered_cfn_model)
         violations << audit_result unless audit_result.nil?
-      rescue Exception => exception
+      rescue StandardError => exception
         raise exception unless @isolate_custom_rule_exceptions
         STDERR.puts exception
       end

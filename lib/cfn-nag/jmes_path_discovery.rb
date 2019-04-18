@@ -5,13 +5,13 @@ class JmesPathDiscovery
     @rule_registry = rule_registry
   end
 
-  def warning(id:, jmespath:, message:)
+  def warning(id:, message:)
     @rule_registry.definition(id: id,
                               type: Violation::WARNING,
                               message: message)
   end
 
-  def failure(id:, jmespath:, message:)
+  def failure(id:, message:)
     @rule_registry.definition(id: id,
                               type: Violation::FAILING_VIOLATION,
                               message: message)

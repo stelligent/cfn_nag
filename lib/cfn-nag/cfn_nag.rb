@@ -85,7 +85,7 @@ class CfnNag
     rescue Psych::SyntaxError, ParserError => parser_error
       violations << fatal_violation(parser_error.to_s)
     rescue JSON::ParserError => json_parameters_error
-      error = "JSON Parameter values parse error: #{json_parameters_error.to_s}"
+      error = "JSON Parameter values parse error: #{json_parameters_error}"
       violations << fatal_violation(error)
     end
 
