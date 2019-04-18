@@ -46,6 +46,40 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 * A warning will return a zero/success exit code.
 * A fatal violation stops analysis (per file) because the template is malformed in some severe way
 
+## Docker Container
+
+A Dockerfile is provided for convenience.
+
+```
+docker build -t cfn_nag .
+```
+
+You can setup a File Share in Docker to share a folder that contains templates. After the share is setup you can call cfn_nag in the container. This example uses the test templates used in unit testing cfn_nag.
+
+```
+$ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_encryption.json
+{
+  "failure_count": 0,
+  "violations": [
+
+  ]
+}
+$ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_no_encryption.json
+{
+  "failure_count": 1,
+  "violations": [
+    {
+      "id": "F27",
+      "type": "FAIL",
+      "message": "EFS FileSystem should have encryption enabled",
+      "logical_resource_ids": [
+        "filesystem"
+      ]
+    }
+  ]
+}
+```
+
 ## Rule Suppression
 
 In the event that there is a rule that you want to suppress, a `cfn_nag` `Metadata` key can be added to the affected resource to tell cfn_nag to not raise a failure or warning for that rule.
