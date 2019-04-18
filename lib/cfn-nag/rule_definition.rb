@@ -30,7 +30,7 @@ class RuleDefinition
     }
   end
 
-  def ==(other_violation)
-    other_violation.class == self.class && other_violation.to_h == to_h
+  def ==(other)
+    other.class == self.class && other.to_h == to_h
   end
 end

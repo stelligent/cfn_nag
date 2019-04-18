@@ -7,6 +7,7 @@ require 'logging'
 require 'json'
 require 'rubygems/specification'
 
+# rubocop:disable Metrics/BlockLength
 opts = Trollop.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
@@ -71,6 +72,7 @@ opts = Trollop.options do
       required: false,
       default: '..*\.json|..*\.yaml|..*\.yml|..*\.template'
 end
+# rubocop:enable Metrics/BlockLength
 
 unless %w[txt json].include?(opts[:output_format])
   Trollop.die(:output_format,

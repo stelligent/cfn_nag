@@ -10,6 +10,7 @@ require 'cfn-nag/jmes_path_discovery'
 # This object can discover the internal and custom user-provided rules and
 # apply these rules to a CfnModel object
 #
+# rubocop:disable Metrics/ClassLength
 class CustomRuleLoader
   def initialize(rule_directory: nil,
                  allow_suppression: true,
@@ -22,6 +23,7 @@ class CustomRuleLoader
     validate_extra_rule_directory rule_directory
   end
 
+  # rubocop:disable Security/Eval
   def rule_definitions
     rule_registry = RuleRegistry.new
 
@@ -39,6 +41,7 @@ class CustomRuleLoader
 
     rule_registry
   end
+  # rubocop:enable Security/Eval
 
   def execute_custom_rules(cfn_model)
     if Logging.logger['log'].debug?
@@ -65,6 +68,7 @@ class CustomRuleLoader
       message: rule.rule_text }
   end
 
+  # rubocop:disable Security/Eval
   def filter_jmespath_filenames(cfn_model, violations)
     discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
       evaluator = JmesPathEvaluator.new cfn_model
@@ -74,7 +78,9 @@ class CustomRuleLoader
       violations += evaluator.violations
     end
   end
+  # rubocop:enable Security/Eval
 
+  # rubocop:disable Style/RedundantBegin
   def filter_rule_classes(cfn_model, violations)
     discover_rule_classes(@rule_directory).each do |rule_class|
       begin
@@ -87,10 +93,12 @@ class CustomRuleLoader
         violations << audit_result unless audit_result.nil?
       rescue ScriptError, StandardError => rule_error
         raise rule_error unless @isolate_custom_rule_exceptions
+
         STDERR.puts rule_error
       end
     end
   end
+  # rubocop:enable Style/RedundantBegin
 
   def rules_to_suppress(resource)
     if resource.metadata &&
@@ -106,6 +114,7 @@ class CustomRuleLoader
     cfn_model.resources.each do |logical_resource_id, resource|
       resource_rules_to_suppress = rules_to_suppress resource
       next if resource_rules_to_suppress.nil?
+
       mangled_rules = resource_rules_to_suppress.select do |rule_to_suppress|
         rule_to_suppress['id'].nil?
       end
@@ -132,6 +141,7 @@ class CustomRuleLoader
   def suppress_resource?(rules_to_suppress, rule_id, logical_resource_id)
     found_suppression_rule = rules_to_suppress.find do |rule_to_suppress|
       next if rule_to_suppress['id'].nil?
+
       rule_to_suppress['id'] == rule_id
     end
     if found_suppression_rule && @print_suppression
@@ -162,6 +172,7 @@ class CustomRuleLoader
 
   def validate_extra_rule_directory(rule_directory)
     return true if rule_directory.nil? || File.directory?(rule_directory)
+
     raise "Not a real directory #{rule_directory}"
   end
 
@@ -203,3 +214,4 @@ class CustomRuleLoader
     rule_filenames
   end
 end
+# rubocop:enable Metrics/ClassLength

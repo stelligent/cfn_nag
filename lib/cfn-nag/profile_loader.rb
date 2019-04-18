@@ -19,6 +19,7 @@ class ProfileLoader
 
     profile_definition.each_line do |line|
       next unless (rule_id = rule_line_match(line))
+
       check_valid_rule_id rule_id
       new_profile.add_rule rule_id
     end
@@ -33,6 +34,7 @@ class ProfileLoader
     rule_id = rule_id.chomp
     matches = /^([a-zA-Z]*?[0-9]+)\s*(.*)/.match(rule_id)
     return false if matches.nil?
+
     matches.captures.first
   end
 
@@ -45,6 +47,7 @@ class ProfileLoader
   # else raise an error
   def check_valid_rule_id(rule_id)
     return true unless @rules_registry.by_id(rule_id).nil?
+
     raise "#{rule_id} is not a legal rule identifier from: #{rules_ids}"
   end
 end
