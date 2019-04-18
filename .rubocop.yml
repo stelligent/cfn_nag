@@ -24,9 +24,6 @@ Naming/BinaryOperatorParameterName:
 Style/GuardClause:
   Enabled: false
 
-Lint/UnusedMethodArgument:
-  Enabled: false
-
 Naming/FileName:
   Enabled: false
 
@@ -54,19 +51,22 @@ Style/StderrPuts:
 Style/RedundantBegin:
   Enabled: false
 
-Lint/RescueException:
+Layout/LeadingBlankLines:
+  Enabled: false
+
+Layout/TrailingBlankLines:
   Enabled: false
 
 Style/SafeNavigation:
   Enabled: false
 
-Lint/UnusedBlockArgument:
+Layout/ExtraSpacing:
+  Enabled: false
+
+Layout/AlignHash:
   Enabled: false
 
 Naming/RescuedExceptionsVariableName:
-  Enabled: false
-
-Lint/StringConversionInInterpolation:
   Enabled: false
 
 Style/Next:
