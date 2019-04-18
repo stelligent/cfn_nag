@@ -30,12 +30,6 @@ Metrics/AbcSize:
 Style/StderrPuts:
   Enabled: false
 
-Lint/RescueException:
-  Enabled: false
-
-Lint/UnusedBlockArgument:
-  Enabled: false
-
 Naming/RescuedExceptionsVariableName:
   Enabled: false
   #PreferredName: something_that_describes_the_actual_exception_or_error
