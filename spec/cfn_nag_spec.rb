@@ -1,10 +1,11 @@
 require 'spec_helper'
 require 'cfn-nag/cfn_nag'
+require 'cfn-nag/cfn_nag_logging'
 require 'cfn-nag/profile_loader'
 
 describe CfnNag do
   before(:each) do
-    CfnNag.configure_logging(debug: false)
+    CfnNagLogging.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 

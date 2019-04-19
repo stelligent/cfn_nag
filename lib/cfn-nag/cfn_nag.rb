@@ -2,28 +2,34 @@
 
 require_relative 'custom_rule_loader'
 require_relative 'rule_registry'
-require_relative 'profile_loader'
+require_relative 'violation_filtering'
 require_relative 'template_discovery'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/json_results'
 require 'cfn-model'
-require 'logging'
 
 # Top-level CfnNag class for running profiles
 class CfnNag
+  include ViolationFiltering
+
+  # rubocop:disable Metrics/ParameterLists
   def initialize(profile_definition: nil,
+                 blacklist_definition: nil,
                  rule_directory: nil,
                  allow_suppression: true,
                  print_suppression: false,
                  isolate_custom_rule_exceptions: false)
     @rule_directory = rule_directory
     @custom_rule_loader = CustomRuleLoader.new(
-      rule_directory: rule_directory, allow_suppression: allow_suppression,
+      rule_directory: rule_directory,
+      allow_suppression: allow_suppression,
       print_suppression: print_suppression,
       isolate_custom_rule_exceptions: isolate_custom_rule_exceptions
     )
     @profile_definition = profile_definition
+    @blacklist_definition = blacklist_definition
   end
+  # rubocop:enable Metrics/ParameterLists
 
   ##
   # Given a file or directory path, emit aggregate results to stdout
@@ -81,7 +87,8 @@ class CfnNag
       cfn_model = CfnParser.new.parse cloudformation_string,
                                       parameter_values_string
       violations += @custom_rule_loader.execute_custom_rules(cfn_model)
-      violations = filter_violations_by_profile violations
+
+      violations = filter_violations_by_blacklist_and_profile(violations)
     rescue Psych::SyntaxError, ParserError => parser_error
       violations << fatal_violation(parser_error.to_s)
     rescue JSON::ParserError => json_parameters_error
@@ -92,18 +99,26 @@ class CfnNag
     audit_result(violations)
   end
 
-  def self.configure_logging(opts)
-    logger = Logging.logger['log']
-    logger.level = if opts[:debug]
-                     :debug
-                   else
-                     :info
-                   end
-
-    logger.add_appenders Logging.appenders.stdout
-  end
-
   private
+
+  def filter_violations_by_blacklist_and_profile(violations)
+    violations = filter_violations_by_profile(
+      profile_definition: @profile_definition,
+      rule_definitions: @custom_rule_loader.rule_definitions,
+      violations: violations
+    )
+
+    # this must come after - blacklist should always win
+    violations = filter_violations_by_blacklist(
+      blacklist_definition: @blacklist_definition,
+      rule_definitions: @custom_rule_loader.rule_definitions,
+      violations: violations
+    )
+    violations
+  rescue StandardError => blacklist_or_profile_parse_error
+    violations << fatal_violation(blacklist_or_profile_parse_error.to_s)
+    violations
+  end
 
   def audit_result(violations)
     {
@@ -116,18 +131,6 @@ class CfnNag
     Violation.new(id: 'FATAL',
                   type: Violation::FAILING_VIOLATION,
                   message: message)
-  end
-
-  def filter_violations_by_profile(violations)
-    profile = nil
-    unless @profile_definition.nil?
-      profile = ProfileLoader.new(@custom_rule_loader.rule_definitions)
-                             .load(profile_definition: @profile_definition)
-    end
-
-    violations.reject do |violation|
-      !profile.nil? && !profile.execute_rule?(violation.id)
-    end
   end
 
   def render_results(aggregate_results:,

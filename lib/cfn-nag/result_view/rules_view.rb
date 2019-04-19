@@ -16,7 +16,7 @@ class RulesView
     warnings.sort { |left, right| sort_id(left, right) }.each do |warning|
       if profile.nil?
         puts "#{warning.id} #{warning.message}"
-      elsif profile.execute_rule?(warning.id)
+      elsif profile.contains_rule?(warning.id)
         puts "#{warning.id} #{warning.message}"
       end
     end
@@ -26,7 +26,7 @@ class RulesView
     failings.sort { |left, right| sort_id(left, right) }.each do |failing|
       if profile.nil?
         puts "#{failing.id} #{failing.message}"
-      elsif profile.execute_rule?(failing.id)
+      elsif profile.contains_rule?(failing.id)
         puts "#{failing.id} #{failing.message}"
       end
     end

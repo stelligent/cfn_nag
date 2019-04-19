@@ -46,6 +46,11 @@ opts = Trollop.options do
       type: :io,
       required: false,
       default: nil
+  opt :blacklist_path,
+      'Path to a blacklist file',
+      type: :io,
+      required: false,
+      default: nil
   opt :parameter_values_path,
       'Path to a JSON file to pull Parameter values from',
       type: :io,
@@ -79,15 +84,21 @@ unless %w[txt json].include?(opts[:output_format])
               'Must be txt or json')
 end
 
-CfnNag.configure_logging(opts)
+CfnNagLogging.configure_logging(opts)
 
 profile_definition = nil
 unless opts[:profile_path].nil?
   profile_definition = IO.read(opts[:profile_path])
 end
 
+blacklist_definition = nil
+unless opts[:blacklist_path].nil?
+  blacklist_definition = IO.read(opts[:blacklist_path])
+end
+
 cfn_nag = CfnNag.new(
   profile_definition: profile_definition,
+  blacklist_definition: blacklist_definition,
   rule_directory: opts[:rule_directory],
   allow_suppression: opts[:allow_suppression],
   print_suppression: opts[:print_suppression],

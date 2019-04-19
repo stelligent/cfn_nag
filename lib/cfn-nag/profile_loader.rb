@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'profile'
+require_relative 'rule_id_set'
 
-# Load rule profile
 class ProfileLoader
   def initialize(rules_registry)
     @rules_registry = rules_registry
@@ -15,7 +14,7 @@ class ProfileLoader
     profile_definition ||= ''
     raise 'Empty profile' if profile_definition.strip == ''
 
-    new_profile = Profile.new
+    new_profile = RuleIdSet.new
 
     profile_definition.each_line do |line|
       next unless (rule_id = rule_line_match(line))

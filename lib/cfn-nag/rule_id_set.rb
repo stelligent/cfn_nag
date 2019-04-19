@@ -3,7 +3,7 @@
 require 'set'
 
 # Container class for profiles
-class Profile
+class RuleIdSet
   attr_reader :rule_ids
 
   def initialize
@@ -16,7 +16,7 @@ class Profile
   end
 
   # Does the list of rule ids contain rule_id?
-  def execute_rule?(rule_id)
+  def contains_rule?(rule_id)
     @rule_ids.include? rule_id
   end
 end

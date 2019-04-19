@@ -3,7 +3,7 @@ require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
-    CfnNag.configure_logging(debug: false)
+    CfnNagLogging.configure_logging(debug: false)
     @cfn_nag = CfnNag.new
   end
 
