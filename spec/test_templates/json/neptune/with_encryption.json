@@ -1,0 +1,26 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "Neptune encrypted storage test template",
+
+  "Resources" : {
+    "NeptuneDBCluster" : {
+      "Type" : "AWS::Neptune::DBCluster",
+      "Properties" :
+      {
+        "DBClusterIdentifier" : "neptune-test-cluster",
+        "IamAuthEnabled" : false,
+        "StorageEncrypted" : true
+      }
+    },
+    "NeptuneDBInstance" : {
+      "Type" : "AWS::Neptune::DBInstance",
+      "Properties" :
+      {        
+        "DBClusterIdentifier" : "neptune-test-cluster",
+        "DBInstanceClass" : "db.r4.large"
+      },
+      "DependsOn" : "NeptuneDBCluster"
+    }
+  }
+}
