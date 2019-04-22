@@ -116,6 +116,29 @@ There are two general methods for placing custom rules:
      * When executing the scan of a template, you'll need to use the `-r` or `--rules-directory` switch to specify your own custom rules directory.
      * An example execution might look like this: `cfn_nag_scan -r ./example_rules my-cfn-template.yaml`
 
+## Testing
+
+Testing your rule is important. The tests for the `custom_rules` included with
+`cfn_nag` are present in the `spec/custom_rules` directory; the templates tested
+are found in the subdirectories of `test_templates/` sorted by template type.
+
+Taking the [Neptune database storage encryption rule test](spec/custom_rules/NeptuneDBClusterStorageEncryptedRule_spec.rb)
+as an example, note the test methods in which a 'rule pass' indicates an empty
+list of logical resource IDs, while the failures have a list containing
+the logical resource ID defined by the tested resource. The provided templates
+defined in `spec/test_templates/json/neptune/` include each possible failure
+case in addition to success. Writing the test for your custom rule should
+generally follow the same method.
+
+After you have written your test, you can run the test suite locally via
+`rspec`. Although several valid methods exist for doing so, the following
+is recommended:
+
+1. Use a [Ruby virtual environment](https://rvm.io).
+2. Using a [named gemset](https://rvm.io/gemsets/basics), perform `bundle
+install` to install dependencies.
+3. From the root directory of the project, `rspec` executes the test suite.
+
 ## Contributing Rules to the Community
 
 For any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Please be sure to use a unique `rule_id` and write the rule according section 1 of the above "Where to Place Rule Files" area.
