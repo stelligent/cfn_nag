@@ -3,7 +3,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-# Rule class to ensure a CF distribution has logging
+# Rule class to warn on CodeBuild::Project without an EncryptionKey specified
 class CodeBuildEncryptionKeyRule < BaseRule
   def rule_text
     'CodeBuild project should specify an EncryptionKey value'
