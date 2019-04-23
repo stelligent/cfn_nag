@@ -2,6 +2,7 @@ AllCops:
   TargetRubyVersion: 2.5
   Exclude:
     - 'spec/**/*'
+    - 'vendor/**/*'
 
 Style/IfUnlessModifier:
   Enabled: false
