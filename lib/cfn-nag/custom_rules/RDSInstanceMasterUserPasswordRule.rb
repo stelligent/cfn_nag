@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
+require 'cfn-nag/util/enforce_noecho_parameter.rb'
 require_relative 'base'
 
 class RDSInstanceMasterUserPasswordRule < BaseRule
@@ -33,30 +34,5 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
     end
 
     violating_rdsinstances.map(&:logical_resource_id)
-  end
-
-  private
-
-  def to_boolean(string)
-    string.to_s.casecmp('true').zero?
-  end
-
-  def no_echo_parameter_without_default?(cfn_model, master_user_password)
-    # i feel like i've written this mess somewhere before
-    if master_user_password.is_a? Hash
-      if master_user_password.key? 'Ref'
-        if cfn_model.parameters.key? master_user_password['Ref']
-          parameter = cfn_model.parameters[master_user_password['Ref']]
-
-          return to_boolean(parameter.noEcho) && parameter.default.nil?
-        else
-          return false
-        end
-      else
-        return false
-      end
-    end
-    # String or anything weird will fall through here
-    false
   end
 end

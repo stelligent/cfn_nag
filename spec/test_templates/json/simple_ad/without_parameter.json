@@ -1,0 +1,20 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "SimpleAD template with password parameter no-echo, but has default",
+
+  "Resources" : {
+    "SimpleAD": {
+      "Type" : "AWS::DirectoryService::SimpleAD",
+      "Properties" : {
+        "Name" : "CFNNagTestSimpleAD",
+        "Password" : "nopenopenope",
+        "Size" : "Small",
+        "VpcSettings" : {
+          "SubnetIds": [ "us-east-1a", "us-east-1b", "us-east-1c" ],
+          "VpcId" : "default"
+        }
+      }
+    }
+  }
+}
