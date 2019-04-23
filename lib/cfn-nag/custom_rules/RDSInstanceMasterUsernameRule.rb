@@ -31,7 +31,7 @@ class RDSInstanceMasterUsernameRule < BaseRule
         false
       else
         !no_echo_parameter_without_default?(cfn_model,
-                                                       instance.masterUsername)
+                                            instance.masterUsername)
       end
     end
 
