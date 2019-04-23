@@ -1,0 +1,28 @@
+{
+  "AWSTemplateFormatVersion" : "2010-09-09",
+
+  "Description" : "CodeBuild Project with encryption key correctly specified",
+
+  "Resources" : {
+    "Project": {
+      "Type": "AWS::CodeBuild::Project",
+      "Properties": {
+        "Name": "fakeCFNNagProject",
+        "EncryptionKey": "some/valid/key",
+        "ServiceRole": "arn:aws:iam::accountNumber:role/service-role/ami_codebuild",
+        "Artifacts": {
+          "Type": "NO_ARTIFACTS"
+        },
+        "Environment": {
+          "Type": "LINUX_CONTAINER",
+          "ComputeType": "BUILD_GENERAL1_SMALL",
+          "Image": "aws/codebuild/java:openjdk-8",
+        },
+        "Source": {
+          "Location": "/fake/invalid/s3/bucket/path",
+          "Type": "S3"
+        }
+      }
+    }
+  }
+}
