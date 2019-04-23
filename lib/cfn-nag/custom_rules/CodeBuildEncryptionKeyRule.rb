@@ -19,7 +19,7 @@ class CodeBuildEncryptionKeyRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_projects = cfn_model.resources_by_type('AWS::CodeBuild::Project')
-                                       .select do |project|
+                                  .select do |project|
       project.encryptionKey.nil?
     end
 
