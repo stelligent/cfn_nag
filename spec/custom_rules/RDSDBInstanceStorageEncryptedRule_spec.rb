@@ -3,6 +3,20 @@ require 'cfn-model'
 require 'cfn-nag/custom_rules/RDSDBInstanceStorageEncryptedRule'
 
 describe RDSDBInstanceStorageEncryptedRule do
+
+  context 'DB Instance with cluster identifier' do
+    it 'inherits the cluster\'s encryption, and therefore passes' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'json/rds_instance/db_instance_with_clusterid_and_encryption_false.json'
+      )
+
+      actual_logical_resource_ids = RDSDBInstanceStorageEncryptedRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
   context 'DB Instance without encryption' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template(
