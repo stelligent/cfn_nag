@@ -97,10 +97,10 @@ until ARGF.closed? || ARGF.eof?
                           parameter_values_string: parameter_values_string)
   ARGF.close
 
-  unless opts[:fail_on_warnings]
-    total_failure_count += results[:failure_count]
+  if opts[:fail_on_warnings]
+    total_failure_count += results[:violations].length
   else
-    total_failure_count = results[:violations].length
+    total_failure_count += results[:failure_count]
   end
 
   results[:violations] = results[:violations].map(&:to_h)
