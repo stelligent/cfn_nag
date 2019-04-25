@@ -57,6 +57,11 @@ opts = Trollop.options do
       type: :boolean,
       required: false,
       default: false
+  opt :fail_on_warnings,
+      'Treat warnings as failing violations',
+      type: :boolean,
+      required: false,
+      default: false
 end
 # rubocop:enable Metrics/BlockLength
 
@@ -92,7 +97,12 @@ until ARGF.closed? || ARGF.eof?
                           parameter_values_string: parameter_values_string)
   ARGF.close
 
-  total_failure_count += results[:failure_count]
+  unless opts[:fail_on_warnings]
+    total_failure_count += results[:failure_count]
+  else
+    total_failure_count = results[:violations].length
+  end
+
   results[:violations] = results[:violations].map(&:to_h)
   puts JSON.pretty_generate(results)
 end
