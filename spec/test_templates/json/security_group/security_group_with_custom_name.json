@@ -1,16 +1,10 @@
 {
   "Resources": {
-    "sg": {
+    "sgWithName": {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
         "GroupDescription": "sg with custom name",
         "GroupName" : "named group"
-      }
-    },
-    "sg2": {
-      "Type": "AWS::EC2::SecurityGroup",
-      "Properties" : {
-        "GroupDescription" : "sg without a custom name"
       }
     }
   }
