@@ -7,6 +7,16 @@ then
   echo rubygems_api_key must be set in the environment
   exit 1
 fi
+if [[ -z ${docker_user} ]];
+then
+  echo docker_user must be set in the environment
+  exit 1
+fi
+if [[ -z ${docker_password} ]];
+then
+  echo docker_password must be set in the environment
+  exit 1
+fi
 set -x
 
 git config --global user.email "build@build.com"
@@ -75,3 +85,7 @@ fi
 # gemspec respects GEM_VERSION envvar
 gem build cfn-nag.gemspec
 gem push cfn-nag-${GEM_VERSION}.gem
+
+docker build -t essej2003/cfn_nag:${GEM_VERSION} .
+echo $docker_password | docker login -u $docker_user --password-stdin
+docker push essej2003/cfn_nag:${GEM_VERSION}
