@@ -3,7 +3,7 @@
     "sgWithName": {
       "Type" : "AWS::EC2::SecurityGroup",
       "Properties" : {
-        "GroupDescription": "sg with custom name",
+        "GroupDescription": "sg with explicit name",
         "GroupName" : "named group"
       }
     }

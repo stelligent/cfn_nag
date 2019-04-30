@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "LoadBalancerWithName": {
+      "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "Properties": {
+        "Name": "loadbalancername"
+      }
+    }
+  }
+}

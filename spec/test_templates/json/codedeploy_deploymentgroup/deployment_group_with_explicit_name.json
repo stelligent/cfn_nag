@@ -1,0 +1,12 @@
+{
+  "Resources": {
+    "DeploymentGroupWithName": {
+      "Type": "AWS::CodeDeploy::DeploymentGroup",
+      "Properties": {
+        "ApplicationName": "app",
+        "DeploymentGroupName": "nameddeploymentgroup",
+        "ServiceRoleArn": "arn:aws:iam::123456789012:role/stuff"
+      }
+    }
+  }
+}
