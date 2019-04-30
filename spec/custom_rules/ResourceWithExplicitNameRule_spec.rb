@@ -3,6 +3,24 @@ require 'cfn-nag/custom_rules/ResourceWithExplicitNameRule'
 require 'cfn-model'
 
 describe ResourceWithExplicitNameRule do
+  describe 'AWS::ApiGateway::ApiKey' do
+    context 'when an explicit name is provided' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/apigateway_apikey/apikey_with_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['ApiKeyWithName']
+      end
+    end
+    context 'when an explicit name is not provided' do
+      it 'does not return a logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/apigateway_apikey/apikey_without_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+  end
   describe 'AWS::CodeDeploy::DeploymentConfig' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do

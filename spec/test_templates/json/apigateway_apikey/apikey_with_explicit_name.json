@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "ApiKeyWithName": {
+      "Type": "AWS::ApiGateway::ApiKey",
+      "Properties": {
+        "Name": "namedapikey"
+      }
+    }
+  }
+}

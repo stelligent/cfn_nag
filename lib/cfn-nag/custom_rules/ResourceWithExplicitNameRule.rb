@@ -10,6 +10,7 @@ class ResourceWithExplicitNameRule < BaseRule
   # camel cased values. E.g. GroupName in CloudFormation is returned by
   # cfn-model as groupName, RoleName is returned as roleName, etc.
   RESOURCE_NAME_MAPPING = {
+    'AWS::ApiGateway::ApiKey' => 'name',
     'AWS::CodeDeploy::DeploymentConfig' => 'deploymentConfigName',
     'AWS::CodeDeploy::DeploymentGroup' => 'deploymentGroupName',
     'AWS::Elasticsearch::Domain' => 'domainName',
