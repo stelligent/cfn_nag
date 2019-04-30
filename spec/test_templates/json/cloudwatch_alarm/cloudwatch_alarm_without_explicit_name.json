@@ -1,0 +1,13 @@
+{
+  "Resources": {
+    "AlarmWithName": {
+      "Type": "AWS::CloudWatch::Alarm",
+      "Properties": {
+        "AlarmName": "namedalarm",
+        "ComparisonOperator": "GreaterThanThreshold",
+        "EvaluationPeriods": "1",
+        "Threshold": "10"
+      }
+    }
+  }
+}

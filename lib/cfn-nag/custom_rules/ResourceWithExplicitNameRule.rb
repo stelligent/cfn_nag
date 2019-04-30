@@ -11,6 +11,7 @@ class ResourceWithExplicitNameRule < BaseRule
   # cfn-model as groupName, RoleName is returned as roleName, etc.
   RESOURCE_NAME_MAPPING = {
     'AWS::ApiGateway::ApiKey' => 'name',
+    'AWS::CloudWatch::Alarm' => 'alarmName',
     'AWS::CodeDeploy::DeploymentConfig' => 'deploymentConfigName',
     'AWS::CodeDeploy::DeploymentGroup' => 'deploymentGroupName',
     'AWS::Elasticsearch::Domain' => 'domainName',

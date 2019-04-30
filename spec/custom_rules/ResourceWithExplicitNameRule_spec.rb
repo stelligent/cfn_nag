@@ -21,6 +21,24 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+  describe 'AWS::CloudWatch::Alarm' do
+    context 'when an explicit name is provided' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/cloudwatch_alarm/cloudwatch_alarm_with_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['AlarmWithName']
+      end
+    end
+    context 'when an explicit name is not provided' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/cloudwatch_alarm/cloudwatch_alarm_without_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+  end
   describe 'AWS::CodeDeploy::DeploymentConfig' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do
