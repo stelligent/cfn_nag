@@ -12,6 +12,7 @@ class ResourceWithExplicitNameRule < BaseRule
   RESOURCE_NAME_MAPPING = {
     'AWS::CodeDeploy::DeploymentConfig' => 'deploymentConfigName',
     'AWS::CodeDeploy::DeploymentGroup' => 'deploymentGroupName',
+    'AWS::Elasticsearch::Domain' => 'domainName',
     'AWS::IAM::Group' => 'groupName',
     'AWS::IAM::ManagedPolicy' => 'managedPolicyName',
     'AWS::IAM::Role' => 'roleName',

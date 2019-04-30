@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "ElasticsearchDomainWithName": {
+      "Type": "AWS::Elasticsearch::Domain",
+      "Properties": {
+        "DomainName": "nameddomain"
+      }
+    }
+  }
+}
