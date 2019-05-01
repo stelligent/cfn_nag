@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "EcrWithName": {
+      "Type": "AWS::ECR::Repository",
+      "Properties": {
+        "RepositoryName": "namedrepo"
+      }
+    }
+  }
+}

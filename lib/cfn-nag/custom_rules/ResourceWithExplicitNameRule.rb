@@ -10,18 +10,19 @@ class ResourceWithExplicitNameRule < BaseRule
   # camel cased values. E.g. GroupName in CloudFormation is returned by
   # cfn-model as groupName, RoleName is returned as roleName, etc.
   RESOURCE_NAME_MAPPING = {
-    'AWS::ApiGateway::ApiKey' => 'name',
-    'AWS::CloudWatch::Alarm' => 'alarmName',
-    'AWS::CodeDeploy::DeploymentConfig' => 'deploymentConfigName',
-    'AWS::CodeDeploy::DeploymentGroup' => 'deploymentGroupName',
-    'AWS::Elasticsearch::Domain' => 'domainName',
-    'AWS::IAM::Group' => 'groupName',
-    'AWS::IAM::ManagedPolicy' => 'managedPolicyName',
-    'AWS::IAM::Role' => 'roleName',
-    'AWS::EC2::SecurityGroup' => 'groupName',
+    'AWS::ApiGateway::ApiKey'                   => 'name',
+    'AWS::CloudWatch::Alarm'                    => 'alarmName',
+    'AWS::CodeDeploy::DeploymentConfig'         => 'deploymentConfigName',
+    'AWS::CodeDeploy::DeploymentGroup'          => 'deploymentGroupName',
+    'AWS::EC2::SecurityGroup'                   => 'groupName',
+    'AWS::ECR::Repository'                      => 'repositoryName',
     'AWS::ElasticLoadBalancingV2::LoadBalancer' => 'name',
-    'AWS::Kinesis::Stream' => 'name',
-    'AWS::RDS::DBInstance' => 'dBInstanceIdentifier',
+    'AWS::Elasticsearch::Domain'                => 'domainName',
+    'AWS::IAM::Group'                           => 'groupName',
+    'AWS::IAM::ManagedPolicy'                   => 'managedPolicyName',
+    'AWS::IAM::Role'                            => 'roleName',
+    'AWS::Kinesis::Stream'                      => 'name',
+    'AWS::RDS::DBInstance'                      => 'dBInstanceIdentifier',
   }
 
   def rule_text
