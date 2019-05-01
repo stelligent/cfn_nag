@@ -21,6 +21,7 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
   describe 'AWS::CloudWatch::Alarm' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do
@@ -39,6 +40,7 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
   describe 'AWS::CodeDeploy::DeploymentConfig' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do
@@ -58,6 +60,7 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
   describe 'AWS::IAM::DeploymentGroup' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do
@@ -76,6 +79,7 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
   describe 'AWS::Elasticsearch::Domain' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do
@@ -94,6 +98,7 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
   describe 'AWS::IAM::Role' do
     context 'when an explicit name is provided' do
       it 'returns offending logical resource id' do
@@ -156,6 +161,25 @@ describe ResourceWithExplicitNameRule do
     context 'when an explicit name is not provided' do
       it 'does not return an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/iam_managed_policy/iam_managed_policy_without_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+  end
+
+  describe 'AWS::Kinesis::Stream' do
+    context 'when an explicit name is provided' do
+      it 'returns offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/kinesis_stream/kinesis_stream_with_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['KinesisStreamWithName']
+      end
+    end
+    context 'when an explicit name is not provided' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/kinesis_stream/kinesis_stream_without_explicit_name.json')
         actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
 
         expect(actual_logical_resource_ids).to eq []

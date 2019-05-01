@@ -19,7 +19,8 @@ class ResourceWithExplicitNameRule < BaseRule
     'AWS::IAM::ManagedPolicy' => 'managedPolicyName',
     'AWS::IAM::Role' => 'roleName',
     'AWS::EC2::SecurityGroup' => 'groupName',
-    'AWS::ElasticLoadBalancingV2::LoadBalancer' => 'name'
+    'AWS::ElasticLoadBalancingV2::LoadBalancer' => 'name',
+    'AWS::Kinesis::Stream' => 'name'
   }
 
   def rule_text
