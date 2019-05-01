@@ -61,6 +61,25 @@ describe ResourceWithExplicitNameRule do
     end
   end
 
+  describe 'AWS::DynamoDB::Table' do
+    context 'when an explicit name is provided' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/dynamodb_table/dynamodb_table_with_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['DynamoDBTableWithName']
+      end
+    end
+    context 'when an explicit name is not provided' do
+      it 'does not return a logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/dynamodb_table/dynamodb_table_without_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+  end
+
   describe 'AWS::IAM::DeploymentGroup' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do

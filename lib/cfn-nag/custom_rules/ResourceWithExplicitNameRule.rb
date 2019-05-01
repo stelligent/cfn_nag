@@ -2,7 +2,6 @@
 
 require 'cfn-nag/violation'
 require_relative 'base'
-require 'pry'
 
 class ResourceWithExplicitNameRule < BaseRule
 
@@ -14,6 +13,7 @@ class ResourceWithExplicitNameRule < BaseRule
     'AWS::CloudWatch::Alarm'                    => 'alarmName',
     'AWS::CodeDeploy::DeploymentConfig'         => 'deploymentConfigName',
     'AWS::CodeDeploy::DeploymentGroup'          => 'deploymentGroupName',
+    'AWS::DynamoDB::Table'                      => 'tableName',
     'AWS::EC2::SecurityGroup'                   => 'groupName',
     'AWS::ECR::Repository'                      => 'repositoryName',
     'AWS::ElasticLoadBalancingV2::LoadBalancer' => 'name',
@@ -22,11 +22,11 @@ class ResourceWithExplicitNameRule < BaseRule
     'AWS::IAM::ManagedPolicy'                   => 'managedPolicyName',
     'AWS::IAM::Role'                            => 'roleName',
     'AWS::Kinesis::Stream'                      => 'name',
-    'AWS::RDS::DBInstance'                      => 'dBInstanceIdentifier',
+    'AWS::RDS::DBInstance'                      => 'dBInstanceIdentifier'
   }
 
   def rule_text
-    'Resources found with a custom name, this disallows updates that ' \
+    'Resource found with an explicit name, this disallows updates that ' \
     'require replacement of this resource'
   end
 
