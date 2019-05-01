@@ -226,4 +226,23 @@ describe ResourceWithExplicitNameRule do
       end
     end
   end
+
+  describe 'AWS::RDS::DBInstance' do
+    context 'when an explicit name is provided' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_with_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['DbWithName']
+      end
+    end
+    context 'when an explicit name is not provided' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/rds_instance/rds_instance_without_explicit_name.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+  end
 end

@@ -20,7 +20,8 @@ class ResourceWithExplicitNameRule < BaseRule
     'AWS::IAM::Role' => 'roleName',
     'AWS::EC2::SecurityGroup' => 'groupName',
     'AWS::ElasticLoadBalancingV2::LoadBalancer' => 'name',
-    'AWS::Kinesis::Stream' => 'name'
+    'AWS::Kinesis::Stream' => 'name',
+    'AWS::RDS::DBInstance' => 'dBInstanceIdentifier',
   }
 
   def rule_text
@@ -44,7 +45,7 @@ class ResourceWithExplicitNameRule < BaseRule
     violating_resources = []
 
     RESOURCE_NAME_MAPPING.each do |cfn_resource, key_name|
-      resources = cfn_model.resources_by_type(cfn_resource.to_s)
+      resources = cfn_model.resources_by_type(cfn_resource)
                           .select do |resource|
         has_explicitly_set_resource_name?(resource, key_name)
       end
