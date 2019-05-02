@@ -3,6 +3,16 @@ require 'cfn-nag/custom_rules/ResourceWithExplicitNameRule'
 require 'cfn-model'
 
 describe ResourceWithExplicitNameRule do
+  describe 'Multiple resources' do
+    context 'when multiple resources have explicit names set within the same template' do
+      it 'returns a list of offending logical resource ids' do
+        cfn_model = CfnParser.new.parse read_test_template('json/structural/multiple_resources_with_explicit_names.json')
+        actual_logical_resource_ids = ResourceWithExplicitNameRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['ElasticsearchDomainWithName', 'KinesisStreamWithName']
+      end
+    end
+  end
   describe 'AWS::ApiGateway::ApiKey' do
     context 'when an explicit name is provided' do
       it 'returns an offending logical resource id' do

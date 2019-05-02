@@ -38,10 +38,6 @@ class ResourceWithExplicitNameRule < BaseRule
     'W28'
   end
 
-  def has_explicitly_set_resource_name?(resource, key_name)
-    !resource.send(key_name).nil?
-  end
-
   def audit_impl(cfn_model)
     violating_resources = []
 
@@ -55,5 +51,11 @@ class ResourceWithExplicitNameRule < BaseRule
     end
 
     violating_resources.flatten
+  end
+
+  private
+
+  def has_explicitly_set_resource_name?(resource, key_name)
+    !resource.send(key_name).nil?
   end
 end
