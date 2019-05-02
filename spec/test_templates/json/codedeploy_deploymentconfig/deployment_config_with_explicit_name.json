@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "DeployConfigWithName": {
+      "Type": "AWS::CodeDeploy::DeploymentConfig",
+      "Properties": {
+        "DeploymentConfigName": "nameddeployconfig"
+      }
+    }
+  }
+}

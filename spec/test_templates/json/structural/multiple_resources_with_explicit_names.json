@@ -1,0 +1,18 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Resources": {
+    "KinesisStreamWithName": {
+      "Type": "AWS::Kinesis::Stream",
+      "Properties": {
+        "Name": "namedstream",
+        "ShardCount": "1"
+      }
+    },
+    "ElasticsearchDomainWithName": {
+      "Type": "AWS::Elasticsearch::Domain",
+      "Properties": {
+        "DomainName": "nameddomain"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "Resources": {
+    "GroupWithName": {
+      "Type": "AWS::IAM::Group"
+    }
+  }
+}

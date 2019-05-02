@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "GroupWithName": {
+      "Type": "AWS::IAM::Group",
+      "Properties": {
+         "GroupName": "groupname"
+      }
+    }
+  }
+}

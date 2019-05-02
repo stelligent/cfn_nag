@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "sgWithoutName": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "sg without an explicit name"
+      }
+    }
+  }
+}

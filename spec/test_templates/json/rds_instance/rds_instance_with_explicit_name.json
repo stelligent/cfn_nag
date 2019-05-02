@@ -1,0 +1,11 @@
+{
+  "Resources": {
+    "DbWithName": {
+      "Type": "AWS::RDS::DBInstance",
+      "Properties": {
+        "SourceDBInstanceIdentifier": "sampleDbInstance",
+        "DBInstanceIdentifier": "namedinstance"
+      }
+    }
+  }
+}

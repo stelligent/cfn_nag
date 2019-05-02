@@ -1,0 +1,7 @@
+{
+  "Resources": {
+    "EcrWithName": {
+      "Type": "AWS::ECR::Repository"
+    }
+  }
+}
