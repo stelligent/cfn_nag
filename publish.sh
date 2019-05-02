@@ -86,6 +86,6 @@ fi
 gem build cfn-nag.gemspec
 gem push cfn-nag-${GEM_VERSION}.gem
 
-docker build -t $dockerhub_org/cfn_nag:${GEM_VERSION} .
+docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
 echo $docker_password | docker login -u $docker_user --password-stdin
-docker push $dockerhub_org/cfn_nag:${GEM_VERSION}
+docker push $docker_org/cfn_nag:${GEM_VERSION}
