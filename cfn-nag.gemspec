@@ -24,8 +24,7 @@ Gem::Specification.new do |s|
   # versus what we used to run tests in cfn-nag before publishing cfn-nag
   # they are coupled and we are doing a good bit of experimenting in cfn-model
   # i might consider collapsing them again....
-  s.add_runtime_dependency('cfn-model', '0.1.35')
-
+  s.add_runtime_dependency('cfn-model', '0.4.0')
   s.add_runtime_dependency('jmespath', '~> 1.3.1')
   s.add_runtime_dependency('logging', '~> 2.2.2')
   s.add_runtime_dependency('netaddr', '~> 1.5.1')

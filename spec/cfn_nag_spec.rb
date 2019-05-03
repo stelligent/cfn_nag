@@ -107,7 +107,8 @@ describe CfnNag do
                 Violation.new(
                   id: 'F16', type: Violation::FAILING_VIOLATION,
                   message: 'S3 Bucket policy should not allow * principal',
-                  logical_resource_ids: %w[S3BucketPolicy2]
+                  logical_resource_ids: %w[S3BucketPolicy2],
+                  line_numbers: [50]
                 )
               ]
             }
@@ -147,17 +148,20 @@ describe CfnNag do
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
                 message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               )
             ]
           }
@@ -196,17 +200,20 @@ EXPECTEDSTDERR
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
                 message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [ 4, 20]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [4, 20]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [4, 20]
               )
             ]
           }

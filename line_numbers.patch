@@ -1,0 +1,437 @@
+diff --git a/cfn-nag.gemspec b/cfn-nag.gemspec
+index ba8bf0f..7be251b 100644
+--- a/cfn-nag.gemspec
++++ b/cfn-nag.gemspec
+@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
+   s.add_development_dependency('rubocop')
+   s.add_development_dependency('simplecov', '~> 0.11')
+ 
+-  s.add_runtime_dependency('cfn-model', '~> 0.1.28')
++  s.add_runtime_dependency('cfn-model')
+   s.add_runtime_dependency('jmespath', '~> 1.3.1')
+   s.add_runtime_dependency('logging', '~> 2.2.2')
+   s.add_runtime_dependency('netaddr', '~> 1.5.1')
+diff --git a/lib/cfn-nag/cfn_nag.rb b/lib/cfn-nag/cfn_nag.rb
+index 4fc619b..7a83c3d 100644
+--- a/lib/cfn-nag/cfn_nag.rb
++++ b/lib/cfn-nag/cfn_nag.rb
+@@ -85,7 +85,8 @@ class CfnNag
+ 
+     begin
+       cfn_model = CfnParser.new.parse cloudformation_string,
+-                                      parameter_values_string
++                                      parameter_values_string,
++                                      true # With line numbers
+       violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+ 
+       violations = filter_violations_by_blacklist_and_profile(violations)
+diff --git a/lib/cfn-nag/custom_rules/SecurityGroupIngressCidrNon32Rule.rb b/lib/cfn-nag/custom_rules/SecurityGroupIngressCidrNon32Rule.rb
+index c9d28e7..1e712a5 100644
+--- a/lib/cfn-nag/custom_rules/SecurityGroupIngressCidrNon32Rule.rb
++++ b/lib/cfn-nag/custom_rules/SecurityGroupIngressCidrNon32Rule.rb
+@@ -24,7 +24,11 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
+   # targeted against inline ingress only
+   def audit_impl(cfn_model)
+     violating_security_groups = cfn_model.security_groups.select do |security_group|
++      puts security_group
+       violating_ingresses = security_group.ingresses.select do |ingress|
++        puts "########################"
++        puts ingress
++        puts "########################"
+         ip4_cidr_range?(ingress) || ip6_cidr_range?(ingress)
+       end
+ 
+@@ -32,6 +36,7 @@ class SecurityGroupIngressCidrNon32Rule < BaseRule
+     end
+ 
+     violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
++      standalone_ingress = standalone_ingress['value']
+       ip4_cidr_range?(standalone_ingress) || ip6_cidr_range?(standalone_ingress)
+     end
+ 
+diff --git a/lib/cfn-nag/ip_addr.rb b/lib/cfn-nag/ip_addr.rb
+index 979e0f0..3321da4 100644
+--- a/lib/cfn-nag/ip_addr.rb
++++ b/lib/cfn-nag/ip_addr.rb
+@@ -20,6 +20,9 @@ module IpAddr
+   end
+ 
+   def ip4_cidr_range?(ingress)
++    puts "#{ingress.methods}"
++    puts "|#{ingress.cidrIp.class}|"
++    puts "|#{ingress.cidrIp}|"
+     ingress.cidrIp.is_a?(String) && !ingress.cidrIp.end_with?('/32')
+   end
+ 
+diff --git a/publish.sh b/publish.sh
+index 490bc45..cc67d18 100755
+--- a/publish.sh
++++ b/publish.sh
+@@ -86,6 +86,6 @@ fi
+ gem build cfn-nag.gemspec
+ gem push cfn-nag-${GEM_VERSION}.gem
+ 
+-docker build -t essej2003/cfn_nag:${GEM_VERSION} .
++docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
+ echo $docker_password | docker login -u $docker_user --password-stdin
+-docker push essej2003/cfn_nag:${GEM_VERSION}
++docker push $docker_org/cfn_nag:${GEM_VERSION}
+diff --git a/spec/cfn_nag_integration/cfn_nag_cloudfront_distribution_spec.rb b/spec/cfn_nag_integration/cfn_nag_cloudfront_distribution_spec.rb
+index 9c0e8e5..d133312 100644
+--- a/spec/cfn_nag_integration/cfn_nag_cloudfront_distribution_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_cloudfront_distribution_spec.rb
+@@ -20,7 +20,7 @@ describe CfnNag do
+               Violation.new(
+                 id: 'W10', type: Violation::WARNING,
+                 message: 'CloudFront Distribution should enable access logging',
+-                logical_resource_ids: %w[rDistribution2]
++                logical_resource_ids: [{ name: 'rDistribution2', line: 46 }]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_ec2_volume_spec.rb b/spec/cfn_nag_integration/cfn_nag_ec2_volume_spec.rb
+index dfae2bf..230c44a 100644
+--- a/spec/cfn_nag_integration/cfn_nag_ec2_volume_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_ec2_volume_spec.rb
+@@ -21,7 +21,16 @@ describe CfnNag do
+                 id: 'F1', type: Violation::FAILING_VIOLATION,
+                 message:
+                 'EBS volume should have server-side encryption enabled',
+-                logical_resource_ids: %w[NewVolume1 NewVolume2]
++                logical_resource_ids: [
++                  {
++                    name: 'NewVolume1',
++                    line: 4
++                  },
++                  {
++                    name: 'NewVolume2',
++                    line: 13
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_elasticloadbalancing_loadbalancer_spec.rb b/spec/cfn_nag_integration/cfn_nag_elasticloadbalancing_loadbalancer_spec.rb
+index 981321e..dc70b65 100644
+--- a/spec/cfn_nag_integration/cfn_nag_elasticloadbalancing_loadbalancer_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_elasticloadbalancing_loadbalancer_spec.rb
+@@ -21,7 +21,16 @@ describe CfnNag do
+                 id: 'W26', type: Violation::WARNING,
+                 message:
+                 'Elastic Load Balancer should have access logging enabled',
+-                logical_resource_ids: %w[elb1 elb2]
++                logical_resource_ids: [
++                  {
++                    name: 'elb1',
++                    line: 4
++                  },
++                  {
++                    name: 'elb2',
++                    line: 19
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_iam_user_spec.rb b/spec/cfn_nag_integration/cfn_nag_iam_user_spec.rb
+index 42d1cf6..69cf998 100644
+--- a/spec/cfn_nag_integration/cfn_nag_iam_user_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_iam_user_spec.rb
+@@ -21,7 +21,7 @@ describe CfnNag do
+               Violation.new(id: 'F2000',
+                             type: Violation::FAILING_VIOLATION,
+                             message: 'User is not assigned to a group',
+-                            logical_resource_ids: %w[myuser2])
++                            logical_resource_ids: [{ name: 'myuser2', line: 4 }])
+             ]
+           }
+         }
+diff --git a/spec/cfn_nag_integration/cfn_nag_lambda_permission_spec.rb b/spec/cfn_nag_integration/cfn_nag_lambda_permission_spec.rb
+index ae6dbec..2ee96a4 100644
+--- a/spec/cfn_nag_integration/cfn_nag_lambda_permission_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_lambda_permission_spec.rb
+@@ -20,15 +20,15 @@ describe CfnNag do
+               Violation.new(id: 'F3',
+                             type: Violation::FAILING_VIOLATION,
+                             message: 'IAM role should not allow * action on its permissions policy',
+-                            logical_resource_ids: %w[LambdaExecutionRole]),
++                            logical_resource_ids: [{ name: 'LambdaExecutionRole', line: 49 }]),
+               Violation.new(id: 'W11',
+                             type: Violation::WARNING,
+                             message: 'IAM role should not allow * resource on its permissions policy',
+-                            logical_resource_ids: %w[LambdaExecutionRole]),
++                            logical_resource_ids: [{ name: 'LambdaExecutionRole', line: 49 }]),
+               Violation.new(id: 'F13',
+                             type: Violation::FAILING_VIOLATION,
+                             message: 'Lambda permission principal should not be wildcard',
+-                            logical_resource_ids: %w[lambdaPermission])
++                            logical_resource_ids: [{ name: 'lambdaPermission', line: 23 }])
+             ]
+           }
+         }
+diff --git a/spec/cfn_nag_integration/cfn_nag_rds_instance_spec.rb b/spec/cfn_nag_integration/cfn_nag_rds_instance_spec.rb
+index a9f61e9..a316eaf 100644
+--- a/spec/cfn_nag_integration/cfn_nag_rds_instance_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_rds_instance_spec.rb
+@@ -21,7 +21,7 @@ describe CfnNag do
+                             type: Violation::FAILING_VIOLATION,
+                             message:
+                             'RDS instance should not be publicly accessible',
+-                            logical_resource_ids: %w[PublicDB])
++                            logical_resource_ids: [{ name: 'PublicDB', line: 4}])
+             ]
+           }
+         }
+@@ -45,13 +45,13 @@ describe CfnNag do
+               Violation.new(
+                 id: 'F23', type: Violation::FAILING_VIOLATION,
+                 message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
+-                logical_resource_ids: %w[BadDb2]
++                logical_resource_ids: [{ name: 'BadDb2', line: 11 }]
+               ),
+               Violation.new(id: 'F22',
+                             type: Violation::FAILING_VIOLATION,
+                             message:
+                             'RDS instance should not be publicly accessible',
+-                            logical_resource_ids: %w[BadDb2])
++                            logical_resource_ids: [{ name: 'BadDb2', line: 11 }])
+             ]
+           }
+         }
+@@ -76,12 +76,30 @@ describe CfnNag do
+               Violation.new(
+                 id: 'F23', type: Violation::FAILING_VIOLATION,
+                 message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
+-                logical_resource_ids: %w[BadDb1 BadDb2]
++                logical_resource_ids: [
++                  {
++                    name: 'BadDb1',
++                    line: 14
++                  },
++                  {
++                    name: 'BadDb2',
++                    line: 28
++                  }
++                ]
+               ),
+               Violation.new(
+                 id: 'F24', type: Violation::FAILING_VIOLATION,
+                 message: 'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended',
+-                logical_resource_ids: %w[BadDb1 BadDb2]
++                logical_resource_ids: [
++                  {
++                    name: 'BadDb1',
++                    line: 14
++                  },
++                  {
++                    name: 'BadDb2',
++                    line: 28
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_s3_bucket_policy_spec.rb b/spec/cfn_nag_integration/cfn_nag_s3_bucket_policy_spec.rb
+index 91d15ca..1ab5836 100644
+--- a/spec/cfn_nag_integration/cfn_nag_s3_bucket_policy_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_s3_bucket_policy_spec.rb
+@@ -21,13 +21,23 @@ describe CfnNag do
+                             type: Violation::FAILING_VIOLATION,
+                             message:
+                             'S3 Bucket policy should not allow * action',
+-                            logical_resource_ids:
+-                            %w[S3BucketPolicy S3BucketPolicy2]),
++                            logical_resource_ids: [
++                              {
++                                name: 'S3BucketPolicy',
++                                line: 25
++                              },
++                              {
++                                name: 'S3BucketPolicy2',
++                                line: 50
++                              }
++                            ]
++              ),
+               Violation.new(id: 'F16',
+                             type: Violation::FAILING_VIOLATION,
+                             message:
+                             'S3 Bucket policy should not allow * principal',
+-                            logical_resource_ids: %w[S3BucketPolicy2])
++                            logical_resource_ids: [{ name: 'S3BucketPolicy2', line: 50 }]
++              )
+             ]
+           }
+         }
+diff --git a/spec/cfn_nag_integration/cfn_nag_s3_bucket_spec.rb b/spec/cfn_nag_integration/cfn_nag_s3_bucket_spec.rb
+index c0f8003..f67f748 100644
+--- a/spec/cfn_nag_integration/cfn_nag_s3_bucket_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_s3_bucket_spec.rb
+@@ -20,13 +20,14 @@ describe CfnNag do
+               Violation.new(
+                 id: 'W31', type: Violation::WARNING,
+                 message: 'S3 Bucket likely should not have a public read acl',
+-                logical_resource_ids: %w[S3BucketRead]
++                logical_resource_ids: [{ name: 'S3BucketRead', line: 4 }]
+               ),
+               Violation.new(id: 'F14',
+                             type: Violation::FAILING_VIOLATION,
+                             message:
+                             'S3 Bucket should not have a public read-write acl',
+-                            logical_resource_ids: %w[S3BucketReadWrite])
++                            logical_resource_ids: [{ name: 'S3BucketReadWrite', line: 12 }]
++              )
+             ]
+           }
+         }
+diff --git a/spec/cfn_nag_integration/cfn_nag_security_group_spec.rb b/spec/cfn_nag_integration/cfn_nag_security_group_spec.rb
+index 1b72c79..2dd0e27 100644
+--- a/spec/cfn_nag_integration/cfn_nag_security_group_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_security_group_spec.rb
+@@ -48,7 +48,7 @@ describe CfnNag do
+               Violation.new(
+                 id: 'F1000', type: Violation::FAILING_VIOLATION,
+                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
+-                logical_resource_ids: %w[sg]
++                logical_resource_ids: [{ name: 'sg', line: 4 }]
+               )
+             ]
+           }
+@@ -74,22 +74,40 @@ describe CfnNag do
+               Violation.new(
+                 id: 'W9', type: Violation::WARNING,
+                 message: 'Security Groups found with ingress cidr that is not /32',
+-                logical_resource_ids: %w[sg2]
++                logical_resource_ids: [{ name: 'sg2', line: 18 }]
+               ),
+               Violation.new(
+                 id: 'W2', type: Violation::WARNING,
+                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
+-                logical_resource_ids: %w[sg2]
++                logical_resource_ids: [{ name: 'sg2', line: 18 }]
+               ),
+               Violation.new(
+                 id: 'W27', type: Violation::WARNING,
+                 message: 'Security Groups found ingress with port range instead of just a single port',
+-                logical_resource_ids: %w[sg sg2]
++                logical_resource_ids: [
++                  {
++                    name: 'sg',
++                    line: 4
++                  },
++                  {
++                    name: 'sg2',
++                    line: 18
++                  }
++                ]
+               ),
+               Violation.new(
+                 id: 'F1000', type: Violation::FAILING_VIOLATION,
+                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
+-                logical_resource_ids: %w[sg sg2]
++                logical_resource_ids: [
++                  {
++                    name: 'sg',
++                    line: 4
++                  },
++                  {
++                    name: 'sg2',
++                    line: 18
++                  }
++                ]
+               )
+             ]
+           }
+@@ -140,7 +158,7 @@ describe CfnNag do
+                 id: 'W9', type: Violation::WARNING,
+                 message:
+                 'Security Groups found with ingress cidr that is not /32',
+-                logical_resource_ids: %w[sg]
++                logical_resource_ids: [{ name: 'sg', line: 4 }]
+               )
+             ]
+           }
+@@ -169,7 +187,16 @@ describe CfnNag do
+                 id: 'W9', type: Violation::WARNING,
+                 message:
+                 'Security Groups found with ingress cidr that is not /32',
+-                logical_resource_ids: %w[sg sg2]
++                logical_resource_ids: [
++                  {
++                    name: 'sg',
++                    line: 10
++                  },
++                  {
++                    name: 'sg2',
++                    line: 30
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_sns_policy_spec.rb b/spec/cfn_nag_integration/cfn_nag_sns_policy_spec.rb
+index 842f2b9..bd79c48 100644
+--- a/spec/cfn_nag_integration/cfn_nag_sns_policy_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_sns_policy_spec.rb
+@@ -22,8 +22,24 @@ describe CfnNag do
+               Violation.new(
+                 id: 'F18', type: Violation::FAILING_VIOLATION,
+                 message: 'SNS topic policy should not allow * principal',
+-                logical_resource_ids: %w[mysnspolicy0 mysnspolicy1
+-                                         mysnspolicy2 mysnspolicy3]
++                logical_resource_ids: [
++                  {
++                    name: 'mysnspolicy0',
++                    line: 10
++                  },
++                  {
++                    name: 'mysnspolicy1',
++                    line: 28
++                  },
++                  {
++                    name: 'mysnspolicy2',
++                    line: 53
++                  },
++                  {
++                    name: 'mysnspolicy3',
++                    line: 83
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_integration/cfn_nag_sqs_policy_spec.rb b/spec/cfn_nag_integration/cfn_nag_sqs_policy_spec.rb
+index dbd066f..dfabd76 100644
+--- a/spec/cfn_nag_integration/cfn_nag_sqs_policy_spec.rb
++++ b/spec/cfn_nag_integration/cfn_nag_sqs_policy_spec.rb
+@@ -21,8 +21,16 @@ describe CfnNag do
+               Violation.new(
+                 id: 'W18', type: Violation::WARNING,
+                 message: 'SQS Queue policy should not allow Allow+NotAction',
+-                logical_resource_ids: %w[QueuePolicyWithNotAction
+-                                         QueuePolicyWithNotAction2]
++                logical_resource_ids: [
++                  {
++                    name: 'QueuePolicyWithNotAction',
++                    line: 18
++                  },
++                  {
++                    name: 'QueuePolicyWithNotAction2',
++                    line: 35
++                  }
++                ]
+               )
+             ]
+           }
+diff --git a/spec/cfn_nag_spec.rb b/spec/cfn_nag_spec.rb
+index 7dc81a4..8eb8f62 100644
+--- a/spec/cfn_nag_spec.rb
++++ b/spec/cfn_nag_spec.rb
+@@ -107,7 +107,7 @@ describe CfnNag do
+                 Violation.new(
+                   id: 'F16', type: Violation::FAILING_VIOLATION,
+                   message: 'S3 Bucket policy should not allow * principal',
+-                  logical_resource_ids: %w[S3BucketPolicy2]
++                  logical_resource_ids: [{ name: 'S3BucketPolicy2', line: 50 }]
+                 )
+               ]
+             }
