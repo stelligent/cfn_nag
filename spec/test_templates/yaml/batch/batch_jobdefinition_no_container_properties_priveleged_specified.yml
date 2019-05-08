@@ -1,0 +1,10 @@
+---
+Resources:
+  BatchJobDefinition:
+    Type: AWS::Batch::JobDefinition
+    Properties:
+      Type: container
+      ContainerProperties:
+        Memory: 512
+        Vcpus: 1
+        Image: amazon/amazon-ecs-agent
