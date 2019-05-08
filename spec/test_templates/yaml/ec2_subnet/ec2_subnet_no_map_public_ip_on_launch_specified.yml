@@ -1,0 +1,8 @@
+---
+Resources:
+  EC2Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: us-east-1a
+      CidrBlock: '10.0.0.0/24'
+      VpcId: vpc-abcde12345
