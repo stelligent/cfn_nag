@@ -19,7 +19,7 @@ class EC2SubnetMapPublicIpOnLaunchRule < BaseRule
   def audit_impl(cfn_model)
     violating_subnets = cfn_model.resources_by_type('AWS::EC2::Subnet')
                                  .select do |subnet|
-      subnet.mapPublicIpOnLaunch.to_s == 'true'
+      truthy?(subnet.mapPublicIpOnLaunch)
     end
 
     violating_subnets.map(&:logical_resource_id)
