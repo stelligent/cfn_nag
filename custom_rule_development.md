@@ -1,32 +1,3 @@
-## Summary
-
-There are three areas that have changed enough from 0.0.x to 0.1.x to cause trouble:
-
-1. The command line scripts are a little different.
-
-   The command line script `cfn_nag` is now called `cfn_nag_scan`.  This script works the way it used to,
-   accepting a commnad line argument for the file to scan,  or a directory to scan for templates.
-
-   The new `cfn_nag` script accepts stdin or an explicit list of files to process.
-
-2. The API to invoke cfn-nag directly is a little different.
-
-   In particular, the CfnNag object is slightly different:
-
-   * The constructor takes the rule directory as well as the profile now
-   * The call to `audit_template` should be replaced by a call to `audit`, and there is no longer
-     a reference to the rule directory at the point of auditing
-   * All the code has been moved under the `cfn-nag` directory, and a call to `require cfn-nag` should
-     replace any calls to `require cfn_nag` (beware the hyphen vs. the underscore)
-
-3. The rule writing is drastically different
-
-   * The recommended approach for writing rules is to write them in Ruby, using the new cfn-model as the basis
-     for analysis.  There should be no/minimal need to write any "Parser" objects as in 0.0.x or to supplement
-     the model.
-   * cfn-nag no longer recognizes rules written in jq.  It will allow writing rules in jmespath, but it is recommended
-     to write the rules in Ruby.  It is far simpler to debug and employ typical software development practices (TDD).
-
 ## Crash Course in (New) Rule Development
 
 1. Create a class that ends with the name Rule.  This is a convention that must be observed in order for cfn-nag to load
