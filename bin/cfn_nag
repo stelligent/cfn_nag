@@ -1,110 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'trollop'
 require 'cfn-nag'
 require 'logging'
 require 'json'
 require 'rubygems/specification'
 
-# rubocop:disable Metrics/BlockLength
-opts = Trollop.options do
-  options_message = '[options] <cloudformation template path ...>|' \
-                    '<cloudformation template in STDIN>'
-  custom_rule_exceptions_message = 'Isolate custom rule exceptions - ' \
-                                   'just emit the exception without stack ' \
-                                   ' trace and keep chugging'
-  usage options_message
-  version Gem::Specification.find_by_name('cfn-nag').version
+exec = CfnNagExecutor.new
 
-  opt :debug,
-      'Enable debug output',
-      type: :boolean,
-      required: false,
-      default: false
-  opt :allow_suppression,
-      'Allow using Metadata to suppress violations',
-      type: :boolean,
-      required: false,
-      default: true
-  opt :print_suppression,
-      'Emit suppressions to stderr',
-      type: :boolean,
-      required: false,
-      default: false
-  opt :rule_directory,
-      'Extra rule directory',
-      type: :io,
-      required: false,
-      default: nil
-  opt :profile_path,
-      'Path to a profile file',
-      type: :io,
-      required: false,
-      default: nil
-  opt :blacklist_path,
-      'Path to a blacklist file',
-      type: :io,
-      required: false,
-      default: nil
-  opt :parameter_values_path,
-      'Path to a JSON file to pull Parameter values from',
-      type: :io,
-      required: false,
-      default: nil
-  opt :isolate_custom_rule_exceptions,
-      custom_rule_exceptions_message,
-      type: :boolean,
-      required: false,
-      default: false
-  opt :fail_on_warnings,
-      'Treat warnings as failing violations',
-      type: :boolean,
-      required: false,
-      default: false
-end
-# rubocop:enable Metrics/BlockLength
-
-CfnNagLogging.configure_logging(opts)
-
-profile_definition = nil
-unless opts[:profile_path].nil?
-  profile_definition = IO.read(opts[:profile_path])
-end
-
-blacklist_definition = nil
-unless opts[:blacklist_path].nil?
-  blacklist_definition = IO.read(opts[:blacklist_path])
-end
-
-parameter_values_string = nil
-unless opts[:parameter_values_path].nil?
-  parameter_values_string = IO.read(opts[:parameter_values_path])
-end
-
-cfn_nag = CfnNag.new(
-  profile_definition: profile_definition,
-  blacklist_definition: blacklist_definition,
-  rule_directory: opts[:rule_directory],
-  allow_suppression: opts[:allow_suppression],
-  print_suppression: opts[:print_suppression],
-  isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions]
-)
-
-total_failure_count = 0
-until ARGF.closed? || ARGF.eof?
-  results = cfn_nag.audit(cloudformation_string: ARGF.file.read,
-                          parameter_values_string: parameter_values_string)
-  ARGF.close
-
-  total_failure_count += if opts[:fail_on_warnings]
-                           results[:violations].length
-                         else
-                           results[:failure_count]
-                         end
-
-  results[:violations] = results[:violations].map(&:to_h)
-  puts JSON.pretty_generate(results)
-end
-
-exit total_failure_count
+exit exec.scan(aggregate_output: false)

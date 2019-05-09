@@ -1,113 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'trollop'
 require 'cfn-nag'
 require 'logging'
 require 'json'
 require 'rubygems/specification'
 
-# rubocop:disable Metrics/BlockLength
-opts = Trollop.options do
-  version Gem::Specification.find_by_name('cfn-nag').version
+exec = CfnNagExecutor.new(require_input_path: true)
 
-  input_path_message = 'CloudFormation template to nag on or directory of ' \
-                       'templates.  Default is all *.json, *.yaml, *.yml ' \
-                       'and *.template recursively, but can be constrained ' \
-                       'by --template-pattern'
-
-  custom_rule_exceptions_message = 'Isolate custom rule exceptions - just ' \
-                                   'emit the exception without stack trace ' \
-                                   'and keep chugging'
-
-  template_pattern_message = 'Within the --input-path, match files to scan ' \
-                             'against this regular expression'
-
-  opt :input_path,
-      input_path_message,
-      type: :io,
-      required: true
-  opt :output_format,
-      'Format of results: [txt, json]',
-      type: :string,
-      default: 'txt'
-  opt :debug,
-      'Enable debug output',
-      type: :boolean,
-      required: false,
-      default: false
-  opt :rule_directory,
-      'Extra rule directory',
-      type: :io,
-      required: false,
-      default: nil
-  opt :profile_path,
-      'Path to a profile file',
-      type: :io,
-      required: false,
-      default: nil
-  opt :blacklist_path,
-      'Path to a blacklist file',
-      type: :io,
-      required: false,
-      default: nil
-  opt :parameter_values_path,
-      'Path to a JSON file to pull Parameter values from',
-      type: :io,
-      required: false,
-      default: nil
-  opt :allow_suppression,
-      'Allow using Metadata to suppress violations',
-      type: :boolean,
-      required: false,
-      default: true
-  opt :print_suppression,
-      'Emit suppressions to stderr',
-      type: :boolean,
-      required: false,
-      default: false
-  opt :isolate_custom_rule_exceptions,
-      custom_rule_exceptions_message,
-      type: :boolean,
-      required: false,
-      default: false
-  opt :template_pattern,
-      template_pattern_message,
-      type: :string,
-      required: false,
-      default: '..*\.json|..*\.yaml|..*\.yml|..*\.template'
-end
-# rubocop:enable Metrics/BlockLength
-
-unless %w[txt json].include?(opts[:output_format])
-  Trollop.die(:output_format,
-              'Must be txt or json')
-end
-
-CfnNagLogging.configure_logging(opts)
-
-profile_definition = nil
-unless opts[:profile_path].nil?
-  profile_definition = IO.read(opts[:profile_path])
-end
-
-blacklist_definition = nil
-unless opts[:blacklist_path].nil?
-  blacklist_definition = IO.read(opts[:blacklist_path])
-end
-
-cfn_nag = CfnNag.new(
-  profile_definition: profile_definition,
-  blacklist_definition: blacklist_definition,
-  rule_directory: opts[:rule_directory],
-  allow_suppression: opts[:allow_suppression],
-  print_suppression: opts[:print_suppression],
-  isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions]
-)
-
-exit cfn_nag.audit_aggregate_across_files_and_render_results(
-  input_path: opts[:input_path],
-  output_format: opts[:output_format],
-  parameter_values_path: opts[:parameter_values_path],
-  template_pattern: opts[:template_pattern]
-)
+exit exec.scan
