@@ -204,3 +204,11 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 
 ## New Rules
 To author new rules for your own use and/or community contribution, see [migration.md](migration.md) for details.
+
+## Specs
+To run end-to-end specs, you need to ensure you have RVM installed. The script will create a new gemset, build and install the gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'
+
+Execute them as follows:
+```
+./scripts/setup_and_run_end_to_end_tests.sh
+```
