@@ -14,20 +14,13 @@ class CfnNagExecutor
 
   def scan(aggregate_output: true)
     opts = read_cli_options(require_input_path: aggregate_output)
+    validate_options(opts)
     execute_io_options(opts)
 
     CfnNagLogging.configure_logging(opts)
 
     cfn_nag = CfnNag.new(
-      config: CfnNagConfig.new(
-        profile_definition: @profile_definition,
-        blacklist_definition: @blacklist_definition,
-        rule_directory: opts[:rule_directory],
-        allow_suppression: opts[:allow_suppression],
-        print_suppression: opts[:print_suppression],
-        isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions],
-        fail_on_warnings: opts[:fail_on_warnings]
-      )
+      config: make_config(opts)
     )
 
     aggregate_output ? execute_aggregate_scan(cfn_nag, opts) : execute_single_scan(cfn_nag, opts)
@@ -82,5 +75,17 @@ class CfnNagExecutor
     unless opts[:parameter_values_path].nil?
       @parameter_values_string = IO.read(opts[:parameter_values_path])
     end
+  end
+
+  def make_config(opts)
+    CfnNagConfig.new(
+      profile_definition: @profile_definition,
+      blacklist_definition: @blacklist_definition,
+      rule_directory: opts[:rule_directory],
+      allow_suppression: opts[:allow_suppression],
+      print_suppression: opts[:print_suppression],
+      isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions],
+      fail_on_warnings: opts[:fail_on_warnings]
+    )
   end
 end
