@@ -5,7 +5,7 @@ require 'trollop'
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Metrics/AbcSize
 # rubocop:disable Metrics/MethodLength
-def read_cli_options(require_input_path: false)
+def cli_options(require_input_path: false)
   Trollop.options do
     version Gem::Specification.find_by_name('cfn-nag').version
     input_path_message = 'CloudFormation template to nag on or directory of ' \

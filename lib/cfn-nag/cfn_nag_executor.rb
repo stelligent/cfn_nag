@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'trollop'
-require 'cfn-nag/read_cli_options'
+require 'cfn-nag/cli_options'
 require 'cfn-nag/cfn_nag_config'
 
 class CfnNagExecutor
@@ -12,28 +12,30 @@ class CfnNagExecutor
     @parameter_values_string = nil
   end
 
-  def scan(aggregate_output: true)
-    opts = read_cli_options(require_input_path: aggregate_output)
+  def scan(aggregate_output: true,
+           cli_supplier: cli_options(require_input_path: @require_input_path),
+           argf_supplier: ARGF)
+    opts = cli_supplier
     validate_options(opts)
     execute_io_options(opts)
 
     CfnNagLogging.configure_logging(opts)
 
     cfn_nag = CfnNag.new(
-      config: make_config(opts)
+      config: cfn_nag_config(opts)
     )
 
-    aggregate_output ? execute_aggregate_scan(cfn_nag, opts) : execute_single_scan(cfn_nag, opts)
+    aggregate_output ? execute_aggregate_scan(cfn_nag, opts) : execute_single_scan(cfn_nag, opts, argf_supplier)
   end
 
   private
 
-  def execute_single_scan(cfn_nag, opts)
+  def execute_single_scan(cfn_nag, opts, argf)
     total_failure_count = 0
-    until ARGF.closed? || ARGF.eof?
-      results = cfn_nag.audit(cloudformation_string: ARGF.file.read,
+    until argf.closed? || argf.eof?
+      results = cfn_nag.audit(cloudformation_string: argf.file.read,
                               parameter_values_string: @parameter_values_string)
-      ARGF.close
+      argf.close
 
       total_failure_count += if opts[:fail_on_warnings]
                                results[:violations].length
@@ -77,7 +79,7 @@ class CfnNagExecutor
     end
   end
 
-  def make_config(opts)
+  def cfn_nag_config(opts)
     CfnNagConfig.new(
       profile_definition: @profile_definition,
       blacklist_definition: @blacklist_definition,
