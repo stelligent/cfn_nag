@@ -22,7 +22,7 @@ download_and_scan_templates () {
   echo -e "Linting sample templates..\n"
   cfn_nag_scan -i ./spec/aws_sample_templates 2>&1 >/dev/null | grep -A 25 Error
 
-  # Since grep exits with a status code of 0 when it maches a pattern, if
+  # Since grep exits with a status code of 0 when it matches a pattern, if
   # the above command exits 0 then that means cfn_nag_scan threw an exception
   if [ $? -eq 0 ]; then
     echo -e "\nException found in cfn_nag_scan, exiting..\n"
