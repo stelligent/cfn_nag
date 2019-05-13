@@ -20,7 +20,7 @@ describe 'cfn_nag_scan template file input', end_to_end: true do
   context 'when outputing in the default format, txt' do
     test_template = 'spec/test_templates/e2e/ElastiCache.template'
     it 'actually outputs as one big string' do
-      stdout, stderr, status = Open3.capture3("cfn_nag_scan -i #{test_template} -o json")
+      stdout, stderr, status = Open3.capture3("cfn_nag_scan -i #{test_template}")
 
       expect(stdout).to be_an_instance_of(String)
     end
