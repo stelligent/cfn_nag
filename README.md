@@ -203,12 +203,25 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 # Development
 
 ## New Rules
-To author new rules for your own use and/or community contribution, see [migration.md](migration.md) for details.
+To author new rules for your own use and/or community contribution, see [custom_rule_development.md](Custom Rule Development) for details.
+
+A screencast demonstrating soup to nuts TDD custom rule development is available here:
+
+https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s
 
 ## Specs
-To run end-to-end specs, you need to ensure you have RVM installed. The script will create a new gemset, build and install the gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'
+To run end-to-end specs, you need to ensure you have RVM installed. The script will create a new gemset, build and install the gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'.
+
+It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 Execute them as follows:
 ```
 ./scripts/setup_and_run_end_to_end_tests.sh
 ```
+
+# Support
+
+To report a bug or request a feature, submit an issue through the GitHub repository via: https://github.com/stelligent/cfn_nag/issues/new
+
+The cfn-nag team is currently experimenting with using Pivotal Tracker to drive development of new features.  The dashboard
+is publicly visible at: https://www.pivotaltracker.com/n/projects/2316748.

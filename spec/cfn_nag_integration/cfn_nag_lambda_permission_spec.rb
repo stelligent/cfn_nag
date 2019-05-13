@@ -38,4 +38,14 @@ describe CfnNag do
       expect(actual_aggregate_results).to eq expected_aggregate_results
     end
   end
+
+  # the heavy lifting for dealing with globals is down in cfn-model.  just make sure we've got a good version
+  # of the parser that doesn't blow up
+  context 'serverless function with globals', :lambda do
+    it 'parses properly' do
+      template_name = 'yaml/sam/globals.yml'
+      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files input_path: test_template_path(template_name)
+      expect(actual_aggregate_results[0][:file_results][:failure_count]).to eq 0
+    end
+  end
 end
