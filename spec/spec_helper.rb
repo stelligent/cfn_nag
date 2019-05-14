@@ -1,4 +1,6 @@
 require 'simplecov'
+require 'open3'
+
 SimpleCov.start do
   add_filter 'spec/'
 end
@@ -22,6 +24,9 @@ end
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  # Run e2e specs by passing '-t e2e' to rspec
+  config.filter_run_excluding end_to_end: true
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

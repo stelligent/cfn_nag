@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  test:
+  unit_test:
     docker:
       - image: circleci/ruby:2.5.5-browsers
     steps:
@@ -17,6 +17,14 @@ jobs:
       - run:
           name: Rspec tests
           command: bundle exec rspec --color --require spec_helper spec
+  end_to_end_test:
+    docker:
+      - image: circleci/ruby:2.5.5-browsers
+    steps:
+      - checkout
+      - run:
+          name: install cfn_nag-0.0.01 locally, rspec, pull sample templates, rspec test
+          command: bash ./scripts/setup_and_run_end_to_end_tests.sh
   publish:
     docker:
       - image: circleci/ruby:2.5.5-browsers
@@ -29,16 +37,18 @@ jobs:
           docker_layer_caching: true
       - run:
           name: Publish gem
-          command: bash ./publish.sh
+          command: bash ./scripts/publish.sh
 
 workflows:
   version: 2
   test-and-publish:
     jobs:
-      - test
+      - unit_test
+      - end_to_end_test
       - publish:
           requires:
-            - test
+            - unit_test
+            - end_to_end_test
           filters:
             branches:
               only: master
