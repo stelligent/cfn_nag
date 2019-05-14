@@ -4,7 +4,7 @@ require 'cfn-nag/custom_rules/RDSDBClusterMasterUserPasswordRule'
 
 describe RDSDBClusterMasterUserPasswordRule, :rule do
   context 'RDS DB Cluster without master user password set' do
-    it 'returns offending logical resource id for offending DBCluster' do
+    it 'returns empty list' do
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/rds_dbcluster/rds_dbcluster_no_master_user_password.yml'
       )
@@ -18,7 +18,7 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
   end
 
   context 'RDS DB Cluster with parameter master user password with NoEcho' do
-    it 'returns offending logical resource id for offending DBCluster' do
+    it 'returns empty list' do
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/rds_dbcluster/' \
         'rds_dbcluster_master_user_password_parameter_noecho.yml'
