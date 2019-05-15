@@ -13,7 +13,7 @@ class CfnNagExecutor
   end
 
   def scan(aggregate_output: true,
-           cli_supplier: cli_options(require_input_path: @require_input_path),
+           cli_supplier: cli_options(cfn_nag_scan: @require_input_path),
            argf_supplier: ARGF)
     opts = cli_supplier
     validate_options(opts)
@@ -59,7 +59,7 @@ class CfnNagExecutor
   end
 
   def validate_options(opts)
-    unless %w[txt json].include?(opts[:output_format])
+    unless opts[:output_format].nil? || %w[txt json].include?(opts[:output_format])
       Trollop.die(:output_format,
                   'Must be txt or json')
     end
