@@ -22,7 +22,11 @@ download_and_scan_templates () {
   # 'Error' which incidates an exception was thrown. For whatever reason,
   # not every ruby exception/stacktrace contains the word 'exception'.
   echo -e "Linting sample templates..\n"
+  # unset -e because cfn_nag_scan failures are OK; Exceptions are not
+  unset -e
   cfn_nag_scan -i ./spec/aws_sample_templates 2>&1 >/dev/null | grep -A 25 Error
+
+  set -e
 
   # Since grep exits with a status code of 0 when it matches a pattern, if
   # the above command exits 0 then that means cfn_nag_scan threw an exception
