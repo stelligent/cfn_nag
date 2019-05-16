@@ -25,12 +25,10 @@ download_and_scan_templates () {
   # set +e because cfn_nag_scan failures are OK; Exceptions are not
   set +e
   cfn_nag_scan -i ./spec/aws_sample_templates 2>&1 >/dev/null | grep -A 25 Error
-  last_exit_code = $?
-  set -e
 
   # Since grep exits with a status code of 0 when it matches a pattern, if
   # the above command exits 0 then that means cfn_nag_scan threw an exception
-  if [ ${last_exit_code} -eq 0 ]; then
+  if [ $? -eq 0 ]; then
     echo -e "\nException found in cfn_nag_scan, exiting..\n"
     exit 1
   else
