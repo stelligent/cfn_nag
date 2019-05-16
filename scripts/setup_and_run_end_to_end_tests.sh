@@ -7,7 +7,7 @@ download_and_scan_templates () {
   mkdir spec/aws_sample_templates || true
   pushd spec/aws_sample_templates
   curl -O https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip
-  rm *.template
+  rm -f *.template
   rm -rf aws-cloudformation-templates
   unzip AWSCloudFormation-samples.zip
   git clone https://github.com/awslabs/aws-cloudformation-templates.git
