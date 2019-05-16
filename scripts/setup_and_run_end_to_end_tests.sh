@@ -5,13 +5,10 @@ set -e
 # Function for downloading/scanning templates to check for exceptions
 download_and_scan_templates () {
   mkdir -p spec/aws_sample_templates || true
-  pushd spec/aws_sample_templates
-  curl -O https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip
-  rm -f *.template
-  rm -rf aws-cloudformation-templates
-  unzip AWSCloudFormation-samples.zip
-  git clone https://github.com/awslabs/aws-cloudformation-templates.git
-  popd
+  curl https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip -o spec/AWSCloudFormation-samples.zip
+  rm -rf spec/aws_sample_templates/*
+  unzip spec/AWSCloudFormation-samples.zip -d spec/aws_sample_templates
+  git clone https://github.com/awslabs/aws-cloudformation-templates.git spec/aws_sample_templates/aws-cloudformation-templates
   # Macros/SAM cause exceptions in cfn-model, removing these two directories
   # allow us to successfully lint everything else.
   rm -rf spec/aws_sample_templates/aws-cloudformation-templates/aws/services/CloudFormation/MacrosExamples
