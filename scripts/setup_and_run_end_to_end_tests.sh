@@ -1,5 +1,7 @@
 #!/bin/bash -l
 
+set -e
+
 # Function for downloading/scanning templates to check for exceptions
 download_and_scan_templates () {
   mkdir spec/aws_sample_templates || true
