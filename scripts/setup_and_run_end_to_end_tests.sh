@@ -4,7 +4,7 @@ set -e
 
 # Function for downloading/scanning templates to check for exceptions
 download_and_scan_templates () {
-  mkdir spec/aws_sample_templates || true
+  mkdir -p spec/aws_sample_templates || true
   pushd spec/aws_sample_templates
   curl -O https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip
   rm -f *.template
