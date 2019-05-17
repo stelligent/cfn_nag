@@ -35,7 +35,6 @@ describe CfnNagExecutor do
     end
   end
 
-
   # this one triggers a trollop 'system exit' mid-flow :(
   context 'no input path specified' do
     it 'throws error on nil input_path' do
@@ -95,6 +94,20 @@ describe CfnNagExecutor do
                                options: options,
                                argf: Argf.for('argf'))
       }.to raise_error(TypeError)
+    end
+  end
+
+  context 'invalid Options and Argf types' do
+    it 'raises errors' do
+      expect {Options.for('invalid')}.to raise_error(RuntimeError)
+      expect {Argf.for('invalid')}.to raise_error(RuntimeError)
+    end
+  end
+
+  context 'no command line options specified' do
+    it 'has no value for input_path' do
+      options = Options.for('cli')
+      expect(options.get[:input_path]).to eq nil
     end
   end
 end
