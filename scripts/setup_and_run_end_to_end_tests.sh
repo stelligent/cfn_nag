@@ -1,15 +1,14 @@
 #!/bin/bash -l
 
+set -e
+
 # Function for downloading/scanning templates to check for exceptions
 download_and_scan_templates () {
-  mkdir spec/aws_sample_templates || true
-  pushd spec/aws_sample_templates
-  curl -O https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip
-  rm *.template
-  rm -rf aws-cloudformation-templates
-  unzip AWSCloudFormation-samples.zip
-  git clone https://github.com/awslabs/aws-cloudformation-templates.git
-  popd
+  mkdir -p spec/aws_sample_templates || true
+  curl https://s3-eu-west-1.amazonaws.com/cloudformation-examples-eu-west-1/AWSCloudFormation-samples.zip -o spec/AWSCloudFormation-samples.zip
+  rm -rf spec/aws_sample_templates/*
+  unzip spec/AWSCloudFormation-samples.zip -d spec/aws_sample_templates
+  git clone https://github.com/awslabs/aws-cloudformation-templates.git spec/aws_sample_templates/aws-cloudformation-templates
   # Macros/SAM cause exceptions in cfn-model, removing these two directories
   # allow us to successfully lint everything else.
   rm -rf spec/aws_sample_templates/aws-cloudformation-templates/aws/services/CloudFormation/MacrosExamples
@@ -20,6 +19,8 @@ download_and_scan_templates () {
   # 'Error' which incidates an exception was thrown. For whatever reason,
   # not every ruby exception/stacktrace contains the word 'exception'.
   echo -e "Linting sample templates..\n"
+  # set +e because cfn_nag_scan failures are OK; Exceptions are not
+  set +e
   cfn_nag_scan -i ./spec/aws_sample_templates 2>&1 >/dev/null | grep -A 25 Error
 
   # Since grep exits with a status code of 0 when it matches a pattern, if
