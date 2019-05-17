@@ -6,6 +6,6 @@ require 'logging'
 require 'json'
 require 'rubygems/specification'
 
-exec = CfnNagExecutor.new(require_input_path: true)
+exec = CfnNagExecutor.new
 
-exit exec.scan
+exit exec.scan(cfn_nag_scan: true, options: Options.for('cli'), argf: Argf.for('argf'))

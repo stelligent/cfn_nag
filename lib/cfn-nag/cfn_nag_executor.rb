@@ -2,20 +2,20 @@
 
 require 'trollop'
 require 'cfn-nag/cli_options'
+require 'cfn-nag/argf'
 require 'cfn-nag/cfn_nag_config'
 
 class CfnNagExecutor
-  def initialize(require_input_path: false)
-    @require_input_path = require_input_path
+  def initialize
     @profile_definition = nil
     @blacklist_definition = nil
     @parameter_values_string = nil
   end
 
-  def scan(aggregate_output: true,
-           cli_supplier: cli_options(cfn_nag_scan: @require_input_path),
-           argf_supplier: ARGF)
-    opts = cli_supplier
+  def scan(cfn_nag_scan: false,
+           options:,
+           argf:)
+    opts = options.get(cfn_nag_scan: cfn_nag_scan)
     validate_options(opts)
     execute_io_options(opts)
 
@@ -25,7 +25,7 @@ class CfnNagExecutor
       config: cfn_nag_config(opts)
     )
 
-    aggregate_output ? execute_aggregate_scan(cfn_nag, opts) : execute_single_scan(cfn_nag, opts, argf_supplier)
+    cfn_nag_scan ? execute_aggregate_scan(cfn_nag, opts) : execute_single_scan(cfn_nag, opts, argf)
   end
 
   private
