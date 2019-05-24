@@ -4,33 +4,70 @@ require 'cfn-nag/cfn_nag_logging'
 require 'cfn-nag/cfn_nag_executor'
 
 describe CfnNagExecutor do
+
   before(:all) do
     CfnNagLogging.configure_logging(debug: false)
-    @cfn_nag_executor = CfnNagExecutor.new
+    @default_cli_options = {
+      allow_suppression: true,
+      debug: false,
+      isolate_custom_rule_exceptions: false,
+      print_suppression: false,
+      rule_directory: nil,
+      template_pattern: '..*\.json|..*\.yaml|..*\.yml|..*\.template',
+      output_format: 'json'
+    }
   end
 
   context 'single file cfn_nag with fail on warnings' do
     it 'returns a nonzero exit code' do
       test_file = 'spec/test_templates/yaml/ec2_subnet/ec2_subnet_map_public_ip_on_launch_true_boolean.yml'
-      argf = Argf.for('force')
-      argf.use_file(test_file: test_file)
-      options = Options.for('force')
-      options.set(fail_on_warnings: true)
-      result = @cfn_nag_executor.scan(argf: argf,
-                                      options: options)
+
+      cli_options = @default_cli_options.clone
+      cli_options[:fail_on_warnings] = true
+      expect(Options).to receive(:cli_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
+      expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
+      expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+
+      result = cfn_nag_executor.scan(options_type: 'cli')
       expect(result).to eq 1
+    end
+  end
+
+  context 'multi file cfn_nag with fail on warnings' do
+    it 'returns a nonzero exit code' do
+      test_file1 = 'spec/test_templates/yaml/ec2_subnet/ec2_subnet_map_public_ip_on_launch_true_boolean.yml'
+      test_file2 = 'spec/test_templates/yaml/ec2_subnet/ec2_subnet_map_public_ip_on_launch_true_boolean.yml'
+
+      cli_options = @default_cli_options.clone
+      cli_options[:fail_on_warnings] = true
+      expect(Options).to receive(:cli_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file1), IO.read(test_file2))
+      expect(cfn_nag_executor).to receive(:argf_close).and_return(nil, nil)
+      expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, false, true)
+
+      result = cfn_nag_executor.scan(options_type: 'cli')
+      expect(result).to eq 2
     end
   end
 
   context 'single file cfn_nag' do
     it 'returns a successful zero exit code' do
       test_file = 'spec/test_templates/yaml/ec2_subnet/ec2_subnet_map_public_ip_on_launch_true_boolean.yml'
-      argf = Argf.for('force')
-      argf.use_file(test_file: test_file)
-      options = Options.for('force')
-      options.set
-      result = @cfn_nag_executor.scan(argf: argf,
-                                      options: options)
+
+      expect(Options).to receive(:cli_options).and_return(@default_cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
+      expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
+      expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+
+      result = cfn_nag_executor.scan(options_type: 'cli')
+
       expect(result).to eq 0
     end
   end
@@ -39,20 +76,23 @@ describe CfnNagExecutor do
   context 'no input path specified' do
     it 'throws error on nil input_path' do
       expect {
-        @cfn_nag_executor.scan(cfn_nag_scan: true,
-                               options: Options.for('cli'),
-                               argf: Argf.for('argf'))
+        cfn_nag_executor = CfnNagExecutor.new
+
+        _ = cfn_nag_executor.scan(options_type: 'scan')
       }.to raise_error(SystemExit)
     end
   end
 
-  context 'input path specified with neptune directory' do
+  context 'input path specified with neptune directory', :poo do
     it 'records three failures' do
-      options = Options.for('force')
-      options.set(input_path: 'spec/test_templates/json/neptune')
-      result = @cfn_nag_executor.scan(cfn_nag_scan: true,
-                                      options: options,
-                                      argf: Argf.for('argf'))
+      cli_options = @default_cli_options.clone
+      cli_options[:input_path] = 'spec/test_templates/json/neptune'
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+      puts cli_options
+
+      cfn_nag_executor = CfnNagExecutor.new
+
+      result = cfn_nag_executor.scan(options_type: 'scan')
 
       expect(result).to eq 3
     end
@@ -60,12 +100,14 @@ describe CfnNagExecutor do
 
   context 'input path specified with fail on warnings' do
     it 'records four failures' do
-      options = Options.for('force')
-      options.set(input_path: 'spec/test_templates/yaml/ec2_subnet',
-                  fail_on_warnings: true)
-      result = @cfn_nag_executor.scan(cfn_nag_scan: true,
-                                      options: options,
-                                      argf: Argf.for('argf'))
+      cli_options = @default_cli_options.clone
+      cli_options[:input_path] = 'spec/test_templates/yaml/ec2_subnet'
+      cli_options[:fail_on_warnings] = true
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+
+      result = cfn_nag_executor.scan(options_type: 'scan')
 
       expect(result).to eq 4
     end
@@ -73,41 +115,37 @@ describe CfnNagExecutor do
 
   context 'invalid value provided for output type' do
     it 'dies at validate_opts' do
-      options = Options.for('force')
-      options.set(output_format: 'invalid')
+      cli_options = @default_cli_options.clone
+      cli_options[:output_format] = 'invalid'
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
       expect {
-        @cfn_nag_executor.scan(cfn_nag_scan: true,
-                               options: options,
-                               argf: Argf.for('argf'))
+        cfn_nag_executor = CfnNagExecutor.new
+
+        _ = cfn_nag_executor.scan(options_type: 'scan')
       }.to raise_error(SystemExit)
     end
   end
 
   context 'use profile, blacklist, and parameter path options' do
     it 'raises a TypeError once it tries to read the invalid files' do
-      options = Options.for('force')
-      options.set(blacklist_definition: 'spec/cfn_nag_integration/test_path.txt',
-                  parameter_values_path: 'spec/cfn_nag_integration/test_path.txt',
-                  profile_path: 'spec/cfn_nag_integration/test_path.txt')
+      cli_options = @default_cli_options.clone
+      cli_options[:blacklist_definition] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:parameter_values_path] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
       expect {
-        @cfn_nag_executor.scan(cfn_nag_scan: true,
-                               options: options,
-                               argf: Argf.for('argf'))
+        cfn_nag_executor = CfnNagExecutor.new
+
+        _ = cfn_nag_executor.scan(options_type: 'scan')
       }.to raise_error(TypeError)
     end
   end
 
-  context 'invalid Options and Argf types' do
+  context 'invalid Options types' do
     it 'raises errors' do
       expect {Options.for('invalid')}.to raise_error(RuntimeError)
-      expect {Argf.for('invalid')}.to raise_error(RuntimeError)
-    end
-  end
-
-  context 'no command line options specified' do
-    it 'has no value for input_path' do
-      options = Options.for('cli')
-      expect(options.get[:input_path]).to eq nil
     end
   end
 end

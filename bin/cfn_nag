@@ -8,4 +8,4 @@ require 'rubygems/specification'
 
 exec = CfnNagExecutor.new
 
-exit exec.scan(options: Options.for('cli'), argf: Argf.for('argf'))
+exit exec.scan(options_type: 'cli')
