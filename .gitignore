@@ -2,3 +2,4 @@
 /Gemfile.lock
 /coverage
 /spec/aws_sample_templates/
+*.zip
