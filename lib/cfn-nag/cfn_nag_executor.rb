@@ -15,7 +15,6 @@ class CfnNagExecutor
     options = Options.for(options_type)
     validate_options(options)
     execute_io_options(options)
-    puts options
 
     CfnNagLogging.configure_logging(options)
 
