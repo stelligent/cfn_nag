@@ -26,6 +26,8 @@ class Options
   def self.cli_options
     options_message = '[options] <cloudformation template path ...>|' \
                         '<cloudformation template in STDIN>'
+    custom_rule_exceptions_message = @custom_rule_exceptions_message
+    version = @version
 
     Trollop.options do
       usage options_message
@@ -67,7 +69,7 @@ class Options
           required: false,
           default: nil
       opt :isolate_custom_rule_exceptions,
-          @custom_rule_exceptions_message,
+          custom_rule_exceptions_message,
           type: :boolean,
           required: false,
           default: false
@@ -88,8 +90,11 @@ class Options
     template_pattern_message = 'Within the --input-path, match files to scan ' \
                                'against this regular expression'
 
+    custom_rule_exceptions_message = @custom_rule_exceptions_message
+    version = @version
+
     Trollop.options do
-      version @version
+      version version
       opt :input_path,
           input_path_message,
           type: :io,
@@ -134,7 +139,7 @@ class Options
           required: false,
           default: false
       opt :isolate_custom_rule_exceptions,
-          @custom_rule_exceptions_message,
+          custom_rule_exceptions_message,
           type: :boolean,
           required: false,
           default: false
