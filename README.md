@@ -100,8 +100,11 @@ W5
 ```
 
 ### Global Blacklist
-The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  The blacklist will trump the
-profile in case a rule is specified in both.
+The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the 
+`--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
+in the file.
+
+The blacklist will trump the profile in case a rule is specified in both.
 
 The format follows.  The only two salient fields are `RulesToSuppres` and the `id` per item.  The `reason` won't
 be interpreted by cfn-nag, but it is recommended to justify why the rule should never be applied.
