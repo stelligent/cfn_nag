@@ -4,7 +4,10 @@
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
         "BucketName" : "fakebucketfakebucket",
-        "AccessControl": "bucketOwnerRead"
+        "AccessControl": "bucketOwnerRead",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     }
   }

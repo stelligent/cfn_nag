@@ -3,7 +3,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class S3BucketPublicReadWriteAclRule < BaseRule
+class S3BucketAccessLoggingRule < BaseRule
   def rule_text
     'S3 Bucket should have access logging configured'
   end

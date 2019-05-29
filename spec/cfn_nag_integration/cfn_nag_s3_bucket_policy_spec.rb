@@ -22,13 +22,13 @@ describe CfnNag do
                             message:
                             'S3 Bucket policy should not allow * action',
                             logical_resource_ids: %w[S3BucketPolicy S3BucketPolicy2],
-                            line_numbers: [25, 50]),
+                            line_numbers: [34, 59]),
               Violation.new(id: 'F16',
                             type: Violation::FAILING_VIOLATION,
                             message:
                             'S3 Bucket policy should not allow * principal',
                             logical_resource_ids: %w[S3BucketPolicy2],
-                            line_numbers: [50])
+                            line_numbers: [59])
             ]
           }
         }

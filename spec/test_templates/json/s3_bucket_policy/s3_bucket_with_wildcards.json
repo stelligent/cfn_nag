@@ -3,21 +3,30 @@
     "S3Bucket" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
-        "BucketName" : "fakebucketfakebucket"
+        "BucketName" : "fakebucketfakebucket",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     },
 
     "S3Bucket2" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
-        "BucketName" : "fakebucketfakebucket2"
+        "BucketName" : "fakebucketfakebucket2",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     },
 
     "S3Bucket3" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
-        "BucketName" : "fakebucketfakebucket3"
+        "BucketName" : "fakebucketfakebucket3",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     },
 

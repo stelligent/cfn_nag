@@ -28,7 +28,7 @@ describe CfnNag do
                             message:
                             'S3 Bucket should not have a public read-write acl',
                             logical_resource_ids: %w[S3BucketReadWrite],
-                            line_numbers: [12])
+                            line_numbers: [15])
             ]
           }
         }

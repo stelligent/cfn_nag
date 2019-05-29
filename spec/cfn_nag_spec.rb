@@ -108,7 +108,7 @@ describe CfnNag do
                   id: 'F16', type: Violation::FAILING_VIOLATION,
                   message: 'S3 Bucket policy should not allow * principal',
                   logical_resource_ids: %w[S3BucketPolicy2],
-                  line_numbers: [50]
+                  line_numbers: [59]
                 )
               ]
             }
