@@ -4,17 +4,19 @@ require_relative 'rule_definition'
 
 # Rule definition for violations
 class Violation < RuleDefinition
-  attr_reader :logical_resource_ids
+  attr_reader :logical_resource_ids, :line_numbers
 
   def initialize(id:,
                  type:,
                  message:,
-                 logical_resource_ids: nil)
+                 logical_resource_ids: nil,
+                 line_numbers: [])
     super id: id,
           type: type,
           message: message
 
     @logical_resource_ids = logical_resource_ids
+    @line_numbers = line_numbers
   end
 
   def to_s
@@ -23,7 +25,8 @@ class Violation < RuleDefinition
 
   def to_h
     super.to_h.merge(
-      logical_resource_ids: @logical_resource_ids
+      logical_resource_ids: @logical_resource_ids,
+      line_numbers: @line_numbers
     )
   end
 

@@ -8,7 +8,8 @@ class SimpleStdoutResults
     violations.each do |violation|
       message message_type: "#{violation.type} #{violation.id}",
               message: violation.message,
-              logical_resource_ids: violation.logical_resource_ids
+              logical_resource_ids: violation.logical_resource_ids,
+              line_numbers: violation.line_numbers
     end
   end
 
@@ -38,7 +39,8 @@ class SimpleStdoutResults
 
   def message(message_type:,
               message:,
-              logical_resource_ids: nil)
+              logical_resource_ids: nil,
+              line_numbers: [])
 
     logical_resource_ids = nil if logical_resource_ids == []
 
@@ -47,7 +49,8 @@ class SimpleStdoutResults
     puts "| #{message_type.upcase}"
     puts '|'
     puts "| Resources: #{logical_resource_ids}" unless logical_resource_ids.nil?
-    puts '|' unless logical_resource_ids.nil?
+    puts "| Line Numbers: #{line_numbers}" unless line_numbers.empty?
+    puts '|' unless line_numbers.empty? && logical_resource_ids.nil?
     puts "| #{message}"
   end
 

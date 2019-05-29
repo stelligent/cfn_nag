@@ -37,3 +37,6 @@ Naming/RescuedExceptionsVariableName:
 
 Gemspec/RequiredRubyVersion:
   Enabled: false
+
+Metrics/ClassLength:
+  Max: 115

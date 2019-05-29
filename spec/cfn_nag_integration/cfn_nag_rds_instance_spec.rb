@@ -21,7 +21,8 @@ describe CfnNag do
                             type: Violation::FAILING_VIOLATION,
                             message:
                             'RDS instance should not be publicly accessible',
-                            logical_resource_ids: %w[PublicDB])
+                            logical_resource_ids: %w[PublicDB],
+                            line_numbers: [4])
             ]
           }
         }
@@ -45,13 +46,15 @@ describe CfnNag do
               Violation.new(
                 id: 'F23', type: Violation::FAILING_VIOLATION,
                 message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
-                logical_resource_ids: %w[BadDb2]
+                logical_resource_ids: %w[BadDb2],
+                line_numbers: [11]
               ),
               Violation.new(id: 'F22',
                             type: Violation::FAILING_VIOLATION,
                             message:
                             'RDS instance should not be publicly accessible',
-                            logical_resource_ids: %w[BadDb2])
+                            logical_resource_ids: %w[BadDb2],
+                            line_numbers: [11])
             ]
           }
         }
@@ -76,12 +79,14 @@ describe CfnNag do
               Violation.new(
                 id: 'F23', type: Violation::FAILING_VIOLATION,
                 message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
-                logical_resource_ids: %w[BadDb1 BadDb2]
+                logical_resource_ids: %w[BadDb1 BadDb2],
+                line_numbers: [14, 28]
               ),
               Violation.new(
                 id: 'F24', type: Violation::FAILING_VIOLATION,
                 message: 'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended',
-                logical_resource_ids: %w[BadDb1 BadDb2]
+                logical_resource_ids: %w[BadDb1 BadDb2],
+                line_numbers: [14, 28]
               )
             ]
           }

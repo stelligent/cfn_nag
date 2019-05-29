@@ -23,7 +23,8 @@ describe CfnNag do
                 id: 'F18', type: Violation::FAILING_VIOLATION,
                 message: 'SNS topic policy should not allow * principal',
                 logical_resource_ids: %w[mysnspolicy0 mysnspolicy1
-                                         mysnspolicy2 mysnspolicy3]
+                                         mysnspolicy2 mysnspolicy3],
+                line_numbers: [10, 28, 53, 83]
               )
             ]
           }
