@@ -18,9 +18,7 @@ describe BaseRule do
         expect(base_rule).to receive(:audit_impl)
           .and_return([])
 
-        dontcare = double('cfn_model')
-
-        expect(base_rule.audit(dontcare)).to eq nil
+        expect(base_rule.audit(nil)).to eq nil
       end
     end
 
@@ -44,14 +42,12 @@ describe BaseRule do
         expect(base_rule).to receive(:audit_impl)
           .and_return(%w[r1 r2 r3])
 
-        dontcare = double('cfn_model')
-
         expected_violation = Violation.new(id: 'F3333',
                                            type: Violation::FAILING_VIOLATION,
                                            message: 'This is an epic fail!',
                                            logical_resource_ids: %w[r1 r2 r3])
 
-        expect(base_rule.audit(dontcare)).to eq expected_violation
+        expect(base_rule.audit(nil)).to eq expected_violation
       end
     end
   end

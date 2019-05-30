@@ -28,6 +28,8 @@ class CustomRuleLoader
     rule_registry = RuleRegistry.new
 
     discover_rule_classes(@rule_directory).each do |rule_class|
+      next if rule_class.singleton_class?
+
       rule_registry
         .definition(**rule_registry_from_rule_class(rule_class))
     end
@@ -193,12 +195,17 @@ class CustomRuleLoader
 
     rule_filenames.each do |rule_filename|
       require(rule_filename)
-      rule_classname = File.basename(rule_filename, '.rb')
-
-      rule_classes << Object.const_get(rule_classname)
     end
-    Logging.logger['log'].debug "rule_classes: #{rule_classes}"
 
+    ObjectSpace.each_object do |object|
+      if object.respond_to?(:superclass) && (object.superclass == BaseRule ||
+                                             object.superclass == CfnNag::BaseRule)
+        rule_classes << object
+      end
+    end
+
+    rule_classes.sort! { |a, b| a.to_s <=> b.to_s }
+    Logging.logger['log'].debug "rule_classes: #{rule_classes}"
     rule_classes
   end
 

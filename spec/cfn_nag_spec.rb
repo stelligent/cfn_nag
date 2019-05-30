@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'cfn-nag/cfn_nag'
 require 'cfn-nag/cfn_nag_logging'
 require 'cfn-nag/profile_loader'
+require 'cfn-nag/base_rule'
 
 describe CfnNag do
   before(:each) do
