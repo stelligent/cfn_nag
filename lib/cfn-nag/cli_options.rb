@@ -78,6 +78,10 @@ class Options
           type: :boolean,
           required: false,
           default: false
+      opt :output_format,
+          'Format of results: [txt, json]',
+          type: :string,
+          default: 'txt'
     end
   end
 
