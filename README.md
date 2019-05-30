@@ -50,7 +50,7 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
 A Dockerfile is provided for convenience. It is published on DockerHub as `stelligent/cfn_nag`.
 
-https://cloud.docker.com/u/stelligent/repository/docker/stelligent/cfn_nag
+https://hub.docker.com/r/stelligent/cfn_nag
 
 You can also build it locally.
 
