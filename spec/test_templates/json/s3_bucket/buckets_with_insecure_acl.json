@@ -4,7 +4,10 @@
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
         "BucketName" : "fakebucketfakebucket",
-        "AccessControl": "PublicRead"
+        "AccessControl": "PublicRead",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     },
 
@@ -12,7 +15,10 @@
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
         "BucketName" : "fakebucketfakebucket2",
-        "AccessControl": "PublicReadWrite"
+        "AccessControl": "PublicReadWrite",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
       }
     }
   }

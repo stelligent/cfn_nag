@@ -13,7 +13,7 @@ class EFSFileSystemEncryptedRule < BaseRule
   end
 
   def rule_id
-    'F27'
+    'F32'
   end
 
   def audit_impl(cfn_model)

@@ -48,7 +48,11 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
 ## Docker Container
 
-A Dockerfile is provided for convenience.
+A Dockerfile is provided for convenience. It is published on DockerHub as `stelligent/cfn_nag`.
+
+https://hub.docker.com/r/stelligent/cfn_nag
+
+You can also build it locally.
 
 ```
 docker build -t cfn_nag .
@@ -80,7 +84,43 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/
 }
 ```
 
-## Rule Suppression
+## Results Filtering
+### Profiles
+cfn-nag supports the notion of a "profile" which is effectively a whitelist of rules to apply.  The profile is a text file
+that that must contain a rule identifier per line.  When specified via the `--profile-path` command line argument,
+cfn-nag will ONLY return violations from those particular rules.
+
+The reasoning behind a "profile" is that different developer might care about different rules.  For example, an
+"infrastructure_developer" might care about IAM rules, while an "app_developer" might not even be able to create
+IAM resources and therefore not care about those rules.
+
+Here is an example profile:
+```
+F1
+F2
+F27
+W3
+W5
+```
+
+### Global Blacklist
+The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the
+`--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
+in the file.
+
+The blacklist will trump the profile in case a rule is specified in both.
+
+The format follows.  The only two salient fields are `RulesToSuppres` and the `id` per item.  The `reason` won't
+be interpreted by cfn-nag, but it is recommended to justify why the rule should never be applied.
+
+```yaml
+---
+RulesToSuppress:
+- id: W3
+  reason: W3 is something we never care about at enterprise X
+```
+
+### Per-Resource Rule Suppression
 
 In the event that there is a rule that you want to suppress, a `cfn_nag` `Metadata` key can be added to the affected resource to tell cfn_nag to not raise a failure or warning for that rule.
 
@@ -203,7 +243,7 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 # Development
 
 ## New Rules
-To author new rules for your own use and/or community contribution, see [custom_rule_development.md](Custom Rule Development) for details.
+To author new rules for your own use and/or community contribution, see [Custom Rule Development](custom_rule_development.md) for details.
 
 A screencast demonstrating soup to nuts TDD custom rule development is available here:
 

@@ -74,10 +74,12 @@ class CfnNag
 
     begin
       cfn_model = CfnParser.new.parse cloudformation_string,
-                                      parameter_values_string
+                                      parameter_values_string,
+                                      true
       violations += @config.custom_rule_loader.execute_custom_rules(cfn_model)
 
       violations = filter_violations_by_blacklist_and_profile(violations)
+      violations = mark_line_numbers(violations, cfn_model)
     rescue Psych::SyntaxError, ParserError => parser_error
       violations << fatal_violation(parser_error.to_s)
     rescue JSON::ParserError => json_parameters_error
@@ -89,6 +91,16 @@ class CfnNag
   end
 
   private
+
+  def mark_line_numbers(violations, cfn_model)
+    violations.each do |violation|
+      violation.logical_resource_ids.each do |logical_resource_id|
+        violation.line_numbers << cfn_model.line_numbers[logical_resource_id]
+      end
+    end
+
+    violations
+  end
 
   def filter_violations_by_blacklist_and_profile(violations)
     violations = filter_violations_by_profile(

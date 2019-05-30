@@ -22,7 +22,8 @@ describe CfnNag do
               Violation.new(id: 'F2000',
                             type: Violation::FAILING_VIOLATION,
                             message: 'User is not assigned to a group',
-                            logical_resource_ids: %w[myuser2])
+                            logical_resource_ids: %w[myuser2],
+                            line_numbers: [4])
             ]
           }
         }

@@ -16,7 +16,6 @@ Resources:
       ToPort: 46
       IpProtocol: tcp
 
-
   sgOpenIngress2:
     Type: AWS::EC2::SecurityGroup
     Properties:

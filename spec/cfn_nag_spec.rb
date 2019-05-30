@@ -13,25 +13,43 @@ describe CfnNag do
   describe '#audit_aggregate_across_files_and_render_results' do
     context 'json output' do
       it 'renders json results' do
-        @cfn_nag.audit_aggregate_across_files_and_render_results(
-          input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
-          output_format: 'json'
-        )
-        # measuring stdout assertion here is going to be a pain and maybe
-        # fragile as rules are added just make sure the rendering doesn't
-        # blow i guess
+        expect {
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
+            output_format: 'json'
+          )
+        }.to output(/"type": "FAIL"/).to_stdout
       end
     end
 
     context 'txt output' do
-      it 'renders json results' do
-        @cfn_nag.audit_aggregate_across_files_and_render_results(
-          input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
-          output_format: 'txt'
-        )
-        # measuring stdout assertion here is going to be a pain and maybe
-        # fragile as rules are added just make sure the rendering doesn't
-        # blow i guess
+      it 'renders text results' do
+        expect {
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
+            output_format: 'txt'
+          )
+        }.to output(/\| FAIL F15/).to_stdout
+      end
+
+      # \e[0;31;49m is the ANSI escape sequence for red
+      it 'colorizes failures as red' do
+        expect {
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
+            output_format: 'txt'
+          )
+        }.to output(/\[0;31;49m/).to_stdout
+      end
+
+      # \e[0;33;49m is the ANSI escape sequence for yellow
+      it 'colorizes warnings as yellow' do
+        expect {
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
+            output_format: 'txt'
+          )
+        }.to output(/\[0;33;49m/).to_stdout
       end
     end
   end
@@ -108,7 +126,8 @@ describe CfnNag do
                 Violation.new(
                   id: 'F16', type: Violation::FAILING_VIOLATION,
                   message: 'S3 Bucket policy should not allow * principal',
-                  logical_resource_ids: %w[S3BucketPolicy2]
+                  logical_resource_ids: %w[S3BucketPolicy2],
+                  line_numbers: [59]
                 )
               ]
             }
@@ -148,17 +167,20 @@ describe CfnNag do
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
                 message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress]
+                logical_resource_ids: %w[sgOpenIngress],
+                line_numbers: [4]
               )
             ]
           }
@@ -197,17 +219,20 @@ EXPECTEDSTDERR
               Violation.new(
                 id: 'W9', type: Violation::WARNING,
                 message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [ 4, 20]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [4, 20]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2]
+                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
+                line_numbers: [4, 20]
               )
             ]
           }

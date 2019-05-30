@@ -21,15 +21,18 @@ describe CfnNag do
               Violation.new(id: 'F3',
                             type: Violation::FAILING_VIOLATION,
                             message: 'IAM role should not allow * action on its permissions policy',
-                            logical_resource_ids: %w[LambdaExecutionRole]),
+                            logical_resource_ids: %w[LambdaExecutionRole],
+                            line_numbers: [49]),
               Violation.new(id: 'W11',
                             type: Violation::WARNING,
                             message: 'IAM role should not allow * resource on its permissions policy',
-                            logical_resource_ids: %w[LambdaExecutionRole]),
+                            logical_resource_ids: %w[LambdaExecutionRole],
+                            line_numbers: [49]),
               Violation.new(id: 'F13',
                             type: Violation::FAILING_VIOLATION,
                             message: 'Lambda permission principal should not be wildcard',
-                            logical_resource_ids: %w[lambdaPermission])
+                            logical_resource_ids: %w[lambdaPermission],
+                            line_numbers: [23])
             ]
           }
         }

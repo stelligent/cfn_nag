@@ -22,7 +22,8 @@ describe CfnNag do
                 id: 'F1', type: Violation::FAILING_VIOLATION,
                 message:
                 'EBS volume should have server-side encryption enabled',
-                logical_resource_ids: %w[NewVolume1 NewVolume2]
+                logical_resource_ids: %w[NewVolume1 NewVolume2],
+                line_numbers: [4, 13]
               )
             ]
           }

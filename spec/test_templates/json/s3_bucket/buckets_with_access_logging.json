@@ -1,0 +1,14 @@
+{
+  "Resources": {
+    "S3BucketNoAccessLogging" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket",
+        "AccessControl": "bucketOwnerRead",
+        "LoggingConfiguration": {
+          "DestinationBucketName": "moocow"
+        }
+      }
+    }
+  }
+}

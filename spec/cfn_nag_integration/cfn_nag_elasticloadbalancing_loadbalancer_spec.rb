@@ -22,7 +22,8 @@ describe CfnNag do
                 id: 'W26', type: Violation::WARNING,
                 message:
                 'Elastic Load Balancer should have access logging enabled',
-                logical_resource_ids: %w[elb1 elb2]
+                logical_resource_ids: %w[elb1 elb2],
+                line_numbers: [4, 19]
               )
             ]
           }

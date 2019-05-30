@@ -23,7 +23,8 @@ describe CfnNag do
                 id: 'W18', type: Violation::WARNING,
                 message: 'SQS Queue policy should not allow Allow+NotAction',
                 logical_resource_ids: %w[QueuePolicyWithNotAction
-                                         QueuePolicyWithNotAction2]
+                                         QueuePolicyWithNotAction2],
+                line_numbers: [18, 35]
               )
             ]
           }
