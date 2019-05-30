@@ -48,7 +48,11 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
 ## Docker Container
 
-A Dockerfile is provided for convenience.
+A Dockerfile is provided for convenience. It is published on DockerHub as `stelligent/cfn_nag`.
+
+https://cloud.docker.com/u/stelligent/repository/docker/stelligent/cfn_nag
+
+You can also build it locally.
 
 ```
 docker build -t cfn_nag .
@@ -95,12 +99,12 @@ Here is an example profile:
 F1
 F2
 F27
-W3 
+W3
 W5
 ```
 
 ### Global Blacklist
-The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the 
+The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the
 `--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
 in the file.
 
