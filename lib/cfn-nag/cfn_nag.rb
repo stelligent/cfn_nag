@@ -25,6 +25,7 @@ class CfnNag
                                                       output_format: 'txt',
                                                       parameter_values_path: nil,
                                                       template_pattern: '..*\.json|..*\.yaml|..*\.yml|..*\.template')
+
     aggregate_results = audit_aggregate_across_files input_path: input_path,
                                                      parameter_values_path: parameter_values_path,
                                                      template_pattern: template_pattern
@@ -90,6 +91,11 @@ class CfnNag
     audit_result(violations)
   end
 
+  def render_results(aggregate_results:,
+                     output_format:)
+    results_renderer(output_format).new.render(aggregate_results)
+  end
+
   private
 
   def mark_line_numbers(violations, cfn_model)
@@ -132,11 +138,6 @@ class CfnNag
     Violation.new(id: 'FATAL',
                   type: Violation::FAILING_VIOLATION,
                   message: message)
-  end
-
-  def render_results(aggregate_results:,
-                     output_format:)
-    results_renderer(output_format).new.render(aggregate_results)
   end
 
   def results_renderer(output_format)
