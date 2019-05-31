@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'cfn-nag/cfn_nag_config'
 require 'cfn-nag/cfn_nag'
 require 'cfn-nag/cfn_nag_logging'
 require 'cfn-nag/profile_loader'
@@ -6,7 +7,7 @@ require 'cfn-nag/profile_loader'
 describe CfnNag do
   before(:each) do
     CfnNagLogging.configure_logging(debug: false)
-    @cfn_nag = CfnNag.new
+    @cfn_nag = CfnNag.new(config: CfnNagConfig.new)
   end
 
   describe '#audit_aggregate_across_files_and_render_results' do
@@ -141,7 +142,7 @@ describe CfnNag do
                                    message: "fakeo#{num}")
         end
 
-        @cfn_nag = CfnNag.new(profile_definition: "F16\n")
+        @cfn_nag = CfnNag.new(config: CfnNagConfig.new(profile_definition: "F16\n"))
 
         actual_aggregate_results =
           @cfn_nag.audit_aggregate_across_files(
@@ -155,7 +156,7 @@ describe CfnNag do
   context 'when template has suppression metadata' do
     it 'ignores rules on suppressed resources' do
       template_name = 'yaml/security_group/sg_with_suppression.yml'
-      @cfn_nag = CfnNag.new print_suppression: true
+      @cfn_nag = CfnNag.new(config: CfnNagConfig.new(print_suppression: true))
 
       expected_aggregate_results = [
         {
@@ -205,7 +206,7 @@ EXPECTEDSTDERR
 
   context 'when template has suppression metadata and suppression is disallowed' do
     it 'ignores rules on suppressed resources' do
-      @cfn_nag = CfnNag.new(allow_suppression: false)
+      @cfn_nag = CfnNag.new(config: CfnNagConfig.new(allow_suppression: false))
 
       template_name = 'yaml/security_group/sg_with_suppression.yml'
 

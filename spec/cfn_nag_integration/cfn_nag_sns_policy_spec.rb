@@ -1,10 +1,11 @@
 require 'spec_helper'
+require 'cfn-nag/cfn_nag_config'
 require 'cfn-nag/cfn_nag'
 
 describe CfnNag do
   before(:all) do
     CfnNagLogging.configure_logging(debug: false)
-    @cfn_nag = CfnNag.new
+    @cfn_nag = CfnNag.new(config: CfnNagConfig.new)
   end
 
   context 'sns with wildcard principal', :sns do

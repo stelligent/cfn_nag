@@ -12,24 +12,9 @@ require 'cfn-model'
 class CfnNag
   include ViolationFiltering
 
-  # rubocop:disable Metrics/ParameterLists
-  def initialize(profile_definition: nil,
-                 blacklist_definition: nil,
-                 rule_directory: nil,
-                 allow_suppression: true,
-                 print_suppression: false,
-                 isolate_custom_rule_exceptions: false)
-    @rule_directory = rule_directory
-    @custom_rule_loader = CustomRuleLoader.new(
-      rule_directory: rule_directory,
-      allow_suppression: allow_suppression,
-      print_suppression: print_suppression,
-      isolate_custom_rule_exceptions: isolate_custom_rule_exceptions
-    )
-    @profile_definition = profile_definition
-    @blacklist_definition = blacklist_definition
+  def initialize(config:)
+    @config = config
   end
-  # rubocop:enable Metrics/ParameterLists
 
   ##
   # Given a file or directory path, emit aggregate results to stdout
@@ -48,7 +33,11 @@ class CfnNag
                    output_format: output_format)
 
     aggregate_results.inject(0) do |total_failure_count, results|
-      total_failure_count + results[:file_results][:failure_count]
+      if @config.fail_on_warnings
+        total_failure_count + results[:file_results][:violations].length
+      else
+        total_failure_count + results[:file_results][:failure_count]
+      end
     end
   end
 
@@ -87,7 +76,7 @@ class CfnNag
       cfn_model = CfnParser.new.parse cloudformation_string,
                                       parameter_values_string,
                                       true
-      violations += @custom_rule_loader.execute_custom_rules(cfn_model)
+      violations += @config.custom_rule_loader.execute_custom_rules(cfn_model)
 
       violations = filter_violations_by_blacklist_and_profile(violations)
       violations = mark_line_numbers(violations, cfn_model)
@@ -115,15 +104,15 @@ class CfnNag
 
   def filter_violations_by_blacklist_and_profile(violations)
     violations = filter_violations_by_profile(
-      profile_definition: @profile_definition,
-      rule_definitions: @custom_rule_loader.rule_definitions,
+      profile_definition: @config.profile_definition,
+      rule_definitions: @config.custom_rule_loader.rule_definitions,
       violations: violations
     )
 
     # this must come after - blacklist should always win
     violations = filter_violations_by_blacklist(
-      blacklist_definition: @blacklist_definition,
-      rule_definitions: @custom_rule_loader.rule_definitions,
+      blacklist_definition: @config.blacklist_definition,
+      rule_definitions: @config.custom_rule_loader.rule_definitions,
       violations: violations
     )
     violations
