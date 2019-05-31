@@ -18,7 +18,7 @@ class KMSKeyRotationRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_keys = cfn_model.resources_by_type('AWS::KMS::Key')
-                                 .select do |key|
+                              .select do |key|
       key_rotation_false_or_absent?(key)
     end
 
