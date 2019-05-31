@@ -28,6 +28,6 @@ class KMSKeyRotationRule < BaseRule
   private
 
   def key_rotation_false_or_absent?(resource)
-    resource.enableKeyRotation.! || resource.enableKeyRotation.nil?
+    !truthy?(resource.enableKeyRotation)
   end
 end
