@@ -20,6 +20,7 @@ class CustomRuleLoader
     @allow_suppression = allow_suppression
     @print_suppression = print_suppression
     @isolate_custom_rule_exceptions = isolate_custom_rule_exceptions
+    @rule_classes = []
     validate_extra_rule_directory rule_directory
   end
 
@@ -189,7 +190,7 @@ class CustomRuleLoader
   end
 
   def discover_rule_classes(rule_directory)
-    rule_classes = []
+    return @rule_classes unless @rule_classes.empty?
 
     rule_filenames = discover_rule_filenames(rule_directory)
 
@@ -200,13 +201,15 @@ class CustomRuleLoader
     ObjectSpace.each_object do |object|
       if object.respond_to?(:superclass) && (object.superclass == BaseRule ||
                                              object.superclass == CfnNag::BaseRule)
-        rule_classes << object
+        @rule_classes << object
       end
     end
 
-    rule_classes.sort! { |a, b| a.to_s <=> b.to_s }
-    Logging.logger['log'].debug "rule_classes: #{rule_classes}"
-    rule_classes
+    @rule_classes.sort! { |a, b| a.to_s <=> b.to_s }
+    @rule_classes.uniq!
+      Logging.logger['log'].debug "rule_classes: #{@rule_classes}"
+
+    @rule_classes
   end
 
   def discover_jmespath_filenames(rule_directory)
