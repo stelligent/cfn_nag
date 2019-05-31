@@ -1,5 +1,5 @@
 {
-  Resources: {
+  "Resources": {
     "myKeyRotationExplicitlyFalse" : {
       "Type" : "AWS::KMS::Key",
       "Properties" : {
