@@ -24,14 +24,14 @@ describe CfnNagExecutor do
 
       cli_options = @default_cli_options.clone
       cli_options[:fail_on_warnings] = true
-      expect(Options).to receive(:cli_options).and_return(cli_options)
+      expect(Options).to receive(:file_options).and_return(cli_options)
 
       cfn_nag_executor = CfnNagExecutor.new
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
 
-      result = cfn_nag_executor.scan(options_type: 'cli')
+      result = cfn_nag_executor.scan(options_type: 'file')
       expect(result).to eq 1
     end
   end
@@ -43,14 +43,14 @@ describe CfnNagExecutor do
 
       cli_options = @default_cli_options.clone
       cli_options[:fail_on_warnings] = true
-      expect(Options).to receive(:cli_options).and_return(cli_options)
+      expect(Options).to receive(:file_options).and_return(cli_options)
 
       cfn_nag_executor = CfnNagExecutor.new
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file1), IO.read(test_file2))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil, nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, false, true)
 
-      result = cfn_nag_executor.scan(options_type: 'cli')
+      result = cfn_nag_executor.scan(options_type: 'file')
       expect(result).to eq 2
     end
   end
@@ -59,14 +59,14 @@ describe CfnNagExecutor do
     it 'returns a successful zero exit code' do
       test_file = 'spec/test_templates/yaml/ec2_subnet/ec2_subnet_map_public_ip_on_launch_true_boolean.yml'
 
-      expect(Options).to receive(:cli_options).and_return(@default_cli_options)
+      expect(Options).to receive(:file_options).and_return(@default_cli_options)
 
       cfn_nag_executor = CfnNagExecutor.new
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
 
-      result = cfn_nag_executor.scan(options_type: 'cli')
+      result = cfn_nag_executor.scan(options_type: 'file')
 
       expect(result).to eq 0
     end

@@ -12,18 +12,18 @@ class Options
 
   def self.for(type)
     case type
-    when 'cli'
-      cli_options
+    when 'file'
+      file_options
     when 'scan'
       scan_options
     else
-      raise "Unsupported Options type #{type}; use 'cli' or 'scan'"
+      raise "Unsupported Options type #{type}; use 'file' or 'scan'"
     end
   end
 
   # rubocop:disable Metrics/BlockLength
   # rubocop:disable Metrics/MethodLength
-  def self.cli_options
+  def self.file_options
     options_message = '[options] <cloudformation template path ...>|' \
                         '<cloudformation template in STDIN>'
     custom_rule_exceptions_message = @custom_rule_exceptions_message

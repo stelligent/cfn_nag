@@ -22,12 +22,12 @@ class CfnNagExecutor
       config: cfn_nag_config(options)
     )
 
-    options_type == 'scan' ? execute_aggregate_scan(cfn_nag, options) : execute_single_scan(cfn_nag, options)
+    options_type == 'scan' ? execute_aggregate_scan(cfn_nag, options) : execute_file_or_piped_scan(cfn_nag, options)
   end
 
   private
 
-  def execute_single_scan(cfn_nag, opts)
+  def execute_file_or_piped_scan(cfn_nag, opts)
     total_failure_count = 0
     until argf_finished?
       results = cfn_nag.audit(cloudformation_string: argf_read,

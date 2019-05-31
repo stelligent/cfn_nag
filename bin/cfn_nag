@@ -8,4 +8,4 @@ require 'rubygems/specification'
 
 exec = CfnNagExecutor.new
 
-exit exec.scan(options_type: 'cli')
+exit exec.scan(options_type: 'file')
