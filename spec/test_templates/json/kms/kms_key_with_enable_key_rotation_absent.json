@@ -1,0 +1,43 @@
+{
+  "Resources": {
+    "myKeyRotationAbsent" : {
+      "Type" : "AWS::KMS::Key",
+      "Properties" : {
+        "Description" : "An example CMK",
+        "KeyPolicy" : {
+          "Version": "2012-10-17",
+          "Id": "key-default-1",
+          "Statement": [
+            {
+              "Sid": "Enable IAM User Permissions",
+              "Effect": "Allow",
+              "Principal": {"AWS": "arn:aws:iam::111122223333:root"},
+              "Action": "kms:*",
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow administration of the key",
+              "Effect": "Allow",
+              "Principal": { "AWS": "arn:aws:iam::123456789012:user/Alice" },
+              "Action": [
+                "kms:Create*",
+                "kms:CancelKeyDeletion"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow use of the key",
+              "Effect": "Allow",
+              "Principal": { "AWS": "arn:aws:iam::123456789012:user/Bob" },
+              "Action": [
+                "kms:GenerateDataKey",
+                "kms:GenerateDataKeyWithoutPlaintext"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
