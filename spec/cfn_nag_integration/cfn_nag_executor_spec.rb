@@ -30,6 +30,7 @@ describe CfnNagExecutor do
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+      expect(cfn_nag_executor).to receive(:argf_filename).and_return(test_file)
 
       result = cfn_nag_executor.scan(options_type: 'file')
       expect(result).to eq 1
@@ -49,6 +50,7 @@ describe CfnNagExecutor do
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file1), IO.read(test_file2))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil, nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, false, true)
+      expect(cfn_nag_executor).to receive(:argf_filename).and_return(test_file1, test_file2)
 
       result = cfn_nag_executor.scan(options_type: 'file')
       expect(result).to eq 2
@@ -65,6 +67,7 @@ describe CfnNagExecutor do
       expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file))
       expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
       expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+      expect(cfn_nag_executor).to receive(:argf_filename).and_return(test_file)
 
       result = cfn_nag_executor.scan(options_type: 'file')
 

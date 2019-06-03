@@ -6,7 +6,7 @@ describe 'cfn_nag template file input', end_to_end: true do
       test_template = 'spec/test_templates/e2e/ElastiCache.template'
 
       expect { system %( cfn_nag #{test_template} ) }
-        .to output(a_string_including('"failure_count": 1'))
+        .to output(a_string_including('Failures count: 1'))
         .to_stdout_from_any_process
     end
   end

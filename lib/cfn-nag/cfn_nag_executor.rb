@@ -12,6 +12,8 @@ class CfnNagExecutor
   end
 
   def scan(options_type:)
+    @total_failure_count = 0
+
     options = Options.for(options_type)
     validate_options(options)
     execute_io_options(options)
@@ -28,22 +30,17 @@ class CfnNagExecutor
   private
 
   def execute_file_or_piped_scan(cfn_nag, opts)
-    total_failure_count = 0
+    aggregate_results = []
+
     until argf_finished?
-      results = cfn_nag.audit(cloudformation_string: argf_read,
-                              parameter_values_string: @parameter_values_string)
+      aggregate_results << scan_file(cfn_nag, opts[:fail_on_warnings])
       argf_close
-
-      total_failure_count += if opts[:fail_on_warnings]
-                               results[:violations].length
-                             else
-                               results[:failure_count]
-                             end
-
-      results[:violations] = results[:violations].map(&:to_h)
-      puts JSON.pretty_generate(results)
     end
-    total_failure_count
+
+    cfn_nag.render_results(aggregate_results: aggregate_results,
+                           output_format: opts[:output_format])
+
+    @total_failure_count
   end
 
   def execute_aggregate_scan(cfn_nag, opts)
@@ -53,6 +50,22 @@ class CfnNagExecutor
       parameter_values_path: opts[:parameter_values_path],
       template_pattern: opts[:template_pattern]
     )
+  end
+
+  def scan_file(cfn_nag, fail_on_warnings)
+    audit_result = cfn_nag.audit(cloudformation_string: argf_read,
+                                 parameter_values_string: @parameter_values_string)
+
+    @total_failure_count += if fail_on_warnings
+                              audit_result[:violations].length
+                            else
+                              audit_result[:failure_count]
+                            end
+
+    {
+      filename: argf_filename,
+      file_results: audit_result
+    }
   end
 
   def validate_options(opts)
@@ -98,5 +111,9 @@ class CfnNagExecutor
 
   def argf_read
     ARGF.file.read
+  end
+
+  def argf_filename
+    ARGF.filename
   end
 end
