@@ -63,7 +63,7 @@ class CfnNagExecutor
                             end
 
     {
-      filename: ARGF.filename,
+      filename: argf_filename,
       file_results: audit_result
     }
   end
@@ -111,5 +111,9 @@ class CfnNagExecutor
 
   def argf_read
     ARGF.file.read
+  end
+
+  def argf_filename
+    ARGF.filename
   end
 end
