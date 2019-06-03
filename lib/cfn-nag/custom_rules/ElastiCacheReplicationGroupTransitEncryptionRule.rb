@@ -13,7 +13,7 @@ class ElastiCacheReplicationGroupTransitEncryptionRule < BaseRule
   end
 
   def rule_id
-    'F24'
+    'F33'
   end
 
   def audit_impl(cfn_model)
