@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('rubocop')
   s.add_development_dependency('simplecov', '~> 0.11')
 
-  s.add_runtime_dependency('cfn-nag-rules-core')
+  s.add_runtime_dependency('cfn-nag-rules-core', '>= 0.0.1')
   # don't relax this, i don't want different versions of cfn-model being installed after the fact
   # versus what we used to run tests in cfn-nag before publishing cfn-nag
   # they are coupled and we are doing a good bit of experimenting in cfn-model
