@@ -40,7 +40,7 @@ describe 'cfn_nag_rules', end_to_end: true do
       end
 CONTENT
       File.open(@duplicate_rule, 'w') {|f| f.write(duplicate_rule_content) }
-      @stdout,@stderr,@status = Open3.capture3("cfn_nag_rules")
+      @stdout,@stderr,@status = Open3.capture3("bundle exec ./bin/cfn_nag_rules")
     end
 
     after(:all) do
