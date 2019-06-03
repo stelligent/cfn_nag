@@ -189,6 +189,7 @@ class CustomRuleLoader
     rule_filenames
   end
 
+  # rubocop:disable Metrics/AbcSize
   def discover_rule_classes(rule_directory)
     return @rule_classes unless @rule_classes.empty?
 
@@ -207,10 +208,11 @@ class CustomRuleLoader
 
     @rule_classes.sort! { |a, b| a.to_s <=> b.to_s }
     @rule_classes.uniq!
-      Logging.logger['log'].debug "rule_classes: #{@rule_classes}"
+    Logging.logger['log'].debug "rule_classes: #{@rule_classes}"
 
     @rule_classes
   end
+  # rubocop:enable Metrics/AbcSize
 
   def discover_jmespath_filenames(rule_directory)
     rule_filenames = []
