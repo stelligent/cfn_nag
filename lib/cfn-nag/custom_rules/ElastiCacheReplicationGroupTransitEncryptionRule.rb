@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class ElastiCacheReplicationGroupTransitEncryptionRule < BaseRule
+class ElastiCacheReplicationGroupTransitEncryptionRule < BooleanBaseRule
   def rule_text
     'ElastiCache ReplicationGroup should have encryption enabled for in transit'
   end
@@ -16,14 +16,11 @@ class ElastiCacheReplicationGroupTransitEncryptionRule < BaseRule
     'F24'
   end
 
-  def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::ElastiCache::ReplicationGroup')
+  def resource_type
+    'AWS::ElastiCache::ReplicationGroup'
+  end
 
-    violating_groups = resources.select do |group|
-      group.transitEncryptionEnabled.nil? ||
-        group.transitEncryptionEnabled.to_s.casecmp('false').zero?
-    end
-
-    violating_groups.map(&:logical_resource_id)
+  def boolean_property
+    :transitEncryptionEnabled
   end
 end
