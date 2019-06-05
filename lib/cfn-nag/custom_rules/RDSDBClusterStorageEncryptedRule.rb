@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class RDSDBClusterStorageEncryptedRule < BaseRule
+class RDSDBClusterStorageEncryptedRule < BooleanBaseRule
   def rule_text
     'RDS DBCluster should have StorageEncrypted enabled'
   end
@@ -16,14 +16,11 @@ class RDSDBClusterStorageEncryptedRule < BaseRule
     'F26'
   end
 
-  def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::RDS::DBCluster')
+  def resource_type
+    'AWS::RDS::DBCluster'
+  end
 
-    violating_clusters = resources.select do |cluster|
-      cluster.storageEncrypted.nil? ||
-        cluster.storageEncrypted.to_s.casecmp('false').zero?
-    end
-
-    violating_clusters.map(&:logical_resource_id)
+  def boolean_property
+    :storageEncrypted
   end
 end

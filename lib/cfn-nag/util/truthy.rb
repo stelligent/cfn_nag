@@ -5,3 +5,7 @@
 def truthy?(string)
   string.to_s.casecmp('true').zero?
 end
+
+def not_truthy?(string)
+  string.nil? || string.to_s.casecmp('false').zero?
+end

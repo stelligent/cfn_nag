@@ -20,11 +20,7 @@ class RDSDBInstanceStorageEncryptedRule < BaseRule
     resources = cfn_model.resources_by_type('AWS::RDS::DBInstance')
 
     violating_instances = resources.select do |instance|
-      instance.dBClusterIdentifier.nil? &&
-        (
-          instance.storageEncrypted.nil? ||
-          instance.storageEncrypted.to_s.casecmp('false').zero?
-        )
+      instance.dBClusterIdentifier.nil? && not_truthy?(instance.storageEncrypted)
     end
 
     violating_instances.map(&:logical_resource_id)

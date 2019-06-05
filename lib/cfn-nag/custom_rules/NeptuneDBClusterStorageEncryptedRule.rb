@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class NeptuneDBClusterStorageEncryptedRule < BaseRule
+class NeptuneDBClusterStorageEncryptedRule < BooleanBaseRule
   def rule_text
     'Neptune database cluster storage should have encryption enabled'
   end
@@ -16,14 +16,11 @@ class NeptuneDBClusterStorageEncryptedRule < BaseRule
     'F30'
   end
 
-  def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::Neptune::DBCluster')
+  def resource_type
+    'AWS::Neptune::DBCluster'
+  end
 
-    violating_storage = resources.select do |filesystem|
-      filesystem.storageEncrypted.nil? ||
-        filesystem.storageEncrypted.to_s.casecmp('false').zero?
-    end
-
-    violating_storage.map(&:logical_resource_id)
+  def boolean_property
+    :storageEncrypted
   end
 end
