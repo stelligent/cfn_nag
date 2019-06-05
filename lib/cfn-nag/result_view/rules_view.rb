@@ -8,9 +8,23 @@ class RulesView
     puts
     puts 'FAILING VIOLATIONS:'
     emit_failings rule_registry.failings, profile
+
+    if rule_registry.duplicate_ids?
+      emit_duplicates(rule_registry.duplicate_ids)
+      exit 1
+    end
   end
 
   private
+
+  def emit_duplicates(duplicates)
+    duplicates.each do |info|
+      puts '------------------'.red
+      puts "Rule ID conflict detected for #{info[:id]}.".red
+      puts "New rule: #{info[:new_message]}".red
+      puts "Registered rule: #{info[:registered_message]}".red
+    end
+  end
 
   def emit_warnings(warnings, profile)
     warnings.sort { |left, right| sort_id(left, right) }.each do |warning|

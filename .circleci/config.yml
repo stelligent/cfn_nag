@@ -17,6 +17,9 @@ jobs:
       - run:
           name: Rspec tests
           command: bundle exec rspec --color --require spec_helper spec
+      - run:
+          name: Duplicate rule check
+          command: bundle exec ./bin/cfn_nag_rules
   end_to_end_test:
     docker:
       - image: circleci/ruby:2.5.5-browsers

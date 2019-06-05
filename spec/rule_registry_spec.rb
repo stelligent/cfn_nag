@@ -17,13 +17,22 @@ describe RuleRegistry do
         ]
 
         expect(rule_registry.rules).to eq expected_rules
+        expect(rule_registry.duplicate_ids?).to be false
 
         # add a dupe
         rule_registry.definition(id: 'F444',
                                  type: RuleDefinition::WARNING,
-                                 message: 'you have been warned!!')
+                                 message: 'you have been warned!! dupe')
+
+        expected_duplicate = {
+          id: 'F444',
+          new_message: 'you have been warned!! dupe',
+          registered_message: 'you have been warned!!'
+        }
 
         expect(rule_registry.rules).to eq expected_rules
+        expect(rule_registry.duplicate_ids?).to be true
+        expect(rule_registry.duplicate_ids.first).to eq expected_duplicate
       end
     end
   end

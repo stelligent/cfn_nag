@@ -13,7 +13,7 @@ class ElastiCacheReplicationGroupTransitEncryptionRule < BooleanBaseRule
   end
 
   def rule_id
-    'F24'
+    'F33'
   end
 
   def resource_type
