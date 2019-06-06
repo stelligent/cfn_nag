@@ -101,7 +101,7 @@ class Options
       version version
       opt :input_path,
           input_path_message,
-          type: :io,
+          type: :string,
           required: true
       opt :output_format,
           'Format of results: [txt, json]',
