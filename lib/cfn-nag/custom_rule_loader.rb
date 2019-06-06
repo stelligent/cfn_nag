@@ -182,6 +182,8 @@ class CustomRuleLoader
       rule_filenames += Dir[File.join(rule_directory, '*Rule.rb')].sort
     end
     rule_filenames += Dir[File.join(__dir__, 'custom_rules', '*Rule.rb')].sort
+    # Windows fix when running ruby from Command Prompt and not bash
+    rule_filenames.reject! { |filename| filename =~ /_rule.rb$/ }
     Logging.logger['log'].debug "rule_filenames: #{rule_filenames}"
     rule_filenames
   end
@@ -197,8 +199,6 @@ class CustomRuleLoader
 
       rule_classes << Object.const_get(rule_classname)
     end
-    # Windows fix when running ruby from Command Prompt and not bash
-    rule_filenames.reject! { |filename| filename =~ /_rule.rb$/ }
     Logging.logger['log'].debug "rule_classes: #{rule_classes}"
 
     rule_classes
