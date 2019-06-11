@@ -16,7 +16,7 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
   end
 
   def rule_id
-    'F32'
+    'F34'
   end
 
   def audit_impl(cfn_model)
