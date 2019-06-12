@@ -6,6 +6,7 @@ require 'cfn-nag/util/enforce_secrets_manager.rb'
 require 'cfn-nag/util/truthy.rb'
 require_relative 'base'
 
+# rubocop:disable all
 class RDSDBClusterMasterUserPasswordRule < BaseRule
   def rule_text
     'RDS DB Cluster master user password must be Ref to NoEcho Parameter. ' \
@@ -69,3 +70,4 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
     password == {"Ref"=>"AWS::NoValue"}
   end
 end
+# rubocop:enable all
