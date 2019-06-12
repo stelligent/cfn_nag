@@ -10,7 +10,7 @@ Roughly speaking it will look for:
 * Access logs that aren't enabled
 * Encryption that isn't enabled
 
-For more background on the tool, please see:  
+For more background on the tool, please see:
 
 [Finding Security Problems Early in the Development Process of a CloudFormation Template with "cfn-nag"](https://stelligent.com/2016/04/07/finding-security-problems-early-in-the-development-process-of-a-cloudformation-template-with-cfn-nag/)
 
@@ -30,7 +30,7 @@ Pretty simple to execute:
 The path can be a directory or a particular template.  If it is a directory, all \*.json, \*.template, \*.yml and \*.yaml files underneath
 there recursively will be processed.
 
-The default output format is free-form text, but json output can be selected with the `--output-format json` flag.    
+The default output format is free-form text, but json output can be selected with the `--output-format json` flag.
 
 Optionally, a `--debug` flag will dump information about the internals of rule loading.
 
@@ -214,7 +214,7 @@ can only look at the "code" that is in front of it.  Therefore a security group 
 be flagged if the cidr is parameterized and the 0.0.0.0/0 is passed in at deploy time.
 
 To allow for checking parameter values, a user can specify the parameter values in a JSON file passed on the command line
-to both `cfn_nag` and `cfn_nag_scan` with the `--parameter-values-path=<filename/uri>` flag.  
+to both `cfn_nag` and `cfn_nag_scan` with the `--parameter-values-path=<filename/uri>` flag.
 
 The format of the JSON is a single key "Parameters" whose value is a dictionary with each key/value pair mapping to
 the Parameters like such:
@@ -250,13 +250,14 @@ A screencast demonstrating soup to nuts TDD custom rule development is available
 https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s
 
 ## Specs
-To run end-to-end specs, you need to ensure you have RVM installed. The script will create a new gemset, build and install the gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'.
+To run end-to-end specs, you need to ensure you have Docker installed. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'.
 
 It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 Execute them as follows:
+
 ```
-./scripts/setup_and_run_end_to_end_tests.sh
+make test
 ```
 
 # Support
