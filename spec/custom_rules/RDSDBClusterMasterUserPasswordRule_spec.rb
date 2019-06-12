@@ -74,4 +74,34 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'RDS DB Cluster master user password restore from snapshot' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional to restore' \
+    'from snapshot' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
