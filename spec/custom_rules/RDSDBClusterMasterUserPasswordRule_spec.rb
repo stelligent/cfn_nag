@@ -46,7 +46,7 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
     end
   end
 
-  context 'RDS DB Cluster with parameter master user password with NoEcho' \
+  context 'RDS DB Cluster with parameter master user password with NoEcho ' \
     'that has Default value' do
     it 'returns offending logical resource id for offending DBCluster' do
       cfn_model = CfnParser.new.parse read_test_template(
