@@ -27,10 +27,8 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
       else
         !no_echo_parameter_without_default?(cfn_model,
                                             cluster.masterUserPassword) &&
-          !secrets_manager_property_value?(
-            cfn_model,
-            cluster.masterUserPassword
-          )
+          !secrets_manager_property_value?(cfn_model,
+                                           cluster.masterUserPassword)
       end
     end
 
