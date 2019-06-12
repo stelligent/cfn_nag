@@ -160,7 +160,7 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
         'yaml/rds_dbcluster/' \
         'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
         'with_if_condition_full_true_value.yml'
-      )
+      ), '{ "Parameters": [{"RestoreFromSnapshot": "true"}]}'
       actual_logical_resource_ids =
         RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[]
