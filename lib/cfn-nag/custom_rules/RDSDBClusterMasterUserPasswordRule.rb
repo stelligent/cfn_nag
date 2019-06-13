@@ -6,7 +6,6 @@ require 'cfn-nag/util/enforce_secrets_manager.rb'
 require 'cfn-nag/util/truthy.rb'
 require_relative 'base'
 
-# rubocop:disable all
 class RDSDBClusterMasterUserPasswordRule < BaseRule
   def rule_text
     'RDS DB Cluster master user password must be Ref to NoEcho Parameter. ' \
@@ -26,33 +25,33 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
     violating_rdsclusters = rds_dbclusters.select do |cluster|
       if cluster.masterUserPassword.nil?
         false
-      else
-        if cluster.masterUserPassword.is_a?(Hash) && cluster.masterUserPassword.key?('Fn::If')
-          conditions = cfn_model.raw_model['Conditions']
-          condition = cluster.masterUserPassword['Fn::If'][0]
-          ref =
-            if conditions[condition].class == Array
-              conditions[condition].first['Ref']
-            else
-              conditions[condition]['Fn::Equals'].first['Ref']
-            end
-          parameter_value =
-            if cfn_model.parameters[ref].synthesized_value
-              cfn_model.parameters[ref].synthesized_value
-            else
-              cfn_model.parameters[ref].default
-            end
-          password_true = cluster.masterUserPassword['Fn::If'][1]
-          password_false = cluster.masterUserPassword['Fn::If'][2]
-
-          if truthy?(parameter_value)
-            (!cluster.snapshotIdentifier.nil? && !no_value?(password_true)) && password_is_invalid?(cfn_model, password_true)
+      elsif cluster.masterUserPassword.is_a?(Hash) &&
+            cluster.masterUserPassword.key?('Fn::If')
+        conditions = cfn_model.raw_model['Conditions']
+        condition = cluster.masterUserPassword['Fn::If'][0]
+        ref =
+          if conditions[condition].class == Array
+            conditions[condition].first['Ref']
           else
-            (!cluster.snapshotIdentifier.nil? && !no_value?(password_false)) && password_is_invalid?(cfn_model, password_false)
+            conditions[condition]['Fn::Equals'].first['Ref']
           end
+        parameter_value =
+          cfn_model.parameters[ref].synthesized_value ||=
+            cfn_model.parameters[ref].default
+        password_true = cluster.masterUserPassword['Fn::If'][1]
+        password_false = cluster.masterUserPassword['Fn::If'][2]
+
+        if truthy?(parameter_value)
+          (!cluster.snapshotIdentifier.nil? &&
+            !no_value?(password_true)) &&
+            password_is_invalid?(cfn_model, password_true)
         else
-          password_is_invalid?(cfn_model, cluster.masterUserPassword)
+          (!cluster.snapshotIdentifier.nil? &&
+            !no_value?(password_false)) &&
+            password_is_invalid?(cfn_model, password_false)
         end
+      else
+        password_is_invalid?(cfn_model, cluster.masterUserPassword)
       end
     end
 
@@ -67,7 +66,6 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
   end
 
   def no_value?(password)
-    password == {"Ref"=>"AWS::NoValue"}
+    password == { 'Ref' => 'AWS::NoValue' }
   end
 end
-# rubocop:enable all
