@@ -2,7 +2,7 @@
 
 require 'cfn-nag/violation'
 require 'cfn-nag/util/enforce_noecho_parameter.rb'
-require 'cfn-nag/util/enforce_secrets_manager.rb'
+require 'cfn-nag/util/enforce_dynamic_reference.rb'
 require 'cfn-nag/util/truthy.rb'
 require_relative 'base'
 
@@ -72,7 +72,7 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
 
   def password_is_invalid?(cfn_model, password)
     !no_echo_parameter_without_default?(cfn_model, password) &&
-      !secrets_manager_property_value?(cfn_model, password)
+      !dynamic_reference_property_value?(cfn_model, password)
   end
 
   def conditional_password_is_invalid?(cfn_model, password, snapshot_identifier)
