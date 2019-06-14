@@ -75,6 +75,34 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
     end
   end
 
+  context 'RDS DB Cluster master user password from Secure Systems Manager' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_ssm-secure.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password from Systems Manager' do
+    it 'returns offending logical resource id for offending DBCluster' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_ssm.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[RDSDBCluster]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
   context 'RDS DB Cluster master user password restore from snapshot' do
     it 'returns empty list' do
       cfn_model = CfnParser.new.parse read_test_template(
