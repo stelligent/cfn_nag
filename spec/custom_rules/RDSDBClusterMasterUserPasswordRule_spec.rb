@@ -116,4 +116,100 @@ describe RDSDBClusterMasterUserPasswordRule, :rule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'RDS DB Cluster master user password If Conditional returns True ' \
+    'to restore from snapshot' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'json/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_true_value.json'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional returns False ' \
+    'to restore from snapshot' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'json/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_false_value.json'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional returns True ' \
+    'to restore from snapshot with short syntax' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_short_true_value.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional returns False ' \
+    'to restore from snapshot with short syntax' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_short_false_value.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional returns True ' \
+    'to restore from snapshot with full syntax' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_full_true_value.yml'
+      ), '{ "Parameters": [{"RestoreFromSnapshot": "true"}]}'
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'RDS DB Cluster master user password If Conditional returns False ' \
+    'to restore from snapshot with full syntax' do
+    it 'returns empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_db_snapshot_identifier_' \
+        'with_if_condition_full_false_value.yml'
+      )
+      actual_logical_resource_ids =
+        RDSDBClusterMasterUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end

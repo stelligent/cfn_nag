@@ -24,6 +24,8 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
     violating_rdsclusters = rds_dbclusters.select do |cluster|
       if cluster.masterUserPassword.nil?
         false
+      elsif cluster.masterUserPassword.is_a?(Hash) &&
+            cluster.masterUserPassword.key?('Fn::If')
       else
         !no_echo_parameter_without_default?(cfn_model,
                                             cluster.masterUserPassword) &&
