@@ -3,6 +3,7 @@
 require 'cfn-nag/violation'
 require 'cfn-nag/util/enforce_noecho_parameter.rb'
 require 'cfn-nag/util/enforce_dynamic_reference.rb'
+require 'cfn-nag/util/enforce_condition_intrinsic_function.rb'
 require_relative 'base'
 
 class RDSDBClusterMasterUserPasswordRule < BaseRule
@@ -24,13 +25,13 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
     violating_rdsclusters = rds_dbclusters.select do |cluster|
       if cluster.masterUserPassword.nil?
         false
-      elsif cluster.masterUserPassword.is_a?(Hash) &&
-            cluster.masterUserPassword.key?('Fn::If')
       else
         !no_echo_parameter_without_default?(cfn_model,
                                             cluster.masterUserPassword) &&
           !dynamic_reference_property_value?(cfn_model,
-                                             cluster.masterUserPassword)
+                                             cluster.masterUserPassword) &&
+          !conditional_intrinsic_func_present?(cfn_model,
+                                               cluster.masterUserPassword)
       end
     end
 
