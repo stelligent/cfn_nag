@@ -1,5 +1,3 @@
-RUBY_VERSION=2.5
-
 build_docker_dev:
 	docker build \
 		--file Dockerfile-dev \

@@ -13,6 +13,3 @@ RUN bundle install
 # --path vendor/bundle
 
 COPY . ${APP_ROOT}
-
-# ENTRYPOINT ["cfn_nag"]
-# CMD ["--help"]
