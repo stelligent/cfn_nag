@@ -50,22 +50,22 @@ class Options
           default: false
       opt :rule_directory,
           'Extra rule directory',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :profile_path,
           'Path to a profile file',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :blacklist_path,
           'Path to a blacklist file',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :parameter_values_path,
           'Path to a JSON file to pull Parameter values from',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :isolate_custom_rule_exceptions,
@@ -114,22 +114,22 @@ class Options
           default: false
       opt :rule_directory,
           'Extra rule directory',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :profile_path,
           'Path to a profile file',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :blacklist_path,
           'Path to a blacklist file',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :parameter_values_path,
           'Path to a JSON file to pull Parameter values from',
-          type: :io,
+          type: :string,
           required: false,
           default: nil
       opt :allow_suppression,
