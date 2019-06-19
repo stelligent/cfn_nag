@@ -270,11 +270,11 @@ A screencast demonstrating soup to nuts TDD custom rule development is available
 
 ## Specs
 
-To run the specs, you need to ensure you have Docker installed. You also need to build the development image first. You can do this by running `make build_docker_dev`.
+To run the specs, you need to ensure you have Docker installed. You also need to build the development image first. You can do this by running `rake build_docker_dev`.
 
-Then, to run all of the specs, just run `make test`.
+Then, to run all of the specs, just run `rake test:all`.
 
-To run the end-to-end tests, run `make test_e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
+To run the end-to-end tests, run `rake test:e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 # Support
 
