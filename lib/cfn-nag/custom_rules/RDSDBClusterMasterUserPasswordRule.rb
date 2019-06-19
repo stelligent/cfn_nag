@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_noecho_parameter.rb'
 require 'cfn-nag/util/enforce_dynamic_reference.rb'
-require 'cfn-nag/util/enforce_condition_intrinsic_function.rb'
+require 'cfn-nag/util/enforce_reference_parameter.rb'
 require_relative 'base'
 
 class RDSDBClusterMasterUserPasswordRule < BaseRule
@@ -26,12 +25,8 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
       if cluster.masterUserPassword.nil?
         false
       else
-        !no_echo_parameter_without_default?(cfn_model,
-                                            cluster.masterUserPassword) &&
-          !dynamic_reference_property_value?(cfn_model,
-                                             cluster.masterUserPassword) &&
-          !conditional_intrinsic_func_present?(cfn_model,
-                                               cluster.masterUserPassword)
+        insecure_parameter?(cfn_model, cluster.masterUserPassword) ||
+          insecure_dynamic_reference?(cfn_model, cluster.masterUserPassword)
       end
     end
 
