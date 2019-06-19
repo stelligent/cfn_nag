@@ -2,10 +2,6 @@
 
 set -e
 
-
-echo "running bundle install"
-bundle install
-
 # Build and install gem locally, using version 0.0.01
 ./scripts/deploy_local.sh
 
@@ -18,4 +14,4 @@ gem install simplecov -v '~> 0.11' --no-document
 
 echo "begin all rspec tests..."
 # Execute end-to-end tests
-rspec spec/cfn_nag_spec.rb[1:1:2]
+rspec

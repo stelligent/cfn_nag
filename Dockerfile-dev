@@ -1,0 +1,18 @@
+FROM ruby:2.5
+
+# ENV GEM_HOME="/usr/local/bundle"
+# ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+
+ENV APP_ROOT=/usr/src/app
+
+RUN gem install rubocop
+
+COPY Gemfile ${APP_ROOT}/
+COPY Gemfile.lock ${APP_ROOT}/
+RUN bundle install
+# --path vendor/bundle
+
+COPY . ${APP_ROOT}
+
+# ENTRYPOINT ["cfn_nag"]
+# CMD ["--help"]
