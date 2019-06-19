@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_dynamic_reference.rb'
-require 'cfn-nag/util/enforce_reference_parameter.rb'
+require 'cfn-nag/util/enforce_dynamic_reference'
+require 'cfn-nag/util/enforce_reference_parameter'
 require_relative 'base'
 
 class RDSDBClusterMasterUserPasswordRule < BaseRule
