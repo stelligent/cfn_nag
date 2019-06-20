@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_string_or_dynamic_reference'
+require 'cfn-nag/util/enforce_reference_parameter'
 require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
