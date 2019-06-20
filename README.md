@@ -2,6 +2,7 @@
 <br/>
 
 # Background
+
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
 Roughly speaking it will look for:
 
@@ -15,17 +16,24 @@ For more background on the tool, please see:
 [Finding Security Problems Early in the Development Process of a CloudFormation Template with "cfn-nag"](https://stelligent.com/2016/04/07/finding-security-problems-early-in-the-development-process-of-a-cloudformation-template-with-cfn-nag/)
 
 # Installation
-Presuming Ruby 2.5.x is installed, installation is just a matter of:
 
-    gem install cfn-nag
+Presuming Ruby 2.5.x is installed, installation is just a matter of `
+
+```bash
+gem install cfn-nag
+```
 
 # Pipeline
+
 To run `cfn_nag` as an action in CodePipeline, you can deploy via the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:923120264911:applications~cfn-nag-pipeline).
 
 # Usage
+
 Pretty simple to execute:
 
-    cfn_nag_scan --input-path <path to cloudformation json>
+```bash
+cfn_nag_scan --input-path <path to cloudformation json>
+```
 
 The path can be a directory or a particular template.  If it is a directory, all \*.json, \*.template, \*.yml and \*.yaml files underneath
 there recursively will be processed.
@@ -38,9 +46,12 @@ Run with `--help` for a full listing of supported switches.
 
 To see a list of all the rules the cfn-nag currently supports, there is a command-line utility that will dump them to stdout:
 
-    cfn_nag_rules
+```bash
+cfn_nag_rules
+```
 
 ## Results
+
 * The results are dumped to stdout
 * A failing violation will return a non-zero exit code.
 * A warning will return a zero/success exit code.
@@ -50,17 +61,17 @@ To see a list of all the rules the cfn-nag currently supports, there is a comman
 
 A Dockerfile is provided for convenience. It is published on DockerHub as `stelligent/cfn_nag`.
 
-https://hub.docker.com/r/stelligent/cfn_nag
+<https://hub.docker.com/r/stelligent/cfn_nag>
 
 You can also build it locally.
 
-```
+```bash
 docker build -t cfn_nag .
 ```
 
 You can setup a File Share in Docker to share a folder that contains templates. After the share is setup you can call cfn_nag in the container. This example uses the test templates used in unit testing cfn_nag.
 
-```
+```bash
 $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_encryption.json
 {
   "failure_count": 0,
@@ -85,7 +96,9 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/
 ```
 
 ## Results Filtering
+
 ### Profiles
+
 cfn-nag supports the notion of a "profile" which is effectively a whitelist of rules to apply.  The profile is a text file
 that that must contain a rule identifier per line.  When specified via the `--profile-path` command line argument,
 cfn-nag will ONLY return violations from those particular rules.
@@ -95,6 +108,7 @@ The reasoning behind a "profile" is that different developer might care about di
 IAM resources and therefore not care about those rules.
 
 Here is an example profile:
+
 ```
 F1
 F2
@@ -104,6 +118,7 @@ W5
 ```
 
 ### Global Blacklist
+
 The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the
 `--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
 in the file.
@@ -127,6 +142,7 @@ In the event that there is a rule that you want to suppress, a `cfn_nag` `Metada
 For example, if you are setting up a public-facing ELB that's open to inbound connections from the internet with resources like the following:
 
 `public_alb.yaml`
+
 ```yaml
 # Partial template
 PublicAlbSecurityGroup:
@@ -148,7 +164,7 @@ PublicAlbSecurityGroupHttpIngress:
 
 cfn_nag will raise warnings like the following:
 
-```
+```bash
 $ cfn_nag_scan -i public_alb.yaml
 ------------------------------------------------------------
 public_alb.yaml
@@ -172,6 +188,7 @@ Warnings count: 2
 By adding the metadata, these warnings can be suppressed:
 
 `public_alb_with_suppression.yaml`
+
 ```yaml
 # Partial template
 PublicAlbSecurityGroup:
@@ -198,7 +215,7 @@ PublicAlbSecurityGroupHttpIngress:
   Type: AWS::EC2::SecurityGroupIngress
 ```
 
-```
+```bash
 $ cfn_nag_scan -i public_alb_with_suppression.yaml
 ------------------------------------------------------------
 public_alb_with_supression.yaml
@@ -208,6 +225,7 @@ Warnings count: 0
 ```
 
 # Setting Template Parameter Values
+
 CloudFormation Template Parameters can present a problem for static analysis as the values are specified at the point
 of deployment.  In other words, the values aren't available when the static analysis is done - static analysis
 can only look at the "code" that is in front of it.  Therefore a security group ingress rule of 0.0.0.0/0 won't
@@ -243,26 +261,21 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 # Development
 
 ## New Rules
+
 To author new rules for your own use and/or community contribution, see [Custom Rule Development](custom_rule_development.md) for details.
 
 A screencast demonstrating soup to nuts TDD custom rule development is available here:
 
-https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s
+<https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s>
 
 ## Specs
-To run end-to-end specs, you need to ensure you have Docker installed. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'.
 
-It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
+To run the specs, you need to ensure you have Docker installed. You also need to build the development image first. You can do this by running `rake build_docker_dev`.
 
-Execute them as follows:
+Then, to run all of the specs, just run `rake test:all`.
 
-```
-make test
-```
+To run the end-to-end tests, run `rake test:e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 # Support
 
-To report a bug or request a feature, submit an issue through the GitHub repository via: https://github.com/stelligent/cfn_nag/issues/new
-
-The cfn-nag team is currently experimenting with using Pivotal Tracker to drive development of new features.  The dashboard
-is publicly visible at: https://www.pivotaltracker.com/n/projects/2316748.
+To report a bug or request a feature, submit an issue through the GitHub repository via: <https://github.com/stelligent/cfn_nag/issues/new>

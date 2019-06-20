@@ -33,9 +33,6 @@ download_and_scan_templates () {
   fi
 }
 
-echo "running bundle install"
-bundle install
-
 # Build and install gem locally, using version 0.0.01
 ./scripts/deploy_local.sh
 
@@ -46,7 +43,7 @@ gem install rspec --explain -v '~> 3.4' --no-document
 gem install rspec -v '~> 3.4' --no-document
 gem install simplecov -v '~> 0.11' --no-document
 
-echo "begin tests..."
+echo "begin end-to-end tests..."
 # Execute end-to-end tests
 rspec -t end_to_end
 
