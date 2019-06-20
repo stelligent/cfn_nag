@@ -33,26 +33,23 @@ download_and_scan_templates () {
   fi
 }
 
-# Test for RVM and create a new gemset for local testing,
-# irrelevant for CircleCI testing, this is just to squelch errors in the
-# CircleCI build
-if [ -x "$(which rvm)" ]; then
-  rvm use 2.5.5
-  rvm --force gemset delete cfn_end_to_end
-  rvm gemset use cfn_end_to_end --create
-else
-  echo 'RVM is not installed, consider installing to run e2e tests locally.'
-fi
+echo "running bundle install"
+bundle install
 
 # Build and install gem locally, using version 0.0.01
 ./scripts/deploy_local.sh
 
 # Install the two gems required to run end-to-end tests
+echo "installing rspec and simplecov for testing"
+PATH=$PATH:/usr/local/bundle/bin
+gem install rspec --explain -v '~> 3.4' --no-document
 gem install rspec -v '~> 3.4' --no-document
 gem install simplecov -v '~> 0.11' --no-document
 
+echo "begin tests..."
 # Execute end-to-end tests
 rspec -t end_to_end
 
-# Call function to download & scan templates, exit 1 if an exception is thrown
+# Call function to download & scan templates,
+# exit 1 if an exception is thrown
 download_and_scan_templates
