@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_dynamic_reference'
 require 'cfn-nag/util/enforce_reference_parameter'
+require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
 # cfn_nag rules related to RDS Instance master username
@@ -32,7 +32,7 @@ class RDSInstanceMasterUsernameRule < BaseRule
         false
       else
         insecure_parameter?(cfn_model, instance.masterUsername) ||
-          insecure_dynamic_reference?(cfn_model, instance.masterUsername)
+          insecure_string_or_dynamic_reference?(cfn_model, instance.masterUsername)
       end
     end
 
