@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_noecho_parameter.rb'
+require 'cfn-nag/util/enforce_reference_parameter'
+require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
 class RDSInstanceMasterUserPasswordRule < BaseRule
@@ -28,8 +29,8 @@ class RDSInstanceMasterUserPasswordRule < BaseRule
       if instance.masterUserPassword.nil?
         false
       else
-        !no_echo_parameter_without_default?(cfn_model,
-                                            instance.masterUserPassword)
+        insecure_parameter?(cfn_model, instance.masterUserPassword) ||
+          insecure_string_or_dynamic_reference?(cfn_model, instance.masterUserPassword)
       end
     end
 
