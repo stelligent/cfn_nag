@@ -14,6 +14,17 @@ def ensure_local_dev_image
   end
 end
 
+#### Tasks ################
+
+desc 'run rspec locally (do bundle exec rake spec)'
+task :spec do
+  require 'rspec/core/rake_task'
+
+  RSpec::Core::RakeTask.new do |rake_task|
+    rake_task.rspec_opts = "--tag ~end_to_end -b"
+  end
+end
+
 desc 'Build the local Docker iamge for development/testing'
 task :build_docker_dev do
   sh 'docker build --file Dockerfile-dev --rm --tag cfn-nag-dev .'
