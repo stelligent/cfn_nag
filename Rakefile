@@ -21,7 +21,7 @@ task :spec do
   require 'rspec/core/rake_task'
 
   RSpec::Core::RakeTask.new do |rake_task|
-    rake_task.rspec_opts = "--tag ~end_to_end -b"
+    rake_task.rspec_opts = '--tag ~end_to_end -b'
   end
 end
 

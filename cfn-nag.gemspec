@@ -16,9 +16,9 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.2'
 
+  s.add_development_dependency('rake')
   s.add_development_dependency('rspec', '~> 3.4')
   s.add_development_dependency('rubocop')
-  s.add_development_dependency('rake')
   s.add_development_dependency('simplecov', '~> 0.11')
 
   # don't relax this, i don't want different versions of cfn-model being installed after the fact
