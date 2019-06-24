@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_reference_parameter'
-require 'cfn-nag/util/enforce_string_or_dynamic_reference'
-require_relative 'base'
+require_relative 'password_base_rule'
 
-class DMSEndpointPasswordRule < BaseRule
+class DMSEndpointPasswordRule < PasswordBaseRule
   def rule_text
-    'DMS Endpoint must not be a plaintext string or a Ref to a NoEcho ' \
-    'Parameter with a Default value.'
+    'DMS Endpoint password must not be a plaintext string ' \
+    'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
@@ -19,17 +17,11 @@ class DMSEndpointPasswordRule < BaseRule
     'F37'
   end
 
-  def audit_impl(cfn_model)
-    dms_endpoints = cfn_model.resources_by_type('AWS::DMS::Endpoint')
-    violating_dms_endpoints = dms_endpoints.select do |endpoint|
-      if endpoint.password.nil?
-        false
-      else
-        insecure_parameter?(cfn_model, endpoint.password) ||
-          insecure_string_or_dynamic_reference?(cfn_model, endpoint.password)
-      end
-    end
+  def resource_type
+    'AWS::DMS::Endpoint'
+  end
 
-    violating_dms_endpoints.map(&:logical_resource_id)
+  def password_property
+    :password
   end
 end
