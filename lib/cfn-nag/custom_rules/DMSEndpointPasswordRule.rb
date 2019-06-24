@@ -7,8 +7,8 @@ require_relative 'base'
 
 class DMSEndpointPasswordRule < BaseRule
   def rule_text
-    'DMS Endpoint password must be Ref to NoEcho Parameter. ' \
-    'Default credentials are not recommended'
+    'DMS Endpoint must not be a plaintext string or a Ref to a NoEcho ' \
+    'Parameter with a Default value.'
   end
 
   def rule_type
