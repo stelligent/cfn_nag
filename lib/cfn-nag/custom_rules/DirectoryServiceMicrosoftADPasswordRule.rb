@@ -8,8 +8,8 @@ require_relative 'base'
 # Rule class to fail on DirectoryService::MicrosoftAD password in template
 class DirectoryServiceMicrosoftADPasswordRule < BaseRule
   def rule_text
-    'DirectoryService::MicrosoftAD password must be Ref to NoEcho Parameter. ' \
-    'Default credentials are not recommended'
+    'Directory Service Microsoft AD must not be a plaintext string or a ' \
+    'Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
