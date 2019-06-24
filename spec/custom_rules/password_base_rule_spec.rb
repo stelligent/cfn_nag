@@ -4,15 +4,9 @@ require 'cfn-nag/custom_rules/password_base_rule'
 
 describe PasswordBaseRule do
   describe '#audit' do
-    it 'raises an error when properties are not set' do
-      expect do
-        PasswordBaseRule.new.audit_impl nil
-      end.to raise_error 'must implement in subclass'
-    end
-
-    it 'returns no violation when password is not set' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
+    before(:all) do
+      @base_rule = PasswordBaseRule.new
+      @base_rule.instance_eval do
         def rule_id
           'F3333'
         end
@@ -33,6 +27,23 @@ describe PasswordBaseRule do
           :masterUserPassword
         end
       end
+    end
+
+    before(:all) do
+      @failing_violation = Violation.new(id: 'F3333',
+                                         type: Violation::FAILING_VIOLATION,
+                                         message: 'This is an epic fail!',
+                                         logical_resource_ids: %w[RedshiftCluster])
+    end
+
+    it 'raises an error when properties are not set' do
+      expect do
+        PasswordBaseRule.new.audit_impl nil
+      end.to raise_error 'must implement in subclass'
+    end
+
+    it 'returns no violation when password is not set' do
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword)
@@ -47,28 +58,7 @@ describe PasswordBaseRule do
     end
 
     it 'returns no violation when password is parameter with noecho' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -86,28 +76,7 @@ describe PasswordBaseRule do
     end
 
     it 'returns violation when password is literal in plaintext' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -121,38 +90,14 @@ describe PasswordBaseRule do
         'redshift_cluster_master_user_password_plaintext.yml'
       )
 
-      expected_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[RedshiftCluster])
+      expected_violation = @failing_violation
 
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end
 
     it 'returns violation when password is parameter with noecho and ' \
       'has a default value present' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -165,37 +110,13 @@ describe PasswordBaseRule do
         'redshift_cluster_master_user_password_parameter_noecho_with_default.yml'
       )
 
-      expected_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[RedshiftCluster])
+      expected_violation = @failing_violation
 
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end
 
     it 'returns no violation when password is from secrets manager' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -213,28 +134,7 @@ describe PasswordBaseRule do
     end
 
     it 'returns no violation when password is from secure systems manager' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -252,28 +152,7 @@ describe PasswordBaseRule do
     end
 
     it 'returns violation when password is systems manager' do
-      base_rule = PasswordBaseRule.new
-      base_rule.instance_eval do
-        def rule_id
-          'F3333'
-        end
-
-        def rule_type
-          Violation::FAILING_VIOLATION
-        end
-
-        def rule_text
-          'This is an epic fail!'
-        end
-
-        def resource_type
-          'AWS::Redshift::Cluster'
-        end
-
-        def password_property
-          :masterUserPassword
-        end
-      end
+      base_rule = @base_rule
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
@@ -286,10 +165,7 @@ describe PasswordBaseRule do
         'yaml/redshift_cluster/redshift_cluster_master_user_password_ssm.yml'
       )
 
-      expected_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[RedshiftCluster])
+      expected_violation = @failing_violation
 
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end
