@@ -5,7 +5,7 @@ require 'cfn-nag/util/enforce_reference_parameter'
 require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
-class RDSInstanceMasterUserPasswordRule < BaseRule
+class RDSDBInstanceMasterUserPasswordRule < BaseRule
   def rule_text
     'RDS instance master user password must be Ref to NoEcho Parameter. ' \
     'Default credentials are not recommended'
