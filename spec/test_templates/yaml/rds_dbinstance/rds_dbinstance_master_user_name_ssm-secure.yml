@@ -1,0 +1,10 @@
+---
+Resources:
+  RDSDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '100'
+      DBInstanceClass: db.m5.large
+      Engine: mysql
+      MasterUserPassword: '{{resolve:ssm-secure:SecureSecretPasswordString:1}}'
+      MasterUsername: '{{resolve:ssm-secure:SecureSecretUsernameString:1}}'

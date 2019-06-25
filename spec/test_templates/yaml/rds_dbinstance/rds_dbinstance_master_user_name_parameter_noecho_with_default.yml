@@ -1,0 +1,19 @@
+---
+Parameters:
+  RDSDBInstanceMasterUserPassword:
+    Type: String
+    NoEcho: true
+    Default: b@dP@$sW0rD
+  RDSDBInstanceMasterUsername:
+    Type: String
+    NoEcho: true
+    Default: admin
+Resources:
+  RDSDBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: '100'
+      DBInstanceClass: db.m5.large
+      Engine: mysql
+      MasterUserPassword: !Ref RDSDBInstanceMasterUserPassword
+      MasterUsername: !Ref RDSDBInstanceMasterUsername

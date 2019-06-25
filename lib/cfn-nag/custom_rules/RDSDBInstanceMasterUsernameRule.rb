@@ -6,7 +6,7 @@ require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
 # cfn_nag rules related to RDS Instance master username
-class RDSInstanceMasterUsernameRule < BaseRule
+class RDSDBInstanceMasterUsernameRule < BaseRule
   def rule_text
     'RDS instance master username must be Ref to NoEcho Parameter. Default ' \
     'credentials are not recommended'
