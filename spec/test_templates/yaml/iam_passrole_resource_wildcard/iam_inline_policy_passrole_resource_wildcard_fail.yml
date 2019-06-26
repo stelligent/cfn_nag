@@ -1,0 +1,21 @@
+---
+Resources:
+
+  GenericGroup:
+    Type: AWS::IAM::Group
+    Properties: 
+      GroupName: GenericGroup
+
+  InlinePolicyFail:
+    Type: AWS::IAM::Policy 
+    Properties:
+      PolicyName: WildcardResourcePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Action: "iam:PassRole"
+            Resource: "*"
+      Groups:
+        - !Ref GenericGroup
