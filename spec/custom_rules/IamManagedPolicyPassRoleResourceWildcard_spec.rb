@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-model'
 require 'cfn-nag/custom_rules/IamManagedPolicyPassRoleWildcardResourceRule'
@@ -24,5 +26,4 @@ describe IamManagedPolicyPassRoleWildcardResourceRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
-
 end
