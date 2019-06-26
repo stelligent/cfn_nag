@@ -5,7 +5,7 @@ require_relative 'base'
 
 class IamRolePassRoleWildcardResourceRule < BaseRule
   def rule_text
-    'IAM role can not use a * resource with a PassRole action on its inline policy'
+    'IAM role should not allow * resource with PassRole action on its permissions policy'
   end
 
   def rule_type
@@ -13,7 +13,7 @@ class IamRolePassRoleWildcardResourceRule < BaseRule
   end
 
   def rule_id
-    'WXX'
+    'F38'
   end
 
   def PassRoleAction?(statement)

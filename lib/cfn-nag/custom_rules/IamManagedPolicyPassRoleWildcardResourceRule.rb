@@ -3,9 +3,9 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class IamPolicyPassRoleWildcardResourceRule < BaseRule
+class IamManagedPolicyPassRoleWildcardResourceRule < BaseRule
   def rule_text
-    'IAM policy should not allow * resource with PassRole action'
+    'IAM managed policy should not allow a * resource with PassRole action'
   end
 
   def rule_type
@@ -13,7 +13,7 @@ class IamPolicyPassRoleWildcardResourceRule < BaseRule
   end
 
   def rule_id
-    'F39'
+    'F40'
   end
 
   def PassRoleAction?(statement)
@@ -25,7 +25,7 @@ class IamPolicyPassRoleWildcardResourceRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').select do |policy|
+    violating_policies = cfn_model.resources_by_type('AWS::IAM::ManagedPolicy').select do |policy|
       violating_statements = policy.policy_document.statements.select do |statement|
         PassRoleAction?(statement) && WildcardAction?(statement) 
       end

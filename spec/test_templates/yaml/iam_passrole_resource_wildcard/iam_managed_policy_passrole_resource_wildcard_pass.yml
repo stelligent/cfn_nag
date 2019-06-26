@@ -7,7 +7,7 @@ Resources:
       GroupName: GenericGroup
 
   ManagedPolicyPass:
-    Type: "AWS::IAM::Policy"
+    Type: "AWS::IAM::ManagedPolicy"
     Properties:
       PolicyDocument:
         Version: "2012-10-17"
