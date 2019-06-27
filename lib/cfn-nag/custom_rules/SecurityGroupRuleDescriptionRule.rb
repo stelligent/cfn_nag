@@ -6,8 +6,8 @@ require 'cfn-nag/ip_addr'
 
 class SecurityGroupRuleDescriptionRule < BaseRule
   def rule_text
-    'Security group rules without a description obscure their purpose and may'\
-    'lead to bad practices in ensuring they only allow traffic from the ports'\
+    'Security group rules without a description obscure their purpose and may '\
+    'lead to bad practices in ensuring they only allow traffic from the ports '\
     'and sources/destinations required.'
   end
 
