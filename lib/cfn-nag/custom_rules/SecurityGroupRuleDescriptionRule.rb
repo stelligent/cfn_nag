@@ -19,15 +19,15 @@ class SecurityGroupRuleDescriptionRule < BaseRule
     'W36'
   end
 
+  def violating_sg_part(sg_part)
+    sg_part.select do |item|
+      item.description.nil? && item.logical_resource_id.nil?
+    end
+  end
+
   def violating_security_groups?(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
-      violating_ingres = security_group.ingresses.select do |ingress|
-        ingress.description.nil? && ingress.logical_resource_id.nil?
-      end
-      violating_egress = security_group.egresses.select do |egress|
-        egress.description.nil? && egress.logical_resource_id.nil?
-      end
-      !violating_ingres.empty? || !violating_egress.empty?
+      !violating_sg_part(security_group.ingresses).empty? || !violating_sg_part(security_group.egresses).empty?
     end
     violating_security_groups.map(&:logical_resource_id)
   end
