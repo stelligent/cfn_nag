@@ -48,8 +48,8 @@ class SecurityGroupRuleDescriptionRule < BaseRule
   end
 
   def violating_egress?(cfn_model)
-    violating_egress = cfn_model.resources_by_type('AWS::EC2::SecurityGroupEgress').select do |standalone_ingress|
-      standalone_ingress&.description.nil?
+    violating_egress = cfn_model.resources_by_type('AWS::EC2::SecurityGroupEgress').select do |standalone_egress|
+      standalone_egress&.description.nil?
     end
     violating_egress.map(&:logical_resource_id)
   end
