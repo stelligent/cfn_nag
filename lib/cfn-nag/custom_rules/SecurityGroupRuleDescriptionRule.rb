@@ -28,15 +28,15 @@ class SecurityGroupRuleDescriptionRule < BaseRule
 
   private
 
-  def violating_sg_part(sg_part)
-    sg_part.select do |item|
-      blank?(item.description) && blank?(item.logical_resource_id)
+  def violating_sg_component(sg_component)
+    sg_component.select do |item|
+      blank?(item['Description'])
     end
   end
 
   def violating_security_groups?(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
-      !violating_sg_part(security_group.ingresses).empty? || !violating_sg_part(security_group.egresses).empty?
+      !violating_sg_component(security_group.securityGroupIngress).empty? || !violating_sg_component(security_group.securityGroupEgress).empty?
     end
     violating_security_groups.map(&:logical_resource_id)
   end
