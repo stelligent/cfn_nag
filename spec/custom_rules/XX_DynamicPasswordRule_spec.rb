@@ -87,7 +87,7 @@ end
 # created from these keys
 def test_sets
   {
-    'not set': 'fail',
+    'not set': 'pass',
     'parameter with NoEcho': 'pass',
     'parameter with NoEcho and Default value': 'fail',
     'parameter as a literal in plaintext': 'fail',
@@ -100,26 +100,26 @@ end
 
 # Returns a violation or non-violation message based on key/pair value
 # from 'test_sets'
-def context_return_value(test_sets)
-  test_sets.each_pair do |_key, value|
-    return returns_violation if value == 'fail'
-    return returns_not_violation if value == 'pass'
+# def context_return_value(test_sets)
+#   test_sets.each_pair do |_test_description, desired_test_result|
+#     return returns_violation if desired_test_result == 'fail'
+#     return returns_not_violation if desired_test_result == 'pass'
 
-    raise 'must be pass or fail'
-  end
-end
+#     raise 'must be pass or fail'
+#   end
+# end
 
 # Returns the offending resource id if the test is a violation or it provide
 # an empty set if it is a non-violating test based on key/pair value
 # from 'test_sets'
-def expected_logical_resource_ids(test_sets)
-  test_sets.each_pair do |_key, value|
-    return [template_resource_id] if value == 'fail'
-    return [] if value == 'pass'
+# def expected_logical_resource_ids(test_sets)
+#   test_sets.each_pair do |_test_description, desired_test_result|
+#     return [template_resource_id] if desired_test_result == 'fail'
+#     return [] if desired_test_result == 'pass'
 
-    raise 'must be pass or fail'
-  end
-end
+#     raise 'must be pass or fail'
+#   end
+# end
 
 # Creates the full file path string
 # example: file_path_prefix = 'yaml/redshift_cluster/redshift_cluster_'
@@ -127,27 +127,55 @@ end
 # example: test_sets.key = 'not set'
 # example: test_template_type = 'yaml'
 # example result: file_path = 'yaml/redshift_cluster/redshift_cluster_master_user_password_not_set.yaml'
-def file_path(test_sets)
-  test_sets.each do |_key|
-    complete_file_path = file_path_prefix +
-                         property_snake_case +
-                         test_sets.key.gsub(' ', '_').downcase +
-                         '.' +
-                         test_template_type
+# def file_path(test_sets)
+#   test_sets.each do |_test_description|
+#     complete_file_path = file_path_prefix +
+#                          property_snake_case +
+#                          test_sets.key.gsub(' ', '_').downcase +
+#                          '.' +
+#                          test_template_type
 
-    return complete_file_path
-  end
-end
-
-# describe rule_name, :rule do
-#   context resource_name + password_property + test_sets.key do
-#     it context_return_value do
-#       cfn_model = CfnParser.new.parse read_test_template(file_path)
-
-#       actual_logical_resource_ids =
-#         Object.const_get(rule_name).new.audit_impl cfn_model
-
-#       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
-#     end
+#     return complete_file_path
 #   end
 # end
+
+describe rule_name, :rule do
+  test_sets.each do |test_description, desired_test_result|
+    puts "#{test_description}: #{desired_test_result}"
+
+    context_description = resource_name +
+                          ' ' +
+                          password_property +
+                          ' ' +
+                          test_description.to_s
+    puts context_description
+
+    file_path = file_path_prefix +
+                property_snake_case +
+                '_' +
+                test_description.to_s.gsub(' ', '_').downcase +
+                '.' +
+                test_template_type
+
+    if desired_test_result == 'fail'
+      context_return_value = returns_violation
+      expected_logical_resource_ids = [template_resource_id]
+    elsif desired_test_result == 'pass'
+      context_return_value = returns_not_violation
+      expected_logical_resource_ids = []
+    else
+      raise 'needs to be "pass" or "fail"'
+    end
+
+    context context_description do
+      it context_return_value do
+        cfn_model = CfnParser.new.parse read_test_template(file_path)
+
+        actual_logical_resource_ids =
+          Object.const_get(rule_name).new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+      end
+    end
+  end
+end
