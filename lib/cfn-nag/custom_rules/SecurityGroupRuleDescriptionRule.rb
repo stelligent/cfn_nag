@@ -3,6 +3,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 require 'cfn-nag/ip_addr'
+require 'cfn-nag/util/blank.rb'
 
 class SecurityGroupRuleDescriptionRule < BaseRule
   def rule_text
@@ -29,7 +30,7 @@ class SecurityGroupRuleDescriptionRule < BaseRule
 
   def violating_sg_part(sg_part)
     sg_part.select do |item|
-      item.description.nil? && item.logical_resource_id.nil?
+      blank?(item.description) && blank?(item.logical_resource_id)
     end
   end
 
@@ -42,14 +43,14 @@ class SecurityGroupRuleDescriptionRule < BaseRule
 
   def violating_ingress?(cfn_model)
     violating_ingress = cfn_model.resources_by_type('AWS::EC2::SecurityGroupIngress').select do |standalone_ingress|
-      standalone_ingress&.description.nil?
+      blank?(standalone_ingress.description)
     end
     violating_ingress.map(&:logical_resource_id)
   end
 
   def violating_egress?(cfn_model)
     violating_egress = cfn_model.resources_by_type('AWS::EC2::SecurityGroupEgress').select do |standalone_egress|
-      standalone_egress&.description.nil?
+      blank?(standalone_egress.description)
     end
     violating_egress.map(&:logical_resource_id)
   end
