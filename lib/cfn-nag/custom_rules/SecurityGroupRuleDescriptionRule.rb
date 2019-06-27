@@ -19,6 +19,14 @@ class SecurityGroupRuleDescriptionRule < BaseRule
     'W36'
   end
 
+  def audit_impl(cfn_model)
+    violating_security_groups?(cfn_model) +
+      violating_ingress?(cfn_model) +
+      violating_egress?(cfn_model)
+  end
+
+  private
+
   def violating_sg_part(sg_part)
     sg_part.select do |item|
       item.description.nil? && item.logical_resource_id.nil?
@@ -44,11 +52,5 @@ class SecurityGroupRuleDescriptionRule < BaseRule
       standalone_ingress&.description.nil?
     end
     violating_egress.map(&:logical_resource_id)
-  end
-
-  def audit_impl(cfn_model)
-    violating_security_groups?(cfn_model) +
-      violating_ingress?(cfn_model) +
-      violating_egress?(cfn_model)
   end
 end
