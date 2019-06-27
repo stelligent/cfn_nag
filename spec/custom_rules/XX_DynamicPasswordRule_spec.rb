@@ -98,58 +98,17 @@ def test_sets
   }
 end
 
-# Returns a violation or non-violation message based on key/pair value
-# from 'test_sets'
-# def context_return_value(test_sets)
-#   test_sets.each_pair do |_test_description, desired_test_result|
-#     return returns_violation if desired_test_result == 'fail'
-#     return returns_not_violation if desired_test_result == 'pass'
-
-#     raise 'must be pass or fail'
-#   end
-# end
-
-# Returns the offending resource id if the test is a violation or it provide
-# an empty set if it is a non-violating test based on key/pair value
-# from 'test_sets'
-# def expected_logical_resource_ids(test_sets)
-#   test_sets.each_pair do |_test_description, desired_test_result|
-#     return [template_resource_id] if desired_test_result == 'fail'
-#     return [] if desired_test_result == 'pass'
-
-#     raise 'must be pass or fail'
-#   end
-# end
-
-# Creates the full file path string
-# example: file_path_prefix = 'yaml/redshift_cluster/redshift_cluster_'
-# example: property_snake_case = 'master_user_password'
-# example: test_sets.key = 'not set'
-# example: test_template_type = 'yaml'
-# example result: file_path = 'yaml/redshift_cluster/redshift_cluster_master_user_password_not_set.yaml'
-# def file_path(test_sets)
-#   test_sets.each do |_test_description|
-#     complete_file_path = file_path_prefix +
-#                          property_snake_case +
-#                          test_sets.key.gsub(' ', '_').downcase +
-#                          '.' +
-#                          test_template_type
-
-#     return complete_file_path
-#   end
-# end
-
 describe rule_name, :rule do
   test_sets.each do |test_description, desired_test_result|
-    puts "#{test_description}: #{desired_test_result}"
-
+    # Creates the context description for the individual spec test
+    # Calculated from key provided from 'test_sets'
     context_description = resource_name +
                           ' ' +
                           password_property +
                           ' ' +
                           test_description.to_s
-    puts context_description
 
+    # Creates the full file path string
     file_path = file_path_prefix +
                 property_snake_case +
                 '_' +
@@ -157,6 +116,12 @@ describe rule_name, :rule do
                 '.' +
                 test_template_type
 
+    # Set the 'context_return_value' & 'expected_logical_resource_ids'
+    # variables based on the value of 'desired_test_result'
+    # If 'desired_test_result' is "fail" then we tell it to return the violation
+    # message and then we expect to see a resource id
+    # If 'desired_test_result' is a "pass" then we tell it to return the
+    # non-violation message and then we expect an empty list
     if desired_test_result == 'fail'
       context_return_value = returns_violation
       expected_logical_resource_ids = [template_resource_id]
@@ -167,6 +132,7 @@ describe rule_name, :rule do
       raise 'needs to be "pass" or "fail"'
     end
 
+    # Spec test
     context context_description do
       it context_return_value do
         cfn_model = CfnParser.new.parse read_test_template(file_path)
