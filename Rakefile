@@ -31,13 +31,13 @@ task :build_docker_dev do
 end
 
 namespace 'test' do
-  desc 'Run all rspec tests'
+  desc 'Run all rspec tests (via docker)'
   task :all do
     ensure_local_dev_image
     sh "#{docker_run_prefix} ./scripts/rspec.sh"
   end
 
-  desc 'Run the end-to-end rspec tests'
+  desc 'Run the end-to-end rspec tests (via docker)'
   task :e2e do
     ensure_local_dev_image
     sh "#{docker_run_prefix} ./scripts/setup_and_run_end_to_end_tests.sh"
