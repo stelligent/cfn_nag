@@ -30,6 +30,12 @@ def context_return_value(desired_test_result)
   end
 end
 
+def rule_name(resource_type, password_property)
+  name_scheme = resource_type.sub('AWS', '').gsub('::', '')
+  calculated_rule_name = name_scheme + password_property + 'Rule'
+  calculated_rule_name
+end
+
 def run_test(resource_type, password_property, test_template_type, test_description, desired_test_result)
   file_path = file_path_prefix(resource_type, test_template_type) +
               password_property.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase +
