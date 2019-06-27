@@ -36,7 +36,8 @@ class SecurityGroupRuleDescriptionRule < BaseRule
 
   def violating_security_groups?(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
-      !violating_sg_component(security_group.securityGroupIngress).empty? || !violating_sg_component(security_group.securityGroupEgress).empty?
+      !violating_sg_component(security_group.securityGroupIngress).empty? ||
+        !violating_sg_component(security_group.securityGroupEgress).empty?
     end
     violating_security_groups.map(&:logical_resource_id)
   end
