@@ -25,7 +25,7 @@ task :spec do
   end
 end
 
-desc 'Build the local Docker iamge for development/testing'
+desc 'Build the local Docker image for development/testing'
 task :build_docker_dev do
   sh 'docker build --file Dockerfile-dev --rm --tag cfn-nag-dev .'
 end
