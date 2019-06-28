@@ -2,7 +2,7 @@
 
 # Find all pemutations of an IAM string with wildcards approprate to the location
 
-def iam_permutations(string, element, prefix = '', suffix = '')
+def iam_permutations(string, element, prefix: '', suffix: '')
   case element
   when 'action'
     wildcard_before_after(string, prefix, suffix) +

@@ -5,7 +5,7 @@ require_relative 'base'
 require 'cfn-nag/util/iam_permutations'
 
 class PassRoleBaseRule < BaseRule
-  PASSROLE_WILDCARD_PERMUTATIONS = iam_permutations(string = 'PassRole', element = 'action', prefix = 'iam:')
+  PASSROLE_WILDCARD_PERMUTATIONS = iam_permutations('PassRole', 'action', prefix: 'iam:')
 
   def policy_type
     raise 'must implement in subclass'
