@@ -16,14 +16,6 @@ class IamRolePassRoleWildcardResourceRule < BaseRule
     'F38'
   end
 
-  def passrole_action?(statement)
-    statement.actions.find { |action| action == 'iam:PassRole' }
-  end
-
-  def wildcard_resource?(statement)
-    statement.resources.find { |resource| resource == '*' }
-  end
-
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
       violating_policies = role.policy_objects.select do |policy|
@@ -35,5 +27,15 @@ class IamRolePassRoleWildcardResourceRule < BaseRule
       !violating_policies.empty?
     end
     violating_roles.map(&:logical_resource_id)
+  end
+
+  private
+
+  def passrole_action?(statement)
+    statement.actions.find { |action| action == 'iam:PassRole' }
+  end
+
+  def wildcard_resource?(statement)
+    statement.resources.find { |resource| resource == '*' }
   end
 end

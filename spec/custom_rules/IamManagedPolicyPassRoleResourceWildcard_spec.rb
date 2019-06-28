@@ -11,7 +11,11 @@ describe IamManagedPolicyPassRoleWildcardResourceRule do
 
       actual_logical_resource_ids = IamManagedPolicyPassRoleWildcardResourceRule.new.audit_impl cfn_model
 
-      expected_logical_resource_ids = %w[ManagedPolicyFail]
+      expected_logical_resource_ids = %w[ManagedPolicyFail1
+                                         ManagedPolicyFail2
+                                         ManagedPolicyFail3
+                                         ManagedPolicyFail4
+                                         ManagedPolicyFail5]
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
