@@ -51,7 +51,8 @@ describe PasswordBaseRule do
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
 
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/redshift_cluster/redshift_cluster_no_master_user_password.yml'
+        'yaml/redshift_cluster/' \
+        'redshift_cluster_master_user_password_not_set.yaml'
       )
 
       expect(base_rule.audit(cfn_model)).to be nil
@@ -69,7 +70,7 @@ describe PasswordBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/redshift_cluster/' \
-        'redshift_cluster_master_user_password_parameter_noecho.yml'
+        'redshift_cluster_master_user_password_parameter_with_noecho.yaml'
       )
 
       expect(base_rule.audit(cfn_model)).to be nil
@@ -87,7 +88,7 @@ describe PasswordBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/redshift_cluster/' \
-        'redshift_cluster_master_user_password_plaintext.yml'
+        'redshift_cluster_master_user_password_as_a_literal_in_plaintext.yaml'
       )
 
       expected_violation = @failing_violation
@@ -107,7 +108,7 @@ describe PasswordBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/redshift_cluster/' \
-        'redshift_cluster_master_user_password_parameter_noecho_with_default.yml'
+        'redshift_cluster_master_user_password_parameter_with_noecho_and_default_value.yaml'
       )
 
       expected_violation = @failing_violation
@@ -127,7 +128,7 @@ describe PasswordBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/redshift_cluster/' \
-        'redshift_cluster_master_user_password_secrets_manager.yml'
+        'redshift_cluster_master_user_password_from_secrets_manager.yaml'
       )
 
       expect(base_rule.audit(cfn_model)).to be nil
@@ -145,7 +146,7 @@ describe PasswordBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/redshift_cluster/' \
-        'redshift_cluster_master_user_password_ssm-secure.yml'
+        'redshift_cluster_master_user_password_from_secure_systems_manager.yaml'
       )
 
       expect(base_rule.audit(cfn_model)).to be nil
@@ -162,7 +163,8 @@ describe PasswordBaseRule do
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
 
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/redshift_cluster/redshift_cluster_master_user_password_ssm.yml'
+        'yaml/redshift_cluster/' \
+        'redshift_cluster_master_user_password_from_systems_manager.yaml'
       )
 
       expected_violation = @failing_violation

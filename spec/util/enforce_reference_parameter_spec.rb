@@ -6,7 +6,8 @@ describe 'insecure_parameter', :rule do
   context 'test function insecure_parameter' do
     it 'returns false if everything is fine, nothing is ruined' do
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/rds_dbcluster/rds_dbcluster_master_user_password_parameter_noecho.yml'
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_parameter_with_noecho.yaml'
       )
       cfn_model.resources_by_type('AWS::RDS::DBCluster')
                .select do |cluster|
@@ -18,7 +19,8 @@ describe 'insecure_parameter', :rule do
 
     it 'returns true if there is a problem' do
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/rds_dbcluster/rds_dbcluster_master_user_password_parameter_noecho_with_default.yml'
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_parameter_with_noecho_and_default_value.yaml'
       )
       cfn_model.resources_by_type('AWS::RDS::DBCluster')
                .select do |cluster|

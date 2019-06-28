@@ -6,7 +6,8 @@ describe 'insecure_string_or_dynamic_reference', :rule do
   context 'test function insecure_string_or_dynamic_reference' do
     it 'returns false if everything is fine, nothing is ruined' do
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/rds_dbcluster/rds_dbcluster_master_user_password_secrets_manager.yml'
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_from_secrets_manager.yaml'
       )
       cfn_model.resources_by_type('AWS::RDS::DBCluster')
                .select do |cluster|
@@ -18,7 +19,8 @@ describe 'insecure_string_or_dynamic_reference', :rule do
 
     it 'returns true if there is a problem' do
       cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/rds_dbcluster/rds_dbcluster_master_user_password_ssm.yml'
+        'yaml/rds_dbcluster/' \
+        'rds_dbcluster_master_user_password_from_systems_manager.yaml'
       )
       cfn_model.resources_by_type('AWS::RDS::DBCluster')
                .select do |cluster|

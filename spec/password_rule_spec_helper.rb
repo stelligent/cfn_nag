@@ -48,7 +48,7 @@ def run_test(resource_type, password_property, test_template_type, test_descript
     if desired_test_result == 'fail'
       [resource_type.sub('AWS::', '').gsub('::', '')]
     else
-      expected_logical_resource_ids = []
+      []
     end
 
   cfn_model = CfnParser.new.parse read_test_template(file_path)
