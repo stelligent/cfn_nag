@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'passrole_base_rule'
 
-class IamPolicyPassRoleWildcardResourceRule < BaseRule
+class IamPolicyPassRoleWildcardResourceRule < PassRoleBaseRule
   def rule_text
     'IAM policy should not allow * resource with PassRole action'
   end
@@ -16,23 +16,7 @@ class IamPolicyPassRoleWildcardResourceRule < BaseRule
     'F39'
   end
 
-  def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::IAM::Policy').select do |policy|
-      violating_statements = policy.policy_document.statements.select do |statement|
-        passrole_action?(statement) && wildcard_resource?(statement)
-      end
-      !violating_statements.empty?
-    end
-    violating_policies.map(&:logical_resource_id)
-  end
-
-  private
-
-  def passrole_action?(statement)
-    statement.actions.find { |action| action == 'iam:PassRole' }
-  end
-
-  def wildcard_resource?(statement)
-    statement.resources.find { |resource| resource == '*' }
+  def policy_type
+    'AWS::IAM::Policy'
   end
 end
