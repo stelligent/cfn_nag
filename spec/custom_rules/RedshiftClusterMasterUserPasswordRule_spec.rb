@@ -3,13 +3,13 @@ require 'password_rule_spec_helper'
 require 'cfn-model'
 
 password_property = 'MasterUserPassword'
-resource_type = 'AWS::Redshift::Cluster'
+resource_type = 'AWS::RDS::DBCluster'
 test_template_type = 'yaml'
-class_name = rule_name(resource_type, password_property)
 
-require "cfn-nag/custom_rules/#{class_name}"
+require "cfn-nag/custom_rules/#{rule_name(resource_type, password_property)}"
 
-describe Object.const_get(class_name), :rule do
+describe Object.const_get(rule_name(resource_type, password_property)), :rule do
+  # Creates dynamic set of contexts based on the password_rule_test_sets hash
   password_rule_test_sets.each do |test_description, desired_test_result|
     context "#{resource_type} #{password_property} #{test_description}" do
       it context_return_value(desired_test_result) do
