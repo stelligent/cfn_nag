@@ -52,12 +52,12 @@ describe 'password_rule_spec_helper' do
     end
   end
 
-  # context 'context_return_value as "foo"' do
-  #   it 'raises error' do
-  #     actual_aggregate_results = context_return_value('foo')
-  #     expect(actual_aggregate_results).to raise_error
-  #   end
-  # end
+  context 'context_return_value as "foo"' do
+    it 'raises error' do
+      expect { context_return_value('foo') }.to \
+        raise_error('desired_test_result value must be either "pass" or "fail"')
+    end
+  end
 
   context 'rule_name' do
     it 'renders rule name' do
@@ -94,11 +94,10 @@ describe 'password_rule_spec_helper' do
     end
   end
 
-  # context 'expected_logical_resource_ids as "foo"' do
-  #   it 'raises error' do
-  #     actual_aggregate_results =
-  #       expected_logical_resource_ids('foo', @resource_type)
-  #     expect(actual_aggregate_results).to raise_error
-  #   end
-  # end
+  context 'expected_logical_resource_ids as "foo"' do
+    it 'raises error' do
+      expect { expected_logical_resource_ids('foo', @resource_type) }.to \
+        raise_error('desired_test_result value must be either "pass" or "fail"')
+    end
+  end
 end
