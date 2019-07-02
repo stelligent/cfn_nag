@@ -3,9 +3,10 @@
 require 'cfn-nag/violation'
 require_relative 'password_base_rule'
 
-class RDSInstanceMasterUserPasswordRule < PasswordBaseRule
+# cfn_nag rules related to RDS Instance master username
+class RDSDBInstanceMasterUsernameRule < PasswordBaseRule
   def rule_text
-    'RDS instance master user password must not be a plaintext string ' \
+    'RDS instance master username must not be a plaintext string ' \
     'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
@@ -14,7 +15,7 @@ class RDSInstanceMasterUserPasswordRule < PasswordBaseRule
   end
 
   def rule_id
-    'F23'
+    'F24'
   end
 
   def resource_type
@@ -22,6 +23,6 @@ class RDSInstanceMasterUserPasswordRule < PasswordBaseRule
   end
 
   def password_property
-    :masterUserPassword
+    :masterUsername
   end
 end
