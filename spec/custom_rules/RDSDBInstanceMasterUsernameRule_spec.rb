@@ -2,8 +2,8 @@ require 'spec_helper'
 require 'password_rule_spec_helper'
 require 'cfn-model'
 
-password_property = 'MasterUsername'
 resource_type = 'AWS::RDS::DBInstance'
+password_property = 'MasterUsername'
 test_template_type = 'yaml'
 
 require "cfn-nag/custom_rules/#{rule_name(resource_type, password_property)}"
