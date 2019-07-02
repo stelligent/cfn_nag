@@ -7,5 +7,5 @@ Resources:
   PinpointAPNSChannel:
     Type: AWS::Pinpoint::APNSChannel
     Properties:
-      TokenKey: b@d0@u7H70K3n
+      PrivateKey: '{{resolve:ssm:UnsecureSecretString:1}}'
       ApplicationId: !Ref PinpointApp

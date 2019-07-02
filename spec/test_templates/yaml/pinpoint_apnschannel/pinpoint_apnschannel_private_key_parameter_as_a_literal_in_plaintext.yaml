@@ -1,4 +1,7 @@
 ---
+Parameters:
+  PinpointAPNSChannelPrivateKey:
+    Type: String
 Resources:
   PinpointApp:
     Type: AWS::Pinpoint::App
@@ -7,5 +10,5 @@ Resources:
   PinpointAPNSChannel:
     Type: AWS::Pinpoint::APNSChannel
     Properties:
-      TokenKey: b@d0@u7H70K3n
+      PrivateKey: !Ref PinpointAPNSChannelPrivateKey
       ApplicationId: !Ref PinpointApp
