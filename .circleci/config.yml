@@ -51,7 +51,7 @@ workflows:
       - publish:
           requires:
             - unit_test
-            - end_to_end_test
+            #- end_to_end_test
           filters:
             branches:
               only: master
