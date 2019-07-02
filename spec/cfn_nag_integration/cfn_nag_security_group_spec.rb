@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-nag/cfn_nag_config'
 require 'cfn-nag/cfn_nag'
@@ -147,7 +149,7 @@ describe CfnNag do
                 message:
                 'Security Groups found with ingress cidr that is not /32',
                 logical_resource_ids: %w[sg],
-                line_numbers: [10]
+                line_numbers: [9]
               )
             ]
           }
@@ -177,7 +179,7 @@ describe CfnNag do
                 message:
                 'Security Groups found with ingress cidr that is not /32',
                 logical_resource_ids: %w[sg sg2],
-                line_numbers: [10, 30]
+                line_numbers: [9, 30]
               )
             ]
           }

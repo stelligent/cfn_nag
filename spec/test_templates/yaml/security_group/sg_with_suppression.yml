@@ -15,6 +15,7 @@ Resources:
       FromPort: 46
       ToPort: 46
       IpProtocol: tcp
+      Description: some rule description
 
   sgOpenIngress2:
     Type: AWS::EC2::SecurityGroup
@@ -39,3 +40,4 @@ Resources:
       FromPort: 46
       ToPort: 46
       IpProtocol: tcp
+      Description: some rule description

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-nag/cfn_nag_config'
 require 'cfn-nag/cfn_nag'
@@ -13,43 +15,43 @@ describe CfnNag do
   describe '#audit_aggregate_across_files_and_render_results' do
     context 'json output' do
       it 'renders json results' do
-        expect {
+        expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'json'
           )
-        }.to output(/"type": "FAIL"/).to_stdout
+        end.to output(/"type": "FAIL"/).to_stdout
       end
     end
 
     context 'txt output' do
       it 'renders text results' do
-        expect {
+        expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'txt'
           )
-        }.to output(/\| FAIL F15/).to_stdout
+        end.to output(/\| FAIL F15/).to_stdout
       end
 
       # \e[0;31;49m is the ANSI escape sequence for red
       it 'colorizes failures as red' do
-        expect {
+        expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'txt'
           )
-        }.to output(/\[0;31;49m/).to_stdout
+        end.to output(/\[0;31;49m/).to_stdout
       end
 
       # \e[0;33;49m is the ANSI escape sequence for yellow
       it 'colorizes warnings as yellow' do
-        expect {
+        expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
             output_format: 'txt'
           )
-        }.to output(/\[0;33;49m/).to_stdout
+        end.to output(/\[0;33;49m/).to_stdout
       end
     end
   end
@@ -220,19 +222,19 @@ EXPECTEDSTDERR
                 id: 'W9', type: Violation::WARNING,
                 message: 'Security Groups found with ingress cidr that is not /32',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [ 4, 20]
+                line_numbers: [4, 21]
               ),
               Violation.new(
                 id: 'W2', type: Violation::WARNING,
                 message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [4, 20]
+                line_numbers: [4, 21]
               ),
               Violation.new(
                 id: 'F1000', type: Violation::FAILING_VIOLATION,
                 message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
                 logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [4, 20]
+                line_numbers: [4, 21]
               )
             ]
           }
@@ -251,12 +253,12 @@ EXPECTEDSTDERR
     it 'raises an error' do
       template_name = 'yaml/security_group/sg_with_mangled_metadata.yml'
 
-      expect {
+      expect do
         _ = @cfn_nag.audit_aggregate_across_files(
           input_path: test_template_path(template_name)
         )
-      }.to output('sgOpenIngress2 has missing cfn_nag suppression rule id: [{"reason"=>"This security group is attached to internet-facing ELB"}]' + "\n")
-       .to_stderr_from_any_process
+      end.to output('sgOpenIngress2 has missing cfn_nag suppression rule id: [{"reason"=>"This security group is attached to internet-facing ELB"}]' + "\n")
+        .to_stderr_from_any_process
     end
   end
 
