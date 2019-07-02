@@ -4,8 +4,6 @@ ENV APP_ROOT=/usr/src/app
 
 RUN gem install rubocop
 
-COPY Gemfile ${APP_ROOT}/
-COPY Gemfile.lock ${APP_ROOT}/
-RUN bundle install
+COPY Gemfile* ${APP_ROOT}/
 
-COPY . ${APP_ROOT}
+RUN bundle install

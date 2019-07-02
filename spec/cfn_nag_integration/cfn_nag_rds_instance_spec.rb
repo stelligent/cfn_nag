@@ -46,7 +46,7 @@ describe CfnNag do
             violations: [
               Violation.new(
                 id: 'F23', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
+                message: 'RDS instance master user password must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.',
                 logical_resource_ids: %w[BadDb2],
                 line_numbers: [11]
               ),
@@ -79,13 +79,13 @@ describe CfnNag do
             violations: [
               Violation.new(
                 id: 'F23', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master user password must be Ref to NoEcho Parameter. Default credentials are not recommended',
+                message: 'RDS instance master user password must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.',
                 logical_resource_ids: %w[BadDb1 BadDb2],
                 line_numbers: [14, 28]
               ),
               Violation.new(
                 id: 'F24', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master username must be Ref to NoEcho Parameter. Default credentials are not recommended',
+                message: 'RDS instance master username must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.',
                 logical_resource_ids: %w[BadDb1 BadDb2],
                 line_numbers: [14, 28]
               )

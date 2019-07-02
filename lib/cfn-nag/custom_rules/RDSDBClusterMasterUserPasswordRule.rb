@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_reference_parameter'
-require 'cfn-nag/util/enforce_string_or_dynamic_reference'
-require_relative 'base'
+require_relative 'password_base_rule'
 
-class RDSDBClusterMasterUserPasswordRule < BaseRule
+class RDSDBClusterMasterUserPasswordRule < PasswordBaseRule
   def rule_text
-    'RDS DB Cluster master user password must be Ref to NoEcho Parameter. ' \
-    'Default credentials are not recommended'
+    'RDS DB Cluster master user password must not be a plaintext string ' \
+    'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
@@ -19,17 +17,11 @@ class RDSDBClusterMasterUserPasswordRule < BaseRule
     'F34'
   end
 
-  def audit_impl(cfn_model)
-    rds_dbclusters = cfn_model.resources_by_type('AWS::RDS::DBCluster')
-    violating_rdsclusters = rds_dbclusters.select do |cluster|
-      if cluster.masterUserPassword.nil?
-        false
-      else
-        insecure_parameter?(cfn_model, cluster.masterUserPassword) ||
-          insecure_string_or_dynamic_reference?(cfn_model, cluster.masterUserPassword)
-      end
-    end
+  def resource_type
+    'AWS::RDS::DBCluster'
+  end
 
-    violating_rdsclusters.map(&:logical_resource_id)
+  def password_property
+    :masterUserPassword
   end
 end

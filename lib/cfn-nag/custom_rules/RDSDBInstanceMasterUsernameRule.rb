@@ -1,15 +1,13 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_reference_parameter'
-require 'cfn-nag/util/enforce_string_or_dynamic_reference'
-require_relative 'base'
+require_relative 'password_base_rule'
 
 # cfn_nag rules related to RDS Instance master username
-class RDSDBInstanceMasterUsernameRule < BaseRule
+class RDSInstanceMasterUsernameRule < PasswordBaseRule
   def rule_text
-    'RDS instance master username must be Ref to NoEcho Parameter. Default ' \
-    'credentials are not recommended'
+    'RDS instance master username must not be a plaintext string ' \
+    'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
@@ -20,22 +18,11 @@ class RDSDBInstanceMasterUsernameRule < BaseRule
     'F24'
   end
 
-  # Warning: if somebody applies parameter values via JSON, this will compare
-  # that....
-  # probably shouldn't be doing that though -
-  # if it's NoEcho there's a good reason
-  # bother checking synthesized_value? that would be the indicator.....
-  def audit_impl(cfn_model)
-    violating_rdsinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance')
-                                      .select do |instance|
-      if instance.masterUsername.nil?
-        false
-      else
-        insecure_parameter?(cfn_model, instance.masterUsername) ||
-          insecure_string_or_dynamic_reference?(cfn_model, instance.masterUsername)
-      end
-    end
+  def resource_type
+    'AWS::RDS::DBInstance'
+  end
 
-    violating_rdsinstances.map(&:logical_resource_id)
+  def password_property
+    :masterUsername
   end
 end

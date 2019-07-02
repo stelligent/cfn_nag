@@ -1,14 +1,12 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_reference_parameter'
-require 'cfn-nag/util/enforce_string_or_dynamic_reference'
-require_relative 'base'
+require_relative 'password_base_rule'
 
-class RedshiftClusterMasterUserPasswordRule < BaseRule
+class RedshiftClusterMasterUserPasswordRule < PasswordBaseRule
   def rule_text
-    'Redshift Cluster master user password must be Ref to NoEcho Parameter. ' \
-    'Default credentials are not recommended'
+    'Redshift Cluster master user password must not be a plaintext string ' \
+    'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
@@ -19,17 +17,11 @@ class RedshiftClusterMasterUserPasswordRule < BaseRule
     'F35'
   end
 
-  def audit_impl(cfn_model)
-    redshift_clusters = cfn_model.resources_by_type('AWS::Redshift::Cluster')
-    violating_redshift_clusters = redshift_clusters.select do |cluster|
-      if cluster.masterUserPassword.nil?
-        false
-      else
-        insecure_parameter?(cfn_model, cluster.masterUserPassword) ||
-          insecure_string_or_dynamic_reference?(cfn_model, cluster.masterUserPassword)
-      end
-    end
+  def resource_type
+    'AWS::Redshift::Cluster'
+  end
 
-    violating_redshift_clusters.map(&:logical_resource_id)
+  def password_property
+    :masterUserPassword
   end
 end
