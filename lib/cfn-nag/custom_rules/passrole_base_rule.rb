@@ -2,10 +2,10 @@
 
 require 'cfn-nag/violation'
 require_relative 'base'
-require 'cfn-nag/util/iam_permutations'
+require 'cfn-nag/util/wildcard_patterns'
 
 class PassRoleBaseRule < BaseRule
-  PASSROLE_WILDCARD_PERMUTATIONS = iam_permutations('PassRole', 'action', prefix: 'iam:')
+  @@iam_action_patterns = wildcard_patterns('PassRole').map! { |x| 'iam:' + x } + ['*']
 
   def policy_type
     raise 'must implement in subclass'
@@ -26,7 +26,7 @@ class PassRoleBaseRule < BaseRule
   private
 
   def passrole_action?(statement)
-    statement.actions.find { |action| PASSROLE_WILDCARD_PERMUTATIONS.include? action }
+    statement.actions.find { |action| @@iam_action_patterns.include? action }
   end
 
   def wildcard_resource?(statement)

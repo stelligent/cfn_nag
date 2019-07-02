@@ -11,7 +11,7 @@ describe IamRolePassRoleWildcardResourceRule do
 
       actual_logical_resource_ids = IamRolePassRoleWildcardResourceRule.new.audit_impl cfn_model
 
-      expected_logical_resource_ids = %w[RoleFail]
+      expected_logical_resource_ids = %w[RoleFail1 RoleFail2]
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end

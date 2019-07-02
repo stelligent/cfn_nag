@@ -2,8 +2,11 @@
 
 require 'cfn-nag/violation'
 require_relative 'base'
+require 'cfn-nag/util/wildcard_patterns'
 
 class IamRolePassRoleWildcardResourceRule < BaseRule
+  @@iam_action_patterns = wildcard_patterns('PassRole').map! { |x| 'iam:' + x } + ['*']
+
   def rule_text
     'IAM role should not allow * resource with PassRole action on its permissions policy'
   end
@@ -32,7 +35,7 @@ class IamRolePassRoleWildcardResourceRule < BaseRule
   private
 
   def passrole_action?(statement)
-    statement.actions.find { |action| action == 'iam:PassRole' }
+    statement.actions.find { |action| @@iam_action_patterns.include? action }
   end
 
   def wildcard_resource?(statement)
