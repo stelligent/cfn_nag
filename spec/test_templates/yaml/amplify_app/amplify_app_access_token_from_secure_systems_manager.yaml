@@ -1,0 +1,7 @@
+---
+Resources:
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      AccessToken: '{{resolve:ssm-secure:SecureSecretString:1}}'
+      Name: foobar

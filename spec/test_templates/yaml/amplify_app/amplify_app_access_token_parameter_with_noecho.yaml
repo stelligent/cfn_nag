@@ -1,0 +1,11 @@
+---
+Parameters:
+  AmplifyAppAccessToken:
+    Type: String
+    NoEcho: True
+Resources:
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      AccessToken: !Ref AmplifyAppAccessToken
+      Name: foobar

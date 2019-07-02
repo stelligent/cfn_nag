@@ -3,9 +3,9 @@
 require 'cfn-nag/violation'
 require_relative 'password_base_rule'
 
-class AmplifyAppOauthTokenRule < PasswordBaseRule
+class AmplifyAppAccessTokenRule < PasswordBaseRule
   def rule_text
-    'Amplify App OauthToken must not be a plaintext string ' \
+    'Amplify App AccessToken must not be a plaintext string ' \
     'or a Ref to a NoEcho Parameter with a Default value.'
   end
 
@@ -14,7 +14,7 @@ class AmplifyAppOauthTokenRule < PasswordBaseRule
   end
 
   def rule_id
-    'F38'
+    'F39'
   end
 
   def resource_type
@@ -22,6 +22,6 @@ class AmplifyAppOauthTokenRule < PasswordBaseRule
   end
 
   def password_property
-    :oauthToken
+    :accessToken
   end
 end
