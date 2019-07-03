@@ -1,0 +1,14 @@
+---
+Parameters:
+  PinpointAPNSVoipChannelTokenKey:
+    Type: String
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSVoipChannel:
+    Type: AWS::Pinpoint::APNSVoipChannel
+    Properties:
+      TokenKey: !Ref PinpointAPNSVoipChannelTokenKey
+      ApplicationId: !Ref PinpointApp
