@@ -63,7 +63,6 @@ describe PasswordBaseRule do
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
-                                               :masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -81,7 +80,6 @@ describe PasswordBaseRule do
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
-                                               :masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -121,7 +119,6 @@ describe PasswordBaseRule do
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
-                                               :masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -139,7 +136,6 @@ describe PasswordBaseRule do
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
-                                               :masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -157,7 +153,6 @@ describe PasswordBaseRule do
 
       expect(base_rule).to \
         receive(:password_property).and_return(:masterUserPassword,
-                                               :masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
