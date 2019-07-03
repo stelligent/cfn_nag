@@ -1,0 +1,9 @@
+---
+Resources:
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      EventSourceToken: '{{resolve:ssm:UnsecureSecretString:1}}'
+      FunctionName: foobar
+      Principal: foo.amazonaws.com
