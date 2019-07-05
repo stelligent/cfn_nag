@@ -22,7 +22,7 @@ class ResourceWithExplicitNameRule < BaseRule
     'AWS::IAM::Role' => 'roleName',
     'AWS::Kinesis::Stream' => 'name',
     'AWS::RDS::DBInstance' => 'dBInstanceIdentifier'
-  }.freeze
+  }.freeze # TODO: update this list.
 
   def rule_text
     'Resource found with an explicit name, this disallows updates that ' \
