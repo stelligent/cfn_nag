@@ -69,7 +69,7 @@ class CfnNagExecutor
   end
 
   def validate_options(opts)
-    unless opts[:output_format].nil? || %w[txt json].include?(opts[:output_format])
+    unless opts[:output_format].nil? || %w[colortxt txt json].include?(opts[:output_format])
       Trollop.die(:output_format,
                   'Must be txt or json')
     end
