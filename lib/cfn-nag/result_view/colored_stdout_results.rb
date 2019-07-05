@@ -3,9 +3,8 @@
 require 'cfn-nag/violation'
 require 'colorize'
 
-# Print results to STDOUT
+# Print results to STDOUT with ANSI color codes
 class ColoredStdoutResults < StdoutResults
-
   private
 
   # rubocop:disable Metrics/AbcSize

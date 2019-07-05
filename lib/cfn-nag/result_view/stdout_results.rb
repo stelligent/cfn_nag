@@ -42,7 +42,7 @@ class StdoutResults
   private
 
   def message
-    raise "Must be implemented in subclass!"
+    raise 'Must be implemented in subclass!'
   end
 
   def indent_multiline_string_with_prefix(prefix, multiline_string)

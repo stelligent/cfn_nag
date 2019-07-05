@@ -4,10 +4,9 @@ require 'cfn-nag/violation'
 
 # Print results to STDOUT
 class SimpleStdoutResults < StdoutResults
-
   private
 
-  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Lint/UnusedMethodArgument
   def message(message_type:,
               message:,
               color:,
@@ -25,5 +24,5 @@ class SimpleStdoutResults < StdoutResults
     puts '|' unless line_numbers.empty? && logical_resource_ids.nil?
     puts "| #{message}"
   end
-  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Lint/UnusedMethodArgument
 end
