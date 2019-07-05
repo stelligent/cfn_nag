@@ -24,7 +24,7 @@ class PasswordBaseRule < BaseRule
         false
       else
         verify_insecure_string_and_parameter(
-          cfn_model,resource, password_property, sub_property_name
+          cfn_model, resource, password_property, sub_property_name
         )
       end
     end
