@@ -14,8 +14,8 @@ describe Object.const_get(rule_name(resource_type, password_property, sub_proper
   password_rule_test_sets.each do |test_description, desired_test_result|
     context "#{resource_type} #{password_property} #{sub_property_name} #{test_description}" do
       it context_return_value(desired_test_result) do
-        run_test(resource_type, password_property, sub_property_name, test_template_type,
-                 test_description, desired_test_result)
+        run_test(resource_type, password_property, sub_property_name,
+                 test_template_type, test_description, desired_test_result)
       end
     end
   end
