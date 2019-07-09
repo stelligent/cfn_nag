@@ -3,7 +3,7 @@
 require 'json'
 require 'net/https'
 
-ENV['CIRCLE_PULL_REQUEST'] = 'https://github.com/stelligent/cfn_nag/pull/243'
+# ENV['CIRCLE_PULL_REQUEST'] = 'https://github.com/stelligent/cfn_nag/pull/243'
 GITHUB_API_HOST = 'api.github.com'
 
 def github_uri_path
@@ -18,7 +18,7 @@ def github_pr_title
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 
     request = Net::HTTP::Get.new(github_uri_path)
-    request['Authorization'] = "token #{ENV['GITHUB_TOKEN']}"
+    request['Authorization'] = "token #{ENV['GITHUB_API_TOKEN']}"
     response = http.request(request)
   rescue StandardError => error
     abort "ERROR: Exception accessing github API: #{error.message}"
