@@ -1,0 +1,8 @@
+{
+  "name": "my-awesome-package",
+  "auto-changelog": {
+    "replaceText": {
+      "^#(\\d+)( -)?(.*)": "$3 (Issue #[$1](https://github.com/stelligent/cfn_nag/issues/$1))"
+    }
+  }
+}

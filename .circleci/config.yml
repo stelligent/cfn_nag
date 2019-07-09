@@ -1,5 +1,12 @@
 version: 2
 jobs:
+  pr_title_validations:
+    docker:
+      - image: circleci/ruby:2.5.5-browsers
+    steps:
+      - run:
+          name: validate PR name starts with issue fixed (ex. #234)     
+          command: ruby ./scripts/check_pr_name.rb
   unit_test:
     docker:
       - image: circleci/ruby:2.5.5-browsers
