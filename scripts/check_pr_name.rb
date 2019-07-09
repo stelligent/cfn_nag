@@ -1,25 +1,26 @@
 # frozen_string_literal: true
 
 require 'json'
-require 'net/https'
+require 'net/http'
 
 # ENV['CIRCLE_PULL_REQUEST'] = 'https://github.com/stelligent/cfn_nag/pull/243'
 GITHUB_API_HOST = 'api.github.com'
+REQUEST_PATH = "/repos/#{ENV['CIRCLE_PROJECT_USERNAME']}"\
+               "/#{ENV['CIRCLE_PROJECT_REPONAME']}"\
+               "/pulls/#{ENV['CIRCLE_PR_NUMBER']}"
 
-def github_uri_path
-  *_beginning, owner, repo, _pull, pr_number = ENV['CIRCLE_PULL_REQUEST'].split('/')
-  "/repos/#{owner}/#{repo}/pulls/#{pr_number}"
+def http_connection
+  http = Net::HTTP.new(GITHUB_API_HOST, 443)
+  http.use_ssl = true
+  http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+  http
 end
 
 def github_pr_title
   begin
-    http = Net::HTTP.new(GITHUB_API_HOST, 443)
-    http.use_ssl = true
-    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
-
-    request = Net::HTTP::Get.new(github_uri_path)
+    request = Net::HTTP::Get.new(REQUEST_PATH)
     request['Authorization'] = "token #{ENV['GITHUB_API_TOKEN']}"
-    response = http.request(request)
+    response = http_connection.request(request)
   rescue StandardError => error
     abort "ERROR: Exception accessing github API: #{error.message}"
   end
