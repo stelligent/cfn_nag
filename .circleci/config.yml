@@ -13,8 +13,8 @@ jobs:
     steps:
       - checkout
       - run:
-        name: validate PR name starts with issue fixed (ex. #234)     
-        command: ruby ./scripts/check_pr_name.rb
+          name: validate PR name starts with issue fixed (ex. #234)     
+          command: ruby ./scripts/check_pr_name.rb
       - run:
           name: Which bundler?
           command: bundle -v
