@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
-# Create array of wildcard patterns for a given string
+# Create array of wildcard patterns for a given input string
 
-def wildcard_patterns(string, patterns: %w[front back both])
-  results = [string]
-  patterns.each do |pattern|
-    case pattern
+def wildcard_patterns(input, pattern_types: %w[front back both])
+  input_string = input.to_s
+  results = [input_string]
+  pattern_types.each do |pattern_type|
+    case pattern_type
     when 'front'
-      results += wildcard_front(string)
+      results += wildcard_front(input_string)
     when 'back'
-      results += wildcard_back(string)
+      results += wildcard_back(input_string)
     when 'both'
-      results += wildcard_front_back(string)
+      results += wildcard_front_back(input_string)
     else
-      raise "no pattern: #{pattern}. Use one or more of: front, back, both"
+      raise "no pattern of type: #{pattern_type}. Use one or more of: front, back, both"
     end
   end
   results + ['*']
@@ -21,23 +22,23 @@ end
 
 private
 
-def wildcard_back(string, results = [], prepend: '')
-  return results if string.empty?
+def wildcard_back(input_string, results = [], prepend: '')
+  return results if input_string.empty?
 
-  results << "#{prepend}#{string}*"
-  wildcard_back(string.chop, results, prepend: prepend)
+  results << "#{prepend}#{input_string}*"
+  wildcard_back(input_string.chop, results, prepend: prepend)
 end
 
-def wildcard_front(string, results = [])
-  return results if string.empty?
+def wildcard_front(input_string, results = [])
+  return results if input_string.empty?
 
-  results << "*#{string}"
-  wildcard_front(string[1..-1], results)
+  results << "*#{input_string}"
+  wildcard_front(input_string[1..-1], results)
 end
 
-def wildcard_front_back(string, results = [])
-  return results if string.empty?
+def wildcard_front_back(input_string, results = [])
+  return results if input_string.empty?
 
-  results += wildcard_back(string.to_s, prepend: '*')
-  wildcard_front_back(string[1..-1], results)
+  results += wildcard_back(input_string, prepend: '*')
+  wildcard_front_back(input_string[1..-1], results)
 end
