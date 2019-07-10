@@ -79,9 +79,9 @@ class Options
           required: false,
           default: false
       opt :output_format,
-          'Format of results: [txt, json]',
+          'Format of results: [txt, json, colortxt]',
           type: :string,
-          default: 'txt'
+          default: 'colortxt'
     end
   end
 
@@ -104,9 +104,9 @@ class Options
           type: :string,
           required: true
       opt :output_format,
-          'Format of results: [txt, json]',
+          'Format of results: [txt, json, colortxt]',
           type: :string,
-          default: 'txt'
+          default: 'colortxt'
       opt :debug,
           'Enable debug output',
           type: :boolean,

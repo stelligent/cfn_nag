@@ -4,7 +4,9 @@ require_relative 'custom_rule_loader'
 require_relative 'rule_registry'
 require_relative 'violation_filtering'
 require_relative 'template_discovery'
+require_relative 'result_view/stdout_results'
 require_relative 'result_view/simple_stdout_results'
+require_relative 'result_view/colored_stdout_results'
 require_relative 'result_view/json_results'
 require 'cfn-model'
 
@@ -142,6 +144,7 @@ class CfnNag
 
   def results_renderer(output_format)
     registry = {
+      'colortxt' => ColoredStdoutResults,
       'txt' => SimpleStdoutResults,
       'json' => JsonResults
     }
