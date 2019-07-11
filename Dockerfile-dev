@@ -1,9 +1,5 @@
 FROM ruby:2.5
 
-ENV APP_ROOT=/usr/src/app
-
-RUN gem install rubocop
-
-COPY Gemfile* ${APP_ROOT}/
-
+ADD . /
+RUN gem install bundler
 RUN bundle install
