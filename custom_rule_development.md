@@ -112,4 +112,6 @@ install` to install dependencies.
 
 ## Contributing Rules to the Community
 
-For any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`.  Please be sure to use a unique `rule_id` and write the rule according section 1 of the above "Where to Place Rule Files" area.
+For any generic rules you want to share with the community, submit a PR of the rule to `lib/custom_rules`. 
+Code should be linted using [Rubocop](https://github.com/rubocop-hq/rubocop).  Please be sure to use a unique 
+`rule_id` and write the rule according section 1 of the above "Where to Place Rule Files" area.
