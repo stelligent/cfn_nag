@@ -1,5 +1,5 @@
-FROM ruby:2.5
+FROM ruby:2.5-alpine3.9@sha256:f33782620b363575ad95d19d0f0f07f7d197e9ccfee51f20df39dd33d408cdb4
 
-ADD . /
+COPY . /
 RUN gem install bundler
 RUN bundle install
