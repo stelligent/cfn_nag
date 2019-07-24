@@ -26,13 +26,13 @@ describe 'git', :rule do
     it 'returns new_version 0.0.1' do
       Dir.mktmpdir do |dir|
         Git.init(dir)
-        expect(repo_current_info(dir)).to include('tag' => nil, 'version' => nil, 'major' => nil, 'minor' => nil, 'patch' => nil, 'new_version' => '0.0.1')
+        expect(repo_current_info(dir)).to include('tag' => nil, 'version' => nil, 'next_version' => '0.0.1')
       end
     end
   end
 
   context 'repo_current_info for a repo with tag on latest commit' do
-    it 'returns existing version' do
+    it 'returns tagged_commit true' do
       Dir.mktmpdir do |dir|
         Git.init(dir)
         git = open_repo(dir)
@@ -40,13 +40,13 @@ describe 'git', :rule do
         git.add("#{dir}/file1")
         git.commit('test commit')
         git.add_tag('v1.0.1', message: 'v1.0.1')
-        expect(repo_current_info(dir)).to include('tag' => 'v1.0.1', 'version' => '1.0.1', 'major' => '1', 'minor' => '0', 'patch' => '1', 'new_version' => nil)
+        expect(repo_current_info(dir)).to include('tag' => 'v1.0.1', 'version' => '1.0.1', 'next_version' => '1.0.2', 'tagged_commit' => true)
       end
     end
   end
 
   context 'repo_current_info for a repo with commits after last tag' do
-    it 'returns existing version' do
+    it 'returns tagged_commit false' do
       Dir.mktmpdir do |dir|
         Git.init(dir)
         git = open_repo(dir)
@@ -57,7 +57,21 @@ describe 'git', :rule do
         File.open("#{dir}/file2", 'w+') { |file| file.write('dummy data') }
         git.add("#{dir}/file2")
         git.commit('test commit2')
-        expect(repo_current_info(dir)).to include('version' => '1.0.1', 'major' => '1', 'minor' => '0', 'patch' => '1', 'new_version' => '1.0.2')
+        expect(repo_current_info(dir)).to include('version' => '1.0.1', 'next_version' => '1.0.2', 'tagged_commit' => false)
+      end
+    end
+  end
+
+  context 'tag_repo' do
+    it 'tags the repo' do
+      Dir.mktmpdir do |dir|
+        Git.init(dir)
+        git = open_repo(dir)
+        File.open("#{dir}/file1", 'w+') { |file| file.write('dummy data') }
+        git.add("#{dir}/file1")
+        git.commit('test commit')
+        tag_repo(dir, 'v1.1.1')
+        expect(git.tag('v1.1.1')).to be_an_instance_of(Git::Object::Tag)
       end
     end
   end

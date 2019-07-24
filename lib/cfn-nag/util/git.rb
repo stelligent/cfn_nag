@@ -8,21 +8,28 @@ def repo_current_info(location)
   current_tag = git.describe
   current_version = current_tag.gsub(/v?([0-9.]+).*/, '\1')
   major, minor, patch = current_version.split('.')
-  new_version = (current_tag.include?('-') ? "#{major}.#{minor}.#{patch.to_i + 1}" : nil)
+  tagged_commit = !current_tag.include?('-')
+  next_version = "#{major}.#{minor}.#{patch.to_i + 1}"
 
   { 'tag' => current_tag,
     'version' => current_version,
-    'major' => major,
-    'minor' => minor,
-    'patch' => patch,
-    'new_version' => new_version }
+    'next_version' => next_version,
+    'tagged_commit' => tagged_commit }
 rescue Git::GitExecuteError
   { 'tag' => nil,
     'version' => nil,
-    'major' => nil,
-    'minor' => nil,
-    'patch' => nil,
-    'new_version' => '0.0.1' }
+    'next_version' => '0.0.1',
+    'tagged_commit' => false }
+end
+
+def tag_repo(repo_dir, tag_name)
+  git = open_repo(repo_dir)
+  git.add_tag(tag_name, message: tag_name)
+  begin
+    git.push
+  rescue StandardError => git_error
+    raise "Git error pushing tag: #{git_error} "
+  end
 end
 
 private
