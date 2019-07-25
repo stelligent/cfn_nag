@@ -17,10 +17,18 @@ For more background on the tool, please see:
 
 # Installation
 
-Presuming Ruby 2.5.x is installed, installation is just a matter of `
+## Gem Install 
+Presuming Ruby >= 2.5.x is installed, installation is just a matter of `
 
 ```bash
 gem install cfn-nag
+```
+
+## Brew Install
+On MacOS or Linux (tested on ubuntu) install with brew
+```
+brew tap stelligent/homebrew-tap
+brew install cfn-nag
 ```
 
 # Pipeline
