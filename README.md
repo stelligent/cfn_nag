@@ -26,7 +26,8 @@ gem install cfn-nag
 
 ## Brew Install
 On MacOS or Linux (tested on ubuntu) install with brew
-```
+
+```bash
 brew tap stelligent/homebrew-tap
 brew install cfn-nag
 ```
