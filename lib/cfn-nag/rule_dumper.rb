@@ -6,9 +6,11 @@ require_relative 'result_view/rules_view'
 
 class CfnNagRuleDumper
   def initialize(profile_definition: nil,
-                 rule_directory: nil)
+                 rule_directory: nil,
+                 output_format: nil)
     @rule_directory = rule_directory
     @profile_definition = profile_definition
+    @output_format = output_format
   end
 
   def dump_rules
@@ -21,6 +23,6 @@ class CfnNagRuleDumper
                              .load(profile_definition: @profile_definition)
     end
 
-    RulesView.new.emit(rule_registry, profile)
+    RulesView.new.emit(rule_registry, profile, output_format: @output_format)
   end
 end

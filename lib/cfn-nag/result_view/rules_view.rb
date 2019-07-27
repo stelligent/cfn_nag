@@ -1,13 +1,21 @@
 # frozen_string_literal: true
 
+require 'json'
+
 # View rules warnings/failings
 class RulesView
-  def emit(rule_registry, profile)
-    puts 'WARNING VIOLATIONS:'
-    emit_warnings rule_registry.warnings, profile
-    puts
-    puts 'FAILING VIOLATIONS:'
-    emit_failings rule_registry.failings, profile
+  def emit(rule_registry, profile, output_format: 'txt')
+    warnings = select_rules(rule_registry.warnings, profile)
+    failings = select_rules(rule_registry.failings, profile)
+    case output_format
+    when 'csv'
+      emit_csv(warnings, failings)
+    when 'json'
+      rules = failings + warnings
+      puts rules_to_json(rules)
+    when 'txt'
+      emit_txt(warnings, failings)
+    end
 
     if rule_registry.duplicate_ids?
       emit_duplicates(rule_registry.duplicate_ids)
@@ -16,6 +24,22 @@ class RulesView
   end
 
   private
+
+  def emit_txt(warnings, failings)
+    output_pattern = '%{id} %{message}'
+    puts 'WARNING VIOLATIONS:'
+    emit_rules(warnings, output_pattern)
+    puts
+    puts 'FAILING VIOLATIONS:'
+    emit_rules(failings, output_pattern)
+  end
+
+  def emit_csv(warnings, failings)
+    output_pattern = '%{type},%{id},"%{message}"'
+    puts 'Type,ID,Message'
+    emit_rules(failings, output_pattern)
+    emit_rules(warnings, output_pattern)
+  end
 
   def emit_duplicates(duplicates)
     duplicates.each do |info|
@@ -26,24 +50,27 @@ class RulesView
     end
   end
 
-  def emit_warnings(warnings, profile)
-    warnings.sort { |left, right| sort_id(left, right) }.each do |warning|
-      if profile.nil?
-        puts "#{warning.id} #{warning.message}"
-      elsif profile.contains_rule?(warning.id)
-        puts "#{warning.id} #{warning.message}"
-      end
+  def select_rules(rules, profile)
+    selected = if profile.nil?
+                 rules
+               else
+                 rules.select { |rule| profile.contains_rule?(rule.id) }
+                end
+    selected.sort { |left, right| sort_id(left, right) }
+  end
+
+  def emit_rules(rules, output_pattern)
+    rules.each do |rule|
+      puts format(output_pattern, id: rule.id, message: rule.message, type: rule.type)
     end
   end
 
-  def emit_failings(failings, profile)
-    failings.sort { |left, right| sort_id(left, right) }.each do |failing|
-      if profile.nil?
-        puts "#{failing.id} #{failing.message}"
-      elsif profile.contains_rule?(failing.id)
-        puts "#{failing.id} #{failing.message}"
-      end
+  def rules_to_json(rules)
+    rule_array = []
+    rules.each do |rule|
+      rule_array << rule.to_h
     end
+    puts rule_array.to_json
   end
 
   def sort_id(left, right)
