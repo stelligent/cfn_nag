@@ -7,11 +7,11 @@ class RulesView
   def emit(rule_registry, profile, output_format: 'txt')
     warnings = select_rules(rule_registry.warnings, profile)
     failings = select_rules(rule_registry.failings, profile)
+    rules = failings + warnings
     case output_format
     when 'csv'
-      emit_csv(warnings, failings)
+      emit_csv(rules)
     when 'json'
-      rules = failings + warnings
       puts rules_to_json(rules)
     when 'txt'
       emit_txt(warnings, failings)
@@ -34,11 +34,10 @@ class RulesView
     emit_rules(failings, output_pattern)
   end
 
-  def emit_csv(warnings, failings)
+  def emit_csv(rules)
     output_pattern = '%<type>s,%<id>s,"%<message>s"'
     puts 'Type,ID,Message'
-    emit_rules(failings, output_pattern)
-    emit_rules(warnings, output_pattern)
+    emit_rules(rules, output_pattern)
   end
 
   def emit_duplicates(duplicates)
