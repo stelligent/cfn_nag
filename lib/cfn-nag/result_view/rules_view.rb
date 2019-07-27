@@ -26,7 +26,7 @@ class RulesView
   private
 
   def emit_txt(warnings, failings)
-    output_pattern = '%{id} %{message}'
+    output_pattern = '%<id>s %<message>s'
     puts 'WARNING VIOLATIONS:'
     emit_rules(warnings, output_pattern)
     puts
@@ -35,7 +35,7 @@ class RulesView
   end
 
   def emit_csv(warnings, failings)
-    output_pattern = '%{type},%{id},"%{message}"'
+    output_pattern = '%<type>s,%<id>s,"%<message>s"'
     puts 'Type,ID,Message'
     emit_rules(failings, output_pattern)
     emit_rules(warnings, output_pattern)
@@ -55,7 +55,7 @@ class RulesView
                  rules
                else
                  rules.select { |rule| profile.contains_rule?(rule.id) }
-                end
+               end
     selected.sort { |left, right| sort_id(left, right) }
   end
 
@@ -70,7 +70,7 @@ class RulesView
     rules.each do |rule|
       rule_array << rule.to_h
     end
-    puts rule_array.to_json
+    puts JSON.pretty_generate(rule_array)
   end
 
   def sort_id(left, right)
