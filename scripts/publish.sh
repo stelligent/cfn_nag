@@ -92,3 +92,9 @@ echo $docker_password | docker login -u $docker_user --password-stdin
 docker tag $docker_org/cfn_nag:${GEM_VERSION} $docker_org/cfn_nag:latest
 docker push $docker_org/cfn_nag:${GEM_VERSION}
 docker push $docker_org/cfn_nag:latest
+
+# Update Changelog
+node node_modules/auto-changelog/lib/index.js --template changelog-template.hbs
+git add CHANGELOG.md
+git commit -m "Update Changelog [skip ci]"
+git push

@@ -2,7 +2,7 @@ version: 2
 jobs:
   unit_test:
     docker:
-      - image: circleci/ruby:2.5.5-browsers
+      - image: circleci/ruby:2.5.5-node-browsers
     steps:
       - checkout
       - run:
@@ -22,7 +22,7 @@ jobs:
           command: bundle exec ./bin/cfn_nag_rules
   end_to_end_test:
     docker:
-      - image: circleci/ruby:2.5.5-browsers
+      - image: circleci/ruby:2.5.5-node-browsers
     steps:
       - checkout
       - run:
@@ -30,7 +30,7 @@ jobs:
           command: bash ./scripts/setup_and_run_end_to_end_tests.sh
   publish:
     docker:
-      - image: circleci/ruby:2.5.5-browsers
+      - image: circleci/ruby:2.5.5-node-browsers
     steps:
       - checkout
       - run:

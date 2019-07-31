@@ -1,0 +1,13 @@
+{{#each releases}}
+### [{{title}}]({{href}})
+> {{niceDate}}
+{{#if merges}}
+{{#each merges}}
+- {{message}} (PR #[{{id}}]({{href}}))
+{{/each}}
+{{/if}}
+{{#commit-list commits heading=''}}
+- {{subject}}
+{{/commit-list}}
+
+{{/each}}
