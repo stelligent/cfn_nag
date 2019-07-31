@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Validate commit message
+if ! grep -qE "^(Merge|#[0-9][0-9]* )" "$1";then
+    cat "$1"
+    echo "Your commit message must start with a Issue id (example: #23) or be a Merge commit"
+    exit 1
+fi
