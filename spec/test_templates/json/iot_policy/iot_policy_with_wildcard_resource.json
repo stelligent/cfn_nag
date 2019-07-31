@@ -1,0 +1,24 @@
+{
+    "Resources" : {
+
+        "IOT_Wildcard_Resource":
+        {
+            "Type" : "AWS::IoT::Policy",
+            "Properties" : {
+                  "PolicyName" : "CFNUsers",
+                  "PolicyDocument" : {
+                        "Version" : "2012-10-17",
+                        "Statement": [ {
+                           "Effect" : "Allow",
+                           "Action" : "Iot:Connect",
+                           "Resource" : "*" 
+                          } ]
+                   },
+
+           "Groups" : [ { "Ref" : "CFNUserGroup" } ]
+        } 
+      }
+
+    }
+}
+
