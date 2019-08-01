@@ -27,9 +27,9 @@ Gem::Specification.new do |s|
   # i might consider collapsing them again....
   s.add_runtime_dependency('cfn-model', '0.4.0')
   s.add_runtime_dependency('colorize', '0.8.1')
+  s.add_runtime_dependency('docker-api', '~> 1.34.2')
   s.add_runtime_dependency('jmespath', '~> 1.3.1')
   s.add_runtime_dependency('logging', '~> 2.2.2')
   s.add_runtime_dependency('netaddr', '~> 1.5.1')
   s.add_runtime_dependency('trollop', '~> 2.1.2')
-  s.add_runtime_dependency('docker-api', '~> 1.34.2')
 end
