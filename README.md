@@ -260,6 +260,14 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 
 # Development
 
+
+## Development Environment Setup
+- Install prerequisites: Ruby, Docker 
+- Clone the repo
+- cd into the repo and run `make`
+
+Note: Development setup includes git hooks to enforce commit message syntax (#XX commit message) where xx is the issue ID.
+
 ## New Rules
 
 To author new rules for your own use and/or community contribution, see [Custom Rule Development](custom_rule_development.md) for details.
@@ -269,23 +277,12 @@ A screencast demonstrating soup to nuts TDD custom rule development is available
 <https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s>
 
 ## Specs
+To run all of the specs, run `make test`.
 
-To run the specs, you need to ensure you have Docker installed and cfn_nag dependencies installed via
-```
-gem install bundle
-bundle install
-```
-
-Then, to run all of the specs, just run `rake test:all`.
-
-To run the end-to-end tests, run `rake test:e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
+To run the end-to-end tests, run `make e2e`. This will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 ## Local Install
-To install the current git branch locally:
-```
-bundle install
-scripts/deploy_local.sh
-```
+To install the current git branch locally: `make install`
 
 # Support
 
