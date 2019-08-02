@@ -14,6 +14,10 @@ opts = Trollop.options do
   opt :profile_path, 'Path to a profile file', type: :io,
                                                required: false,
                                                default: nil
+  opt :output_format,
+      'Format of results: [csv, json, txt]',
+      type: :string,
+      default: 'txt'
 end
 
 profile_definition = nil
@@ -22,6 +26,7 @@ unless opts[:profile_path].nil?
 end
 
 rule_dumper = CfnNagRuleDumper.new(profile_definition: profile_definition,
-                                   rule_directory: opts[:rule_directory])
+                                   rule_directory: opts[:rule_directory],
+                                   output_format: opts[:output_format])
 
 rule_dumper.dump_rules
