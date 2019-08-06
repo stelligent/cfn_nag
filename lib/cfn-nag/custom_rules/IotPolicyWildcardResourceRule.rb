@@ -21,12 +21,7 @@ class IotPolicyWildcardResourceRule < BaseRule
   def audit_impl(cfn_model)
 
     violating_policies = cfn_model.resources_by_type('AWS::IoT::Policy').select do |policy|
-
-      # there is no support for AWS::IoT::Policy in cfn_model yet, so must 
-      # call PolicyDocumentParser ourselves
-      policy.policy_document = PolicyDocumentParser.new.parse(policy.policyDocument)
-
-     !policy.policy_document.wildcard_allowed_resources.empty?
+      !policy.policy_document.wildcard_allowed_resources.empty?
     end
 
     violating_policies.map(&:logical_resource_id)
