@@ -4,7 +4,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 require 'json'
 
-
 class IotPolicyWildcardActionRule < BaseRule
   def rule_text
     'IOT policy should not allow * action'
@@ -19,7 +18,6 @@ class IotPolicyWildcardActionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-
     violating_policies = cfn_model.resources_by_type('AWS::IoT::Policy').select do |policy|
       !policy.policy_document.wildcard_allowed_actions.empty?
     end
