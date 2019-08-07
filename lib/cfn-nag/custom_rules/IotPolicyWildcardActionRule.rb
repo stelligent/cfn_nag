@@ -10,7 +10,7 @@ class IotPolicyWildcardActionRule < BaseRule
   end
 
   def rule_type
-    Violation::FAILING_VIOLATION
+    Violation::WARNING
   end
 
   def rule_id
