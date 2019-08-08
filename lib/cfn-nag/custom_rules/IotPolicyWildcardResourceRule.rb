@@ -4,7 +4,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 require 'json'
 
-
 class IotPolicyWildcardResourceRule < BaseRule
   def rule_text
     'IoT policy should not allow * resource'
