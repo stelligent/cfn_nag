@@ -1,0 +1,28 @@
+{
+  "Resources": {
+    "S3BucketEncryptionNotSet" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "fakebucketfakebucket",
+        "AccessControl": "BucketOwnerRead"
+      }
+    },
+
+    "S3BucketEncryptionSSSet" : {
+      "Type" : "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName" : "anotherfakebucketasdfa",
+        "AccessControl": "BucketOwnerRead",
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }    
+      }
+    }
+  }
+}
