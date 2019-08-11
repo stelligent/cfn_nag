@@ -22,7 +22,7 @@ class SecurityGroupEgressAllProtocolsRule < BaseRule
   def audit_impl(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_egresses = security_group.egresses.select do |egress|
-        egress.ipProtocol == -1 && egress.fromPort != egress.toPort
+        egress.ipProtocol == -1
       end
 
         !violating_egresses.empty?
@@ -30,7 +30,7 @@ class SecurityGroupEgressAllProtocolsRule < BaseRule
 
      # TODO: research standalone egress, is there a CF example?
      violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-        standalone_egress.ipProtocol == -1 && standalone_egress.fromPort != standalone_egress.toPort
+        standalone_egress.ipProtocol == -1
       end
 
     violating_security_groups.map(&:logical_resource_id) + violating_egresses.map(&:logical_resource_id)

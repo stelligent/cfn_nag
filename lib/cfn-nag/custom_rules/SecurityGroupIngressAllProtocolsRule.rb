@@ -22,14 +22,14 @@ class SecurityGroupIngressAllProtocolsRule < BaseRule
   def audit_impl(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_ingresses = security_group.ingresses.select do |ingress|
-        ingress.ipProtocol == -1 && ingress.fromPort != ingress.toPort
+        ingress.ipProtocol == -1
       end
 
       !violating_ingresses.empty?
     end
 
     violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
-      standalone_ingress.ipProtocol == -1 && standalone_ingress.fromPort != standalone_ingress.toPort
+      standalone_ingress.ipProtocol == -1 
     end
 
     violating_security_groups.map(&:logical_resource_id) + violating_ingresses.map(&:logical_resource_id)
