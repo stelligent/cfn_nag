@@ -25,13 +25,12 @@ class SecurityGroupEgressAllProtocolsRule < BaseRule
         egress.ipProtocol == -1
       end
 
-        !violating_egresses.empty?
-     end
+      !violating_egresses.empty?
+    end
 
-     # TODO: research standalone egress, is there a CF example?
-     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-        standalone_egress.ipProtocol == -1
-      end
+    violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
+      standalone_egress.ipProtocol == -1
+    end
 
     violating_security_groups.map(&:logical_resource_id) + violating_egresses.map(&:logical_resource_id)
   end
