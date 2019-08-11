@@ -3,9 +3,9 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class SecurityGroupEgressPortRangeRule2 < BaseRule
+class SecurityGroupEgressAllProtocolsRule < BaseRule
   def rule_text
-    'Security Groups with an IpProtocol of -1 found egress with port range'
+    'Security Groups with an IpProtocol of -1 found'
   end
 
   def rule_type
