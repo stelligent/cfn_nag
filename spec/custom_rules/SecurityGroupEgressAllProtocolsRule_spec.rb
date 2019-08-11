@@ -8,7 +8,7 @@ describe SecurityGroupEgressAllProtocolsRule do
       cfn_model = CfnParser.new.parse read_test_template('json/security_group/dangling_allprotocols_egress_rule.json')
 
       actual_logical_resource_ids = SecurityGroupEgressAllProtocolsRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[securityGroupEgress2]
+      expected_logical_resource_ids = %w[securityGroupEgress2 IpProtocol_minus_1_str]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

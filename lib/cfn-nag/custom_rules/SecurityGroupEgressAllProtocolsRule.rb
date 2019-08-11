@@ -22,14 +22,14 @@ class SecurityGroupEgressAllProtocolsRule < BaseRule
   def audit_impl(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_egresses = security_group.egresses.select do |egress|
-        egress.ipProtocol == -1
+        egress.ipProtocol.to_i == -1
       end
 
       !violating_egresses.empty?
     end
 
     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-      standalone_egress.ipProtocol == -1
+      standalone_egress.ipProtocol.to_i == -1
     end
 
     violating_security_groups.map(&:logical_resource_id) + violating_egresses.map(&:logical_resource_id)
