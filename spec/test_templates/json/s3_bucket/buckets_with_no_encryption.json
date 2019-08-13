@@ -3,15 +3,15 @@
     "S3BucketEncryptionNotSet" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
-        "BucketName" : "fakebucketfakebucket",
+        "BucketName" : "fakebucketfaaaake",
         "AccessControl": "BucketOwnerRead"
       }
     },
 
-    "S3BucketEncryptionSSSet" : {
+    "Green_S3BucketEncryptionSet" : {
       "Type" : "AWS::S3::Bucket",
       "Properties" : {
-        "BucketName" : "anotherfakebucketasdfa",
+        "BucketName" : "encryptedfakebucket",
         "AccessControl": "BucketOwnerRead",
         "BucketEncryption": {
           "ServerSideEncryptionConfiguration": [

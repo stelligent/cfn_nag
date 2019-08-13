@@ -3,8 +3,6 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-#TODO: assign/check unique W rule number
-
 class S3BucketEncryptionSetRule < BaseRule
   def rule_text
     'S3 Bucket should have encryption option set'
@@ -15,15 +13,14 @@ class S3BucketEncryptionSetRule < BaseRule
   end
 
   def rule_id
-    'W40'
+    'W41'
   end
 
   def audit_impl(cfn_model)
-    violating_buckets = cfn_model.resources_by_type('AWS::S3::Bucket').each do |bucket|
-       bucket.bucketEncryption.nil?
+    violating_buckets = cfn_model.resources_by_type('AWS::S3::Bucket').select do |bucket|
+      bucket.bucketEncryption.nil?
     end
 
     violating_buckets.map(&:logical_resource_id)
   end
-
 end
