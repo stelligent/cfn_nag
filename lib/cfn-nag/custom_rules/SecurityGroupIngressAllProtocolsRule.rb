@@ -13,7 +13,7 @@ class SecurityGroupIngressAllProtocolsRule < BaseRule
   end
 
   def rule_id
-    'W41'
+    'W42'
   end
 
   ##
