@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'cfn-model'
-require 'cfn-nag/custom_rules/IoTPolicyWildcardActionRule'
+require 'cfn-nag/custom_rules/IotPolicyWildcardActionRule'
 
 describe IotPolicyWildcardActionRule do
   context 'policy with a wildcard Action' do
