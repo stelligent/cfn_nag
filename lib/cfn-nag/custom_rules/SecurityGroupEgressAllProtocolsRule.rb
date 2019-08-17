@@ -5,7 +5,7 @@ require_relative 'base'
 
 class SecurityGroupEgressAllProtocolsRule < BaseRule
   def rule_text
-    'Security Groups with an IpProtocol of -1 found'
+    'Security Groups egress with an IpProtocol of -1 found'
   end
 
   def rule_type
