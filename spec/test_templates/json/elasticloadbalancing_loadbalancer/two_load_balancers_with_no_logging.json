@@ -63,6 +63,15 @@
         "BucketName" : "fakebucketfakebucket",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     },

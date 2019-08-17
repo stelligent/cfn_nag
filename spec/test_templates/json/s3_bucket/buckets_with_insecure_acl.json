@@ -7,6 +7,15 @@
         "AccessControl": "PublicRead",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     },
@@ -18,6 +27,15 @@
         "AccessControl": "PublicReadWrite",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     }

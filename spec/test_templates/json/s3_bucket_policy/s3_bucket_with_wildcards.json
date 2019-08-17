@@ -6,6 +6,15 @@
         "BucketName" : "fakebucketfakebucket",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     },
@@ -16,6 +25,15 @@
         "BucketName" : "fakebucketfakebucket2",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     },
@@ -26,6 +44,15 @@
         "BucketName" : "fakebucketfakebucket3",
         "LoggingConfiguration": {
           "DestinationBucketName": "moocow"
+        },
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration" : [
+            {
+              "ServerSideEncryptionByDefault" : {
+                "SSEAlgorithm" : "AES256"
+              }
+            }
+          ]
         }
       }
     },
