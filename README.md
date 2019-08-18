@@ -1,6 +1,8 @@
 <img src="logo.png?raw=true" width="150">
 <br/>
 
+[![CircleCI Build Status](https://circleci.com/gh/stelligent/cfn_nag.svg?style=shield)](https://circleci.com/gh/stelligent/cfn_nag)
+
 # Background
 
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
