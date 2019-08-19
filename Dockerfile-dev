@@ -1,4 +1,4 @@
-FROM ruby:2.5-alpine3.9@sha256:f33782620b363575ad95d19d0f0f07f7d197e9ccfee51f20df39dd33d408cdb4
+FROM ruby:2.6-alpine3.9@sha256:b73133a8d9c20680153ec82b9615f89b4ed0114240823ef6d3f5b9930280c893
 
 COPY . /
 RUN gem install bundler

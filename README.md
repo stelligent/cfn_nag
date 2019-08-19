@@ -18,7 +18,7 @@ For more background on the tool, please see:
 # Installation
 
 ## Gem Install 
-Presuming Ruby >= 2.5.x is installed, installation is just a matter of `
+Presuming Ruby >= 2.6.x is installed, installation is just a matter of `
 
 ```bash
 gem install cfn-nag
