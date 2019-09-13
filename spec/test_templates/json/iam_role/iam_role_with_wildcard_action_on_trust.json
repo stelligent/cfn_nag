@@ -14,7 +14,7 @@
                   "ec2.amazonaws.com"
                 ]
               },
-              "Action": "sts:AssumeRole*"
+              "Action": "*"
             }
           ]
         },

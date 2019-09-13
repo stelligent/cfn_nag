@@ -8,7 +8,7 @@ describe IotPolicyWildcardActionRule do
       cfn_model = CfnParser.new.parse read_test_template('json/iot_policy/iot_policy_with_wildcard_action.json')
 
       actual_logical_resource_ids = IotPolicyWildcardActionRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[WildcardActionPolicy PartialWildcardActionPolicy]
+      expected_logical_resource_ids = %w[WildcardActionPolicy]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
