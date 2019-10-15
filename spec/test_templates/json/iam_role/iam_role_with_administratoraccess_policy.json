@@ -15,7 +15,6 @@
               "Action": ["sts:AssumeRole"]
             } ]
           },
-          "RoleName": "administratoraccess",
           "ManagedPolicyArns" : [ "arn:aws:iam::aws:policy/AdministratorAccess" ]
         }
       }
