@@ -13,15 +13,12 @@ class IamRoleAdministratorAccessPolicyRule < BaseRule
   end
 
   def rule_id
-    'W25'
+    'W43'
   end
 
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      violating_policies = role.managedPolicyArns.select do |policy|
-        policy.include? "arn:aws:iam::aws:policy/AdministratorAccess"
-      end
-      !violating_policies.empty?
+      role.managedPolicyArns.find { |policy| policy.include? 'arn:aws:iam::aws:policy/AdministratorAccess' }
     end
 
     violating_roles.map(&:logical_resource_id)
