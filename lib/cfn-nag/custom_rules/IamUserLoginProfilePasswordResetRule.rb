@@ -4,7 +4,6 @@ require 'cfn-nag/violation'
 require_relative 'base'
 
 class IamUserLoginProfilePasswordResetRule < BaseRule
-
 	def rule_text
 		'IAM User Login Profile should exist and have PasswordResetRequired set to true'
 	end
