@@ -1,7 +1,6 @@
 require 'spec_helper'
 require 'password_rule_spec_helper'
 require 'cfn-model'
-
 require 'cfn-nag/custom_rules/IamUserLoginProfilePasswordRule'
 
 describe IamUserLoginProfilePasswordRule do
