@@ -18,7 +18,7 @@ class ApiGatewayAccessLoggingRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_deployments = cfn_model.resources_by_type('AWS::ApiGateway::Deployment').select do |deployment|
-      volume.StageDescription.nil? || deployment.StageDescription['AccessLogSetting'].nil?
+      deployment.stageDescription.nil? || deployment.stageDescription['AccessLogSetting'].nil?
     end
 
     violating_deployments.map(&:logical_resource_id)

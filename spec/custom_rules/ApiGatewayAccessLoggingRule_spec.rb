@@ -5,7 +5,7 @@ require 'cfn-nag/custom_rules/ApiGatewayAccessLoggingRule'
 describe ApiGatewayAccessLoggingRule do
   context 'Api Gateway has no access logging configured since it missing stagedescription' do
     it 'returns offending logical resource id' do
-      cfn_model = CfnParser.new.parse read_test_template('json/apigateway_accesslogging/apigateway_with_no_access_logging-missing-stagedescription.json')
+      cfn_model = CfnParser.new.parse read_test_template('json/apigateway_accesslogging/apigateway_with_no_access_logging_missing_stagedescription.json')
 
       actual_logical_resource_ids = ApiGatewayAccessLoggingRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[ApiGatewayNoAccessLogging]

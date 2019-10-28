@@ -1,0 +1,10 @@
+{
+	"Resources": {
+		"ApiGatewayNoAccessLogging": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				
+			}
+		}
+	}
+}

@@ -1,8 +1,0 @@
-{
-	"Resources": {
-		"Type": "AWS::ApiGateway::Deployment",
-		"Properties": {
-			
-		}
-	}
-}
