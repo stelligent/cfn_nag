@@ -16,12 +16,16 @@ class IamRoleElevatedManagedPolicyRule < BaseRule
     'W44'
   end
 
+  def includes_elevated_policy(role)
+    role.managedPolicyArns.find do |policy|
+      policy.include?('arn:aws:iam::aws:policy/PowerUserAccess') ||
+        policy.include?('arn:aws:iam::aws:policy/IAMFullAccess')
+    end
+  end
+
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      role.managedPolicyArns.find do |policy|
-          policy.include?('arn:aws:iam::aws:policy/PowerUserAccess') ||
-          policy.include?('arn:aws:iam::aws:policy/IAMFullAccess')
-      end
+      includes_elevated_policy(role)
     end
     violating_roles.map(&:logical_resource_id)
   end
