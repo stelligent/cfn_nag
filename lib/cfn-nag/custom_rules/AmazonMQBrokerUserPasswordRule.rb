@@ -8,7 +8,7 @@ require_relative 'base'
 class AmazonMQBrokerUserPasswordRule < BaseRule
 
   def rule_text
-    'Amazon MQ Broker User should not show password in plain text, resolve an unsecure ssm string, or have a default value for parameter.'
+    'Amazon MQ Broker User Password property should not show password in plain text, resolve an unsecure ssm string, or have a default value for parameter.'
   end
 
   def rule_type
