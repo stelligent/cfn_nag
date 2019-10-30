@@ -3,9 +3,9 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class IamRoleElevatedManagedPolicyRule < BaseRule
+class IamRoleAdministratorAccessPolicyRule < BaseRule
   def rule_text
-    'IAM role should not have Elevated Managed policy'
+    'IAM role should not have AdministratorAccess policy'
   end
 
   def rule_type
@@ -13,16 +13,14 @@ class IamRoleElevatedManagedPolicyRule < BaseRule
   end
 
   def rule_id
-    'W44'
+    'W43'
   end
 
   def audit_impl(cfn_model)
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
-      role.managedPolicyArns.find do |policy|
-          policy.include?('arn:aws:iam::aws:policy/PowerUserAccess') ||
-          policy.include?('arn:aws:iam::aws:policy/IAMFullAccess')
-      end
+      role.managedPolicyArns.find { |policy| policy.include? 'arn:aws:iam::aws:policy/AdministratorAccess' }
     end
+
     violating_roles.map(&:logical_resource_id)
   end
 end
