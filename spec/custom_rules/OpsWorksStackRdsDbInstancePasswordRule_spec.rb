@@ -12,7 +12,7 @@ describe OpsWorksStackRdsDbInstancePasswordRule do
 
       actual_logical_resource_ids =
         OpsWorksStackRdsDbInstancePasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[MyOpsWorksStack]
+      expected_logical_resource_ids = %w[MyOpsWorksStack MyOpsWorksStack2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -26,7 +26,7 @@ describe OpsWorksStackRdsDbInstancePasswordRule do
 
       actual_logical_resource_ids =
         OpsWorksStackRdsDbInstancePasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[MyOpsWorksStack]
+      expected_logical_resource_ids = %w[MyOpsWorksStack MyOpsWorksStack3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -46,7 +46,7 @@ describe OpsWorksStackRdsDbInstancePasswordRule do
     end
   end
 
-  context 'OpsWorks Stack RDS DBInstance resource has a password in plaint text' do
+  context 'OpsWorks Stack RDS DBInstance resource has a password in plain text' do
     it 'Returns the logical resource ID of the offending AWS::OpsWorks::Stack resouce' do
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/ops_works/ops_works_stack_rds_db_instance_password_plain_text.yaml'
@@ -54,7 +54,7 @@ describe OpsWorksStackRdsDbInstancePasswordRule do
 
       actual_logical_resource_ids =
         OpsWorksStackRdsDbInstancePasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[MyOpsWorksStack]
+      expected_logical_resource_ids = %w[MyOpsWorksStack MyOpsWorksStack2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -93,7 +93,7 @@ describe OpsWorksStackRdsDbInstancePasswordRule do
       )
       actual_logical_resource_ids =
         OpsWorksStackRdsDbInstancePasswordRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[MyOpsWorksStack]
+      expected_logical_resource_ids = %w[MyOpsWorksStack MyOpsWorksStack2]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
