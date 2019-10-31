@@ -1,0 +1,15 @@
+{
+	"Resources": {
+		"ApiGatewayWithAccessLogging": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				"StageDescription": {
+					"AccessLogSetting": {
+						"DestinationArn": "arn",
+						"Format": "format"
+					}
+				}
+			}
+		}
+	}
+}
