@@ -98,4 +98,43 @@ describe AmazonMQBrokerUserPasswordRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'AmazonMQBroker has Users property defined' do
+    it 'returns offending logical resource id for offending AmazonMQBroker resource' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/amazon_mq/amazon_mq_broker_user_property_not_defined.yaml'
+      )
+      actual_logical_resource_ids =
+        AmazonMQBrokerUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[AmazonMQBroker]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'AmazonMQBroker has Users property with Password value nil' do
+    it 'returns offending logical resource id for offending AmazonMQBroker resource' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/amazon_mq/amazon_mq_broker_user_password_value_nil.yaml'
+      )
+      actual_logical_resource_ids =
+        AmazonMQBrokerUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[AmazonMQBroker]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'AmazonMQBroker has Users property with no Password key' do
+    it 'returns offending logical resource id for offending AmazonMQBroker resource' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/amazon_mq/amazon_mq_broker_user_password_key_not_defined.yaml'
+      )
+      actual_logical_resource_ids =
+        AmazonMQBrokerUserPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[AmazonMQBroker]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
