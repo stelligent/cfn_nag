@@ -48,11 +48,4 @@ class IamUserLoginProfilePasswordResetRule < BaseRule
 
     violating_iam_users.map(&:logical_resource_id)
   end
-  # def audit_impl(cfn_model)
-  #   violating_iam_users = cfn_model.resources_by_type('AWS::IAM::User').select do |iam_user|
-  #     iam_user.loginProfile['PasswordResetRequired'].nil? || iam_user.loginProfile['PasswordResetRequired'].to_s == 'false'
-  #   end
-
-  #   violating_iam_users.map(&:logical_resource_id)
-  # end
 end
