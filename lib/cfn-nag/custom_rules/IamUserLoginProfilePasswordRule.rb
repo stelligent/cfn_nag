@@ -19,9 +19,17 @@ class IamUserLoginProfilePasswordRule < BaseRule
     'F51'
   end
 
-  def check_password_property(cfn_model, login_profile)
-    # Checks to make sure 'LoginProfile' property has the key 'Password' defined.
-    # Also check if the value for the 'Password' key is nil
+  def audit_impl(cfn_model)
+    resources = cfn_model.resources_by_type('AWS::IAM::User')
+    violating_resources = resources.select do |iam_user|
+      violating_users?(cfn_model, iam_user)
+    end
+    violating_resources.map(&:logical_resource_id)
+  end
+
+  private
+  
+  def iam_user_has_insecure_password?(cfn_model, login_profile)
     if login_profile.has_key? 'Password'
       if insecure_parameter?(cfn_model, login_profile['Password'])
         true
@@ -35,27 +43,11 @@ class IamUserLoginProfilePasswordRule < BaseRule
     end
   end
 
-  def check_login_profile_property(login_profile)
-    # Checks to see if the 'LoginProfile' property that is part of the 'AWS::IAM::User'
-    # resource exists and is defined.
-    !login_profile.nil?
-  end
-
-  def get_violating_iam_users(cfn_model, resource)
-    # If the 'LoginProfile' property is defined then grab the violating IamUser resources
-    # with 'Password' key defined.
-    if check_login_profile_property(resource.loginProfile)
-      check_password_property(cfn_model, resource.loginProfile)
+  def violating_users?(cfn_model, iam_user)
+    if !iam_user.loginProfile.nil?
+      iam_user_has_insecure_password?(cfn_model, iam_user.loginProfile)
     else
       false
     end
   end 
-
-  def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::IAM::User')
-    violating_resources = resources.select do |resource|
-      get_violating_iam_users(cfn_model, resource)
-    end
-    violating_resources.map(&:logical_resource_id)
-  end
 end

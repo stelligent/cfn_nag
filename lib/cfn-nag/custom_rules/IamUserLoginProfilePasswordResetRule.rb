@@ -17,35 +17,33 @@ class IamUserLoginProfilePasswordResetRule < BaseRule
     'W50'
   end
 
-  def check_for_login_profile(login_profile)
-    !login_profile.nil?
-  end
-
-  def check_for_password_reset_required_key(login_profile)
-    login_profile.has_key? 'PasswordResetRequired'
-  end
-
-  def get_violating_iam_users(iam_user)
-    if check_for_login_profile(iam_user.loginProfile)
-      if check_for_password_reset_required_key(iam_user.loginProfile)
-        if iam_user.loginProfile['PasswordResetRequired'].nil?
-          true
-        elsif not_truthy?(iam_user.loginProfile['PasswordResetRequired'])
-          true
-        end
-      else
-        true
-      end
-    else
-      false
-    end
-  end     
-
   def audit_impl(cfn_model)
     violating_iam_users = cfn_model.resources_by_type('AWS::IAM::User').select do |iam_user|
-      get_violating_iam_users(iam_user)
+      violating_iam_users?(iam_user)
     end
 
     violating_iam_users.map(&:logical_resource_id)
   end
+
+  private
+
+  def iam_user_password_reset_required_key?(login_profile)
+    if login_profile.has_key? 'PasswordResetRequired'
+      if login_profile['PasswordResetRequired'].nil?
+        true
+      elsif not_truthy?(login_profile['PasswordResetRequired'])
+        true
+      end
+    else
+      true
+    end
+  end
+
+  def violating_iam_users?(iam_user)
+    if !iam_user.loginProfile.nil?
+      iam_user_password_reset_required_key?(iam_user.loginProfile)
+    else
+      false
+    end
+  end     
 end
