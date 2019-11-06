@@ -20,9 +20,17 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
     'F54'
   end
 
-  def check_password_property(cfn_model, dbinstance)
-    # Checks to make sure 'RdsDbInstances' property has the key 'Password' defined.
-    # Also check if the value for the 'Password' key is nil
+  def audit_impl(cfn_model)
+    resources = cfn_model.resources_by_type('AWS::OpsWorks::Stack')
+    violating_resources = resources.select do |opsworks_stack|
+      violating_db_instances?(cfn_model, opsworks_stack)
+    end
+    violating_resources.map(&:logical_resource_id)
+  end
+
+  private 
+
+  def db_instance_has_insecure_password?(cfn_model, dbinstance)
     if dbinstance.has_key? 'DbPassword'
       if insecure_parameter?(cfn_model, dbinstance['DbPassword'])
         true
@@ -36,30 +44,14 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
     end
   end
 
-  def check_dbinstance_property(dbinstance_property)
-    # Checks to see if the 'RdsDbInstances' property that is part of the 'AWS::OpsWorks::Stack'
-    # resource exists and is defined.
-    !dbinstance_property.nil?
-  end
-
-  def get_violating_dbinstances(cfn_model, resource)
-    # If the 'RdsDbInstances' property is defined then grab the violating DB Instances
-    # that are part of the 'RdsDbInstances' property list.
-    if check_dbinstance_property(resource.rdsDbInstances)
-      violating_dbinstances = resource.rdsDbInstances.select do |dbinstance|
-        check_password_property(cfn_model, dbinstance)
+  def violating_db_instances?(cfn_model, opsworks_stack)
+    if !opsworks_stack.rdsDbInstances.nil?
+      violating_dbinstances = opsworks_stack.rdsDbInstances.select do |dbinstance|
+        db_instance_has_insecure_password?(cfn_model, dbinstance)
       end
       !violating_dbinstances.empty?
     else
       false
     end
   end 
-
-  def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::OpsWorks::Stack')
-    violating_resources = resources.select do |resource|
-      get_violating_dbinstances(cfn_model, resource)
-    end
-    violating_resources.map(&:logical_resource_id)
-  end
 end 
