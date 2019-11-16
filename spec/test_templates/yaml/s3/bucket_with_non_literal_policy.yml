@@ -1,0 +1,27 @@
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${hello}-a
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Sub ${hello}-a
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: !Ref ${AWS::AccountId}
+            Action: 's3:PutObject'
+            Resource:
+              - !GetAtt LambdaBucket.Arn
+              - !Sub ${LambdaBucket.Arn}/*
+          - Effect: Deny
+            Principal: '*'
+            Action: '*'
+            Resource:
+              - !GetAtt LambdaBucket.Arn
+              - !Sub ${LambdaBucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: false

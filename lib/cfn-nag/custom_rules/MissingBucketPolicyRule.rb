@@ -28,12 +28,10 @@ class MissingBucketPolicyRule < BaseRule
 
   def policy_for_bucket(cfn_model, bucket)
     cfn_model.resources_by_type('AWS::S3::BucketPolicy').find do |bucket_policy|
-      if bucket_policy.bucket.is_a? String
-        bucket.bucketName == bucket_policy.bucket
-      elsif bucket_policy.bucket.is_a? Hash
+      if bucket_policy.bucket.is_a?(Hash) && bucket_policy.bucket.has_key?('Ref')
         bucket_policy.bucket['Ref'] == bucket.logical_resource_id
       else
-        false
+        bucket.bucketName == bucket_policy.bucket
       end
     end
   end
