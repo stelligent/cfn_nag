@@ -21,11 +21,11 @@ class AmazonMQBrokerUserPasswordRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::AmazonMQ::Broker')
-    violating_resources = resources.select do |mq_broker|
+    brokers = cfn_model.resources_by_type('AWS::AmazonMQ::Broker')
+    violating_brokers = brokers.select do |mq_broker|
       violating_users?(cfn_model, mq_broker)
     end
-    violating_resources.map(&:logical_resource_id)
+    violating_brokers.map(&:logical_resource_id)
   end
 
   private

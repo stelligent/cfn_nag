@@ -21,11 +21,11 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    resources = cfn_model.resources_by_type('AWS::OpsWorks::Stack')
-    violating_resources = resources.select do |opsworks_stack|
+    opsworks_stacks = cfn_model.resources_by_type('AWS::OpsWorks::Stack')
+    violating_opsworks_stacks = opsworks_stacks.select do |opsworks_stack|
       violating_db_instances?(cfn_model, opsworks_stack)
     end
-    violating_resources.map(&:logical_resource_id)
+    violating_opsworks_stacks.map(&:logical_resource_id)
   end
 
   private 
