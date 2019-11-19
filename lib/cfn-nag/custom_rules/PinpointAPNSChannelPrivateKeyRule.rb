@@ -14,7 +14,7 @@ class PinpointAPNSChannelPrivateKeyRule < PasswordBaseRule
   end
 
   def rule_id
-    'F41'
+    'F57'
   end
 
   def resource_type

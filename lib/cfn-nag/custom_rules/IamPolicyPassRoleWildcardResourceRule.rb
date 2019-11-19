@@ -13,7 +13,7 @@ class IamPolicyPassRoleWildcardResourceRule < PassRoleBaseRule
   end
 
   def rule_id
-    'F39'
+    'F41'
   end
 
   def policy_type

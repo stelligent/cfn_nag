@@ -14,7 +14,7 @@ class PinpointAPNSChannelTokenKeyRule < PasswordBaseRule
   end
 
   def rule_id
-    'F40'
+    'F56'
   end
 
   def resource_type

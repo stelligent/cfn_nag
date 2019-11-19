@@ -14,7 +14,7 @@ class AmplifyAppOauthTokenRule < PasswordBaseRule
   end
 
   def rule_id
-    'F38'
+    'F58'
   end
 
   def resource_type

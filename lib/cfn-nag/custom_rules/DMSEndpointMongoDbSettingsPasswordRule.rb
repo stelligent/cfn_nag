@@ -14,7 +14,7 @@ class DMSEndpointMongoDbSettingsPasswordRule < PasswordBaseRule
   end
 
   def rule_id
-    'F51'
+    'F55'
   end
 
   def resource_type

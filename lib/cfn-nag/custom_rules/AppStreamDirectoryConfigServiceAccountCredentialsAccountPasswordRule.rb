@@ -15,7 +15,7 @@ class AppStreamDirectoryConfigServiceAccountCredentialsAccountPasswordRule < Pas
   end
 
   def rule_id
-    'F52'
+    'F53'
   end
 
   def resource_type
