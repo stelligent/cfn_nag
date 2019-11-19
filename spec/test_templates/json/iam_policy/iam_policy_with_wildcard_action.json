@@ -14,7 +14,7 @@
             {
               "Effect": "Allow",
               "Action": [
-                "rds:CreateDBInstance",
+                "rds:*",
                 {
                   "Fn::Join": [
                     "",

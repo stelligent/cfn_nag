@@ -24,6 +24,28 @@ describe CfnNag do
       end
     end
 
+    context 'colortxt output' do
+      # \e[0;31;49m is the ANSI escape sequence for red
+      it 'colorizes failures as red' do
+        expect do
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
+            output_format: 'colortxt'
+          )
+        end.to output(/\[0;31;49m/).to_stdout
+      end
+
+      # \e[0;33;49m is the ANSI escape sequence for yellow
+      it 'colorizes warnings as yellow' do
+        expect do
+          @cfn_nag.audit_aggregate_across_files_and_render_results(
+            input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
+            output_format: 'colortxt'
+          )
+        end.to output(/\[0;33;49m/).to_stdout
+      end
+    end
+
     context 'txt output' do
       it 'renders text results' do
         expect do
@@ -35,23 +57,23 @@ describe CfnNag do
       end
 
       # \e[0;31;49m is the ANSI escape sequence for red
-      it 'colorizes failures as red' do
+      it 'Does not colorize failures as red' do
         expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'txt'
           )
-        end.to output(/\[0;31;49m/).to_stdout
+        end.to_not output(/\[0;31;49m/).to_stdout
       end
 
       # \e[0;33;49m is the ANSI escape sequence for yellow
-      it 'colorizes warnings as yellow' do
+      it 'Does not colorize warnings as yellow' do
         expect do
           @cfn_nag.audit_aggregate_across_files_and_render_results(
             input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
             output_format: 'txt'
           )
-        end.to output(/\[0;33;49m/).to_stdout
+        end.to_not output(/\[0;33;49m/).to_stdout
       end
     end
   end
@@ -129,7 +151,7 @@ describe CfnNag do
                   id: 'F16', type: Violation::FAILING_VIOLATION,
                   message: 'S3 Bucket policy should not allow * principal',
                   logical_resource_ids: %w[S3BucketPolicy2],
-                  line_numbers: [59]
+                  line_numbers: [86]
                 )
               ]
             }

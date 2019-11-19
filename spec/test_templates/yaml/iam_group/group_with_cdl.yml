@@ -1,0 +1,10 @@
+Parameters:
+  ManagedPolicyArns:
+    Type: CommaDelimitedList
+    Default: ''
+
+Resources:
+  Group:
+    Type: AWS::IAM::Group
+    Properties:
+      ManagedPolicyArns: !Ref ManagedPolicyArns

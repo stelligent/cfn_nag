@@ -17,10 +17,19 @@ For more background on the tool, please see:
 
 # Installation
 
-Presuming Ruby 2.5.x is installed, installation is just a matter of `
+## Gem Install 
+Presuming Ruby >= 2.5.x is installed, installation is just a matter of `
 
 ```bash
 gem install cfn-nag
+```
+
+## Brew Install
+On MacOS or Linux you can alternatively install with brew
+
+```bash
+brew install ruby brew-gem
+brew gem install cfn-nag
 ```
 
 # Pipeline
@@ -270,11 +279,22 @@ A screencast demonstrating soup to nuts TDD custom rule development is available
 
 ## Specs
 
-To run the specs, you need to ensure you have Docker installed. You also need to build the development image first. You can do this by running `rake build_docker_dev`.
+To run the specs, you need to ensure you have Docker installed and cfn_nag dependencies installed via
+```
+gem install bundle
+bundle install
+```
 
 Then, to run all of the specs, just run `rake test:all`.
 
 To run the end-to-end tests, run `rake test:e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
+
+## Local Install
+To install the current git branch locally:
+```
+bundle install
+scripts/deploy_local.sh
+```
 
 # Support
 

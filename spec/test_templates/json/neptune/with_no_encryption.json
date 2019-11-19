@@ -9,7 +9,7 @@
       "Properties" :
       {
         "DBClusterIdentifier" : "neptune-test-cluster",
-        "IamAuthEnabled" : false,
+        "IamAuthEnabled" : false
       }
     },
     "NeptuneDBInstance" : {

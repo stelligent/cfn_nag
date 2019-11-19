@@ -23,6 +23,12 @@ describe CfnNag do
                 message: 'CloudFront Distribution should enable access logging',
                 logical_resource_ids: %w[rDistribution2],
                 line_numbers: [46]
+              ),
+              Violation.new(
+                id: 'W51', type: Violation::WARNING,
+                message: 'S3 bucket should likely have a bucket policy',
+                logical_resource_ids: %w[S3Bucket],
+                line_numbers: [81]
               )
             ]
           }

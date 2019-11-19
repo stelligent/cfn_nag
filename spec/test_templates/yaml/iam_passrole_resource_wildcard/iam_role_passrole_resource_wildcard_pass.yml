@@ -1,0 +1,38 @@
+---
+Resources:
+
+  RoleFail:
+    Type: AWS::IAM::Role 
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        -
+          PolicyName: Policy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              -
+                Effect: "Allow"
+                Action: 
+                  - "s3:ListBucket"
+                  - "s3:GetBucketLocation"
+                Resource: "arn:aws:s3:::*"
+              -
+                Effect: Allow
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetBucketLocation"
+                Resource: "*"
+              -
+                Effect: Allow
+                Action: "iam:PassRole"
+                Resource: "arn:aws:s3:::*"

@@ -16,8 +16,13 @@ describe CfnNag do
         {
           filename: test_template_path(template_name),
           file_results: {
-            failure_count: 2,
+            failure_count: 3,
             violations: [
+              Violation.new(id: 'F38',
+                            type: Violation::FAILING_VIOLATION,
+                            message: 'IAM role should not allow * resource with PassRole action on its permissions policy',
+                            logical_resource_ids: %w[LambdaExecutionRole],
+                            line_numbers: [49]),
               Violation.new(id: 'F3',
                             type: Violation::FAILING_VIOLATION,
                             message: 'IAM role should not allow * action on its permissions policy',

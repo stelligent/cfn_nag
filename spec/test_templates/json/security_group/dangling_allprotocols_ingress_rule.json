@@ -1,0 +1,26 @@
+{
+  "Resources": {
+    "danglingIngress" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": "sg-09fb296e",
+        "CidrIp" : "1.2.3.5/16",
+        "FromPort" : 45,
+        "ToPort" : 46,
+        "IpProtocol" : -1
+      }
+    },
+
+    "IpProtocol_minus_1_str" : {
+      "Type" : "AWS::EC2::SecurityGroupIngress",
+      "Properties" : {
+        "GroupId": "sg-09fb296e",
+        "CidrIp" : "1.2.3.5/16",
+        "FromPort" : 45,
+        "ToPort" : 46,
+        "IpProtocol" : "-1"
+      }
+    }
+
+  }
+}

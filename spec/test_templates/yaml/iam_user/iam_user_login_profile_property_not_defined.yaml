@@ -1,0 +1,12 @@
+---
+Resources:
+  MyIamUser:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: testuser
+
+  MyIamUser2:
+    Type: AWS::IAM::User
+    Properties: 
+      UserName: testuser2
+        

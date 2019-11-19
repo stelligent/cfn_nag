@@ -19,6 +19,12 @@ describe CfnNag do
             failure_count: 1,
             violations: [
               Violation.new(
+                id: 'W51', type: Violation::WARNING,
+                message: 'S3 bucket should likely have a bucket policy',
+                logical_resource_ids: %w[S3BucketRead S3BucketReadWrite],
+                line_numbers: [4, 24]
+              ),
+              Violation.new(
                 id: 'W31', type: Violation::WARNING,
                 message: 'S3 Bucket likely should not have a public read acl',
                 logical_resource_ids: %w[S3BucketRead],
@@ -29,7 +35,7 @@ describe CfnNag do
                             message:
                             'S3 Bucket should not have a public read-write acl',
                             logical_resource_ids: %w[S3BucketReadWrite],
-                            line_numbers: [15])
+                            line_numbers: [24])
             ]
           }
         }

@@ -1,5 +1,15 @@
 /*.gem
-/Gemfile.lock
 /coverage
 /spec/aws_sample_templates/
 *.zip
+spec/test_templates/json/iot_policy/UNUSED_iot2_policy_with_wildcard_action.json
+mkmf.log
+simple.json
+simple+iam.json
+test.json
+update_cellar.pl
+.vscode/launch.json
+.vscode/settings.json
+.vscode-upload.json
+IotPolicy-test.json
+test-cfn-model.rb

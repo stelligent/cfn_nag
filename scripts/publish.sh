@@ -87,8 +87,8 @@ gem build cfn-nag.gemspec
 gem push cfn-nag-${GEM_VERSION}.gem
 
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
-echo $docker_password | docker login -u $docker_user --password-stdin
-docker tag $docker_org/cfn_nag:${GEM_VERSION} $docker_org/cfn_nag:latest
-docker push $docker_org/cfn_nag:${GEM_VERSION}
-docker push $docker_org/cfn_nag:latest
+#docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
+#echo $docker_password | docker login -u $docker_user --password-stdin
+#docker tag $docker_org/cfn_nag:${GEM_VERSION} $docker_org/cfn_nag:latest
+#docker push $docker_org/cfn_nag:${GEM_VERSION}
+#docker push $docker_org/cfn_nag:latest

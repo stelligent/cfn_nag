@@ -1,0 +1,12 @@
+{
+	"Resources": {
+		"ApiGatewayNoAccessLogging": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				"StageDescription": {
+					"CacheClusterEnabled": "true"
+				}
+			}
+		}
+	}
+}
