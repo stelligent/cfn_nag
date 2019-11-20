@@ -32,7 +32,7 @@ describe CfnNag do
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'colortxt'
           )
-        end.to output(/\[0;31;49m/).to_stdout
+        end.to output(/\e\[31m/).to_stdout
       end
 
       # \e[0;33;49m is the ANSI escape sequence for yellow
@@ -42,7 +42,7 @@ describe CfnNag do
             input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
             output_format: 'colortxt'
           )
-        end.to output(/\[0;33;49m/).to_stdout
+        end.to output(/\e\[33m/).to_stdout
       end
     end
 
@@ -63,7 +63,7 @@ describe CfnNag do
             input_path: test_template_path('json/s3_bucket_policy/s3_bucket_with_wildcards.json'),
             output_format: 'txt'
           )
-        end.to_not output(/\[0;31;49m/).to_stdout
+        end.to_not output(/\e\[31m/).to_stdout
       end
 
       # \e[0;33;49m is the ANSI escape sequence for yellow
@@ -73,7 +73,7 @@ describe CfnNag do
             input_path: test_template_path('yaml/security_group/sg_with_suppression.yml'),
             output_format: 'txt'
           )
-        end.to_not output(/\[0;33;49m/).to_stdout
+        end.to_not output(/\e\[33m/).to_stdout
       end
     end
   end

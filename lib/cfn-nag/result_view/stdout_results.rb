@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'colorize'
 
 # Print results to STDOUT
 class StdoutResults
