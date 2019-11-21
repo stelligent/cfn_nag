@@ -1,0 +1,15 @@
+---
+Parameters:
+  OpsWorksAppSslConfigurationPrivateKey:
+    Type: String
+Resources:
+  OpsWorksApp:
+    Type: AWS::OpsWorks::App
+    Properties:
+      Name: foobar
+      SslConfiguration:
+        Certificate: Certificate-Foo
+        Chain: Chain-Bar
+        PrivateKey: !Ref OpsWorksAppSslConfigurationPrivateKey
+      StackId: Stack-Foo
+      Type: static
