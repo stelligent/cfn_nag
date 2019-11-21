@@ -14,7 +14,7 @@ class OpsWorksStackRdsDbInstancesDbPasswordRule < PasswordBaseRuleSubPropertyWit
   end
 
   def rule_id
-    'F59'
+    'F54'
   end
 
   def resource_type
