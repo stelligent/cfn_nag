@@ -58,7 +58,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_not_set.yaml'
+        'opsworks_stack_rds_db_instances_db_password_not_set.yaml'
       )
 
       expect(base_rule_with_list.audit(cfn_model)).to be nil
@@ -76,7 +76,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_parameter_with_noecho.yaml'
+        'opsworks_stack_rds_db_instances_db_password_parameter_with_noecho.yaml'
       )
 
       expect(base_rule_with_list.audit(cfn_model)).to be nil
@@ -94,7 +94,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_as_a_literal_in_plaintext.yaml'
+        'opsworks_stack_rds_db_instances_db_password_as_a_literal_in_plaintext.yaml'
       )
 
       expected_violation = @failing_violation
@@ -115,7 +115,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_parameter_with_noecho_and_default_value.yaml'
+        'opsworks_stack_rds_db_instances_db_password_parameter_with_noecho_and_default_value.yaml'
       )
 
       expected_violation = @failing_violation
@@ -135,7 +135,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_from_secrets_manager.yaml'
+        'opsworks_stack_rds_db_instances_db_password_from_secrets_manager.yaml'
       )
 
       expect(base_rule_with_list.audit(cfn_model)).to be nil
@@ -153,7 +153,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_from_secure_systems_manager.yaml'
+        'opsworks_stack_rds_db_instances_db_password_from_secure_systems_manager.yaml'
       )
 
       expect(base_rule_with_list.audit(cfn_model)).to be nil
@@ -171,7 +171,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/opsworks_stack/' \
-        'opsworks_stack_rds_db_instance_db_password_from_systems_manager.yaml'
+        'opsworks_stack_rds_db_instances_db_password_from_systems_manager.yaml'
       )
 
       expected_violation = @failing_violation
