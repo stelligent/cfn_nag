@@ -1,0 +1,13 @@
+{
+	"Resources": {
+		"ApiGatewayWithAccessLogging": {
+			"Type": "AWS::ApiGatewayV2::Stage",
+			"Properties": {
+					"AccessLogSetting": {
+						"DestinationArn": "arn",
+						"Format": "format"
+					}
+			}
+		}
+	}
+}
