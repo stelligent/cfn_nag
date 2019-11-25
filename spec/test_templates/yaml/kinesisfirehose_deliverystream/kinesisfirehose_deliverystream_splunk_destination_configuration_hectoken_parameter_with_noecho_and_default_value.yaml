@@ -3,7 +3,7 @@ Parameters:
   KinesisFirehoseDeliveryStreamSplunkDestinationConfigurationHECToken:
     Type: String
     NoEcho: True
-    Default: b@dP@$sW0rD
+    Default: b@d0@h3C70K3n
 Resources:
   KinesisFirehoseDeliveryStream:
     Type: AWS::KinesisFirehose::DeliveryStream
