@@ -39,20 +39,18 @@ def context_return_value(desired_test_result)
 end
 
 # Creates the string name for the rule
-def rule_name(resource_type, password_property, sub_property_name, sub_sub_property_name, sub_sub_sub_property_name)
-  if sub_property_name.nil? && sub_sub_property_name.nil? && sub_sub_sub_property_name.nil?
-    _password_property_name_rule_name(resource_type, password_property)
-  elsif !sub_property_name.nil? && sub_sub_property_name.nil? & sub_sub_sub_property_name.nil?
-    _sub_property_name_rule_name(resource_type, password_property, sub_property_name)
-  elsif !sub_property_name.nil? && !sub_sub_property_name.nil? & sub_sub_sub_property_name.nil?
-    _sub_sub_property_name_rule_name(resource_type, password_property, sub_property_name, sub_sub_property_name)
+def rule_name(resource_type, password_property, sub_property_name)
+  if sub_property_name.nil?
+    _nil_sub_property_name_rule_name(resource_type, password_property)
   else
-    _sub_sub_sub_property_name_rule_name(resource_type, password_property, sub_property_name, sub_sub_property_name, sub_sub_sub_property_name)
+    _not_nil_sub_property_name_rule_name(
+      resource_type, password_property, sub_property_name
+    )
   end
 end
 
 # Creates the logic for the rule name if sub_property_name is nil
-def _password_property_name_rule_name(resource_type, password_property)
+def _nil_sub_property_name_rule_name(resource_type, password_property)
   [
     resource_type.sub('AWS', '').gsub('::', ''),
     password_property,
@@ -61,7 +59,7 @@ def _password_property_name_rule_name(resource_type, password_property)
 end
 
 # Creates the logic for the rule name if sub_property_name is present
-def _sub_property_name_rule_name(
+def _not_nil_sub_property_name_rule_name(
   resource_type, password_property, sub_property_name
 )
   [
@@ -72,51 +70,25 @@ def _sub_property_name_rule_name(
   ].join
 end
 
-# Creates the logic for the rule name if sub_sub_property_name is present
-def _sub_sub_property_name_rule_name(
-  resource_type, password_property, sub_property_name, sub_sub_property_name
-)
-  [
-    resource_type.sub('AWS', '').gsub('::', ''),
-    password_property,
-    sub_property_name,
-    sub_sub_property_name,
-    'Rule'
-  ].join
-end
-
-# Creates the logic for the rule name if sub_sub_sub_property_name is present
-def _sub_sub_sub_property_name_rule_name(
-  resource_type, password_property, sub_property_name, sub_sub_property_name, sub_sub_sub_property_name
-)
-  [
-    resource_type.sub('AWS', '').gsub('::', ''),
-    password_property,
-    sub_property_name,
-    sub_sub_property_name,
-    sub_sub_sub_property_name,
-    'Rule'
-  ].join
-end
-
 # Creates full file path string
 def file_path(
   resource_type, test_template_type, password_property, sub_property_name,
-  sub_sub_property_name, sub_sub_sub_property_name, test_description
+  test_description
 )
-  if sub_property_name.nil? && sub_sub_property_name.nil? && sub_sub_sub_property_name.nil?
-    _password_property_name_file_path(resource_type, test_template_type, password_property, test_description)
-  elsif !sub_property_name.nil? && sub_sub_property_name.nil? & sub_sub_sub_property_name.nil?
-    _sub_property_name_file_path(resource_type, test_template_type, password_property, sub_property_name, test_description)
-  elsif !sub_property_name.nil? && !sub_sub_property_name.nil? & sub_sub_sub_property_name.nil?
-    _sub_sub_property_name_file_path(resource_type, test_template_type, password_property, sub_property_name, sub_sub_property_name, test_description)
+  if sub_property_name.nil?
+    _nil_sub_property_name_file_path(
+      resource_type, test_template_type, password_property, test_description
+    )
   else
-    _sub_sub_sub_property_name_file_path(resource_type, test_template_type, password_property, sub_property_name, sub_sub_property_name, sub_sub_sub_property_name, test_description)
+    _not_nil_sub_property_name_file_path(
+      resource_type, test_template_type, password_property,
+      sub_property_name, test_description
+    )
   end
 end
 
 # Creates the logic for the file path if sub_property_name is nil
-def _password_property_name_file_path(
+def _nil_sub_property_name_file_path(
   resource_type, test_template_type, password_property, test_description
 )
   [
@@ -130,7 +102,7 @@ def _password_property_name_file_path(
 end
 
 # Creates the logic for the file path if sub_property_name is present
-def _sub_property_name_file_path(
+def _not_nil_sub_property_name_file_path(
   resource_type, test_template_type, password_property,
   sub_property_name, test_description
 )
@@ -142,37 +114,6 @@ def _sub_property_name_file_path(
     '_',
     test_description.to_s.gsub(' ', '_').downcase,
     '.',
-    test_template_type
-  ].join
-end
-
-# Creates the logic for the file path if sub_sub_property_name is present
-def _sub_sub_property_name_file_path(
-  resource_type, test_template_type, password_property, sub_property_name,
-  sub_sub_property_name, test_description
-)
-  [
-    file_path_prefix(resource_type, test_template_type),
-    password_property.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    sub_property_name.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    sub_sub_property_name.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    test_description.to_s.gsub(' ', '_').downcase, '.',
-    test_template_type
-  ].join
-end
-
-# Creates the logic for the file path if sub_sub_sub_property_name is present
-def _sub_sub_sub_property_name_file_path(
-  resource_type, test_template_type, password_property, sub_property_name,
-  sub_sub_property_name, sub_sub_sub_property_name, test_description
-)
-  [
-    file_path_prefix(resource_type, test_template_type),
-    password_property.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    sub_property_name.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    sub_sub_property_name.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    sub_sub_sub_property_name.gsub(/(?<=[a-z])(?=[A-Z])/, ' ').gsub(' ', '_').downcase, '_',
-    test_description.to_s.gsub(' ', '_').downcase, '.',
     test_template_type
   ].join
 end
@@ -191,14 +132,14 @@ end
 
 # Run the spec test
 def run_test(
-  resource_type, password_property, sub_property_name, sub_sub_property_name, sub_sub_sub_property_name,
-  test_template_type, test_description, desired_test_result
+  resource_type, password_property, sub_property_name, test_template_type,
+  test_description, desired_test_result
 )
   cfn_model =
     CfnParser.new.parse read_test_template(
       file_path(
-        resource_type, test_template_type, password_property, sub_property_name,
-        sub_sub_property_name, sub_sub_sub_property_name, test_description
+        resource_type, test_template_type, password_property,
+        sub_property_name, test_description
       )
     )
 
