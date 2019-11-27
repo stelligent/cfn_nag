@@ -59,33 +59,67 @@ describe 'password_rule_spec_helper' do
     end
   end
 
-  context 'rule_name with sub_property_name set' do
+  context 'rule_name with sub_property_name, sub_sub_property_name, and sub_sub_sub_property_name set' do
     before(:each) do
       @sub_property_name = 'Qux'
+      @sub_sub_property_name = 'Quux'
+      @sub_sub_sub_property_name = 'Quuz'
     end
     it 'renders rule name' do
       actual_aggregate_results = rule_name(
-        @resource_type, @password_property, @sub_property_name
+        @resource_type, @password_property, @sub_property_name, @sub_sub_property_name, @sub_sub_sub_property_name
+      )
+      expect(actual_aggregate_results).to eq 'FooBarBazQuxQuuxQuuzRule'
+    end
+  end
+
+  context 'rule_name with sub_property_name and sub_sub_property_name set and sub_sub_sub_property_name not set' do
+    before(:each) do
+      @sub_property_name = 'Qux'
+      @sub_sub_property_name = 'Quux'
+      @sub_sub_sub_property_name = nil
+    end
+    it 'renders rule name' do
+      actual_aggregate_results = rule_name(
+        @resource_type, @password_property, @sub_property_name, @sub_sub_property_name, @sub_sub_sub_property_name
+      )
+      expect(actual_aggregate_results).to eq 'FooBarBazQuxQuuxRule'
+    end
+  end
+
+  context 'rule_name with sub_property_name set and sub_sub_property_name and sub_sub_sub_property not set' do
+    before(:each) do
+      @sub_property_name = 'Qux'
+      @sub_sub_property_name = nil
+      @sub_sub_sub_property_name = nil
+    end
+    it 'renders rule name' do
+      actual_aggregate_results = rule_name(
+        @resource_type, @password_property, @sub_property_name, @sub_sub_property_name, @sub_sub_sub_property_name
       )
       expect(actual_aggregate_results).to eq 'FooBarBazQuxRule'
     end
   end
 
-  context 'rule_name with no sub_property_name set' do
+  context 'rule_name with no sub_property_name, sub_sub_property_name, and sub_sub_sub_property_name set' do
     before(:each) do
       @sub_property_name = nil
+      @sub_sub_property_name = nil
+      @sub_sub_sub_property_name = nil
     end
     it 'renders rule name' do
       actual_aggregate_results = rule_name(
-        @resource_type, @password_property, @sub_property_name
+        @resource_type, @password_property, @sub_property_name, @sub_sub_property_name, @sub_sub_sub_property_name
       )
       expect(actual_aggregate_results).to eq 'FooBarBazRule'
     end
   end
 
-  context 'file_path with sub_property_name set' do
+  context 'file_path with sub_property_name, sub_sub_property_name, and sub_sub_sub_property_name set' do
     before(:each) do
       @sub_property_name = 'Qux'
+      @sub_sub_property_name = 'Quux'
+      @sub_sub_sub_property_name = 'Quuz'
     end
     it 'renders full test template file path' do
       actual_aggregate_results =
@@ -93,15 +127,59 @@ describe 'password_rule_spec_helper' do
                   @test_template_type,
                   @password_property,
                   @sub_property_name,
+                  @sub_sub_property_name,
+                  @sub_sub_sub_property_name,
+                  'test template name')
+      expect(actual_aggregate_results).to eq \
+        'yaml/foo_bar/foo_bar_baz_qux_quux_quuz_test_template_name.yaml'
+    end
+  end
+
+  context 'file_path with sub_property_name and sub_sub_property_name set and sub_sub_sub_property_name not set' do
+    before(:each) do
+      @sub_property_name = 'Qux'
+      @sub_sub_property_name = 'Quux'
+      @sub_sub_sub_property_name = nil
+    end
+    it 'renders full test template file path' do
+      actual_aggregate_results =
+        file_path(@resource_type,
+                  @test_template_type,
+                  @password_property,
+                  @sub_property_name,
+                  @sub_sub_property_name,
+                  @sub_sub_sub_property_name,
+                  'test template name')
+      expect(actual_aggregate_results).to eq \
+        'yaml/foo_bar/foo_bar_baz_qux_quux_test_template_name.yaml'
+    end
+  end
+
+  context 'file_path with sub_property_name set and sub_sub_property_name and sub_sub_sub_property_name not set' do
+    before(:each) do
+      @sub_property_name = 'Qux'
+      @sub_sub_property_name = nil
+      @sub_sub_sub_property_name = nil
+    end
+    it 'renders full test template file path' do
+      actual_aggregate_results =
+        file_path(@resource_type,
+                  @test_template_type,
+                  @password_property,
+                  @sub_property_name,
+                  @sub_sub_property_name,
+                  @sub_sub_sub_property_name,
                   'test template name')
       expect(actual_aggregate_results).to eq \
         'yaml/foo_bar/foo_bar_baz_qux_test_template_name.yaml'
     end
   end
 
-  context 'file_path with no sub_property_name set' do
+  context 'file_path with no sub_property_name, sub_sub_property_name, and sub_sub_sub_property_name set' do
     before(:each) do
       @sub_property_name = nil
+      @sub_sub_property_name = nil
+      @sub_sub_sub_property_name = nil
     end
     it 'renders full test template file path' do
       actual_aggregate_results =
@@ -109,6 +187,8 @@ describe 'password_rule_spec_helper' do
                   @test_template_type,
                   @password_property,
                   @sub_property_name,
+                  @sub_sub_property_name,
+                  @sub_sub_sub_property_name,
                   'test template name')
       expect(actual_aggregate_results).to eq \
         'yaml/foo_bar/foo_bar_baz_test_template_name.yaml'
