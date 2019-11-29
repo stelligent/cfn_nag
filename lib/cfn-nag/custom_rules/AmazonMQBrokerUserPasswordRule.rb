@@ -6,9 +6,8 @@ require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
 class AmazonMQBrokerUserPasswordRule < BaseRule
-
   def rule_text
-    'Amazon MQ Broker resource Users property should exist and its Password property value ' +
+    'Amazon MQ Broker resource Users property should exist and its Password property value ' \
     'should not show password in plain text, resolve an unsecure ssm string, or have a default value for parameter.'
   end
 
@@ -31,7 +30,7 @@ class AmazonMQBrokerUserPasswordRule < BaseRule
   private
 
   def user_has_insecure_password?(cfn_model, user)
-    if user.has_key? 'Password'
+    if user.key? 'Password'
       if insecure_parameter?(cfn_model, user['Password'])
         true
       elsif insecure_string_or_dynamic_reference?(cfn_model, user['Password'])
@@ -40,7 +39,7 @@ class AmazonMQBrokerUserPasswordRule < BaseRule
         true
       end
     else
-      true    
+      true
     end
   end
 
@@ -53,5 +52,5 @@ class AmazonMQBrokerUserPasswordRule < BaseRule
     else
       true
     end
-  end 
+  end
 end

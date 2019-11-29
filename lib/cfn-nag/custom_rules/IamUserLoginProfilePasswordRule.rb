@@ -7,7 +7,7 @@ require_relative 'base'
 
 class IamUserLoginProfilePasswordRule < BaseRule
   def rule_text
-    'If the IAM user LoginProile property exists, then its Password value should not ' +
+    'If the IAM user LoginProile property exists, then its Password value should not ' \
     'show password in plain text, resolve an unsecure ssm string, or have a default value for parameter.'
   end
 
@@ -28,9 +28,9 @@ class IamUserLoginProfilePasswordRule < BaseRule
   end
 
   private
-  
+
   def iam_user_has_insecure_password?(cfn_model, login_profile)
-    if login_profile.has_key? 'Password'
+    if login_profile.key? 'Password'
       if insecure_parameter?(cfn_model, login_profile['Password'])
         true
       elsif insecure_string_or_dynamic_reference?(cfn_model, login_profile['Password'])
@@ -39,7 +39,7 @@ class IamUserLoginProfilePasswordRule < BaseRule
         true
       end
     else
-      true    
+      true
     end
   end
 
@@ -49,5 +49,5 @@ class IamUserLoginProfilePasswordRule < BaseRule
     else
       false
     end
-  end 
+  end
 end

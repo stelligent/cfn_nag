@@ -6,9 +6,8 @@ require 'cfn-nag/util/enforce_string_or_dynamic_reference'
 require_relative 'base'
 
 class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
-
   def rule_text
-    'OpsWorks Stack RDS DBInstance Password property should not show password ' +
+    'OpsWorks Stack RDS DBInstance Password property should not show password ' \
     'in plain text, resolve an unsecure ssm string, or have a default value for parameter.'
   end
 
@@ -28,10 +27,10 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
     violating_opsworks_stacks.map(&:logical_resource_id)
   end
 
-  private 
+  private
 
   def db_instance_has_insecure_password?(cfn_model, dbinstance)
-    if dbinstance.has_key? 'DbPassword'
+    if dbinstance.key? 'DbPassword'
       if insecure_parameter?(cfn_model, dbinstance['DbPassword'])
         true
       elsif insecure_string_or_dynamic_reference?(cfn_model, dbinstance['DbPassword'])
@@ -40,7 +39,7 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
         true
       end
     else
-      true    
+      true
     end
   end
 
@@ -53,5 +52,5 @@ class OpsWorksStackRdsDbInstancePasswordRule < BaseRule
     else
       false
     end
-  end 
-end 
+  end
+end
