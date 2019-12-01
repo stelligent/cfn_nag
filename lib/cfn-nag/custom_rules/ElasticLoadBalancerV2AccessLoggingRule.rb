@@ -19,7 +19,7 @@ class ElasticLoadBalancerV2AccessLoggingRule < BaseRule
   def audit_impl(cfn_model)
     violating_elbs = cfn_model.resources_by_type('AWS::ElasticLoadBalancingV2::LoadBalancer')
                               .select do |elb|      
-      elb.loadBalancerAttributes.nil? || elb.loadBalancerAttributes.find{ |k| k['Key'] ==  'access_logs.s3.enabled'}.nil? ||  elb.loadBalancerAttributes.find{ |k| k['Key'] ==  'access_logs.s3.enabled' && k['Value'] == 'false'} 
+      elb.loadBalancerAttributes.nil? || elb.loadBalancerAttributes.find{ |k| k['Key'] ==  'access_logs.s3.enabled'}.nil? ||  elb.loadBalancerAttributes.find{ |k| k['Key'] ==  'access_logs.s3.enabled' && k['Value'].casecmp?('false') } 
     end
 
     violating_elbs.map(&:logical_resource_id)
