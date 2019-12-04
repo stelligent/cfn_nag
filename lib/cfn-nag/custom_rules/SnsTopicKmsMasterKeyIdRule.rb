@@ -5,7 +5,7 @@ require_relative 'base'
 
 class SnsTopicKmsMasterKeyIdRule < BaseRule
   def rule_text
-    'SNS Topic policy should specify KmsMasterKeyId property'
+    'SNS Topic should specify KmsMasterKeyId property'
   end
 
   def rule_type

@@ -3,7 +3,7 @@ require 'cfn-model'
 require 'cfn-nag/custom_rules/SnsTopicKmsMasterKeyIdRule'
 
 describe SnsTopicKmsMasterKeyIdRule do
-  context 'sns topic policy with no KmsMasterKeyId property defined.' do
+  context 'sns topic with no KmsMasterKeyId property defined.' do
     it 'returns offending logical resource ids' do
       cfn_model = CfnParser.new.parse read_test_template('yaml/sns/sns_topic_kms_master_key_id_not_defined.yaml')
 
@@ -14,7 +14,7 @@ describe SnsTopicKmsMasterKeyIdRule do
     end
   end
 
-  context 'sns topic policy with KmsMasterKeyId property defined.' do
+  context 'sns topic with KmsMasterKeyId property defined.' do
     it 'an empty list' do
       cfn_model = CfnParser.new.parse read_test_template('yaml/sns/sns_topic_kms_master_key_id_defined.yaml')
 
@@ -25,7 +25,7 @@ describe SnsTopicKmsMasterKeyIdRule do
     end
   end
 
-  context 'sns topic policy with KmsMasterKeyId property defined and referencing parameter.' do
+  context 'sns topic with KmsMasterKeyId property defined and referencing parameter.' do
     it 'an empty list' do
       cfn_model = CfnParser.new.parse read_test_template('yaml/sns/sns_topic_kms_master_key_id_defined_with_parameter.yaml')
 
