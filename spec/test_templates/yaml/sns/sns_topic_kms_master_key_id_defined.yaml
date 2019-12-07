@@ -1,0 +1,14 @@
+Resources:
+  SnsTopic1:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: snstopic1
+      KmsMasterKeyId: arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+      TopicName: snstopic1
+
+  SnsTopic2:
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: snstopic2
+      KmsMasterKeyId: arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab
+      TopicName: snstopic2
