@@ -25,7 +25,7 @@ describe CfnNag do
                 message: 'SNS topic policy should not allow * principal',
                 logical_resource_ids: %w[mysnspolicy0 mysnspolicy1
                                          mysnspolicy2 mysnspolicy3],
-                line_numbers: [10, 28, 53, 83]
+                line_numbers: [11, 29, 55, 85]
               )
             ]
           }

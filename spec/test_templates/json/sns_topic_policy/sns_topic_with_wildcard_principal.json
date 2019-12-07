@@ -3,6 +3,7 @@
     "MySNSTopic" : {
       "Type" : "AWS::SNS::Topic",
       "Properties" : {
+         "KmsMasterKeyId": "alias/aws/sns"
       }
     },
 
@@ -45,7 +46,8 @@
     "MySNSTopic2" : {
       "Type" : "AWS::SNS::Topic",
       "Properties" : {
-        "TopicName": "fredfred"
+        "TopicName": "fredfred",
+        "KmsMasterKeyId": "alias/aws/sns"
       }
     },
 
