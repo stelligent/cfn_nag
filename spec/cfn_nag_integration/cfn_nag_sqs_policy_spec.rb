@@ -24,7 +24,7 @@ describe CfnNag do
                 message: 'SQS Queue policy should not allow Allow+NotAction',
                 logical_resource_ids: %w[QueuePolicyWithNotAction
                                          QueuePolicyWithNotAction2],
-                line_numbers: [18, 35]
+                line_numbers: [20, 37]
               )
             ]
           }

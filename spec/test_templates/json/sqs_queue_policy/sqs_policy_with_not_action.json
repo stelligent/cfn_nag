@@ -3,14 +3,16 @@
     "queue1": {
       "Type": "AWS::SQS::Queue",
       "Properties": {
-        "QueueName": "queue1"
+        "QueueName": "queue1",
+        "KmsMasterKeyId": "alias/aws/sqs"
       }
     },
 
     "queue2": {
       "Type": "AWS::SQS::Queue",
       "Properties": {
-        "QueueName": "queue2"
+        "QueueName": "queue2",
+        "KmsMasterKeyId": "alias/aws/sqs"
       }
     },
 
