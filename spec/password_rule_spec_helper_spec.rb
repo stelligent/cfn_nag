@@ -4,7 +4,7 @@ require 'password_rule_spec_helper'
 describe 'password_rule_spec_helper' do
   before(:all) do
     @resource_type = 'AWS::Foo::Bar'
-    @property_name = 'Baz'
+    @password_property = 'Baz'
     @test_template_type = 'yaml'
   end
 
@@ -65,7 +65,7 @@ describe 'password_rule_spec_helper' do
     end
     it 'renders rule name' do
       actual_aggregate_results = rule_name(
-        @resource_type, @property_name, @sub_property_name
+        @resource_type, @password_property, @sub_property_name
       )
       expect(actual_aggregate_results).to eq 'FooBarBazQuxRule'
     end
@@ -77,7 +77,7 @@ describe 'password_rule_spec_helper' do
     end
     it 'renders rule name' do
       actual_aggregate_results = rule_name(
-        @resource_type, @property_name, @sub_property_name
+        @resource_type, @password_property, @sub_property_name
       )
       expect(actual_aggregate_results).to eq 'FooBarBazRule'
     end
@@ -91,7 +91,7 @@ describe 'password_rule_spec_helper' do
       actual_aggregate_results =
         file_path(@resource_type,
                   @test_template_type,
-                  @property_name,
+                  @password_property,
                   @sub_property_name,
                   'test template name')
       expect(actual_aggregate_results).to eq \
@@ -107,7 +107,7 @@ describe 'password_rule_spec_helper' do
       actual_aggregate_results =
         file_path(@resource_type,
                   @test_template_type,
-                  @property_name,
+                  @password_property,
                   @sub_property_name,
                   'test template name')
       expect(actual_aggregate_results).to eq \
