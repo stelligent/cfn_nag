@@ -20,7 +20,7 @@ class PasswordBaseRule < BaseRule
     resources = cfn_model.resources_by_type(resource_type)
 
     violating_resources = resources.select do |resource|
-      if verify_parameter_exists(resource, password_property, sub_property_name)
+      if parameter_does_not_exist(resource, password_property, sub_property_name)
         false
       else
         verify_insecure_string_and_parameter(
@@ -35,7 +35,7 @@ end
 
 private
 
-def verify_parameter_exists(resource, password_property, sub_property_name)
+def parameter_does_not_exist(resource, password_property, sub_property_name)
   if resource.send(password_property).nil?
     true
   elsif sub_property_name.nil?
