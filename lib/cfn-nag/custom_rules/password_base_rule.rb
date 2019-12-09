@@ -36,7 +36,9 @@ end
 private
 
 def verify_parameter_exists(resource, password_property, sub_property_name)
-  if sub_property_name.nil?
+  if resource.send(password_property).nil?
+    true
+  elsif sub_property_name.nil?
     resource.send(password_property).nil?
   else
     resource.send(password_property)[sub_property_name].nil?
