@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'password_base_rule_sub_property_with_list'
+require_relative 'sub_property_with_list_password_base_rule'
 
-class OpsWorksStackRdsDbInstancesDbPasswordRule < PasswordBaseRuleSubPropertyWithList
+class OpsWorksStackRdsDbInstancesDbPasswordRule < SubPropertyWithListPasswordBaseRule
   def rule_text
     'OpsWorks Stack RDS DbInstance DbPassword must not be a plaintext ' \
     'string or a Ref to a NoEcho Parameter with a Default value.' \

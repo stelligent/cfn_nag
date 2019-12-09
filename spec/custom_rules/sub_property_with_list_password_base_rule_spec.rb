@@ -1,11 +1,11 @@
 require 'spec_helper'
 require 'cfn-model'
-require 'cfn-nag/custom_rules/password_base_rule_sub_property_with_list'
+require 'cfn-nag/custom_rules/sub_property_with_list_password_base_rule'
 
-describe PasswordBaseRuleSubPropertyWithList do
+describe SubPropertyWithListPasswordBaseRule do
   describe '#audit' do
     before(:all) do
-      @base_rule_with_list = PasswordBaseRuleSubPropertyWithList.new
+      @base_rule_with_list = SubPropertyWithListPasswordBaseRule.new
       @base_rule_with_list.instance_eval do
         def rule_id
           'F3333'
@@ -42,7 +42,7 @@ describe PasswordBaseRuleSubPropertyWithList do
 
     it 'raises an error when properties are not set' do
       expect do
-        PasswordBaseRuleSubPropertyWithList.new.audit_impl nil
+        SubPropertyWithListPasswordBaseRule.new.audit_impl nil
       end.to raise_error 'must implement in subclass'
     end
 
