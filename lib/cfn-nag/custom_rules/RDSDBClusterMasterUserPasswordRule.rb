@@ -21,7 +21,7 @@ class RDSDBClusterMasterUserPasswordRule < PasswordBaseRule
     'AWS::RDS::DBCluster'
   end
 
-  def password_property
+  def property_name
     :masterUserPassword
   end
 end

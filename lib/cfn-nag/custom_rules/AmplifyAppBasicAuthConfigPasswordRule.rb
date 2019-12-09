@@ -21,7 +21,7 @@ class AmplifyAppBasicAuthConfigPasswordRule < PasswordBaseRule
     'AWS::Amplify::App'
   end
 
-  def password_property
+  def property_name
     :basicAuthConfig
   end
 

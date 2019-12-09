@@ -21,7 +21,7 @@ class RedshiftClusterMasterUserPasswordRule < PasswordBaseRule
     'AWS::Redshift::Cluster'
   end
 
-  def password_property
+  def property_name
     :masterUserPassword
   end
 end

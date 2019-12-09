@@ -22,7 +22,7 @@ class DirectoryServiceMicrosoftADPasswordRule < PasswordBaseRule
     'AWS::DirectoryService::MicrosoftAD'
   end
 
-  def password_property
+  def property_name
     :password
   end
 end

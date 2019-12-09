@@ -22,7 +22,7 @@ class DirectoryServiceSimpleADPasswordRule < PasswordBaseRule
     'AWS::DirectoryService::SimpleAD'
   end
 
-  def password_property
+  def property_name
     :password
   end
 end

@@ -22,7 +22,7 @@ class RDSDBInstanceMasterUsernameRule < PasswordBaseRule
     'AWS::RDS::DBInstance'
   end
 
-  def password_property
+  def property_name
     :masterUsername
   end
 end

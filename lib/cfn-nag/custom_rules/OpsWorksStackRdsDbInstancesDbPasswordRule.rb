@@ -21,7 +21,7 @@ class OpsWorksStackRdsDbInstancesDbPasswordRule < SubPropertyWithListPasswordBas
     'AWS::OpsWorks::Stack'
   end
 
-  def password_property
+  def property_name
     :rdsDbInstances
   end
 

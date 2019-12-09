@@ -10,7 +10,7 @@ class PasswordBaseRule < BaseRule
     raise 'must implement in subclass'
   end
 
-  def password_property
+  def property_name
     raise 'must implement in subclass'
   end
 
@@ -20,11 +20,11 @@ class PasswordBaseRule < BaseRule
     resources = cfn_model.resources_by_type(resource_type)
 
     violating_resources = resources.select do |resource|
-      if parameter_does_not_exist(resource, password_property, sub_property_name)
+      if parameter_does_not_exist(resource, property_name, sub_property_name)
         false
       else
         verify_insecure_string_and_parameter(
-          cfn_model, resource, password_property, sub_property_name
+          cfn_model, resource, property_name, sub_property_name
         )
       end
     end
@@ -35,30 +35,30 @@ end
 
 private
 
-def parameter_does_not_exist(resource, password_property, sub_property_name)
-  if resource.send(password_property).nil?
+def parameter_does_not_exist(resource, property_name, sub_property_name)
+  if resource.send(property_name).nil?
     true
   elsif sub_property_name.nil?
-    resource.send(password_property).nil?
+    resource.send(property_name).nil?
   else
-    resource.send(password_property)[sub_property_name].nil?
+    resource.send(property_name)[sub_property_name].nil?
   end
 end
 
 def verify_insecure_string_and_parameter(
-  cfn_model, resource, password_property, sub_property_name
+  cfn_model, resource, property_name, sub_property_name
 )
   if sub_property_name.nil?
-    insecure_parameter?(cfn_model, resource.send(password_property)) ||
+    insecure_parameter?(cfn_model, resource.send(property_name)) ||
       insecure_string_or_dynamic_reference?(
-        cfn_model, resource.send(password_property)
+        cfn_model, resource.send(property_name)
       )
   else
     insecure_parameter?(
-      cfn_model, resource.send(password_property)[sub_property_name]
+      cfn_model, resource.send(property_name)[sub_property_name]
     ) ||
       insecure_string_or_dynamic_reference?(
-        cfn_model, resource.send(password_property)[sub_property_name]
+        cfn_model, resource.send(property_name)[sub_property_name]
       )
   end
 end

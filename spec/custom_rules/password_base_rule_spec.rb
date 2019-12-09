@@ -23,7 +23,7 @@ describe PasswordBaseRule do
           'AWS::Redshift::Cluster'
         end
 
-        def password_property
+        def property_name
           :masterUserPassword
         end
       end
@@ -46,7 +46,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword)
+        receive(:property_name).and_return(:masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
 
@@ -62,7 +62,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -79,7 +79,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -99,7 +99,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -118,7 +118,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -135,7 +135,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -152,7 +152,7 @@ describe PasswordBaseRule do
       base_rule = @base_rule
 
       expect(base_rule).to \
-        receive(:password_property).and_return(:masterUserPassword,
+        receive(:property_name).and_return(:masterUserPassword,
                                                :masterUserPassword)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::Redshift::Cluster')
@@ -167,7 +167,7 @@ describe PasswordBaseRule do
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end
 
-    it 'returns no violation when password_property is not defined in resource' do
+    it 'returns no violation when property_name is not defined in resource' do
       base_rule = PasswordBaseRule.new
       base_rule.instance_eval do
         def rule_id
@@ -186,7 +186,7 @@ describe PasswordBaseRule do
           'AWS::IAM::User'
         end
 
-        def password_property
+        def property_name
           :loginProfile
         end
 
@@ -198,7 +198,7 @@ describe PasswordBaseRule do
       expect(base_rule).to \
         receive(:sub_property_name).and_return('Password')
       expect(base_rule).to \
-        receive(:password_property).and_return(:loginProfile)
+        receive(:property_name).and_return(:loginProfile)
       expect(base_rule).to \
         receive(:resource_type).and_return('AWS::IAM::User')
 

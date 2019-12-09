@@ -21,7 +21,7 @@ class DMSEndpointPasswordRule < PasswordBaseRule
     'AWS::DMS::Endpoint'
   end
 
-  def password_property
+  def property_name
     :password
   end
 end

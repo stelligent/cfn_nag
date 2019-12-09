@@ -23,7 +23,7 @@ describe SubPropertyWithListPasswordBaseRule do
           'AWS::OpsWorks::Stack'
         end
 
-        def password_property
+        def property_name
           :rdsDbInstances
         end
 
@@ -52,7 +52,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -70,7 +70,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -88,7 +88,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -109,7 +109,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -129,7 +129,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -147,7 +147,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
@@ -165,7 +165,7 @@ describe SubPropertyWithListPasswordBaseRule do
       expect(base_rule_with_list).to \
         receive(:sub_property_name).and_return('DbPassword')
       expect(base_rule_with_list).to \
-        receive(:password_property).and_return(:rdsDbInstances)
+        receive(:property_name).and_return(:rdsDbInstances)
       expect(base_rule_with_list).to \
         receive(:resource_type).and_return('AWS::OpsWorks::Stack')
 
