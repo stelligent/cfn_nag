@@ -27,22 +27,22 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
 
     violating_resources.map(&:logical_resource_id)
   end
-end
 
-private
+  private
 
-def verify_insecure_string_and_parameter_with_list(
-  cfn_model, resource, password_property, sub_property_name
-)
-  sub_property_checks_result = ''
-
-  resource.send(password_property).select do |sub_property|
-    sub_property_checks_result = insecure_parameter?(
-      cfn_model, sub_property[sub_property_name]
-    ) || insecure_string_or_dynamic_reference?(
-      cfn_model, sub_property[sub_property_name]
-    )
+  def verify_insecure_string_and_parameter_with_list(
+    cfn_model, resource, password_property, sub_property_name
+  )
+    sub_property_checks_result = ''
+  
+    resource.send(password_property).select do |sub_property|
+      sub_property_checks_result = insecure_parameter?(
+        cfn_model, sub_property[sub_property_name]
+      ) || insecure_string_or_dynamic_reference?(
+        cfn_model, sub_property[sub_property_name]
+      )
+    end
+  
+    sub_property_checks_result
   end
-
-  sub_property_checks_result
 end

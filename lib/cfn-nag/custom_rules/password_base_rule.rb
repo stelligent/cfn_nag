@@ -31,34 +31,34 @@ class PasswordBaseRule < BaseRule
 
     violating_resources.map(&:logical_resource_id)
   end
-end
 
-private
+  private
 
-def property_does_not_exist(resource, password_property, sub_property_name)
-  if resource.send(password_property).nil?
-    true
-  elsif sub_property_name.nil?
-    resource.send(password_property).nil?
-  else
-    resource.send(password_property)[sub_property_name].nil?
+  def property_does_not_exist(resource, password_property, sub_property_name)
+    if resource.send(password_property).nil?
+      true
+    elsif sub_property_name.nil?
+      resource.send(password_property).nil?
+    else
+      resource.send(password_property)[sub_property_name].nil?
+    end
   end
-end
-
-def verify_insecure_string_and_parameter(
-  cfn_model, resource, password_property, sub_property_name
-)
-  if sub_property_name.nil?
-    insecure_parameter?(cfn_model, resource.send(password_property)) ||
-      insecure_string_or_dynamic_reference?(
-        cfn_model, resource.send(password_property)
-      )
-  else
-    insecure_parameter?(
-      cfn_model, resource.send(password_property)[sub_property_name]
-    ) ||
-      insecure_string_or_dynamic_reference?(
+  
+  def verify_insecure_string_and_parameter(
+    cfn_model, resource, password_property, sub_property_name
+  )
+    if sub_property_name.nil?
+      insecure_parameter?(cfn_model, resource.send(password_property)) ||
+        insecure_string_or_dynamic_reference?(
+          cfn_model, resource.send(password_property)
+        )
+    else
+      insecure_parameter?(
         cfn_model, resource.send(password_property)[sub_property_name]
-      )
+      ) ||
+        insecure_string_or_dynamic_reference?(
+          cfn_model, resource.send(password_property)[sub_property_name]
+        )
+    end
   end
 end
