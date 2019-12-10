@@ -34,7 +34,7 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
     cfn_model, resource, password_property, sub_property_name
   )
     sub_property_checks_result = ''
-  
+
     resource.send(password_property).select do |sub_property|
       sub_property_checks_result = insecure_parameter?(
         cfn_model, sub_property[sub_property_name]
@@ -42,7 +42,7 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
         cfn_model, sub_property[sub_property_name]
       )
     end
-  
+
     sub_property_checks_result
   end
 end

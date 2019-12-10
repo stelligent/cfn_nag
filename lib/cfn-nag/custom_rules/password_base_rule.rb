@@ -43,7 +43,7 @@ class PasswordBaseRule < BaseRule
       resource.send(password_property)[sub_property_name].nil?
     end
   end
-  
+
   def verify_insecure_string_and_parameter(
     cfn_model, resource, password_property, sub_property_name
   )
