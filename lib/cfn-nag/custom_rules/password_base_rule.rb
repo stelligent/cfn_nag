@@ -38,7 +38,7 @@ class PasswordBaseRule < BaseRule
     if resource.send(password_property).nil?
       true
     elsif sub_property_name.nil?
-      resource.send(password_property).nil?
+      false
     else
       resource.send(password_property)[sub_property_name].nil?
     end
