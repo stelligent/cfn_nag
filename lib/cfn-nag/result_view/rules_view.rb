@@ -42,10 +42,10 @@ class RulesView
 
   def emit_duplicates(duplicates)
     duplicates.each do |info|
-      puts '------------------'.red
-      puts "Rule ID conflict detected for #{info[:id]}.".red
-      puts "New rule: #{info[:new_message]}".red
-      puts "Registered rule: #{info[:registered_message]}".red
+      puts '------------------'
+      puts "Rule ID conflict detected for #{info[:id]}."
+      puts "New rule: #{info[:new_message]}"
+      puts "Registered rule: #{info[:registered_message]}"
     end
   end
 
