@@ -19,4 +19,4 @@ Resources:
       ShardCount: 1
       StreamEncryption: 
         EncryptionType: KMS
-        KeyId: !Ref
+        KeyId: !Ref KmsKeyId

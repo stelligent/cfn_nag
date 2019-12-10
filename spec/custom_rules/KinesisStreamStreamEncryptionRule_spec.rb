@@ -41,31 +41,31 @@ describe KinesisStreamStreamEncryptionRule do
       cfn_model = CfnParser.new.parse read_test_template('yaml/kinesis/kinesis_stream_stream_encryption_defined_encryption_type_none.yaml')
 
       actual_logical_resource_ids = KinesisStreamStreamEncryptionRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[]
+      expected_logical_resource_ids = %w[KinesisStream2 KinesisStream3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
 
-  # context 'Kinesis Stream with StreamEncryption property defined without KeyId.' do
-  #   it 'returns offending logical resource ids' do
-  #     cfn_model = CfnParser.new.parse read_test_template('yaml/kinesis/kinesis_topic_kms_master_key_id_defined_with_parameter.yaml')
+  context 'Kinesis Stream with StreamEncryption property defined without KeyId.' do
+    it 'returns offending logical resource ids' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/kinesis/kinesis_stream_stream_encryption_defined_without_key_id.yaml')
 
-  #     actual_logical_resource_ids = KinesisStreamStreamEncryptionRule.new.audit_impl cfn_model
-  #     expected_logical_resource_ids = %w[]
+      actual_logical_resource_ids = KinesisStreamStreamEncryptionRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[KinesisStream2 KinesisStream3]
 
-  #     expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
-  #   end
-  # end
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 
-  # context 'Kinesis Stream with StreamEncryption property defined without EncryptionType.' do
-  #   it 'returns offending logical resource ids' do
-  #     cfn_model = CfnParser.new.parse read_test_template('yaml/kinesis/kinesis_topic_kms_master_key_id_defined_with_parameter.yaml')
+  context 'Kinesis Stream with StreamEncryption property defined without EncryptionType.' do
+    it 'returns offending logical resource ids' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/kinesis/kinesis_stream_stream_encryption_defined_without_encryption_type.yaml')
 
-  #     actual_logical_resource_ids = KinesisStreamStreamEncryptionRule.new.audit_impl cfn_model
-  #     expected_logical_resource_ids = %w[]
+      actual_logical_resource_ids = KinesisStreamStreamEncryptionRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[KinesisStream2 KinesisStream3]
 
-  #     expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
-  #   end
-  # end
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
