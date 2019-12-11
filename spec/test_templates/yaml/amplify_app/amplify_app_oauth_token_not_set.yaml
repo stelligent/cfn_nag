@@ -1,0 +1,6 @@
+---
+Resources:
+  AmplifyApp:
+    Type: AWS::Amplify::App
+    Properties:
+      Name: foobar
