@@ -1,0 +1,14 @@
+{
+	"Resources": {
+		"ElasticsearchDomainWithName": {
+			"Type": "AWS::Elasticsearch::Domain",
+			"Properties": {
+				"DomainName": "nameddomain",
+				"EncryptionAtRestOptions" : {
+					"Enabled": true,
+					"KmsKeyId": ""
+				}
+			}
+		}
+	}
+}
