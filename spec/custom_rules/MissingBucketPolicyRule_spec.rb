@@ -19,7 +19,7 @@ describe MissingBucketPolicyRule do
   context 'bucket with bucket policy' do
     it 'returns offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template(
-                                        'yaml/s3/bucket_With_non_literal_policy.yml'
+                                        'yaml/s3/bucket_with_non_literal_policy.yml'
                                       )
 
       actual_logical_resource_ids = MissingBucketPolicyRule.new.audit_impl cfn_model
