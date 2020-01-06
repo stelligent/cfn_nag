@@ -1,0 +1,28 @@
+---
+Resources:
+  AmazonMQBroker:
+    Type: AWS::AmazonMQ::Broker
+    Properties: 
+      AutoMinorVersionUpgrade: true
+      BrokerName: MyAmazonMQBroker
+      DeploymentMode: SINGLE_INSTANCE
+      EngineType: ACTIVEMQ
+      EngineVersion: "5.15.0"
+      HostInstanceType: mq.t2.micro
+      PubliclyAccessible: false
+      EncryptionOptions:
+        UseAwsOwnedKey: true
+  AmazonMQBroker2:
+    Type: AWS::AmazonMQ::Broker
+    Properties: 
+      AutoMinorVersionUpgrade: true
+      BrokerName: MyAmazonMQBroker
+      DeploymentMode: SINGLE_INSTANCE
+      EngineType: ACTIVEMQ
+      EngineVersion: "5.15.0"
+      HostInstanceType: mq.t2.micro
+      PubliclyAccessible: false
+      EncryptionOptions:
+        KmsKeyId: "arn"
+        UseAwsOwnedKey: false
+        
