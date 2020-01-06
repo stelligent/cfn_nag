@@ -18,9 +18,15 @@ class ElasticsearchDomainEncryptionAtRestOptionsRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_domains = cfn_model.resources_by_type('AWS::Elasticsearch::Domain').select do |domain|
-      domain.encryptionAtRestOptions.nil?  || domain.encryptionAtRestOptions['Enabled'].nil? || domain.encryptionAtRestOptions['Enabled'].to_s.casecmp?('false')
+      domain.encryptionAtRestOptions.nil? || encryption_not_enabled?(domain.encryptionAtRestOptions)
     end
 
     violating_domains.map(&:logical_resource_id)
+  end
+
+  private
+
+  def encryption_not_enabled?(encryption_at_rest_options)
+    encryption_at_rest_options['Enabled'].nil? || encryption_at_rest_options['Enabled'].to_s.casecmp?('false')
   end
 end
