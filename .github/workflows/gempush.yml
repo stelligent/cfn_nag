@@ -52,7 +52,9 @@ jobs:
     steps:
       # is this the same commit hash we saw in commit?
       - uses: actions/checkout@v2
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+      - run: |
+          git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+          git fetch --prune --unshallow
       - name: Publish to RubyGems and DockerHub
         run: bash ./scripts/publish.sh
         env:
