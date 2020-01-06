@@ -1,0 +1,19 @@
+{
+	"Resources": {
+		"ElasticsearchDomainWithName": {
+			"Type": "AWS::Elasticsearch::Domain",
+			"Properties": {
+				"DomainName": "nameddomain"
+			}
+		},
+		"ElasticsearchDomainWithName2": {
+			"Type": "AWS::Elasticsearch::Domain",
+			"Properties": {
+				"DomainName": "nameddomain2",
+				"EncryptionAtRestOptions": {
+					"Enabled": false}
+					
+			}
+		}
+	}
+}
