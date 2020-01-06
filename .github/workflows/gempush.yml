@@ -42,6 +42,8 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         version: 2.5.x
+    - name: Install Bundler
+      run: gem install bundler
     - name: e2e
       run: bash ./scripts/setup_and_run_end_to_end_tests.sh
     #- name: Publish to RubyGems
