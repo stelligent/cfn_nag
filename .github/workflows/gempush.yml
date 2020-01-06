@@ -1,0 +1,50 @@
+name: cfn_nag
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+jobs:
+  commit:
+    name: Commit
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby 2.5
+      uses: actions/setup-ruby@v1
+      with:
+        version: 2.5.x
+    - name: Which bundler?
+      run: bundle -v
+    - name: Bundle install
+      run: bundle check || bundle install
+    - name: Rubocop lint
+      run: bundle exec rubocop -D
+    - name: Rspec tests
+      run: bundle exec rspec --color --require spec_helper spec
+    - name: Duplicate rule check
+      run: bundle exec ./bin/cfn_nag_rules
+      
+  acceptance:
+    name: Acceptance
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby 2.5
+      uses: actions/setup-ruby@v1
+      with:
+        version: 2.5.x
+    - name: e2e
+      run: bash ./scripts/setup_and_run_end_to_end_tests.sh
+    #- name: Publish to RubyGems
+    # run: bash ./scripts/publish.sh
+    #  env:
+    #    rubygems_api_key: ${{secrets.RUBYGEMS_AUTH_TOKEN}}
+    #    docker_user: ${{secrets.DOCKER_USER}}
+    #    docker_password: ${{secrets.DOCKER_PASSWORD}}
