@@ -55,7 +55,11 @@ jobs:
       - run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           git fetch --prune --unshallow
-      - name: Publish to RubyGems and DockerHub
+      - name: Set up Ruby 2.5
+        uses: actions/setup-ruby@v1
+        with:
+          version: 2.5.x
+      - name: Publish to RubyGems and DockerH1ub
         run: bash ./scripts/publish.sh
         env:
           rubygems_api_key: ${{secrets.rubygems_api_key}}
