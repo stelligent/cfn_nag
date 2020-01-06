@@ -42,8 +42,8 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
     return false unless property_list
 
     property_list.find do |property_element|
-      sub_property_value = property_element[sub_property_name]
-      insecure_parameter?(cfn_model, sub_property_value) || insecure_string_or_dynamic_reference?(cfn_model, sub_property_value)
+      sub_value = property_element[sub_property_name]
+      insecure_parameter?(cfn_model, sub_value) || insecure_string_or_dynamic_reference?(cfn_model, sub_value)
     end
   end
 end
