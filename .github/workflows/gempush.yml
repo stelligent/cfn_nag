@@ -19,6 +19,8 @@ jobs:
       uses: actions/setup-ruby@v1
       with:
         version: 2.5.x
+    - name: Install Bundler
+      run: gem install bundler
     - name: Which bundler?
       run: bundle -v
     - name: Bundle install
