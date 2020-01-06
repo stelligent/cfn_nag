@@ -20,3 +20,18 @@ describe Object.const_get(rule_name(resource_type, password_property, sub_proper
     end
   end
 end
+
+describe OpsWorksStackRdsDbInstancesDbPasswordRule do
+  context 'opswork stack without rds db instances' do
+    it 'returns empty list of violations' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/opsworks_stack/opsworks_stack_no_rds_db_instances.yaml'
+                                      )
+
+      actual_logical_resource_ids = OpsWorksStackRdsDbInstancesDbPasswordRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+end

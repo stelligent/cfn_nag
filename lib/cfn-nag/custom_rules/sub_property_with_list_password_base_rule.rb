@@ -20,7 +20,7 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
     resources = cfn_model.resources_by_type(resource_type)
 
     violating_resources = resources.select do |resource|
-      verify_insecure_string_and_parameter_with_list(
+      resource_with_insecure_subproperty_within_list_property?(
         cfn_model, resource, password_property, sub_property_name
       )
     end
@@ -30,19 +30,20 @@ class SubPropertyWithListPasswordBaseRule < BaseRule
 
   private
 
-  def verify_insecure_string_and_parameter_with_list(
+  ##
+  # This method name is a mouthful.  Consider a cfn resource with a property that is a list
+  # like OpsworkStack::RdsDbInstances.  The elements of that list include a password property.
+  # This predicate goes looking for unsafe password values "down" in the elements of the list
+  #
+  def resource_with_insecure_subproperty_within_list_property?(
     cfn_model, resource, password_property, sub_property_name
   )
-    sub_property_checks_result = ''
+    property_list = resource.send(password_property)
+    return false unless property_list
 
-    resource.send(password_property).select do |sub_property|
-      sub_property_checks_result = insecure_parameter?(
-        cfn_model, sub_property[sub_property_name]
-      ) || insecure_string_or_dynamic_reference?(
-        cfn_model, sub_property[sub_property_name]
-      )
+    property_list.find do |property_element|
+      sub_property_value = property_element[sub_property_name]
+      insecure_parameter?(cfn_model, sub_property_value) || insecure_string_or_dynamic_reference?(cfn_model, sub_property_value)
     end
-
-    sub_property_checks_result
   end
 end

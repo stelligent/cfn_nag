@@ -1,0 +1,8 @@
+---
+Resources:
+  OpsWorksStack:
+    Type: AWS::OpsWorks::Stack
+    Properties:
+      DefaultInstanceProfileArn: arn:aws:iam::123456789012:instance-profile/MyProfile-foobar
+      Name: foobar
+      ServiceRoleArn: arn:aws:iam::123456789012:role/MyRole-foobar
