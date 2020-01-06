@@ -17,6 +17,11 @@ then
   echo docker_password must be set in the environment
   exit 1
 fi
+if [[ -z ${docker_org} ]];
+then
+  echo $docker_org must be set in the environment
+  exit 1
+fi
 set -x
 
 git config --global user.email "build@build.com"

@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - master
+env:
+  docker_org: stelligent
 
 jobs:
   commit:
