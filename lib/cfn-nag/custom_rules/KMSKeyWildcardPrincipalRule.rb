@@ -9,11 +9,11 @@ class KMSKeyWildcardPrincipalRule < BaseRule
   end
 
   def rule_type
-    Violation::WARNING
+    Violation::FAILING_VIOLATION
   end
 
   def rule_id
-    'W55'
+    'F76'
   end
 
   def audit_impl(cfn_model)
@@ -22,7 +22,7 @@ class KMSKeyWildcardPrincipalRule < BaseRule
       # Select all key policy 'Statement' objects to audit
       violating_statements = key.keyPolicy['Statement'].select do |statement|
         # Add statement as violating if allowing wildcard principal
-        statement['Principal'] == '*' && statement['Effect'] == 'Allow'
+        (statement['Principal'] == '*' || statement['Principal']['AWS'] == '*') && statement['Effect'] == 'Allow'
       end
 
       !violating_statements.empty?
