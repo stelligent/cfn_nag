@@ -5,7 +5,8 @@ require_relative 'base'
 
 class KMSKeyWildcardPrincipalRule < BaseRule
   def rule_text
-    'KMS key should not allow * principal'
+    'KMS key should not allow * principal ' \
+    '(https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)'
   end
 
   def rule_type
@@ -19,13 +20,8 @@ class KMSKeyWildcardPrincipalRule < BaseRule
   def audit_impl(cfn_model)
     # Select all AWS::KMS::Key resources to audit
     violating_keys = cfn_model.resources_by_type('AWS::KMS::Key').select do |key|
-      # Select all key policy 'Statement' objects to audit
-      violating_statements = key.keyPolicy['Statement'].select do |statement|
-        # Add statement as violating if allowing wildcard principal
-        (statement['Principal'] == '*' || statement['Principal']['AWS'] == '*') && statement['Effect'] == 'Allow'
-      end
-
-      !violating_statements.empty?
+      # Return key if wildcard_allowed_principals boolean is not empty
+      !key.key_policy.policy_document.wildcard_allowed_principals.empty?
     end
 
     violating_keys.map(&:logical_resource_id)

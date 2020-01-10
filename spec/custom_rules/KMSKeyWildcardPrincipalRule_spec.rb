@@ -28,5 +28,13 @@ describe KMSKeyWildcardPrincipalRule do
         expect(actual_logical_resource_ids).to eq ['myKeyAwsWildcardPrincipal']
       end
     end
+    context 'when a principal\'s AWS key is an array and contains a wildcard' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/kms/kms_key_with_aws_array_wildcard_principal.json')
+        actual_logical_resource_ids = KMSKeyWildcardPrincipalRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq ['myKeyAwsArrayWildcardPrincipal']
+      end
+    end
   end
 end
