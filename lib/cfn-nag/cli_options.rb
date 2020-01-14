@@ -68,6 +68,11 @@ class Options
           type: :string,
           required: false,
           default: nil
+      opt :condition_values_path,
+          'Path to a JSON file to pull Condition values from',
+          type: :string,
+          required: false,
+          default: nil
       opt :isolate_custom_rule_exceptions,
           custom_rule_exceptions_message,
           type: :boolean,
@@ -129,6 +134,11 @@ class Options
           default: nil
       opt :parameter_values_path,
           'Path to a JSON file to pull Parameter values from',
+          type: :string,
+          required: false,
+          default: nil
+      opt :condition_values_path,
+          'Path to a JSON file to pull Condition values from',
           type: :string,
           required: false,
           default: nil

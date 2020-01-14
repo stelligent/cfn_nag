@@ -15,4 +15,48 @@ describe ElasticLoadBalancerV2AccessLoggingRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'load balancer with conditional access logging at the property' do
+    it 'returns offending logical resource id depending on condition' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/elasticloadbalacingv2_elasticloadbalancer/conditional_properties.yml'
+                                      )
+
+      actual_logical_resource_ids = ElasticLoadBalancerV2AccessLoggingRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/elasticloadbalacingv2_elasticloadbalancer/conditional_properties.yml'
+                                      ), nil, false, '{"EnableLogsPublicLB":false}'
+
+      actual_logical_resource_ids = ElasticLoadBalancerV2AccessLoggingRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[ApplicationLoadBalancer]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'load balancer with conditional access logging at the property value' do
+    it 'returns offending logical resource id depending on condition' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/elasticloadbalacingv2_elasticloadbalancer/conditional_property_values.yml'
+                                      )
+
+      actual_logical_resource_ids = ElasticLoadBalancerV2AccessLoggingRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/elasticloadbalacingv2_elasticloadbalancer/conditional_properties.yml'
+                                      ), nil, false, '{"EnableLogsPublicLB":false}'
+
+      actual_logical_resource_ids = ElasticLoadBalancerV2AccessLoggingRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[ApplicationLoadBalancer]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end

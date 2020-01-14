@@ -9,6 +9,7 @@ class CfnNagExecutor
     @profile_definition = nil
     @blacklist_definition = nil
     @parameter_values_string = nil
+    @condition_values_string = nil
   end
 
   def scan(options_type:)
@@ -48,13 +49,15 @@ class CfnNagExecutor
       input_path: opts[:input_path],
       output_format: opts[:output_format],
       parameter_values_path: opts[:parameter_values_path],
+      condition_values_path: opts[:condition_values_path],
       template_pattern: opts[:template_pattern]
     )
   end
 
   def scan_file(cfn_nag, fail_on_warnings)
     audit_result = cfn_nag.audit(cloudformation_string: argf_read,
-                                 parameter_values_string: @parameter_values_string)
+                                 parameter_values_string: @parameter_values_string,
+                                 condition_values_string: @condition_values_string)
 
     @total_failure_count += if fail_on_warnings
                               audit_result[:violations].length
@@ -86,6 +89,10 @@ class CfnNagExecutor
 
     unless opts[:parameter_values_path].nil?
       @parameter_values_string = IO.read(opts[:parameter_values_path])
+    end
+
+    unless opts[:condition_values_path].nil?
+      @condition_values_string = IO.read(opts[:condition_values_path])
     end
   end
 

@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  RestoreSecretString:
+    Type: String
+    NoEcho: true
+    Default: none
+Conditions:
+  IsNone: !Or
+    - !Equals
+      - !Ref RestoreSecretString
+      - none
+    - !Equals
+      - !Ref RestoreSecretString
+      - ""
+Resources:
+  AppDbSecret:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Retain
+    Properties: !If
+      - IsNone
+      - Description: 'New'
+        GenerateSecretString:
+          SecretStringTemplate: '{"username": "test-user"}'
+          GenerateStringKey: "password"
+          PasswordLength: 30
+          ExcludeCharacters: '"@/\'
+      - Description: 'Restore'
+        SecretString: !Ref 'RestoreSecretString'

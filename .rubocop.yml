@@ -23,10 +23,10 @@ Style/InverseMethods:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 15
+  Max: 20
 
 Metrics/AbcSize:
-  Max: 16
+  Max: 17
 
 Style/StderrPuts:
   Enabled: false
