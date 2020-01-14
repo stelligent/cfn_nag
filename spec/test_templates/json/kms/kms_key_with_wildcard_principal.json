@@ -1,0 +1,44 @@
+{
+  "Resources": {
+    "myKeyWildcardPrincipal" : {
+      "Type" : "AWS::KMS::Key",
+      "Properties" : {
+        "Description" : "An example CMK",
+				"EnableKeyRotation": "true",
+        "KeyPolicy" : {
+          "Version": "2012-10-17",
+          "Id": "key-default-1",
+          "Statement": [
+            {
+              "Sid": "Enable IAM User Permissions",
+              "Effect": "Allow",
+              "Principal": {"AWS": "arn:aws:iam::111122223333:root"},
+              "Action": "kms:*",
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow administration of the key",
+              "Effect": "Allow",
+              "Principal": { "CanonicalUser": "79a59df900b949e55d96a1e698fbacedfd6e09d98eacf8f8d5218e7cd47ef2be" },
+              "Action": [
+                "kms:Create*",
+                "kms:CancelKeyDeletion"
+              ],
+              "Resource": "*"
+            },
+            {
+              "Sid": "Allow use of the key",
+              "Effect": "Allow",
+              "Principal": "*",
+              "Action": [
+                "kms:GenerateDataKey",
+                "kms:GenerateDataKeyWithoutPlaintext"
+              ],
+              "Resource": "*"
+            }
+          ]
+        }
+      }
+    }
+  }
+}
