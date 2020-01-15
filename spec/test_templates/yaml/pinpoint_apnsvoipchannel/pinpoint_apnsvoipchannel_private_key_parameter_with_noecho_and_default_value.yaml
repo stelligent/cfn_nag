@@ -1,0 +1,16 @@
+---
+Parameters:
+  PinpointAPNSVoipChannelPrivateKey:
+    Type: String
+    NoEcho: True
+    Default: b@d0@u7H70K3n
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSVoipChannel:
+    Type: AWS::Pinpoint::APNSVoipChannel
+    Properties:
+      PrivateKey: !Ref PinpointAPNSVoipChannelPrivateKey
+      ApplicationId: !Ref PinpointApp

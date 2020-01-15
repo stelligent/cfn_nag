@@ -1,0 +1,10 @@
+---
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSVoipChannel:
+    Type: AWS::Pinpoint::APNSVoipChannel
+    Properties:
+      ApplicationId: !Ref PinpointApp
