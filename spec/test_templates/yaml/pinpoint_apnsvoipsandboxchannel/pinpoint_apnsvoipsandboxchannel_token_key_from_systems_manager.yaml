@@ -1,0 +1,11 @@
+---
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSVoipSandboxChannel:
+    Type: AWS::Pinpoint::APNSVoipSandboxChannel
+    Properties:
+      TokenKey: '{{resolve:ssm:UnsecureSecretString:1}}'
+      ApplicationId: !Ref PinpointApp
