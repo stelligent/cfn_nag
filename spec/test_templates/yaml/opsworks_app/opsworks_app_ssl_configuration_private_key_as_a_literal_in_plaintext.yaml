@@ -1,0 +1,13 @@
+---
+Resources:
+  OpsWorksApp:
+    Type: AWS::OpsWorks::App
+    Properties:
+      Name: foobar
+      SslConfiguration:
+        Certificate: Certificate-Foo
+        Chain: Chain-Bar
+        PrivateKey: b@dPr1V@73K3y
+      StackId: Stack-Foo
+      Type: static
+  
