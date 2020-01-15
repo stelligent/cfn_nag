@@ -30,7 +30,7 @@ jobs:
       run: bundle exec rspec --color --require spec_helper spec
     - name: Duplicate rule check
       run: bundle exec ./bin/cfn_nag_rules
-      
+
   acceptance:
     name: Acceptance
     runs-on: ubuntu-latest
@@ -61,6 +61,13 @@ jobs:
         uses: actions/setup-ruby@v1
         with:
           version: 2.5.x
+      - name: Trigger homebrew-tap repo workflow
+        run: |
+          curl -s -XPOST -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
+          -H "Accept: application/vnd.github.everest-preview+json" \
+          -H "Content-Type: application/json" \
+          https://api.github.com/repos/stelligent/homebrew-tap/dispatches \
+          --data '{"event_type": "build_application"}'
       - name: Publish to RubyGems and DockerH1ub
         run: bash ./scripts/publish.sh
         env:
