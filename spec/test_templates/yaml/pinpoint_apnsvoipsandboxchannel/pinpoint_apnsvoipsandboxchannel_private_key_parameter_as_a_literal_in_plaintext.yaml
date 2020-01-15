@@ -1,0 +1,14 @@
+---
+Parameters:
+  PinpointAPNSVoipSandboxChannelPrivateKey:
+    Type: String
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSVoipSandboxChannel:
+    Type: AWS::Pinpoint::APNSVoipSandboxChannel
+    Properties:
+      PrivateKey: !Ref PinpointAPNSVoipSandboxChannelPrivateKey
+      ApplicationId: !Ref PinpointApp
