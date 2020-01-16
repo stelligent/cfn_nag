@@ -6,7 +6,7 @@ require_relative 'password_base_rule'
 class CodePipelineWebhookAuthenticationConfigurationSecretTokenRule < PasswordBaseRule
   def rule_text
     'CodePipeline Webhook AuthenticationConfiguration SecretToken must not be ' \
-    'a plaintext string or a Ref to a NoEcho Parameter with a Default value.' \
+    'a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
