@@ -1,0 +1,11 @@
+---
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSSandboxChannel:
+    Type: AWS::Pinpoint::APNSSandboxChannel
+    Properties:
+      PrivateKey: '{{resolve:ssm:UnsecureSecretString:1}}'
+      ApplicationId: !Ref PinpointApp
