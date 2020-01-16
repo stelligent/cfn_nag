@@ -6,7 +6,7 @@ require_relative 'sub_property_with_list_password_base_rule'
 class MediaLiveInputSourcesPasswordParamRule < SubPropertyWithListPasswordBaseRule
   def rule_text
     'MediaLive Input Sources PasswordParam must not be a plaintext ' \
-    'string or a Ref to a NoEcho Parameter with a Default value.' \
+    'string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
