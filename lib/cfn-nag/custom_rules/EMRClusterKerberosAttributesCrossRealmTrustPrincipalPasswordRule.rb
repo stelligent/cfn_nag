@@ -7,7 +7,7 @@ class EMRClusterKerberosAttributesCrossRealmTrustPrincipalPasswordRule < Passwor
   def rule_text
     'EMR Cluster KerberosAttributes CrossRealmTrustPrincipal Password must ' \
     'not be a plaintext string or a Ref to a NoEcho Parameter with a ' \
-    'Default value.' \
+    'Default value.'
   end
 
   def rule_type
