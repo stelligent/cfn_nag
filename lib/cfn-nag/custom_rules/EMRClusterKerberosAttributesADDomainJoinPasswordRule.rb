@@ -6,7 +6,7 @@ require_relative 'password_base_rule'
 class EMRClusterKerberosAttributesADDomainJoinPasswordRule < PasswordBaseRule
   def rule_text
     'EMR Cluster KerberosAttributes AD Domain JoinPassword must not be a ' \
-    'plaintext string or a Ref to a NoEcho Parameter with a Default value.' \
+    'plaintext string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
