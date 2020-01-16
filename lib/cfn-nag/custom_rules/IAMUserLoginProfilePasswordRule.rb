@@ -6,7 +6,7 @@ require_relative 'password_base_rule'
 class IAMUserLoginProfilePasswordRule < PasswordBaseRule
   def rule_text
     'IAM User LoginProfile Password must not be a plaintext string or ' \
-    'a Ref to a NoEcho Parameter with a Default value.' \
+    'a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
