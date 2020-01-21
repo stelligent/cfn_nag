@@ -1,0 +1,13 @@
+---
+Parameters:
+  LambdaPermissionEventSourceToken:
+    Type: String
+    NoEcho: True
+Resources:
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      EventSourceToken: !Ref LambdaPermissionEventSourceToken
+      FunctionName: foobar
+      Principal: foo.amazonaws.com

@@ -1,0 +1,23 @@
+---
+Parameters:
+  KinesisFirehoseDeliveryStreamSplunkDestinationConfigurationHECToken:
+    Type: String
+    NoEcho: True
+    Default: b@d0@h3C70K3n
+Resources:
+  KinesisFirehoseDeliveryStream:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties: 
+      DeliveryStreamName: foobar
+      DeliveryStreamType: DirectPut
+      SplunkDestinationConfiguration:
+        HECEndpoint: String
+        HECEndpointType: https://splunk.aws.id.foobar:8888
+        HECToken: !Ref KinesisFirehoseDeliveryStreamSplunkDestinationConfigurationHECToken
+        S3Configuration: 
+          BucketARN: arn:aws:s3:::foobar-bucket
+          BufferingHints: 
+            IntervalInSeconds: 60
+            SizeInMBs: 1
+          CompressionFormat: GZIP
+          RoleARN: arn:aws:iam::123456789012:role/KinesisFirehose-S3Configuration-foobar

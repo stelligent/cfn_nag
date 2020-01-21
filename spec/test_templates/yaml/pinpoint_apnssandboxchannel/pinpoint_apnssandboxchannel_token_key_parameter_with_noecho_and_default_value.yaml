@@ -1,0 +1,16 @@
+---
+Parameters:
+  PinpointAPNSSandboxChannelTokenKey:
+    Type: String
+    NoEcho: True
+    Default: b@d0@u7H70K3n
+Resources:
+  PinpointApp:
+    Type: AWS::Pinpoint::App
+    Properties:
+      Name: foobar
+  PinpointAPNSSandboxChannel:
+    Type: AWS::Pinpoint::APNSSandboxChannel
+    Properties:
+      TokenKey: !Ref PinpointAPNSSandboxChannelTokenKey
+      ApplicationId: !Ref PinpointApp

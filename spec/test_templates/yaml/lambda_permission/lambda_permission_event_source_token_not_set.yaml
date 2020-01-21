@@ -1,0 +1,8 @@
+---
+Resources:
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: foobar
+      Principal: foo.amazonaws.com

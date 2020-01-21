@@ -1,6 +1,8 @@
 <img src="logo.png?raw=true" width="150">
 <br/>
 
+![cfn_nag](https://github.com/stelligent/cfn_nag/workflows/cfn_nag/badge.svg)
+
 # Background
 
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
@@ -266,6 +268,44 @@ _BEWARE_ that if there are extra parameters in the JSON they are quietly ignored
 the same JSON across all the templates)
 
 If the JSON is malformed or doesn't meet the above specification, then parsing will fail with FATAL violation.
+
+# Controlling the Behavior of Conditions
+
+Up until version 0.4.66 of cfn_nag, the underlying model did not do any processing of Fn::If within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the Fn::If.  Given that an Fn::If could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.  
+
+In order to address this issue, the default behavior for cfn_nag is now to substitute Fn::If with the true outcome.  This means by default that rules will not inspect the false outcomes for security violations.  
+
+In addition to substituting Fn::If at the property value level, the same behavior is applied to Fn::If at the top-level of Properties.  For example:
+
+```yaml
+Resource1:
+  Type: Foo
+  Properties: !If
+    - IsNone
+    - Description: Up
+    - Description: DOwn
+```
+
+Will look the same as:
+
+```yaml
+Resource1:
+  Type: Foo
+  Properties:
+    Description: Up
+```
+
+To provide some control over this behavior, a user can specify the condition values in a JSON file passed on the command line
+to both `cfn_nag` and `cfn_nag_scan` with the `--condition-values-path=<filename/uri>` flag.
+
+The format of the JSON is a a dictionary with each key/value pair mapping to the Conditions like such:
+
+```json
+{
+  "Condition1": true,
+  "Condition2": false
+}
+```
 
 # Development
 
