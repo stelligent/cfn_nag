@@ -12,6 +12,7 @@ Roughly speaking it will look for:
 * Security group rules that are too permissive (wildcards)
 * Access logs that aren't enabled
 * Encryption that isn't enabled
+* Password literals
 
 For more background on the tool, please see:
 
