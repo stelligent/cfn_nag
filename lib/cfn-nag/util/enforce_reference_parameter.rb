@@ -2,8 +2,8 @@
 
 require 'cfn-nag/util/truthy.rb'
 
-# Returns false if the provided key_to_check is a no-echo parameter
-# without a default value; true otherwise.
+# Returns false if the provided key_to_check is a no-echo parameter without a
+# default value, or pseudo parameter reference to 'AWS::NoValue'; true otherwise.
 # Only applicable for a hash
 def insecure_parameter?(cfn_model, key_to_check)
   # We only want to perform the check against a hash
@@ -12,6 +12,9 @@ def insecure_parameter?(cfn_model, key_to_check)
   # We don't care if any other intrinsic function is used here. We only want to
   # verify that Ref is being used properly
   return false unless key_to_check.key? 'Ref'
+
+  # Check if the property is a pseudo parameter reference to 'AWS::NoValue'
+  return false if key_to_check['Ref'] == 'AWS::NoValue'
 
   # Check if the key parameter is Ref and if that corresponding reference is
   # setup securely by stating NoEcho=true & Default is not present
