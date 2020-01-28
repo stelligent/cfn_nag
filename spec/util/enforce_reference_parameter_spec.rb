@@ -20,12 +20,13 @@ describe 'insecure_parameter', :rule do
     it 'returns false if AWS::NoValue Pseudo Parameter is used' do
       cfn_model = CfnParser.new.parse read_test_template(
         'yaml/rds_dbcluster/' \
-        'rds_dbcluster_master_user_password_pseudo_parameter.yaml'
+        'rds_dbcluster_master_user_password_with_novalue_pseudo_parameter.yaml'
       )
       cfn_model.resources_by_type('AWS::RDS::DBCluster')
                .select do |cluster|
         raise "masterUserPassword shouldn't be nil" if cluster.masterUserPassword.nil?
 
+        expect(cluster.masterUserPassword).to eq "Ref"=>"AWS::NoValue"
         expect(insecure_parameter?(cfn_model, cluster.masterUserPassword)).to eq false
       end
     end
