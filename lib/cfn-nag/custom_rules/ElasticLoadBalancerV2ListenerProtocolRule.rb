@@ -5,7 +5,7 @@ require_relative 'base'
 
 class ElasticLoadBalancerV2ListenerProtocolRule < BaseRule
   def rule_text
-    'Elastic Load Balancer V2 Listener Protocol should use HTTPS for ALB or TLS for Network LB'
+    'Elastic Load Balancer V2 Listener Protocol should use HTTPS for ALBs'
   end
 
   def rule_type

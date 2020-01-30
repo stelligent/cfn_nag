@@ -19,7 +19,6 @@ class ElasticLoadBalancerV2ListenerSslPolicyRule < BaseRule
   def audit_impl(cfn_model)
     violating_listeners = cfn_model.resources_by_type('AWS::ElasticLoadBalancingV2::Listener')
                                    .select do |listener|
-      listener.sSLPolicy.nil? ||
         %w[ELBSecurityPolicy-2016-08 ELBSecurityPolicy-TLS-1-0-2015-04 ELBSecurityPolicy-TLS-1-1-2017-01
            ELBSecurityPolicy-FS-2018-06 ELBSecurityPolicy-FS-1-1-2019-08 ELBSecurityPolicy-2015]
           .include?(listener.sSLPolicy)
