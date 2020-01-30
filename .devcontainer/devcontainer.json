@@ -1,0 +1,30 @@
+{
+	"name": "cfn_nag Development",
+	"dockerFile": "Dockerfile",
+	"appPort": 9001,
+	"mounts": [
+		// Docker in Docker
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"extensions": [
+		"rebornix.Ruby",
+		"castwide.solargraph",
+		"kaiwood.endwise",
+		"misogi.ruby-rubocop"
+	],
+	"settings": {
+		// Ruby
+    "[ruby]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2
+		},
+		// Solargraph
+		"solargraph.commandPath": "/usr/local/bundle/bin/solargraph",
+		"solargraph.bundlerPath": "/usr/local/bin/bundle",
+		// Rubocop
+		"ruby.rubocop.executePath": "/usr/local/bundle/bin/",
+		"ruby.rubocop.onSave": true,
+		"ruby.rubocop.configFilePath": "/workspaces/cfn_nag/.rubocop.yml"
+	},
+	"postCreateCommand": "bundle install"
+}
