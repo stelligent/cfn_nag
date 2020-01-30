@@ -2,6 +2,9 @@
 	"name": "cfn_nag Development",
 	"dockerFile": "Dockerfile",
 	"appPort": 9001,
+	"containerEnv": {
+		"DND_PWD": "${localEnv:PWD}"
+	},
 	"mounts": [
 		// Docker in Docker
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
