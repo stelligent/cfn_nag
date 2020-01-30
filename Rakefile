@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Returns a docker run prefix.
+# Returns a docker run prefix based on the environment that you are running in.
 # If the command is run inside a running Docker container (determined by the file '/.dockerenv' existing) then it will
 # set the mount source as the '$DND_PWD' environment variable.
 # If the command is run outside a Docker container then it will just use the regular local '$(pwd)' as the mount source.
