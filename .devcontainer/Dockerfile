@@ -31,3 +31,7 @@ RUN curl -sSL "https://github.com/docker/compose/releases/download/1.24.0/docker
 RUN gem install bundler
 RUN gem install rubocop
 RUN gem install solargraph
+
+# Install cfn-lint via pip
+RUN apt-get install -y python3-pip
+RUN pip3 install cfn-lint

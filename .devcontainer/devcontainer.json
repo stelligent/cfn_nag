@@ -10,12 +10,42 @@
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
 	],
 	"extensions": [
+		// General
+		"CoenraadS.bracket-pair-colorizer",
+		"fabiospampinato.vscode-diff",
+		"kddejong.vscode-cfn-lint",
+		"mrmlnc.vscode-duplicate",
+		"ms-azuretools.vscode-docker",
+		"wayou.vscode-todo-highlight",
+		// Ruby
 		"rebornix.Ruby",
 		"castwide.solargraph",
 		"kaiwood.endwise",
-		"misogi.ruby-rubocop"
+		"misogi.ruby-rubocop",
+		"groksrc.ruby",
+		"hoovercj.ruby-linter",
+		"miguel-savignano.ruby-symbols",
+		"wingrunr21.vscode-ruby",
+		// JSON
+		"mohsen1.prettify-json",
+		// YAML
+		"redhat.vscode-yaml"
 	],
 	"settings": {
+		// Bracket Pair Colorizer
+		"bracketPairColorizer.forceUniqueOpeningColor": false,
+		"bracketPairColorizer.colorMode": "Consecutive",
+		"bracketPairColorizer.highlightActiveScope": true,
+		"bracketPairColorizer.activeScopeCSS": [
+			"borderStyle : solid",
+			"borderWidth : 1px",
+			"borderColor : {color}; opacity: 0.5",
+			"backgroundColor : {color}"
+		],
+		"editor.matchBrackets": "never",
+		"bracketPairColorizer.showBracketsInGutter": true,
+		// cfn-lint
+		"cfnLint.path": "/usr/local/bin/cfn-lint",
 		// Ruby
     "[ruby]": {
       "editor.insertSpaces": true,
@@ -27,7 +57,50 @@
 		// Rubocop
 		"ruby.rubocop.executePath": "/usr/local/bundle/bin/",
 		"ruby.rubocop.onSave": true,
-		"ruby.rubocop.configFilePath": "/workspaces/cfn_nag/.rubocop.yml"
+		"ruby.rubocop.configFilePath": "/workspaces/cfn_nag/.rubocop.yml",
+		// YAML
+		"[yaml]": {
+			"editor.insertSpaces": true,
+			"editor.tabSize": 2
+		},
+		"yaml.format.enable": true,
+		"yaml.format.singleQuote": true,
+		"yaml.format.bracketSpacing": true,
+		"yaml.format.printWidth": 120,
+		"yaml.format.proseWrap": "always",
+    "yaml.customTags": [
+			"!And sequence",
+			"!If sequence",
+			"!Not sequence",
+			"!Equals sequence",
+			"!Or sequence",
+			"!FindInMap sequence",
+			"!Base64",
+			"!Cidr sequence",
+			"!Ref",
+			"!Sub",
+			"!GetAtt",
+			"!GetAZs",
+			"!ImportValue",
+			"!Select sequence",
+			"!Split sequence",
+			"!Join sequence",
+			"!And",
+			"!If",
+			"!Not",
+			"!Equals",
+			"!Or",
+			"!FindInMap",
+			"!Cidr",
+			"!Select",
+			"!Split",
+			"!Join",
+			"!Sub sequence",
+			"!ImportValue sequence"
+		],
+		// TODO
+		"todohighlight.isEnable": true,
+		"todohighlight.isCaseSensitive": false
 	},
 	"postCreateCommand": "bundle install"
 }
