@@ -3,9 +3,9 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 
-class ElasticLoadBalancerV2ListenerSslPolicyRule < BaseRule
+class ElasticLoadBalancerV2ListenerProtocolRule < BaseRule
   def rule_text
-    'Elastic Load Balancer V2 Listener SslPolicy should use TLS 1.2'
+    'Elastic Load Balancer V2 Listener Protocol should use HTTPS for ALB or TLS for Network LB'
   end
 
   def rule_type
@@ -13,16 +13,13 @@ class ElasticLoadBalancerV2ListenerSslPolicyRule < BaseRule
   end
 
   def rule_id
-    'W77'
+    'W78'
   end
 
   def audit_impl(cfn_model)
     violating_listeners = cfn_model.resources_by_type('AWS::ElasticLoadBalancingV2::Listener')
                                    .select do |listener|
-      listener.sSLPolicy.nil? ||
-        %w[ELBSecurityPolicy-2016-08 ELBSecurityPolicy-TLS-1-0-2015-04 ELBSecurityPolicy-TLS-1-1-2017-01
-           ELBSecurityPolicy-FS-2018-06 ELBSecurityPolicy-FS-1-1-2019-08 ELBSecurityPolicy-2015]
-          .include?(listener.sSLPolicy)
+      listener.protocol == 'HTTP'
     end
 
     violating_listeners.map(&:logical_resource_id)
