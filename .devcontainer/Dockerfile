@@ -36,9 +36,24 @@ RUN gem install solargraph
 RUN apt-get install -y python3-pip
 RUN pip3 install cfn-lint
 
+# Create a non-root user
+ARG USERNAME=cfn_nag_dev
+ARG USER_UID=1000
+ARG USER_GID=$USER_UID
+RUN groupadd --gid $USER_GID $USERNAME \
+  && useradd --uid $USER_UID --gid $USER_GID --shell /bin/bash -m $USERNAME
+
 # Persist bash history between runs
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
-    && echo $SNIPPET >> "/root/.bashrc"
+    && mkdir /commandhistory \
+    && touch /commandhistory/.bash_history \
+    && chown -R $USERNAME /commandhistory \
+    && echo $SNIPPET >> "/home/$USERNAME/.bashrc"
 
-# Prompt gpg window inside container for signing commits
-RUN echo 'export GPG_TTY="$(tty)"' >> /root/.bashrc
+# Prompt gpg window inside container for signing commits & setup folder permissions for non-root user
+RUN echo 'export GPG_TTY="$(tty)"' >> /home/$USERNAME/.bashrc \
+  && mkdir /home/$USERNAME/.gnupg \
+  && chown -R $USERNAME /home/$USERNAME/.gnupg
+
+# Enter container as non-root user
+USER $USERNAME
