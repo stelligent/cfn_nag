@@ -6,6 +6,8 @@
 		"DND_PWD": "${localEnv:PWD}"
 	},
 	"mounts": [
+		// Bash History
+		"source=cfn_nag-bash_history,target=/commandhistory,type=volume",
 		// Docker in Docker
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
 		// Gitconfig

@@ -35,3 +35,8 @@ RUN gem install solargraph
 # Install cfn-lint via pip
 RUN apt-get install -y python3-pip
 RUN pip3 install cfn-lint
+
+# Persist bash history between runs
+RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
+    && echo $SNIPPET >> "/root/.bashrc"
+
