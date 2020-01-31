@@ -40,3 +40,5 @@ RUN pip3 install cfn-lint
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && echo $SNIPPET >> "/root/.bashrc"
 
+# Prompt gpg window inside container for signing commits
+RUN echo 'export GPG_TTY="$(tty)"' >> /root/.bashrc
