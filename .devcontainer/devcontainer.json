@@ -10,6 +10,8 @@
 		"source=cfn_nag-bash_history,target=/commandhistory,type=volume",
 		// Docker in Docker
 		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		// SSH
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,readonly",
 		// GPG
 		"source=${localEnv:HOME}/.gnupg/private-keys-v1.d,target=/root/.gnupg/private-keys-v1.d,type=bind",
 		"source=${localEnv:HOME}/.gnupg/pubring.kbx,target=/root/.gnupg/pubring.kbx,type=bind",
@@ -108,5 +110,6 @@
 		"todohighlight.isEnable": true,
 		"todohighlight.isCaseSensitive": false
 	},
+	// "postCreateCommand": "bundle install; chmod 700 /root/.gnupg"
 	"postCreateCommand": "bundle install"
 }
