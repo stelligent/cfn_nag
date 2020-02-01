@@ -13,7 +13,7 @@ class ElasticLoadBalancerV2ListenerSslPolicyRule < BaseRule
   end
 
   def rule_id
-    'W77'
+    'W55'
   end
 
   def audit_impl(cfn_model)

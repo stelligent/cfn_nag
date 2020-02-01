@@ -13,7 +13,7 @@ class ElasticLoadBalancerV2ListenerProtocolRule < BaseRule
   end
 
   def rule_id
-    'W78'
+    'W56'
   end
 
   def audit_impl(cfn_model)
