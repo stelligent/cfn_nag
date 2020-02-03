@@ -99,8 +99,10 @@ jobs:
           asset_content_type: application/zip
       - name: Trigger homebrew-tap repo workflow
         run: |
-          curl -s -XPOST -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/stelligent/homebrew-tap/dispatches \
-          --data '{"event_type": "build_application"}'
+          curl -s \
+               -XPOST \
+               -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
+               -H "Accept: application/vnd.github.everest-preview+json" \
+               -H "Content-Type: application/json" \
+               https://api.github.com/repos/stelligent/homebrew-tap/dispatches \
+               --data '{"event_type": "build_application"}'
