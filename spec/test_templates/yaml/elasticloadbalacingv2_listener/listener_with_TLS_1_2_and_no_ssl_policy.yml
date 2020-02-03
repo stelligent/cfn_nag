@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  HTTPSlistener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      Certificates:
+        - CertificateArn: "MyCertificateArn"
+      DefaultActions:
+        - Type: "forward"
+        - TargetGroupArn: "MyTargetGroupArn"
+      LoadBalancerArn: "MyLoadBalancerArn"
+      Port: 443
+      Protocol: "HTTPS"
