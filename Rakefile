@@ -10,7 +10,7 @@ def docker_command
   cmd_prefix
 end
 
-# Returns a docker run prefix based on the environment that you are running in, determined by the file '/.dockerenv' 
+# Returns a docker run prefix based on the environment that you are running in, determined by the file '/.dockerenv'
 # existing or not.
 # If the command is run inside a running Docker container then it will set the mount source as the
 # '$DND_PWD' (DockerInDocker_PresentWorkingDirectory) environment variable.

@@ -26,10 +26,6 @@ RUN apt-get install -y apt-transport-https \
     && apt-get update \
     && apt-get install -y docker-ce-cli
 
-# Install Docker Compose
-RUN curl -sSL "https://github.com/docker/compose/releases/download/1.24.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose \
-    && chmod +x /usr/local/bin/docker-compose
-
 # Install gems
 RUN gem install bundler
 RUN gem install rubocop
@@ -51,7 +47,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
 
 RUN chown -R $USERNAME /usr/local/lib/ruby/gems/2.5.0 \
   && chown -R $USERNAME /usr/local/bundle
-# RUN groupadd docker && usermod -aG docker $USERNAME
 
 # Persist bash history between runs
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
