@@ -4,6 +4,7 @@
 	"appPort": 9001,
 	"remote.containers.workspaceMountConsistency": "consistent",
 	"containerEnv": {
+		// Docker-in-Docker Present Working Directory
 		"DND_PWD": "${localEnv:PWD}"
 	},
 	"mounts": [

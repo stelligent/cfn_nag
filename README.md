@@ -345,6 +345,8 @@ There is a complete remote development environment created and setup with all th
 - When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
 - When opening in the future use the "`[Dev Container] cfn_nag Development`" option
 
+More information about the VS Code Remote Development setup can be found here, [VS Code Remote Development](vscode_remote_development.md).
+
 # Support
 
 To report a bug or request a feature, submit an issue through the GitHub repository via: <https://github.com/stelligent/cfn_nag/issues/new>
