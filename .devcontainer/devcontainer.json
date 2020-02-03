@@ -2,6 +2,7 @@
 	"name": "cfn_nag Development",
 	"dockerFile": "Dockerfile",
 	"appPort": 9001,
+	"remote.containers.workspaceMountConsistency": "consistent",
 	"containerEnv": {
 		"DND_PWD": "${localEnv:PWD}"
 	},
@@ -110,6 +111,5 @@
 		"todohighlight.isEnable": true,
 		"todohighlight.isCaseSensitive": false
 	},
-	// "postCreateCommand": "bundle install; chmod 700 /root/.gnupg"
 	"postCreateCommand": "bundle install"
 }
