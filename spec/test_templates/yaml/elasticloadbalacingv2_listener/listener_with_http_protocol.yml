@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  HTTPlistener:
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties:
+      DefaultActions:
+        - Type: "forward"
+        - TargetGroupArn: "MyTargetGroupArn"
+      LoadBalancerArn: "MyLoadBalancerArn"
+      Port: 80
+      Protocol: "HTTP"
