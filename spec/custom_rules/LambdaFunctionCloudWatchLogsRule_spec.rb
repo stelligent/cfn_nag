@@ -20,7 +20,8 @@ describe LambdaFunctionCloudWatchLogsRule do
 
         expect(actual_logical_resource_ids).to eq [
           'FunctionWithWildcardDynamoDbRoleByRef',
-          'FunctionWithWildcardDynamoDbRoleByFnGetAtt'
+          'FunctionWithWildcardDynamoDbRoleByFnGetAtt',
+          'FunctionWithPartialLogsPermsRoleByRef'
         ]
       end
     end
@@ -28,6 +29,15 @@ describe LambdaFunctionCloudWatchLogsRule do
     context 'when function\'s role contains CloudWatchLogsFullAccess managed policy' do
       it 'does not return an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_cloudwatch_logs_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
+    context 'when function\'s role contains AWSLambdaBasicExecutionRole managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_basic_managed_policy.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
 
         expect(actual_logical_resource_ids).to eq []

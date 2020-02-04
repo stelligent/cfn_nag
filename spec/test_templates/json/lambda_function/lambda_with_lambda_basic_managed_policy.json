@@ -1,10 +1,10 @@
 {
   "Resources": {
-    "FunctionWithOtherManagedPolicyRoleByRef": {
+    "FunctionWithLambdaBasicManagedPolicyRoleByRef": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Handler": "index.handler",
-        "Role": {"Ref": "RoleWithOtherManagedPolicy"},
+        "Role": {"Ref": "RoleWithLambdaBasicManagedPolicy"},
         "Code": {
           "ZipFile": {
             "Fn::Join": [
@@ -22,7 +22,29 @@
         "Runtime": "nodejs6.10"
       }
     },
-    "RoleWithOtherManagedPolicy": {
+    "FunctionWithLambdaBasicManagedPolicyRoleByFnGetAtt": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Fn::GetAtt": ["RoleWithLambdaBasicManagedPolicy", "Arn"]},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "RoleWithLambdaBasicManagedPolicy": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -35,7 +57,7 @@
             }
           ]
         },
-        "ManagedPolicyArns": ["arn:aws:iam::aws:policy/AmazonChimeReadOnly"],
+        "ManagedPolicyArns": ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"],
         "Path": "/",
         "Policies": [
           {
