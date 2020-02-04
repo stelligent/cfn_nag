@@ -45,9 +45,6 @@ RUN groupadd --gid $USER_GID $USERNAME \
   && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
   && chmod 0440 /etc/sudoers.d/$USERNAME
 
-RUN chown -R $USERNAME /usr/local/lib/ruby/gems/2.5.0 \
-  && chown -R $USERNAME /usr/local/bundle
-
 # Persist bash history between runs
 RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.bash_history" \
     && mkdir /commandhistory \
@@ -59,6 +56,10 @@ RUN SNIPPET="export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhisto
 RUN echo 'export GPG_TTY="$(tty)"' >> /home/$USERNAME/.bashrc \
   && mkdir /home/$USERNAME/.gnupg \
   && chown -R $USERNAME /home/$USERNAME/.gnupg
+
+# Add non-root user to gems and bundle
+RUN chown -R $USERNAME /usr/local/lib/ruby/gems/2.5.0 \
+  && chown -R $USERNAME /usr/local/bundle
 
 # Enter container as non-root user
 USER $USERNAME

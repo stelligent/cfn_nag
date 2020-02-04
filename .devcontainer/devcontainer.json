@@ -15,9 +15,9 @@
 		// SSH
 		"source=${localEnv:HOME}/.ssh,target=/home/cfn_nag_dev/.ssh,type=bind,readonly",
 		// GPG
-		"source=${localEnv:HOME}/.gnupg/private-keys-v1.d,target=/home/cfn_nag_dev/.gnupg/private-keys-v1.d,type=bind",
-		"source=${localEnv:HOME}/.gnupg/pubring.kbx,target=/home/cfn_nag_dev/.gnupg/pubring.kbx,type=bind",
-		"source=${localEnv:HOME}/.gnupg/trustdb.gpg,target=/home/cfn_nag_dev/.gnupg/trustdb.gpg,type=bind"
+		"source=${localEnv:HOME}/.gnupg/private-keys-v1.d,target=/home/cfn_nag_dev/.gnupg/private-keys-v1.d,type=bind,readonly",
+		"source=${localEnv:HOME}/.gnupg/pubring.kbx,target=/home/cfn_nag_dev/.gnupg/pubring.kbx,type=bind,readonly",
+		"source=${localEnv:HOME}/.gnupg/trustdb.gpg,target=/home/cfn_nag_dev/.gnupg/trustdb.gpg,type=bind,readonly"
 	],
 	"extensions": [
 		// General
