@@ -384,6 +384,16 @@ bundle install
 scripts/deploy_local.sh
 ```
 
+## VS Code Remote Development
+There is a complete remote development environment created and setup with all the tools and settings pre-configured for ease in rule development and creation. You can enable this by using the VS Code Remote development functionality.
+
+- Install the VS Code [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+- Open the repo in VS Code
+- When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
+- When opening in the future use the "`[Dev Container] cfn_nag Development`" option
+
+More information about the VS Code Remote Development setup can be found here, [VS Code Remote Development](vscode_remote_development.md).
+
 # Support
 
 To report a bug or request a feature, submit an issue through the GitHub repository via: <https://github.com/stelligent/cfn_nag/issues/new>
