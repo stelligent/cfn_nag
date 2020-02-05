@@ -87,6 +87,6 @@ docker build -t $docker_org/vscode-remote-cfn_nag:${GEM_VERSION} --file .devcont
 set +x
 echo $docker_password | docker login -u $docker_user --password-stdin
 set -x
-docker tag $docker_org/vscode-remote-cfn_nag:${GEM_VERSION} $docker_org/vscode-remote-cfn_nag:latest
-docker push $docker_org/vscode-remote-cfn_nag:${GEM_VERSION}
+docker tag $docker_org/vscode-remote-cfn_nag:${new_version} $docker_org/vscode-remote-cfn_nag:latest
+docker push $docker_org/vscode-remote-cfn_nag:${new_version}
 docker push $docker_org/vscode-remote-cfn_nag:latest
