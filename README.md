@@ -308,6 +308,52 @@ The format of the JSON is a a dictionary with each key/value pair mapping to the
 }
 ```
 
+# Distribution of Custom Rules
+
+The release of 0.5.x includes some major changes in how custom rules (can) be distributed and loaded.  Before this release,
+there were two places where rules were loaded from: the `lib/cfn-nag/custom_rules` directory within the core cfn_nag gem
+and the custom-rule-directory specified on the command line.
+
+There are two use cases that forced a redesign of how/where custom rules are loaded.  The rule loading mechanism has been
+generalized such that custom rule repositories can be used to discover rules.
+
+1. A bunch of "rule files" sitting around on a filesystem isn't great from a traditional software development perspective.
+There is no version or traceability on these files, so 0.5.x introduces the notion of a "cfn_nag rule gem".  A developer
+can develop custom rules as part of a separate gem, version it and install it... and those rules are referenced from cfn_nag
+as long as the gem metadata includes `cfn_nag_rules => true`
+
+2. When cfn_nag is running in an AWS Lambda - there isn't really a filesystem (besides /tmp) in the traditional sense.
+Therefore, only core rules are usable from the Lambda.  To support custom rules, cfn_nag supports discovering rules
+from an S3 bucket instead of the filesystem.
+
+Everything you've likely seen about how to develop custom rules in Ruby still holds true.
+
+To discover rules from an S3 bucket, capture a file s3.yml with this content:
+
+```yaml
+---
+repo_class_name: S3BucketBasedRuleRepo
+repo_arguments:
+  s3_bucket_name: cfn-nag-rules-my-enterprise
+  prefix: /rules
+``` 
+
+To apply *Rule.rb files in the bucket cfn-nag-rules-my-enterprise with the prefix /rules (e.g. /rules/MyNewRule.rb), 
+specify this file on the command line to cfn_nag as such:
+
+```yaml
+cat my_cfn_template.yml | cfn_nag --rule-repository s3.yml
+```
+
+If rules are in more than one bucket, then create multiple s3*.yml files and specify them in the `--rule-repository` argument.
+
+If the ambient AWS credentials have permission to access the bucket `cfn-nag-rules-enterprise` then it will find all rules
+like `/rules/*Rule.rb`. If a particular aws_profile should be used, add it as a key under `repo_arguments`, e.g 
+`aws_profile: my_aws_profile`
+
+Beyond the filesystem, gem installs and S3 - the new architecture theoretically supports developing other "rule repositories"
+to load rules from DynamoDb, relational databases, or other web services.
+
 # Development
 
 ## New Rules
