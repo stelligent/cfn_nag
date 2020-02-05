@@ -48,7 +48,7 @@ fi
 # strip off initial 'v' and everything after digits and .
 current_version=$(git describe | sed 's/^\(v\)\([0-9.]*\).*$/\2/')
 # strip .### from end to get major.minor version
-current_minor=$(echo $current_version | sed 's/\.\([0-9]*\)$//')
+current_minor=5
 # get third dotted field for patch version
 current_patch=$(echo $current_version | cut -f 3 -d . )
 

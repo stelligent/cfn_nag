@@ -23,7 +23,7 @@ describe CfnNag do
               Violation.new(id: 'FATAL',
                             type: Violation::FAILING_VIOLATION,
                             message: "Basic CloudFormation syntax error:[#<Kwalify::ValidationError: [/Resources/sg] key 'Properties:' is required.>]",
-                            logical_resource_ids: nil)
+                            logical_resource_ids: [])
             ]
           }
         }

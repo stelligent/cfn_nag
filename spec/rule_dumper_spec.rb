@@ -2,6 +2,8 @@
 
 require 'cfn-nag/rule_dumper'
 
+# Objectspace iterating and rspec-mocks double() don't mix
+
 describe CfnNagRuleDumper do
   context 'no profile' do
     before(:each) do

@@ -1,11 +1,11 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'trollop'
+require 'optimist'
 require 'cfn-nag'
 require 'rubygems/specification'
 
-opts = Trollop.options do
+opts = Optimist.options do
   version Gem::Specification.find_by_name('cfn-nag').version
 
   opt :rule_directory, 'Extra rule directories', type: :io,
@@ -18,6 +18,11 @@ opts = Trollop.options do
       'Format of results: [csv, json, txt]',
       type: :string,
       default: 'txt'
+
+  opt :rule_repository,
+      'Path(s)s to rule repository to include in rule discovery',
+      type: :strings,
+      required: false
 end
 
 profile_definition = nil
@@ -25,8 +30,14 @@ unless opts[:profile_path].nil?
   profile_definition = IO.read(opts[:profile_path])
 end
 
+rule_repository_definitions = []
+opts[:rule_repository]&.each do |rule_repository|
+  rule_repository_definitions << IO.read(rule_repository)
+end
+
 rule_dumper = CfnNagRuleDumper.new(profile_definition: profile_definition,
                                    rule_directory: opts[:rule_directory],
-                                   output_format: opts[:output_format])
+                                   output_format: opts[:output_format],
+                                   rule_repository_definitions: rule_repository_definitions)
 
 rule_dumper.dump_rules

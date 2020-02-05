@@ -45,21 +45,11 @@ RULE
         File.open(File.join(@custom_rule_directory,
                             'FakeRule.rb'),
                   'w+') { |file| file.write fake_rule }
-        @custom_rule_loader = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
+        @file_base_rule_repo = CustomRuleLoader.new(rule_directory: @custom_rule_directory)
       end
 
       after(:each) do
         FileUtils.rm_rf @custom_rule_directory
-      end
-
-      it 'includes external rule definition' do
-        actual_rule_registry = @custom_rule_loader.rule_definitions
-        expected_rule_definition = RuleDefinition.new id: 'W9933',
-                                                      message: 'this is fake rule text',
-                                                      type: RuleDefinition::WARNING
-
-        actual_rule_definition = actual_rule_registry.by_id 'W9933'
-        expect(actual_rule_definition).to eq expected_rule_definition
       end
 
       it 'does its thing' do
@@ -67,7 +57,7 @@ RULE
         # for rules that mess with direct model
         cfn_model.raw_model = { 'Resources' => {} }
 
-        actual_violations = @custom_rule_loader.execute_custom_rules cfn_model
+        actual_violations = @file_base_rule_repo.execute_custom_rules cfn_model, @file_base_rule_repo.rule_definitions
         expected_violations = [
           Violation.new(id: 'W9933',
                         type: Violation::WARNING,
