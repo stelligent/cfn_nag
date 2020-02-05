@@ -14,7 +14,8 @@ describe CfnNagExecutor do
       print_suppression: false,
       rule_directory: nil,
       template_pattern: '..*\.json|..*\.yaml|..*\.yml|..*\.template',
-      output_format: 'json'
+      output_format: 'json',
+      rule_repository: []
     }
   end
 

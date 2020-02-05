@@ -3,17 +3,42 @@ require 'cfn-nag/profile_loader'
 require 'cfn-nag/rule_registry'
 require 'set'
 
+
+class Rule1
+  def rule_text
+    'fakeo'
+  end
+
+  def rule_type
+    Violation::WARNING
+  end
+
+  def rule_id
+    'id1'
+  end
+end
+
+class Rule2
+  def rule_text
+    'fakeo2'
+  end
+
+  def rule_type
+    Violation::WARNING
+  end
+
+  def rule_id
+    'id2'
+  end
+end
+
 describe ProfileLoader do
   describe '#load' do
     before(:all) do
       @rule_registry = RuleRegistry.new
 
-      @rule_registry.definition(id: 'id1',
-                                type: Violation::WARNING,
-                                message: 'fakeo')
-      @rule_registry.definition(id: 'id2',
-                                type: Violation::WARNING,
-                                message: 'fakeo2')
+      @rule_registry.definition(Rule1)
+      @rule_registry.definition(Rule2)
     end
 
     context 'empty profile' do

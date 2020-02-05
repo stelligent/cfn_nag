@@ -9,7 +9,7 @@ class Violation < RuleDefinition
   def initialize(id:,
                  type:,
                  message:,
-                 logical_resource_ids: nil,
+                 logical_resource_ids: [],
                  line_numbers: [])
     super id: id,
           type: type,
