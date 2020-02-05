@@ -1,6 +1,6 @@
 # VS Code Remote Development
 
-You can start working on developing with this project with relative ease using the VS Code Remote Development extension. In this project there is a folder named `.devcontainer` that allows users to open the project in a docker container using the custom built development image. This development image has all the items needed to start working on the cfn_nag project right out of the box. All you need to do is open the project in the VS Code Remote Container to get started.
+You can start working on developing with this project with relative ease by using the VS Code Remote Development extension. In this project there is a folder named `.devcontainer` that allows users to open the project in a docker container using the custom built development image. This development image has all the items needed to start working on the cfn_nag project right out of the box. All you need to do is open the project in the VS Code Remote Container to get started.
 
 - Install the VS Code [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
 - Open the repo in VS Code
@@ -20,10 +20,10 @@ The `stelligent/vscode-remote-cfn_nag` container image is build and controlled b
 From within this file we are starting from the official Ruby 2.5 image and then going through and installing and configuring the necessary items for the remote build environment.
 
 Some important items to note here:
-* Installs the docker cli so that the rake tasks can still run from within the remote development container environment.
+* Installs the `docker` cli so that the `rake` tasks can still run from within the remote development container environment.
 * Installs gems needed for the project and vscode extensions.
-* Creates a non-root user (`cfn_nag_dev`) and provides `sudo` access so that the user can run the rake tasks that call the `docker` cli.
-* Creates a way for the command history to be saved between container runs.
+* Creates a non-root user (`cfn_nag_dev`) and provides `sudo` access so that the user can run the `rake` tasks that call the `docker` cli.
+* Creates a way for the `bash` command history to be saved between container runs.
 * Sets up the GPG home directory and sets the `tty` so that you can still sign git commits inside the container.
 
 ## Container Settings
@@ -31,10 +31,10 @@ Some important items to note here:
 The VS Code Remote Development container settings are controlled from within the `.devcontainer/devcontainer.json` file.
 
 Some important items to note here:
-* Container Mount Consistency is set to `consistent` to avoid a lag or mismatch from files that are changed during code editing.
-* `DND_PWD` Environment Variable is created to help with the Rake tasks that are executed while inside the remote container. The mount source needs to reference the local systems path from within the docker container.
+* Container Mount Consistency is set to `consistent` to avoid a lag or mismatch from files that are changed during code editing from inside the remote container environment.
+* `DND_PWD` Environment Variable is created to help with the `rake` tasks that are executed while inside the remote container. The mount source needs to reference the local systems path from within the docker container.
 * Mounts:
-  * A volume is created and mounted to store Bash history from within the container. Now when you close the connection and reopen at a later date, you can still search for previously used commands as needed.
+  * A volume is created and mounted to store the `bash` command line history from within the container. Now when you close the connection and reopen at a later date, you can still search for previously used commands as needed.
   * The Docker socket is mounted so that you can still run `docker` commands from within the remote container environment.
   * Your local ssh directory (`~/.ssh`) is mounted so that you still access your config and sshkeys to be able to connect to github with key authentication.
   * Your local gpg items are mounted so that you can still sign your commits and tags from within the remote container.
