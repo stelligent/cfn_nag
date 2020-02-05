@@ -3,7 +3,7 @@
 
 ![cfn_nag](https://github.com/stelligent/cfn_nag/workflows/cfn_nag/badge.svg)
 
-# Background
+# Background 
 
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
 Roughly speaking it will look for:
