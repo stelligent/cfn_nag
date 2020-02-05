@@ -58,7 +58,7 @@ if [[ ${current_version} == nil ]];
 then
   log_rev_range=${head}
 else
-  log_rev_range="v${current_version}..${head}"
+  log_rev_range="v${minor_version}.${current_version}..${head}"
 fi
 
 git log ${log_rev_range} --pretty="format:%s"
