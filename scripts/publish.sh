@@ -45,7 +45,7 @@ else
   new_version="${minor_version}.$((current_version+1))"
 fi
 
-sed -i.bak "s/0\.0\.0/${new_version}/g" ${gem_name}.gemspec
+sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 
 #on circle ci - head is ambiguous for reasons that i don't grok
 #we haven't made the new tag and we can't if we are going to annotate
