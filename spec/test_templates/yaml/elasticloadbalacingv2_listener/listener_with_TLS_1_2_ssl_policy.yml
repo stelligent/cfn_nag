@@ -11,4 +11,4 @@ Resources:
       LoadBalancerArn: "MyLoadBalancerArn"
       Port: 443
       Protocol: "HTTPS"
-      SSLPolicy: "ELBSecurityPolicy-FS-1-2-2019-08"
+      SslPolicy: "ELBSecurityPolicy-FS-1-2-2019-08"
