@@ -62,7 +62,7 @@ jobs:
         with:
           ruby-version: 2.5.x
       - name: Publish to RubyGems and DockerHub
-        run: bash ./scripts/publish.sh
+        run: bash ./scripts/publish.rb
         env:
           rubygems_api_key: ${{secrets.rubygems_api_key}}
           docker_user: ${{secrets.docker_user}}
