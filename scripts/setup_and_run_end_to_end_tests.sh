@@ -34,7 +34,7 @@ download_and_scan_templates () {
 }
 
 # Build and install gem locally, using version 0.0.01
-./scripts/deploy_local.sh
+/bin/sh scripts/deploy_local.sh
 
 # Install the two gems required to run end-to-end tests
 echo "installing rspec and simplecov for testing"
