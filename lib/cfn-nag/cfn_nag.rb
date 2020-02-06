@@ -87,12 +87,15 @@ class CfnNag
                                       parameter_values_string,
                                       true,
                                       condition_values_string
-      violations += @config.custom_rule_loader.execute_custom_rules(cfn_model)
+      violations += @config.custom_rule_loader.execute_custom_rules(
+        cfn_model,
+        @config.custom_rule_loader.rule_definitions
+      )
 
       violations = filter_violations_by_blacklist_and_profile(violations)
       violations = mark_line_numbers(violations, cfn_model)
-    rescue Psych::SyntaxError, ParserError => parser_error
-      violations << fatal_violation(parser_error.to_s)
+    rescue RuleRepoException, Psych::SyntaxError, ParserError => fatal_error
+      violations << fatal_violation(fatal_error.to_s)
     rescue JSON::ParserError => json_parameters_error
       error = "JSON Parameter values parse error: #{json_parameters_error}"
       violations << fatal_violation(error)

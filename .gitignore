@@ -13,3 +13,6 @@ update_cellar.pl
 .vscode-upload.json
 IotPolicy-test.json
 test-cfn-model.rb
+.idea
+.DS_Store
+tmp

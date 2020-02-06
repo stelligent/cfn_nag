@@ -3,47 +3,46 @@
 require 'cfn-model'
 require 'logging'
 require_relative 'rule_registry'
-require 'cfn-nag/jmes_path_evaluator'
-require 'cfn-nag/jmes_path_discovery'
+require_relative 'rule_repos/file_based_rule_repo'
+require_relative 'rule_repos/gem_based_rule_repo'
+require_relative 'rule_repos/s3_based_rule_repo'
+require_relative 'rule_repository_loader'
 
 ##
 # This object can discover the internal and custom user-provided rules and
 # apply these rules to a CfnModel object
 #
-# rubocop:disable Metrics/ClassLength
 class CustomRuleLoader
   def initialize(rule_directory: nil,
                  allow_suppression: true,
                  print_suppression: false,
-                 isolate_custom_rule_exceptions: false)
+                 isolate_custom_rule_exceptions: false,
+                 rule_repository_definitions: [])
     @rule_directory = rule_directory
     @allow_suppression = allow_suppression
     @print_suppression = print_suppression
     @isolate_custom_rule_exceptions = isolate_custom_rule_exceptions
-    validate_extra_rule_directory rule_directory
+    @rule_repository_definitions = rule_repository_definitions
+    @registry = nil
   end
 
-  # rubocop:disable Security/Eval
-  def rule_definitions
-    rule_registry = RuleRegistry.new
+  ##
+  # the first time this runs, it's "expensive".  the core rules, the gem-based rules will load, and
+  # any other repos like "s3" will go the expensive route.  after that, it's cached so you can
+  # call it as many times as you like unless you force_refresh
+  #
+  def rule_definitions(force_refresh: false)
+    if @registry.nil? || force_refresh
+      @registry = FileBasedRuleRepo.new(@rule_directory).discover_rules
+      @registry.merge! GemBasedRuleRepo.new.discover_rules
 
-    discover_rule_classes(@rule_directory).each do |rule_class|
-      rule_registry
-        .definition(**rule_registry_from_rule_class(rule_class))
+      @registry = RuleRepositoryLoader.new.merge(@registry, @rule_repository_definitions)
+      @registry
     end
-
-    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
-      evaluator = JmesPathDiscovery.new rule_registry
-      evaluator.instance_eval do
-        eval IO.read jmespath_file
-      end
-    end
-
-    rule_registry
+    @registry
   end
-  # rubocop:enable Security/Eval
 
-  def execute_custom_rules(cfn_model)
+  def execute_custom_rules(cfn_model, rules_registry)
     if Logging.logger['log'].debug?
       Logging.logger['log'].debug "cfn_model: #{cfn_model}"
     end
@@ -52,37 +51,16 @@ class CustomRuleLoader
 
     validate_cfn_nag_metadata(cfn_model)
 
-    filter_rule_classes cfn_model, violations
-
-    filter_jmespath_filenames cfn_model, violations
+    filter_rule_classes cfn_model, violations, rules_registry
 
     violations
   end
 
   private
 
-  def rule_registry_from_rule_class(rule_class)
-    rule = rule_class.new
-    { id: rule.rule_id,
-      type: rule.rule_type,
-      message: rule.rule_text }
-  end
-
-  # rubocop:disable Security/Eval
-  def filter_jmespath_filenames(cfn_model, violations)
-    discover_jmespath_filenames(@rule_directory).each do |jmespath_file|
-      evaluator = JmesPathEvaluator.new cfn_model
-      evaluator.instance_eval do
-        eval IO.read jmespath_file
-      end
-      violations += evaluator.violations
-    end
-  end
-  # rubocop:enable Security/Eval
-
   # rubocop:disable Style/RedundantBegin
-  def filter_rule_classes(cfn_model, violations)
-    discover_rule_classes(@rule_directory).each do |rule_class|
+  def filter_rule_classes(cfn_model, violations, rules_registry)
+    rules_registry.rule_classes.each do |rule_class|
       begin
         filtered_cfn_model = cfn_model_with_suppressed_resources_removed(
           cfn_model: cfn_model,
@@ -169,51 +147,4 @@ class CustomRuleLoader
     end
     cfn_model
   end
-
-  def validate_extra_rule_directory(rule_directory)
-    return true if rule_directory.nil? || File.directory?(rule_directory)
-
-    raise "Not a real directory #{rule_directory}"
-  end
-
-  def discover_rule_filenames(rule_directory)
-    rule_filenames = []
-    unless rule_directory.nil?
-      rule_filenames += Dir[File.join(rule_directory, '*Rule.rb')].sort
-    end
-    rule_filenames += Dir[File.join(__dir__, 'custom_rules', '*Rule.rb')].sort
-    # Windows fix when running ruby from Command Prompt and not bash
-    rule_filenames.reject! { |filename| filename =~ /_rule.rb$/ }
-    Logging.logger['log'].debug "rule_filenames: #{rule_filenames}"
-    rule_filenames
-  end
-
-  def discover_rule_classes(rule_directory)
-    rule_classes = []
-
-    rule_filenames = discover_rule_filenames(rule_directory)
-
-    rule_filenames.each do |rule_filename|
-      require(rule_filename)
-      rule_classname = File.basename(rule_filename, '.rb')
-
-      rule_classes << Object.const_get(rule_classname)
-    end
-    Logging.logger['log'].debug "rule_classes: #{rule_classes}"
-
-    rule_classes
-  end
-
-  def discover_jmespath_filenames(rule_directory)
-    rule_filenames = []
-    unless rule_directory.nil?
-      rule_filenames += Dir[File.join(rule_directory, '*jmespath.rb')].sort
-    end
-    rule_filenames += Dir[File.join(__dir__,
-                                    'custom_rules',
-                                    '*jmespath.rb')].sort
-    Logging.logger['log'].debug "jmespath_filenames: #{rule_filenames}"
-    rule_filenames
-  end
 end
-# rubocop:enable Metrics/ClassLength

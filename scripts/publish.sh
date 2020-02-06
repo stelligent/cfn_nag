@@ -1,5 +1,6 @@
 #!/bin/bash -ex
 set -o pipefail
+export minor_version="0.5"
 
 set +x
 if [[ -z ${rubygems_api_key} ]];
@@ -34,37 +35,17 @@ echo :rubygems_api_key: ${rubygems_api_key} > ~/.gem/credentials
 set -ex
 chmod 0600 ~/.gem/credentials
 
-# git describe returns the latest tag
-current_tag=$(git describe)
-
-# Check if '-' in git describe. If so, we
-# have advanced past the latest tag (and will
-# need to compute new version)
-tagged_commit=1
-if echo $current_tag | grep -q '-'; then
-  tagged_commit=0
-fi
-
-# strip off initial 'v' and everything after digits and .
-current_version=$(git describe | sed 's/^\(v\)\([0-9.]*\).*$/\2/')
-# strip .### from end to get major.minor version
-current_minor=$(echo $current_version | sed 's/\.\([0-9]*\)$//')
-# get third dotted field for patch version
-current_patch=$(echo $current_version | cut -f 3 -d . )
+current_version=$(ruby -e 'tags=`git tag -l v#{ENV["minor_version"]}.*`' \
+                       -e 'p tags.lines.map { |tag| tag.sub(/v#{ENV["minor_version"]}./, "").chomp.to_i }.max')
 
 if [[ ${current_version} == nil ]];
 then
-  # No version determined from tag, assume 0.0.0
-  GEM_VERSION='0.0.0'
-elif [ $tagged_commit = 1 ]; then
-  # Current commit was tagged with version, use it
-  GEM_VERSION=$current_version
+  new_version="${minor_version}.0"
 else
-  # Current commit was goes past a tag, increment patch
-  GEM_VERSION="$current_minor."$((current_patch + 1))
+  new_version="${minor_version}.$((current_version+1))"
 fi
 
-export GEM_VERSION
+sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 
 #on circle ci - head is ambiguous for reasons that i don't grok
 #we haven't made the new tag and we can't if we are going to annotate
@@ -77,25 +58,35 @@ if [[ ${current_version} == nil ]];
 then
   log_rev_range=${head}
 else
-  log_rev_range="v${current_version}..${head}"
+  log_rev_range="v${minor_version}.${current_version}..${head}"
 fi
 
-export issues=""$(git log ${log_rev_range} --oneline | awk '{print $2}' | grep "${issue_prefix}" | uniq)
+git log ${log_rev_range} --pretty="format:%s"
+issues=$(git log ${log_rev_range} --pretty="format:%s" | \
+         egrep "${issue_prefix}" | \
+         cut -d " " -f 1 | sort | uniq)
 
-if [ $tagged_commit = 0 ]; then
-  git tag -a "v${GEM_VERSION}" -m "${GEM_VERSION}" -m "Issues with commits, not necessarily closed: ${issues}"
-  git push --tags
-fi
+git tag -a v${new_version} -m "${new_version}" -m "Issues with commits, not necessarily closed: ${issues}"
 
-# gemspec respects GEM_VERSION envvar
+git push --tags
+
 gem build cfn-nag.gemspec
-gem push cfn-nag-${GEM_VERSION}.gem
+gem push cfn-nag-${new_version}.gem
 
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
+docker build -t $docker_org/cfn_nag:${new_version} .
 set +x
 echo $docker_password | docker login -u $docker_user --password-stdin
 set -x
-docker tag $docker_org/cfn_nag:${GEM_VERSION} $docker_org/cfn_nag:latest
-docker push $docker_org/cfn_nag:${GEM_VERSION}
+docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
+docker push $docker_org/cfn_nag:${new_version}
 docker push $docker_org/cfn_nag:latest
+
+# publish vscode-remote docker image to DockerHub, https://hub.docker.com/r/stelligent/vscode-remote-cfn_nag
+docker build -t $docker_org/vscode-remote-cfn_nag:${new_version} --file .devcontainer/build/Dockerfile .
+set +x
+echo $docker_password | docker login -u $docker_user --password-stdin
+set -x
+docker tag $docker_org/vscode-remote-cfn_nag:${new_version} $docker_org/vscode-remote-cfn_nag:latest
+docker push $docker_org/vscode-remote-cfn_nag:${new_version}
+docker push $docker_org/vscode-remote-cfn_nag:latest

@@ -26,10 +26,15 @@ Gem::Specification.new do |s|
   # they are coupled and we are doing a good bit of experimenting in cfn-model
   # i might consider collapsing them again....
   s.add_runtime_dependency('cfn-model', '0.4.14')
-  s.add_runtime_dependency('jmespath', '~> 1.3.1')
   s.add_runtime_dependency('logging', '~> 2.2.2')
   s.add_runtime_dependency('netaddr', '~> 2.0.4')
-  s.add_runtime_dependency('trollop', '~> 2.1.2')
+  s.add_runtime_dependency('optimist', '~> 3.0.0')
+
+  # this is NOT an invitation to make requests to AWS...
+  # this dependency is here only to optionally retrieve rules from s3
+  # cfn_nag is a static analysis tool that must be workable with NO network connectivity
+  s.add_runtime_dependency('aws-sdk-s3', '~> 1.60.1')
+  s.add_runtime_dependency('lightly', '~> 0.3.2')
 
   # WARNING: don't add any gems with poisonous GPL licenses
 end

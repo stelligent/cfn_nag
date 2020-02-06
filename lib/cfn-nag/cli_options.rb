@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'trollop'
+require 'optimist'
 
 # rubocop:disable Metrics/ClassLength
 class Options
@@ -29,7 +29,7 @@ class Options
     custom_rule_exceptions_message = @custom_rule_exceptions_message
     version = @version
 
-    Trollop.options do
+    Optimist.options do
       usage options_message
       version version
 
@@ -87,6 +87,10 @@ class Options
           'Format of results: [txt, json, colortxt]',
           type: :string,
           default: 'colortxt'
+      opt :rule_repository,
+          'Path(s) to a rule repository to include in rule discovery',
+          type: :strings,
+          required: false
     end
   end
 
@@ -102,7 +106,7 @@ class Options
     custom_rule_exceptions_message = @custom_rule_exceptions_message
     version = @version
 
-    Trollop.options do
+    Optimist.options do
       version version
       opt :input_path,
           input_path_message,
@@ -167,6 +171,10 @@ class Options
           type: :boolean,
           required: false,
           default: false
+      opt :rule_repository,
+          'Path(s)s to rule repository to include in rule discovery',
+          type: :strings,
+          required: false
     end
   end
   # rubocop:enable Metrics/BlockLength
