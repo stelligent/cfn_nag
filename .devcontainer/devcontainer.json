@@ -1,0 +1,116 @@
+{
+	"name": "cfn_nag Development",
+	"dockerFile": "Dockerfile",
+	"appPort": 9001,
+	"remote.containers.workspaceMountConsistency": "consistent",
+	"containerEnv": {
+		// Docker-in-Docker Present Working Directory
+		"DND_PWD": "${localEnv:PWD}"
+	},
+	"mounts": [
+		// Bash History
+		"source=cfn_nag-bash_history,target=/commandhistory,type=volume",
+		// Docker in Docker
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		// SSH
+		"source=${localEnv:HOME}/.ssh,target=/home/cfn_nag_dev/.ssh,type=bind,readonly",
+		// GPG
+		"source=${localEnv:HOME}/.gnupg/private-keys-v1.d,target=/home/cfn_nag_dev/.gnupg/private-keys-v1.d,type=bind,readonly",
+		"source=${localEnv:HOME}/.gnupg/pubring.kbx,target=/home/cfn_nag_dev/.gnupg/pubring.kbx,type=bind,readonly",
+		"source=${localEnv:HOME}/.gnupg/trustdb.gpg,target=/home/cfn_nag_dev/.gnupg/trustdb.gpg,type=bind,readonly"
+	],
+	"extensions": [
+		// General
+		"CoenraadS.bracket-pair-colorizer",
+		"fabiospampinato.vscode-diff",
+		"kddejong.vscode-cfn-lint",
+		"mrmlnc.vscode-duplicate",
+		"ms-azuretools.vscode-docker",
+		"wayou.vscode-todo-highlight",
+		// Ruby
+		"rebornix.Ruby",
+		"castwide.solargraph",
+		"kaiwood.endwise",
+		"misogi.ruby-rubocop",
+		"groksrc.ruby",
+		"hoovercj.ruby-linter",
+		"miguel-savignano.ruby-symbols",
+		"wingrunr21.vscode-ruby",
+		// JSON
+		"mohsen1.prettify-json",
+		// YAML
+		"redhat.vscode-yaml"
+	],
+	"settings": {
+		// Bracket Pair Colorizer
+		"bracketPairColorizer.forceUniqueOpeningColor": false,
+		"bracketPairColorizer.colorMode": "Consecutive",
+		"bracketPairColorizer.highlightActiveScope": true,
+		"bracketPairColorizer.activeScopeCSS": [
+			"borderStyle : solid",
+			"borderWidth : 1px",
+			"borderColor : {color}; opacity: 0.5",
+			"backgroundColor : {color}"
+		],
+		"editor.matchBrackets": "never",
+		"bracketPairColorizer.showBracketsInGutter": true,
+		// cfn-lint
+		"cfnLint.path": "/usr/local/bin/cfn-lint",
+		// Ruby
+    "[ruby]": {
+      "editor.insertSpaces": true,
+      "editor.tabSize": 2
+		},
+		// Solargraph
+		"solargraph.commandPath": "/usr/local/bundle/bin/solargraph",
+		"solargraph.bundlerPath": "/usr/local/bin/bundle",
+		// Rubocop
+		"ruby.rubocop.executePath": "/usr/local/bundle/bin/",
+		"ruby.rubocop.onSave": true,
+		"ruby.rubocop.configFilePath": "/workspaces/cfn_nag/.rubocop.yml",
+		// YAML
+		"[yaml]": {
+			"editor.insertSpaces": true,
+			"editor.tabSize": 2
+		},
+		"yaml.format.enable": true,
+		"yaml.format.singleQuote": true,
+		"yaml.format.bracketSpacing": true,
+		"yaml.format.printWidth": 120,
+		"yaml.format.proseWrap": "always",
+    "yaml.customTags": [
+			"!And sequence",
+			"!If sequence",
+			"!Not sequence",
+			"!Equals sequence",
+			"!Or sequence",
+			"!FindInMap sequence",
+			"!Base64",
+			"!Cidr sequence",
+			"!Ref",
+			"!Sub",
+			"!GetAtt",
+			"!GetAZs",
+			"!ImportValue",
+			"!Select sequence",
+			"!Split sequence",
+			"!Join sequence",
+			"!And",
+			"!If",
+			"!Not",
+			"!Equals",
+			"!Or",
+			"!FindInMap",
+			"!Cidr",
+			"!Select",
+			"!Split",
+			"!Join",
+			"!Sub sequence",
+			"!ImportValue sequence"
+		],
+		// TODO
+		"todohighlight.isEnable": true,
+		"todohighlight.isCaseSensitive": false
+	},
+	"postCreateCommand": "bundle install"
+}

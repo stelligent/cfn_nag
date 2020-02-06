@@ -96,7 +96,7 @@ describe CfnNag do
                 Violation.new(id: 'FATAL',
                               type: Violation::FAILING_VIOLATION,
                               message: 'Illegal cfn - no Resources',
-                              logical_resource_ids: nil)
+                              logical_resource_ids: [])
               ]
             }
           }
@@ -123,7 +123,7 @@ describe CfnNag do
                 Violation.new(id: 'FATAL',
                               type: Violation::FAILING_VIOLATION,
                               message: 'Illegal cfn - no Resources',
-                              logical_resource_ids: nil)
+                              logical_resource_ids: [])
               ]
             }
           }
@@ -161,9 +161,22 @@ describe CfnNag do
         rule_registry = RuleRegistry.new
 
         (1..100).each do |num|
-          rule_registry.definition(id: "F#{num}",
-                                   type: Violation::FAILING_VIOLATION,
-                                   message: "fakeo#{num}")
+          rule_klass = Object.const_set("RuleF#{num}", Class.new)
+          rule_klass.class_eval %Q{
+            def rule_text
+              "fakeo#{num}"
+            end
+
+            def rule_type
+              Violation::FAILING_VIOLATION
+            end
+
+            def rule_id
+              "F#{num}"
+            end
+          }
+
+          rule_registry.definition(rule_klass)
         end
 
         @cfn_nag = CfnNag.new(config: CfnNagConfig.new(profile_definition: "F16\n"))

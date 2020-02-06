@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'trollop'
+require 'optimist'
 require 'cfn-nag/cli_options'
 require 'cfn-nag/cfn_nag_config'
 
@@ -10,6 +10,7 @@ class CfnNagExecutor
     @blacklist_definition = nil
     @parameter_values_string = nil
     @condition_values_string = nil
+    @rule_repository_definitions = []
   end
 
   def scan(options_type:)
@@ -73,26 +74,28 @@ class CfnNagExecutor
 
   def validate_options(opts)
     unless opts[:output_format].nil? || %w[colortxt txt json].include?(opts[:output_format])
-      Trollop.die(:output_format,
-                  'Must be colortxt, txt, or json')
+      Optimist.die(:output_format,
+                   'Must be colortxt, txt, or json')
     end
   end
 
   def execute_io_options(opts)
-    unless opts[:profile_path].nil?
-      @profile_definition = IO.read(opts[:profile_path])
-    end
+    @profile_definition = read_conditionally(opts[:profile_path])
 
-    unless opts[:blacklist_path].nil?
-      @blacklist_definition = IO.read(opts[:blacklist_path])
-    end
+    @blacklist_definition = read_conditionally(opts[:blacklist_path])
 
-    unless opts[:parameter_values_path].nil?
-      @parameter_values_string = IO.read(opts[:parameter_values_path])
-    end
+    @parameter_values_string = read_conditionally(opts[:parameter_values_path])
 
-    unless opts[:condition_values_path].nil?
-      @condition_values_string = IO.read(opts[:condition_values_path])
+    @condition_values_string = read_conditionally(opts[:condition_values_path])
+
+    opts[:rule_repository]&.each do |rule_repository|
+      @rule_repository_definitions << IO.read(rule_repository)
+    end
+  end
+
+  def read_conditionally(path)
+    unless path.nil?
+      IO.read(path)
     end
   end
 
@@ -104,7 +107,8 @@ class CfnNagExecutor
       allow_suppression: opts[:allow_suppression],
       print_suppression: opts[:print_suppression],
       isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions],
-      fail_on_warnings: opts[:fail_on_warnings]
+      fail_on_warnings: opts[:fail_on_warnings],
+      rule_repository_definitions: @rule_repository_definitions
     )
   end
 

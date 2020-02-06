@@ -38,6 +38,6 @@ class BlackListLoader
   def check_valid_rule_id(rule_id)
     return true unless @rules_registry.by_id(rule_id).nil?
 
-    raise "#{rule_id} is not a legal rule identifier from: #{rules_ids}"
+    raise "#{rule_id} is not a legal rule identifier from: #{@rules_registry.ids}"
   end
 end
