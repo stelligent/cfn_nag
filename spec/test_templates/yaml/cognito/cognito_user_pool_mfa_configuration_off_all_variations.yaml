@@ -1,15 +1,4 @@
 ---
-Parameters:
-  CognitoUserPoolMfaConfiguration1:
-    Type: String
-    Default: ON
-    Description: Must be values of  either 'OFF | ON | OPTIONAL'
-
-  CognitoUserPoolMfaConfiguration2:
-    Type: String
-    Default: OPTIONAL
-    Description: Must be values of  either 'OFF | ON | OPTIONAL'
-
 Resources:
   # When specifying MfaConfiguration as ON or OFF, those values MUST be wrapped in quotes.
   # They are reserved YAML key words and CFN will fail to deploy stack otherwise.

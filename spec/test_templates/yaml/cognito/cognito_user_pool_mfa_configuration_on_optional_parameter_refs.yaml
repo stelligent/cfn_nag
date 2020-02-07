@@ -7,7 +7,7 @@ Parameters:
 
   CognitoUserPoolMfaConfiguration2:
     Type: String
-    Default: OPTIONAL
+    Default: 'OPTIONAL'
     Description: Must be values of  either 'OFF | ON | OPTIONAL'
 
 Resources:
