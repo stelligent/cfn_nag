@@ -1,16 +1,13 @@
 #!/usr/bin/ruby
-#set -o pipefail
 
 require 'logger'
 require 'fileutils'
 require 'open3'
 
-#!/bin/bash -ex
-#set -o pipefail
-#export minor_version="0.5"
-major_version = "0"
-minor_version = "5"
+major_version = 0
+minor_version = 6
 
+# Use this for shelling out
 def run(cmd:, input: nil)
   Open3.popen3(cmd) do |stdin, stdout, stderr, wait_thr|
     stdin.write(input) unless input.nil?
@@ -25,29 +22,7 @@ def run(cmd:, input: nil)
   end
 end
 
-#set +x
-#if [[ -z ${rubygems_api_key} ]];
-#then
-#  echo rubygems_api_key must be set in the environment
-#  exit 1
-#fi
-#if [[ -z ${docker_user} ]];
-#then
-#  echo docker_user must be set in the environment
-#  exit 1
-#fi
-#if [[ -z ${docker_password} ]];
-#then
-#  echo docker_password must be set in the environment
-#  exit 1
-#fi
-#if [[ -z ${docker_org} ]];
-#then
-#  echo $docker_org must be set in the environment
-#  exit 1
-#fi
-#set -x
-
+# Ensure we have all environment variables we need set
 failed = 0
 ["rubygems_api_key", "docker_user", "docker_password", "docker_org"].each do |v|
   if ENV[v] == nil
@@ -57,88 +32,77 @@ failed = 0
 end
 exit 1 if failed > 0
 
-#git config --global user.email "build@build.com"
-#git config --global user.name "build"
-
+# Setup a logger
 logger = Logger.new(STDOUT)
-logger.level = Logger::DEBUG
-#git config --global user.email "build@build.com"
-#git config --global user.name "build"
+if ARGV.include? '-d'
+  logger.level = Logger::DEBUG
+else
+  logger.level = Logger::INFO
+end
+
+# Set global git config user and email
 cmd='git config --global user.email "build@build.com" && '\
     'git config --global user.name "build"'
+logger.debug("Running #{cmd}")
 run(cmd: cmd)
 
-#Git.global_config('user.name', 'build')
-#Git.global_config('user.email', 'build@build.com')
-
-#mkdir -p ~/.gem
-
-#set +ex
-#echo :rubygems_api_key: ${rubygems_api_key} > ~/.gem/credentials
-#set -ex
-#chmod 0600 ~/.gem/credentials
-
+# Create ~/.gem/credentials and populate it with secret from env
 gem_dir = File.join(Dir.home, ".gem")
 Dir.mkdir(gem_dir) unless File.exists?(gem_dir)
 creds_file = File.join(Dir.home, ".gem", "credentials")
 File.write(creds_file, ":rubygems_api_key: #{ENV['rubygems_api_key']}\n")
 FileUtils.chmod(0600, creds_file)
 
-#current_version=$(ruby -e 'tags=`git tag -l v#{ENV["minor_version"]}.*`' \
-#                       -e 'p tags.lines.map { |tag| tag.sub(/v#{ENV["minor_version"]}./, "").chomp.to_i }.max')
-
 # Find the largest patch version of the minor version
 # I.e. if minor version is 4 and there is a v0.4.0 - v0.4.82, then return 82
 cmd = "git tag -l v#{major_version}.#{minor_version}.*"
-stdout, stderr = run(cmd: cmd)
-tags = stdout
-#logger.debug "tags = #{tags}"
+logger.debug("Running #{cmd}")
+tags, stderr = run(cmd: cmd)
 patch_version = tags.lines.map { |tag| tag.sub(/v#{major_version}.#{minor_version}./, "").chomp.to_i }.max
-logger.debug "patch_version = #{patch_version}"
-#tags=g.tags.map{|e| e.name}
+previous_version = ""
+new_version = ""
+if patch_version == nil
+  patch_version = 0
+  # New version without the prefix "v"
+  new_version = "#{major_version}.#{minor_version}.#{patch_version}"
+else
+  previous_version = "#{major_version}.#{minor_version}.#{patch_version}"
+  patch_version += 1
+  # New version without the prefix "v"
+  new_version = "#{major_version}.#{minor_version}.#{patch_version}"
+end
+logger.debug "patch_version = \"#{patch_version}\""
 
-new_version = "#{major_version}.#{minor_version}.#{patch_version}"
-logger.debug("Found next version to be #{new_version}")
+# Get the most recent tag
+cmd = 'git describe --abbrev=0 || echo ""'
+logger.debug("Running #{cmd}")
+stdout, stderr = run(cmd: cmd)
+last_tag = stdout.chomp
 
-#if [[ ${current_version} == nil ]];
-#then
-#  new_version="${minor_version}.0"
-#else
-#  new_version="${minor_version}.$((current_version+1))"
-#fi
+logger.debug("last_tag is \"#{last_tag}\"")
+logger.debug("previous_version is \"#{previous_version}\"")
+logger.debug("new_version is \"#{new_version}\"")
 
-#sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
-
+# Write the version in the gemspec file and make a backup
 cmd = "sed -i.bak \"s/0\.0\.0/#{new_version}/g\" cfn-nag.gemspec"
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
 
 
-##on circle ci - head is ambiguous for reasons that i don't grok
-##we haven't made the new tag and we can't if we are going to annotate
-#head=$(git rev-parse HEAD)
+# On circle ci - head is ambiguous for reasons that I don't grok
+# We haven't made the new tag and we can't if we are going to annotate
 cmd = "git rev-parse HEAD"
 head, stderr = run(cmd: cmd)
 logger.debug("head = #{head}")
 
-#issue_prefix='^#'
-#echo "Remember! You need to start your commit messages with #{issue_prefix}x, where x is the issue number your commit resolves."
 issue_prefix='^#'
-logger.info("Remember! You need to start your commit messages with #{issue_prefix}x, where x is the issue number your commit resolves.")
+logger.info("Remember! You need to start your commit messages with #x, where x is the issue number your commit resolves.")
 
-#if [[ ${current_version} == nil ]];
-#then
-#  log_rev_range=${head}
-#else
-#  log_rev_range="v${minor_version}.${current_version}..${head}"
-#fi
-
-#issues=$(git log ${log_rev_range} --pretty="format:%s" | \
-#         egrep "${issue_prefix}" | \
-#         cut -d " " -f 1 | sort | uniq)
-
-log_rev_range = head
-log_rev_range = "v#{new_version}..#{head}" if patch_version != "0"
+if previous_version == ""
+  log_rev_range = "#{last_tag}..#{head}"
+else
+  log_rev_range = "v#{previous_version}..#{head}"
+end
 
 issues = ''
 cmd = "git log #{log_rev_range} --pretty=\"format:%s\" | egrep \"#{issue_prefix}\" | cut -d \" \" -f 1 | sort | uniq"
@@ -148,49 +112,46 @@ issues = stdout
 
 logger.debug issues
 
-exit
-
-#git tag -a v${new_version} -m "${new_version}" -m "Issues with commits, not necessarily closed: ${issues}"
-
+# Tag with the new version
 cmd = "git tag -a v#{new_version} -m \"#{new_version}\" -m \"Issues with commits, not necessarily closed: #{issues}\""
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
 
-#git push --tags
+# Push tags
 cmd = "git push --tags"
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
 
-
-#gem build cfn-nag.gemspec
+# Run a gem build
 cmd = 'gem build cfn-nag.gemspec'
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
-#gem push cfn-nag-${new_version}.gem
+
+# Push the gem
 cmd = "gem push cfn-nag-#{new_version}.gem"
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
 
-# publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-#docker build -t $docker_org/cfn_nag:${new_version} .
-cmd = "docker build -t $docker_org/cfn_nag:#{new_version} ."
+# Publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
+cmd = "docker build -t #{ENV['docker_org']}/cfn_nag:#{new_version} ."
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
-#set +x
-#echo $docker_password | docker login -u $docker_user --password-stdin
-#set -x
-cmd = "docker login -u $docker_user --password-stdin"
+
+# Login to docker
+cmd = "docker login -u #{ENV['docker_user']} --password-stdin"
 logger.debug("Running #{cmd}")
-run(cmd: cmd, input: docker_password)
-#docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
-cmd = "docker tag #{docker_org}/cfn_nag:#{new_version} #{docker_org}/cfn_nag:latest"
-logger.debug("Running #{cmd}")
-run(cmd: cmd)
-#docker push $docker_org/cfn_nag:${new_version}
-cmd = "docker push #{docker_org}/cfn_nag:#{new_version}"
+run(cmd: cmd, input: ENV['docker_password'])
+
+# Tag docker image
+cmd = "docker tag #{ENV['docker_org']}/cfn_nag:#{new_version} #{ENV['docker_org']}/cfn_nag:latest"
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
-#docker push $docker_org/cfn_nag:latest
-cmd = "docker push ${docker_org}/cfn_nag:latest"
+
+# Push docker image
+cmd = "docker push #{ENV['docker_org']}/cfn_nag:#{new_version}"
+logger.debug("Running #{cmd}")
+run(cmd: cmd)
+
+cmd = "docker push #{ENV['docker_org']}/cfn_nag:latest"
 logger.debug("Running #{cmd}")
 run(cmd: cmd)
