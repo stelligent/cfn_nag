@@ -10,11 +10,11 @@ class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
   end
 
   def rule_type
-    Violation::WARNING
+    Violation::FAILING_VIOLATION
   end
 
   def rule_id
-    'W85'
+    'F85'
   end
 
   def audit_impl(cfn_model)
