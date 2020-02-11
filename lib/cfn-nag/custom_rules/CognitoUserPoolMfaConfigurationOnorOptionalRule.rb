@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/enforce_reference_parameter'
+require 'cfn-nag/util/truthy'
 require_relative 'base'
 
 class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
@@ -28,33 +28,33 @@ class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
   private
 
   def yaml_reserved_keyword_boolean_conv?(user_pool, param_value = '')
-    if [true, false].include?(user_pool.mfaConfiguration)
+    if truthy?(user_pool.mfaConfiguration) || not_truthy?(user_pool.mfaConfiguration)
       true
-    elsif [true, false].include?(param_value)
+    elsif truthy?(param_value) || not_truthy?(param_value)
       true
     end
   end
 
-  def keyword_uppercase?(user_pool)
+  def keyword_uppercase?(mfa_config_value)
     violating_key_words = %w[On on OFF Off off Optional optional]
-    violating_key_words.include? user_pool.mfaConfiguration
+    violating_key_words.include? mfa_config_value
   end
 
   def param_reference?(user_pool)
-    violating_key_words = %w[On on OFF Off off Optional optional]
     ref_value = user_pool.mfaConfiguration.values[0]
     if user_pool.cfn_model.parameters[ref_value].default.nil?
     else
       param_value = user_pool.cfn_model.parameters[ref_value].default
-      violating_key_words.include?(param_value) || yaml_reserved_keyword_boolean_conv?(user_pool, param_value)
+      keyword_uppercase?(param_value) || yaml_reserved_keyword_boolean_conv?(user_pool, param_value)
     end
   end
 
   def violating_userpool?(user_pool)
-    if user_pool.mfaConfiguration.class == Hash
+    up_mfa = user_pool.mfaConfiguration
+    if up_mfa.is_a?(Hash) && up_mfa.key?('Ref')
       param_reference?(user_pool)
     else
-      keyword_uppercase?(user_pool) || \
+      keyword_uppercase?(up_mfa) || \
         yaml_reserved_keyword_boolean_conv?(user_pool)
     end
   end
