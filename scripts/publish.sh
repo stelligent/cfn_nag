@@ -82,11 +82,3 @@ docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
 docker push $docker_org/cfn_nag:${new_version}
 docker push $docker_org/cfn_nag:latest
 
-# publish vscode-remote docker image to DockerHub, https://hub.docker.com/r/stelligent/vscode-remote-cfn_nag
-docker build -t $docker_org/vscode-remote-cfn_nag:${new_version} --file .devcontainer/build/Dockerfile .
-set +x
-echo $docker_password | docker login -u $docker_user --password-stdin
-set -x
-docker tag $docker_org/vscode-remote-cfn_nag:${new_version} $docker_org/vscode-remote-cfn_nag:latest
-docker push $docker_org/vscode-remote-cfn_nag:${new_version}
-docker push $docker_org/vscode-remote-cfn_nag:latest
