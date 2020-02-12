@@ -36,7 +36,7 @@ Some important items to note here:
 * Mounts:
   * A volume is created and mounted to store the `bash` command line history from within the container. Now when you close the connection and reopen at a later date, you can still search for previously used commands as needed.
   * The Docker socket is mounted so that you can still run `docker` commands from within the remote container environment.
-  * Your local ssh directory (`~/.ssh`) is mounted so that you still access your config and sshkeys to be able to connect to github with key authentication.
-  * Your local gpg items are mounted so that you can still sign your commits and tags from within the remote container.
+  * If it exists, your local ssh directory (`~/.ssh`) is mounted so that you still access your config and sshkeys to be able to connect to github with key authentication.
+  * If it exists, your local gpg items (`~/.gnupg`) are mounted so that you can still sign your commits and tags from within the remote container.
 * Several vscode extensions are installed to help the user jumping right into project development. These extensions also have custom configured settings to work within the remote container environment.
 * Runs `bundle install` so that everything is fully setup for the user before they get logged into the connection. The user can simply just run the `rake` commands without needing to set anything else up.
