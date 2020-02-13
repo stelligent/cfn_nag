@@ -1,0 +1,24 @@
+---
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: "10.0.0.0/16"
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: "default"
+  myNetworkAcl:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+      VpcId: !Ref VPC
+  myNetworkAclEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref myNetworkAcl
+      Protocol: "17"
+      RuleAction: "allow"
+      RuleNumber: "100"
+      CidrBlock: "10.0.0.0/16"
+      Egress: false
+      PortRange:
+        From: '67'
