@@ -2,6 +2,7 @@
 
 require 'cfn-nag/violation'
 require 'cfn-nag/util/truthy'
+require 'cfn-nag/util/parameter_reference_and_default_value'
 require_relative 'base'
 
 class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
@@ -14,7 +15,7 @@ class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
   end
 
   def rule_id
-    'F85'
+    'F51'
   end
 
   def audit_impl(cfn_model)
@@ -27,35 +28,30 @@ class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
 
   private
 
-  def yaml_reserved_keyword_boolean_conv?(user_pool, param_value = '')
-    if truthy?(user_pool.mfaConfiguration) || not_truthy?(user_pool.mfaConfiguration)
-      true
-    elsif truthy?(param_value) || not_truthy?(param_value)
-      true
-    end
+  def yaml_reserved_keyword_boolean?(property_value)
+    truthy?(property_value) || not_truthy?(property_value)
   end
 
-  def keyword_uppercase?(mfa_config_value)
-    violating_key_words = %w[On on OFF Off off Optional optional]
-    violating_key_words.include? mfa_config_value
+  def violating_keywords?(mfa_config_value)
+    valid_keywords = %w[ON OPTIONAL]
+    !valid_keywords.include? mfa_config_value
   end
 
-  def param_reference?(user_pool)
-    ref_value = user_pool.mfaConfiguration.values[0]
-    if user_pool.cfn_model.parameters[ref_value].default.nil?
-    else
-      param_value = user_pool.cfn_model.parameters[ref_value].default
-      keyword_uppercase?(param_value) || yaml_reserved_keyword_boolean_conv?(user_pool, param_value)
-    end
+  def violations?(mfa_config_value)
+    violating_keywords?(mfa_config_value) || \
+      yaml_reserved_keyword_boolean?(mfa_config_value)
   end
 
   def violating_userpool?(user_pool)
     up_mfa = user_pool.mfaConfiguration
-    if up_mfa.is_a?(Hash) && up_mfa.key?('Ref')
-      param_reference?(user_pool)
+    if property_a_param_ref?(user_pool, up_mfa)
+      prop_default_value = get_default_param_value(user_pool, up_mfa)
+      if prop_default_value.nil?
+      else
+        violations?(prop_default_value)
+      end
     else
-      keyword_uppercase?(up_mfa) || \
-        yaml_reserved_keyword_boolean_conv?(user_pool)
+      violations?(up_mfa)
     end
   end
 end

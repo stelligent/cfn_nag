@@ -112,7 +112,7 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
-  context "Cognito UserPool with MfaConfiguration with parameters references but not default values" do
+  context "Cognito UserPool with MfaConfiguration with parameters references but no default values" do
     it 'Returns an empty list' do
       cfn_model = CfnParser.new.parse read_test_template(
                                           'yaml/cognito/cognito_user_pool_mfa_configuration_parameter_refs_no_default_values.yaml'
