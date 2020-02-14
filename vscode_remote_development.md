@@ -22,7 +22,7 @@ There are a couple of dependencies that you need to configure locally before bei
 
 ### Docker Hub: stelligent/vscode-remote-cfn_nag
 
-The main `.devcontainer/Dockerfile` points to the latest `stelligent/vscode-remote-cfn_nag` Docker Hub container image. This image is created and pushed by a step in the `scripts/publish.sh` file. This will build a new remote development container image and tag it with the same `cfn_nag` gem version.
+The main `.devcontainer/Dockerfile` points to the latest `stelligent/vscode-remote-cfn_nag` Docker Hub container image. This image is created and pushed by a separate GitHub Actions Workflow. It will tag the newly created image with the short git sha and `latest`.
 
 ### Build Dockerfile
 
