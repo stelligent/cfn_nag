@@ -11,13 +11,15 @@
 		// Bash History
 		"source=cfn_nag-bash_history,target=/commandhistory,type=volume",
 		// Docker in Docker
-		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+		"source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+	],
+	"runArgs": [
 		// SSH
-		"source=${localEnv:HOME}/.ssh,target=/home/cfn_nag_dev/.ssh,type=bind,readonly",
+		"-v", "${localEnv:HOME}/.ssh:/home/cfn_nag_dev/.ssh:ro",
 		// GPG
-		"source=${localEnv:HOME}/.gnupg/private-keys-v1.d,target=/home/cfn_nag_dev/.gnupg/private-keys-v1.d,type=bind,readonly",
-		"source=${localEnv:HOME}/.gnupg/pubring.kbx,target=/home/cfn_nag_dev/.gnupg/pubring.kbx,type=bind,readonly",
-		"source=${localEnv:HOME}/.gnupg/trustdb.gpg,target=/home/cfn_nag_dev/.gnupg/trustdb.gpg,type=bind,readonly"
+		"-v", "${localEnv:HOME}/.gnupg/private-keys-v1.d:/home/cfn_nag_dev/.gnupg/private-keys-v1.d:ro",
+		"-v", "${localEnv:HOME}/.gnupg/pubring.kbx:/home/cfn_nag_dev/.gnupg/pubring.kbx:ro",
+		"-v", "${localEnv:HOME}/.gnupg/trustdb.gpg:/home/cfn_nag_dev/.gnupg/trustdb.gpg:ro"
 	],
 	"extensions": [
 		// General
