@@ -1,0 +1,28 @@
+---
+Resources:
+  # When specifying MfaConfiguration as ON or OFF, those values MUST be wrapped in quotes.
+  # They are reserved YAML key words and CFN will fail to deploy stack otherwise.
+  CognitoUserPool1:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      MfaConfiguration: 'OFF'
+      # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
+      SmsConfiguration:
+        SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
+
+  CognitoUserPool2:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      MfaConfiguration: 'Off'
+      # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
+      SmsConfiguration:
+        SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
+
+  CognitoUserPool3:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      MfaConfiguration: 'off'
+      # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
+      SmsConfiguration:
+        SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
+

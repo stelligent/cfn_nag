@@ -1,0 +1,11 @@
+---
+Resources:
+  CognitoIdentityPool1:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: 'false'
+
+  CognitoIdentityPool2:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: false
