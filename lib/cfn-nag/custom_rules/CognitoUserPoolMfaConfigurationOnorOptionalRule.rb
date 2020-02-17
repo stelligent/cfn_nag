@@ -14,7 +14,7 @@ class CognitoUserPoolMfaConfigurationOnorOptionalRule < BaseRule
   end
 
   def rule_id
-    'F51'
+    'F78'
   end
 
   def audit_impl(cfn_model)
