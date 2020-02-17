@@ -15,7 +15,7 @@ class CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule < BaseRule
   end
 
   def rule_id
-    'W46'
+    'W57'
   end
 
   def audit_impl(cfn_model)
