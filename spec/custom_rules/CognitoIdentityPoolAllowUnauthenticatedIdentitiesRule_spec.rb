@@ -33,7 +33,8 @@ describe CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule do
     it 'Returns offending logical resource ids' do
       cfn_model = CfnParser.new.parse read_test_template(
                                           'yaml/cognito/cognito_identity_pool_allowunauthenticatedidentities_default_value_param_refs.yaml'
-                                      )
+                                      ),
+                                      parameter_values_json='[]'
 
       actual_logical_resource_ids = CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[CognitoIdentityPool1 CognitoIdentityPool2]

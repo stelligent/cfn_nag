@@ -16,7 +16,7 @@ class CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule < BaseRule
   end
 
   def rule_id
-    'W86'
+    'W46'
   end
 
   def audit_impl(cfn_model)
@@ -34,15 +34,6 @@ class CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule < BaseRule
   end
 
   def violating_identity_pool?(identity_pool)
-    ip_prop = identity_pool.allowUnauthenticatedIdentities
-    if property_a_param_ref?(identity_pool, ip_prop)
-      prop_default_value = get_default_param_value(identity_pool, ip_prop)
-      if prop_default_value.nil?
-      else
-        violations?(prop_default_value)
-      end
-    else
-      violations?(ip_prop)
-    end
+    violations?(identity_pool.allowUnauthenticatedIdentities)
   end
 end
