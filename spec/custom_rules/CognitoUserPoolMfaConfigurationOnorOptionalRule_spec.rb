@@ -23,7 +23,7 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
                                       )
 
       actual_logical_resource_ids = CognitoUserPoolMfaConfigurationOnorOptionalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[CognitoUserPool2 CognitoUserPool3 CognitoUserPool4]
+      expected_logical_resource_ids = %w[]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -36,7 +36,7 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
                                       )
 
       actual_logical_resource_ids = CognitoUserPoolMfaConfigurationOnorOptionalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[CognitoUserPool1 CognitoUserPool2]
+      expected_logical_resource_ids = %w[]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -52,10 +52,7 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
       actual_logical_resource_ids = CognitoUserPoolMfaConfigurationOnorOptionalRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[CognitoUserPool1
                                          CognitoUserPool2
-                                         CognitoUserPool3
-                                         CognitoUserPool4
-                                         CognitoUserPool5
-                                         CognitoUserPool6]
+                                         CognitoUserPool3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -68,7 +65,7 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
                                       )
 
       actual_logical_resource_ids = CognitoUserPoolMfaConfigurationOnorOptionalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[CognitoUserPool1 CognitoUserPool2 CognitoUserPool3 CognitoUserPool4]
+      expected_logical_resource_ids = %w[]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -90,24 +87,17 @@ describe CognitoUserPoolMfaConfigurationOnorOptionalRule do
   context "Cognito UserPool with MfaConfiguration set to OFF/Off/off or 'OFF'/'Off'/'off' or
   when referenced by parameter values (Wrapped/Not wrapped in quotes and/or NOT fully upper case)." do
     it 'Returns offending logical resource ids' do
+      # by specifying the parameters_values_json, it means apply parameter substitution to the model
+      # this is empty, but by triggering the subsitution, it means default values are substituted where defined
       cfn_model = CfnParser.new.parse read_test_template(
-                                          'yaml/cognito/cognito_user_pool_mfa_configuration_violations_all_variations_with_param_refs.yaml'
-                                      )
+                                          'yaml/cognito/cognito_user_pool_mfa_configuration_violations_all_variations_with_param_refs.yaml',
+                                      ),
+                                      parameter_values_json='[]'
 
       actual_logical_resource_ids = CognitoUserPoolMfaConfigurationOnorOptionalRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[CognitoUserPool1
-                                         CognitoUserPool2
-                                         CognitoUserPool3
-                                         CognitoUserPool4
+      expected_logical_resource_ids = %w[CognitoUserPool4
                                          CognitoUserPool5
-                                         CognitoUserPool6
-                                         CognitoUserPool7
-                                         CognitoUserPool8
-                                         CognitoUserPool9
-                                         CognitoUserPool10
-                                         CognitoUserPool11
-                                         CognitoUserPool12
-                                         CognitoUserPool13]
+                                         CognitoUserPool6]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
