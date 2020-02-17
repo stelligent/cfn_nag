@@ -2,7 +2,6 @@
 
 require 'cfn-nag/violation'
 require 'cfn-nag/util/truthy'
-require 'cfn-nag/util/parameter_reference_and_default_value'
 require_relative 'base'
 
 class CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule < BaseRule
