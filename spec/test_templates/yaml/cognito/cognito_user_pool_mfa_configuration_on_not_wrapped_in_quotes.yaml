@@ -17,19 +17,3 @@ Resources:
       # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
       SmsConfiguration:
         SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
-
-  CognitoUserPool3:
-    Type: AWS::Cognito::UserPool
-    Properties:
-      MfaConfiguration: On
-      # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
-      SmsConfiguration:
-        SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
-
-  CognitoUserPool4:
-    Type: AWS::Cognito::UserPool
-    Properties:
-      MfaConfiguration: on
-      # The below property is required when specifying ON/OPTIONAL for MfaConfiguration
-      SmsConfiguration:
-        SnsCallerArn: 'arn:aws:iam::12345678910:role/service-role/test-cognito-SMS-Role'
