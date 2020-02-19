@@ -1,6 +1,0 @@
----
-Resources:
-  EC2NACL:
-    Type: AWS::EC2::NetworkAcl
-    Properties:
-      VpcId:

@@ -51,18 +51,6 @@ describe EC2NetworkAclEntryPortRangeRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
-  context 'EC2 Network ACL Entry allows all ports open using -1' do
-    it 'returns the offending logical resource id' do
-      cfn_model = CfnParser.new.parse read_test_template(
-        'yaml/ec2_networkaclentry/ec2_networkaclentry_all_ports_open.yml'
-      )
-
-      actual_logical_resource_ids = EC2NetworkAclEntryPortRangeRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[myNetworkAclEntry]
-
-      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
-    end
-  end
   context 'EC2 Network ACL Entry allows all ports open by the full range' do
     it 'returns the offending logical resource id' do
       cfn_model = CfnParser.new.parse read_test_template(
