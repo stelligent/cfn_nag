@@ -1,0 +1,38 @@
+---
+Parameters:
+  CognitoIdentityPoolAllowUnauthenticatedIdentities1:
+    Type: String
+    Default: 'true'
+  CognitoIdentityPoolAllowUnauthenticatedIdentities2:
+    Type: String
+    Default: true
+  CognitoIdentityPoolAllowUnauthenticatedIdentities3:
+    Type: String
+    Default: 'false'
+  CognitoIdentityPoolAllowUnauthenticatedIdentities4:
+    Type: String
+    Default: false
+
+
+Resources:
+  CognitoIdentityPool1:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: !Ref CognitoIdentityPoolAllowUnauthenticatedIdentities1
+
+  CognitoIdentityPool2:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities:
+        Ref: CognitoIdentityPoolAllowUnauthenticatedIdentities2
+
+  CognitoIdentityPool3:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities: !Ref CognitoIdentityPoolAllowUnauthenticatedIdentities3
+
+  CognitoIdentityPool4:
+    Type: AWS::Cognito::IdentityPool
+    Properties:
+      AllowUnauthenticatedIdentities:
+        Ref: CognitoIdentityPoolAllowUnauthenticatedIdentities4
