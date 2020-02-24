@@ -1,0 +1,11 @@
+---
+Resources:
+  ApiGatewayMethod1:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType:
+
+  ApiGatewayMethod2:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType:
