@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'cfn-model'
 require 'cfn-nag/custom_rules/LambdaFunctionCloudWatchLogsRule'
@@ -18,10 +20,10 @@ describe LambdaFunctionCloudWatchLogsRule do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_without_cloudwatch_logs_permission.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
 
-        expect(actual_logical_resource_ids).to eq [
-          'FunctionWithWildcardDynamoDbRoleByRef',
-          'FunctionWithWildcardDynamoDbRoleByFnGetAtt',
-          'FunctionWithPartialLogsPermsRoleByRef'
+        expect(actual_logical_resource_ids).to eq %w[
+          FunctionWithWildcardDynamoDbRoleByRef
+          FunctionWithWildcardDynamoDbRoleByFnGetAtt
+          FunctionWithPartialLogsPermsRoleByRef
         ]
       end
     end
@@ -49,8 +51,8 @@ describe LambdaFunctionCloudWatchLogsRule do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_other_managed_policies.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
 
-        expect(actual_logical_resource_ids).to eq [
-          'FunctionWithOtherManagedPolicyRoleByRef'
+        expect(actual_logical_resource_ids).to eq %w[
+          FunctionWithOtherManagedPolicyRoleByRef
         ]
       end
     end
@@ -60,8 +62,8 @@ describe LambdaFunctionCloudWatchLogsRule do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_managed_policies.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
 
-        expect(actual_logical_resource_ids).to eq [
-          'FunctionWithOtherManagedPolicyRoleByRef'
+        expect(actual_logical_resource_ids).to eq %w[
+          FunctionWithOtherManagedPolicyRoleByRef
         ]
       end
     end
@@ -71,9 +73,9 @@ describe LambdaFunctionCloudWatchLogsRule do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_role_elsewhere.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
 
-        expect(actual_logical_resource_ids).to eq [
-          'FunctionWithRoleFromParameter',
-          'FunctionWithRoleStringArn'
+        expect(actual_logical_resource_ids).to eq %w[
+          FunctionWithRoleFromParameter
+          FunctionWithRoleStringArn
         ]
       end
     end
