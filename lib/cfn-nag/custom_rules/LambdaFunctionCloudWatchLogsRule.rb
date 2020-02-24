@@ -31,8 +31,9 @@ class LambdaFunctionCloudWatchLogsRule < BaseRule
   end
 
   def managed_policies_include_cw_logs_access?(managed_policies)
-    managed_policies.include?('arn:aws:iam::aws:policy/CloudWatchLogsFullAccess') || \
-      managed_policies.include?('arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole')
+    !(managed_policies & ['arn:aws:iam::aws:policy/CloudWatchLogsFullAccess',
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']
+     ).empty?
   end
 
   def inline_policies_include_cw_logs_access?(policies)
