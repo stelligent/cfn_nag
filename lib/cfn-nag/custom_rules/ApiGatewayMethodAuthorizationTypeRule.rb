@@ -18,7 +18,7 @@ class ApiGatewayMethodAuthorizationTypeRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_deployments = cfn_model.resources_by_type('AWS::ApiGateway::Method').select do |method|
-      method.authorizationType.nil? || method.authorizationType.to_s.downcase == 'none'
+      method.authorizationType.to_s == '' || method.authorizationType.to_s.casecmp('none').zero?
     end
 
     violating_deployments.map(&:logical_resource_id)
