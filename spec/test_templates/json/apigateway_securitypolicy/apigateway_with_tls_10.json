@@ -1,0 +1,10 @@
+{
+	"Resources": {
+		"ApiGatewayWithTLS10": {
+			"Type": "AWS::ApiGateway::DomainName",
+			"Properties": {
+				"SecurityPolicy": "TLS_1_0"
+			}
+		}
+	}
+}
