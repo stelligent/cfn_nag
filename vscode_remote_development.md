@@ -7,11 +7,22 @@ You can start working on developing with this project with relative ease by usin
 - When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
 - When opening in the future use the "`[Dev Container] cfn_nag Development`" option
 
+## VS Code Dependencies
+
+There are a couple of dependencies that you need to configure locally before being able to fully utizlize the Remote Developemnt environment.
+- Requires `ms-vscode-remote.remote-containers` >= `0.101.0`
+- [Docker](https://www.docker.com/products/docker-desktop)
+  - Needs to be installed in order to use the remote development container
+- [GPG](https://gpgtools.org)
+  - Should to be installed in `~/.gnupg/` to be able to sign git commits with gpg
+- SSH
+  - Should to be installed in `~/.ssh` to be able to use your ssh config and keys.
+
 ## Container Image
 
 ### Docker Hub: stelligent/vscode-remote-cfn_nag
 
-The main `.devcontainer/Dockerfile` points to the latest `stelligent/vscode-remote-cfn_nag` Docker Hub container image. This image is created and pushed by a step in the `scripts/publish.sh` file. This will build a new remote development container image and tag it with the same `cfn_nag` gem version.
+The main `.devcontainer/Dockerfile` points to the latest `stelligent/vscode-remote-cfn_nag` Docker Hub container image. This image is created and pushed by a separate GitHub Actions Workflow. It will tag the newly created image with the short git sha and `latest`.
 
 ### Build Dockerfile
 
@@ -36,7 +47,7 @@ Some important items to note here:
 * Mounts:
   * A volume is created and mounted to store the `bash` command line history from within the container. Now when you close the connection and reopen at a later date, you can still search for previously used commands as needed.
   * The Docker socket is mounted so that you can still run `docker` commands from within the remote container environment.
-  * Your local ssh directory (`~/.ssh`) is mounted so that you still access your config and sshkeys to be able to connect to github with key authentication.
-  * Your local gpg items are mounted so that you can still sign your commits and tags from within the remote container.
+  * If it exists, your local ssh directory (`~/.ssh`) is mounted so that you still access your config and sshkeys to be able to connect to github with key authentication.
+  * If it exists, your local gpg items (`~/.gnupg`) are mounted so that you can still sign your commits and tags from within the remote container.
 * Several vscode extensions are installed to help the user jumping right into project development. These extensions also have custom configured settings to work within the remote container environment.
 * Runs `bundle install` so that everything is fully setup for the user before they get logged into the connection. The user can simply just run the `rake` commands without needing to set anything else up.

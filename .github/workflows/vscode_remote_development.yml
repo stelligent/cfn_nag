@@ -1,0 +1,33 @@
+name: VS Code DockerHub Build & Push
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '.devcontainer/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: checkout
+        uses: actions/checkout@master
+      -
+        name: docker login
+        env:
+          DOCKER_USER: ${{ secrets.docker_user }}
+          DOCKER_PASSWORD: ${{ secrets.docker_password }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+      -
+        name: Build & Push to DockerHub
+        env:
+          DOCKER_ORG: stelligent
+          DOCKER_REPO: vscode-remote-cfn_nag
+        run: |
+          docker build -t $DOCKER_ORG/$DOCKER_REPO:${GITHUB_SHA::8} --file .devcontainer/build/Dockerfile .
+          docker tag $DOCKER_ORG/$DOCKER_REPO:${GITHUB_SHA::8} $DOCKER_ORG/$DOCKER_REPO:latest
+          docker push $DOCKER_ORG/$DOCKER_REPO:${GITHUB_SHA::8}
+          docker push $DOCKER_ORG/$DOCKER_REPO:latest

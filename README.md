@@ -320,8 +320,8 @@ generalized such that custom rule repositories can be used to discover rules.
 1. A bunch of "rule files" sitting around on a filesystem isn't great from a traditional software development perspective.
 There is no version or traceability on these files, so 0.5.x introduces the notion of a "cfn_nag rule gem".  A developer
 can develop custom rules as part of a separate gem, version it and install it... and those rules are referenced from cfn_nag
-as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hippa-rules", any *.rb under 
-lib/cfn-nag-hippa-rules will be loaded.
+as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hippa-rules", any \*.rb under 
+lib/cfn-nag-hippa-rules will be loaded.  Any custom rules should derive from CfnNag::BaseRule in cfn-nag/base_rule (*not* cfn-nag/custom-rules/base).  If the rule must derive from something else, defining a method `cfn_nag_rule?` that returns true will also cause it to be loaded as a rule.
 
 2. When cfn_nag is running in an AWS Lambda - there isn't really a filesystem (besides /tmp) in the traditional sense.
 Therefore, only core rules are usable from the Lambda.  To support custom rules, cfn_nag supports discovering rules
@@ -397,3 +397,4 @@ More information about the VS Code Remote Development setup can be found here, [
 # Support
 
 To report a bug or request a feature, submit an issue through the GitHub repository via: <https://github.com/stelligent/cfn_nag/issues/new>
+
