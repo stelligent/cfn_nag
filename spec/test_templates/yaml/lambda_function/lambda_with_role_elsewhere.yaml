@@ -1,0 +1,40 @@
+---
+AWSTemplateFormatVersion: 2017-10-17
+
+Parameters:
+  RoleFromParameter:
+    Type: String
+    Description: Name of Lambda role.
+
+Resources:
+  FunctionWithRoleFromParameter:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref RoleFromParameter
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithRoleStringArn:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: arn:aws:iam::123456789012:role/LambdaRole
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
