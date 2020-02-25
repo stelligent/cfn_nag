@@ -13,6 +13,8 @@ Parameters:
     # Default: gamelift-testing
 
 Resources:
+  # Instructions to SSH to GameLift fleet servers
+  # https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-remote-access.html
   InsecureGameLiftFleet:
     Type: AWS::GameLift::Fleet
     Properties:

@@ -1,7 +1,20 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
+Description: Create a GameLift Fleet with individual ports open.
+
+Parameters:
+  Owner:
+    Type: String
+    Description: Owner of these resources.
+    # Default: pshelby
+  Project:
+    Type: String
+    Description: For what these resources were created.
+    # Default: gamelift-testing
 
 Resources:
+  # Instructions to SSH to GameLift fleet servers
+  # https://docs.aws.amazon.com/gamelift/latest/developerguide/fleets-remote-access.html
   SecureGameLiftFleet:
     Type: AWS::GameLift::Fleet
     Properties:
@@ -19,4 +32,19 @@ Resources:
           Protocol: TCP
           ToPort: 10623
       EC2InstanceType: t2.micro
-      Name: InsecureGameLiftFleet
+      Name: SecureGameLiftFleet
+      RuntimeConfiguration:
+        ServerProcesses:
+          - ConcurrentExecutions: 2
+            LaunchPath: /local/game/rt_servers.js
+      ScriptId: !GetAtt RealTimeScript.Id
+
+  RealTimeScript:
+    Type: AWS::GameLift::Script
+    Properties:
+      StorageLocation:
+        Bucket:
+          Fn::ImportValue: !Sub ${Owner}-${Project}-GameLiftSourceCodeBucketName
+        Key: rt_servers.zip
+        RoleArn:
+          Fn::ImportValue: !Sub ${Owner}-${Project}-GameLiftSupportRoleArn
