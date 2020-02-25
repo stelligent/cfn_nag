@@ -1,0 +1,114 @@
+---
+AWSTemplateFormatVersion: 2017-10-17
+
+Resources:
+  FunctionWithLogsManagedPolicyRoleByRef:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref RoleWithLogsManagedPolicy
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithLogsManagedPolicyRoleByGetAtt:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt RoleWithLogsManagedPolicy.Arn
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithLogsManagedPolicyRoleByFnGetAtt:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role:
+        Fn::GetAtt: RoleWithLogsManagedPolicy.Arn
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithOtherManagedPolicyRoleByRef:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref RoleWithOtherManagedPolicy
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  RoleWithLogsManagedPolicy:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 'specific:ObscureAction'
+                Resource: '*'
+
+  RoleWithOtherManagedPolicy:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonChimeReadOnly
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: 'specific:ObscureAction'
+                Resource: '*'

@@ -1,0 +1,9 @@
+{
+	"Resources": {
+		"ApiGatewayWithoutSecurityPolicy": {
+			"Type": "AWS::ApiGateway::DomainName",
+			"Properties": {
+			}
+		}
+	}
+}
