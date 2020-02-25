@@ -27,7 +27,7 @@ jobs:
     - name: Rubocop lint
       run: bundle exec rubocop -D
     - name: Rspec tests
-      run: bundle exec rspec --color --require spec_helper spec
+      run: bundle exec rspec --require spec_helper spec
     - name: Duplicate rule check
       run: bundle exec ./bin/cfn_nag_rules
 
