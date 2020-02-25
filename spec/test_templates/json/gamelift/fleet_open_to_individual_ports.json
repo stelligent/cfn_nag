@@ -1,0 +1,31 @@
+{
+  "Resources": {
+    "SecureGameLiftFleet": {
+      "Type": "AWS::GameLift::Fleet",
+      "Properties": {
+        "EC2InboundPermissions": [
+          {
+            "FromPort": 22,
+            "ToPort": 22,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          },
+          {
+            "FromPort": 1122,
+            "ToPort": 1122,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          },
+          {
+            "FromPort": 10623,
+            "ToPort": 10623,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          }
+        ],
+        "EC2InstanceType": "t2.micro",
+        "Name": "InsecureGameLiftFleet"
+      }
+    }
+  }
+}

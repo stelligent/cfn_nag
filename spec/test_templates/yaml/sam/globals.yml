@@ -24,3 +24,11 @@ Resources:
       Tracing: Active
       Tags:
         warmup: True
+  NewFunction:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Sub "${Site}-Function"
+      Handler: "com.test.Function::handleRequest"
+      Tracing: Active
+      Tags:
+        warmup: True
