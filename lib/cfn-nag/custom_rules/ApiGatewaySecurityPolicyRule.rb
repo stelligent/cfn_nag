@@ -17,11 +17,10 @@ class ApiGatewaySecurityPolicyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_domains = cfn_model.resources_by_type('AWS::ApiGateway::DomainName').select do |domain|      
+    violating_domains = cfn_model.resources_by_type('AWS::ApiGateway::DomainName').select do |domain|
       domain.securityPolicy.nil? || domain.securityPolicy == 'TLS_1_0'
     end
 
     violating_domains.map(&:logical_resource_id)
   end
-
 end
