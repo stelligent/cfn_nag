@@ -13,7 +13,7 @@ class ApiGatewayMethodAuthorizationTypeRule < BaseRule
   end
 
   def rule_id
-    'W58'
+    'W59'
   end
 
   def audit_impl(cfn_model)
