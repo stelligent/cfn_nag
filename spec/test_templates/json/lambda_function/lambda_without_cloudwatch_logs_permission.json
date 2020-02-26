@@ -123,7 +123,7 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": ["logs:CreateLogGroup", "logs:PutLogEvent"],
+                  "Action": ["logs:CreateLogGroup", "logs:PutLogEvents"],
                   "Resource": [
 										{"Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"},
 										{"Fn::Sub": "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*/*"}
