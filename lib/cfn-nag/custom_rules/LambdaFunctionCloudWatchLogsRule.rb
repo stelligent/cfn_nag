@@ -41,7 +41,7 @@ class LambdaFunctionCloudWatchLogsRule < BaseRule
       permissive_statements = policy.policy_document.statements.select do |statement|
         statement.allows_action?('logs:CreateLogGroup') && \
           statement.allows_action?('logs:CreateLogStream') && \
-          statement.allows_action?('logs:PutLogEvent')
+          statement.allows_action?('logs:PutLogEvents')
       end
       !permissive_statements.empty?
     end

@@ -6,7 +6,7 @@ require 'cfn-nag/custom_rules/LambdaFunctionCloudWatchLogsRule'
 
 describe LambdaFunctionCloudWatchLogsRule do
   describe 'AWS::Lambda::Function' do
-    context 'when function\'s role contains logs:PutLogEvent or equivalent wildcard' do
+    context 'when function\'s role contains logs:PutLogEvents or equivalent wildcard' do
       it 'does not return an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_cloudwatch_logs_permission.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
@@ -15,7 +15,7 @@ describe LambdaFunctionCloudWatchLogsRule do
       end
     end
 
-    context 'when function\'s role does not contain logs:PutLogEvent or equivalent wildcard' do
+    context 'when function\'s role does not contain logs:PutLogEvents or equivalent wildcard' do
       it 'returns an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_without_cloudwatch_logs_permission.json')
         actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model

@@ -108,7 +108,7 @@ Resources:
               - Effect: Allow
                 Action:
                   - logs:CreateLogGroup
-                  - logs:PutLogEvent
+                  - logs:PutLogEvents
                 Resource:
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
                   - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*/*
