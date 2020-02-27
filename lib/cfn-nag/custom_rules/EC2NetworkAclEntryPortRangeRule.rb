@@ -5,7 +5,7 @@ require_relative 'base'
 
 class EC2NetworkAclEntryPortRangeRule < BaseRule
   def rule_text
-    'EC2 NetworkACL Entry Port Range must be defined for TCP/UDP protocols and should probably not allow all ports'
+    'TCP/UDP protocol NetworkACL entries possibly should not allow all ports.'
   end
 
   def rule_type
