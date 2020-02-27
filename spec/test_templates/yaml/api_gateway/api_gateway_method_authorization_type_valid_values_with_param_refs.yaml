@@ -1,0 +1,28 @@
+---
+Parameters:
+  ApiGatewayMethodAuthorizationType1:
+    Type: String
+    Default: AWS_IAM
+  ApiGatewayMethodAuthorizationType2:
+    Type: String
+    Default: CUSTOM
+  ApiGatewayMethodAuthorizationType3:
+    Type: String
+    Default: COGNITO_USER_POOLS
+
+Resources:
+  ApiGatewayMethod1:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: !Ref ApiGatewayMethodAuthorizationType1
+
+  ApiGatewayMethod2:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType:
+        Ref: ApiGatewayMethodAuthorizationType2
+
+  ApiGatewayMethod3:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: !Ref ApiGatewayMethodAuthorizationType3

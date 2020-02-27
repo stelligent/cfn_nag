@@ -1,0 +1,114 @@
+---
+AWSTemplateFormatVersion: 2017-10-17
+
+Resources:
+  FunctionWithWildcardDynamoDbRoleByRef:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref RoleWithWildcardDynamoDb
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithWildcardDynamoDbRoleByGetAtt:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt RoleWithWildcardDynamoDb.Arn
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithWildcardDynamoDbRoleByFnGetAtt:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role:
+        Fn::GetAtt: RoleWithWildcardDynamoDb.Arn
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  FunctionWithPartialLogsPermsRoleByRef:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !Ref RoleWithPartialLogsPerms
+      Code:
+        ZipFile:
+          Fn::Join:
+            - ""
+            - var response = require('cfn-response');
+            - exports.handler = function(event, context) {
+            - var responseData = {Value: event.ResourceProperties.List};
+            - responseData.Value.push(event.ResourceProperties.AppendedItem);
+            - response.send(event, context, response.SUCCESS, responseData);}
+      Runtime: nodejs6.10
+
+  RoleWithWildcardDynamoDb:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action: dynamodb:Update*
+                Resource: !Sub arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/*
+
+  RoleWithPartialLogsPerms:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:PutLogEvents
+                Resource:
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
+                  - !Sub arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*/*

@@ -1,0 +1,246 @@
+{
+  "Resources": {
+    "FunctionWithWildcardAllRoleByRef": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Ref": "RoleWithWildcardAll"},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "FunctionWithWildcardAllRoleByFnGetAtt": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Fn::GetAtt": ["RoleWithWildcardAll", "Arn"]},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "FunctionWithWildcardLogsRoleByRef": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Ref": "RoleWithWildcardLogs"},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "FunctionWithPutLogEventsRoleByRef": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Ref": "RoleWithPutLogEvents"},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "FunctionWithCreateLogAndPutLogEventsRoleByRef": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Ref": "RoleWithWildcardCreateLogAndPutLogEvents"},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "RoleWithWildcardAll": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "RoleWithWildcardLogs": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": "logs:*",
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "RoleWithPutLogEvents": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "RoleWithWildcardCreateLogAndPutLogEvents": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "lambda.amazonaws.com"
+              },
+              "Action": ["sts:AssumeRole"]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "root",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["logs:CreateLog*", "logs:PutLogEvents"],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -56,5 +56,22 @@ describe CfnNag do
       actual_aggregate_results = @cfn_nag.audit_aggregate_across_files input_path: test_template_path(template_name)
       expect(actual_aggregate_results[0][:file_results][:failure_count]).to eq 0
     end
+
+    it 'makes globals available as a top-level hash' do
+      template_name = 'yaml/sam/globals.yml'
+      cfn_model = CfnParser.new.parse read_test_template(template_name)
+      globals = cfn_model.globals
+
+      expect(globals).to_not be_nil
+      expect(globals['Function'].timeout).to eq 30
+    end
+  end
+
+  context 'serverless function with implicit API', :lambda do
+    it 'parses properly' do
+      template_name = 'yaml/sam/serverless_rest_api_with_basepathmapping.yml'
+      actual_aggregate_results = @cfn_nag.audit_aggregate_across_files input_path: test_template_path(template_name)
+      expect(actual_aggregate_results[0][:file_results][:failure_count]).to eq 0
+    end
   end
 end
