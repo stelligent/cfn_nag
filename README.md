@@ -6,7 +6,7 @@
 # Background 
 
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
-Roughly speaking it will look for:
+Roughly speaking, it will look for:
 
 * IAM rules that are too permissive (wildcards)
 * Security group rules that are too permissive (wildcards)
@@ -21,14 +21,14 @@ For more background on the tool, please see:
 # Installation
 
 ## Gem Install 
-Presuming Ruby >= 2.5.x is installed, installation is just a matter of `
+Presuming Ruby >= 2.5.x is installed, installation is just a matter of:
 
 ```bash
 gem install cfn-nag
 ```
 
 ## Brew Install
-On MacOS or Linux you can alternatively install with brew
+On MacOS or Linux you can alternatively install with brew:
 
 ```bash
 brew install ruby brew-gem
@@ -47,8 +47,7 @@ Pretty simple to execute:
 cfn_nag_scan --input-path <path to cloudformation json>
 ```
 
-The path can be a directory or a particular template.  If it is a directory, all \*.json, \*.template, \*.yml and \*.yaml files underneath
-there recursively will be processed.
+The path can be a directory or a particular template.  If it is a directory, all `.json,` `.template`, `.yml` and `.yaml` files will be processed, including recursing into subdirectories.
 
 The default output format is free-form text, but json output can be selected with the `--output-format json` flag.
 
@@ -56,7 +55,7 @@ Optionally, a `--debug` flag will dump information about the internals of rule l
 
 Run with `--help` for a full listing of supported switches.
 
-To see a list of all the rules the cfn-nag currently supports, there is a command-line utility that will dump them to stdout:
+To see a list of all the rules cfn-nag currently supports, there is a command-line utility that will dump them to stdout:
 
 ```bash
 cfn_nag_rules
@@ -69,7 +68,7 @@ cfn_nag_rules
 * A warning will return a zero/success exit code.
 * A fatal violation stops analysis (per file) because the template is malformed in some severe way
 
-## Docker Container
+## Running in Docker
 
 A Dockerfile is provided for convenience. It is published on DockerHub as `stelligent/cfn_nag`.
 
@@ -81,7 +80,7 @@ You can also build it locally.
 docker build -t cfn_nag .
 ```
 
-You can setup a File Share in Docker to share a folder that contains templates. After the share is setup you can call cfn_nag in the container. This example uses the test templates used in unit testing cfn_nag.
+You can mount a local directory containing templates into the Docker container and then call cfn_nag in the container. This example uses the test templates used in unit testing cfn_nag:
 
 ```bash
 $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_encryption.json
@@ -112,10 +111,10 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/
 ### Profiles
 
 cfn-nag supports the notion of a "profile" which is effectively a whitelist of rules to apply.  The profile is a text file
-that that must contain a rule identifier per line.  When specified via the `--profile-path` command line argument,
+that must contain a rule identifier per line.  When specified via the `--profile-path` command line argument,
 cfn-nag will ONLY return violations from those particular rules.
 
-The reasoning behind a "profile" is that different developer might care about different rules.  For example, an
+The motivation behind creating a "profile" is that different developers might care about different rules.  For example, an
 "infrastructure_developer" might care about IAM rules, while an "app_developer" might not even be able to create
 IAM resources and therefore not care about those rules.
 
@@ -135,10 +134,10 @@ The blacklist is basically the opposite of the profile: it's a list of rules to 
 `--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
 in the file.
 
-The blacklist will trump the profile in case a rule is specified in both.
+In case a rule is specified in both, the blacklist will take priority over the profile, and the rule will not be applieed.
 
-The format follows.  The only two salient fields are `RulesToSuppres` and the `id` per item.  The `reason` won't
-be interpreted by cfn-nag, but it is recommended to justify why the rule should never be applied.
+The format is as follows.  The only two salient fields are `RulesToSuppress` and the `id` per item.  The `reason` won't
+be interpreted by cfn-nag, but it is recommended to justify and document why the rule should never be applied.
 
 ```yaml
 ---
@@ -246,8 +245,8 @@ be flagged if the cidr is parameterized and the 0.0.0.0/0 is passed in at deploy
 To allow for checking parameter values, a user can specify the parameter values in a JSON file passed on the command line
 to both `cfn_nag` and `cfn_nag_scan` with the `--parameter-values-path=<filename/uri>` flag.
 
-The format of the JSON is a single key "Parameters" whose value is a dictionary with each key/value pair mapping to
-the Parameters like such:
+The format of the JSON is a single key, "Parameters", whose value is a dictionary with each key/value pair mapping to
+the Parameters:
 
 ```json
 {
@@ -257,7 +256,7 @@ the Parameters like such:
 }
 ```
 
-will fill in "0.0.0.0/0" to the following Parameter:
+This will provide "0.0.0.0/0" to the following Parameter:
 
 ```yaml
 Parameters:
@@ -265,10 +264,10 @@ Parameters:
     Type: String
 ```
 
-_BEWARE_ that if there are extra parameters in the JSON they are quietly ignored (to allow `cfn_nag_scan` to apply
-the same JSON across all the templates)
+_BEWARE_ that if there are extra parameters in the JSON, they are quietly ignored (to allow `cfn_nag_scan` to apply
+the same JSON across all the templates).
 
-If the JSON is malformed or doesn't meet the above specification, then parsing will fail with FATAL violation.
+If the JSON is malformed or doesn't meet the above specification, then parsing will fail with a FATAL violation.
 
 # Controlling the Behavior of Conditions
 
@@ -299,7 +298,7 @@ Resource1:
 To provide some control over this behavior, a user can specify the condition values in a JSON file passed on the command line
 to both `cfn_nag` and `cfn_nag_scan` with the `--condition-values-path=<filename/uri>` flag.
 
-The format of the JSON is a a dictionary with each key/value pair mapping to the Conditions like such:
+The format of the JSON is a a dictionary with each key/value pair mapping to the Conditions:
 
 ```json
 {
@@ -311,7 +310,7 @@ The format of the JSON is a a dictionary with each key/value pair mapping to the
 # Distribution of Custom Rules
 
 The release of 0.5.x includes some major changes in how custom rules (can) be distributed and loaded.  Before this release,
-there were two places where rules were loaded from: the `lib/cfn-nag/custom_rules` directory within the core cfn_nag gem
+there were two places where rules were loaded from: the `lib/cfn-nag/custom_rules` directory within the core cfn_nag gem,
 and the custom-rule-directory specified on the command line.
 
 There are two use cases that forced a redesign of how/where custom rules are loaded.  The rule loading mechanism has been
@@ -320,8 +319,8 @@ generalized such that custom rule repositories can be used to discover rules.
 1. A bunch of "rule files" sitting around on a filesystem isn't great from a traditional software development perspective.
 There is no version or traceability on these files, so 0.5.x introduces the notion of a "cfn_nag rule gem".  A developer
 can develop custom rules as part of a separate gem, version it and install it... and those rules are referenced from cfn_nag
-as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hippa-rules", any \*.rb under 
-lib/cfn-nag-hippa-rules will be loaded.  Any custom rules should derive from CfnNag::BaseRule in cfn-nag/base_rule (*not* cfn-nag/custom-rules/base).  If the rule must derive from something else, defining a method `cfn_nag_rule?` that returns true will also cause it to be loaded as a rule.
+as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hipaa-rules", any \*.rb under 
+lib/cfn-nag-hipaa-rules will be loaded.  Any custom rules should derive from CfnNag::BaseRule in cfn-nag/base_rule (*not* cfn-nag/custom-rules/base).  If the rule must derive from something else, defining a method `cfn_nag_rule?` that returns true will also cause it to be loaded as a rule.
 
 2. When cfn_nag is running in an AWS Lambda - there isn't really a filesystem (besides /tmp) in the traditional sense.
 Therefore, only core rules are usable from the Lambda.  To support custom rules, cfn_nag supports discovering rules
@@ -329,7 +328,7 @@ from an S3 bucket instead of the filesystem.
 
 Everything you've likely seen about how to develop custom rules in Ruby still holds true.
 
-To discover rules from an S3 bucket, capture a file s3.yml with this content:
+To discover rules from an S3 bucket, create a file `s3.yml` with this content:
 
 ```yaml
 ---
@@ -361,7 +360,7 @@ to load rules from DynamoDb, relational databases, or other web services.
 
 To author new rules for your own use and/or community contribution, see [Custom Rule Development](custom_rule_development.md) for details.
 
-A screencast demonstrating soup to nuts TDD custom rule development is available here:
+A screencast demonstrating soup-to-nuts TDD custom rule development is available here:
 
 <https://www.youtube.com/watch?v=JRZct0naFd4&t=1601s>
 
