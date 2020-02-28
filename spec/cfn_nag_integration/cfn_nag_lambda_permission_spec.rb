@@ -71,7 +71,11 @@ describe CfnNag do
     it 'parses properly' do
       template_name = 'yaml/sam/serverless_rest_api_with_basepathmapping.yml'
       actual_aggregate_results = @cfn_nag.audit_aggregate_across_files input_path: test_template_path(template_name)
-      expect(actual_aggregate_results[0][:file_results][:failure_count]).to eq 0
+      expect(actual_aggregate_results[0][:file_results][:failure_count]).to eq 2
+      violations = actual_aggregate_results[0][:file_results][:violations].select do |violation|
+        violation.type == 'FAIL'
+      end
+      expect(violations.map(&:id)).to eq %w[F38 F3]
     end
   end
 end
