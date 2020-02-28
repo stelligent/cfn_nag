@@ -6,7 +6,7 @@ require_relative 'base'
 
 class ApiGatewayRestApiUsagePlanRule < BaseRule
   def rule_text
-    'All AWS::ApiGateway::RestApi resources should be associated with an AWS::ApiGateway::UsagePlan. '
+    'AWS::ApiGateway::RestApi resources should be associated with an AWS::ApiGateway::UsagePlan. '
   end
 
   def rule_type

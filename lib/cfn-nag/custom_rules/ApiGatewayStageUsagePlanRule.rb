@@ -6,7 +6,7 @@ require_relative 'base'
 
 class ApiGatewayStageUsagePlanRule < BaseRule
   def rule_text
-    'All AWS::ApiGateway::Stage resources should be associated with an AWS::ApiGateway::UsagePlan. '
+    'AWS::ApiGateway::Stage resources should be associated with an AWS::ApiGateway::UsagePlan. '
   end
 
   def rule_type

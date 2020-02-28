@@ -1,0 +1,57 @@
+---
+Resources:
+  ApiGatewayUsagePlan1:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: !Ref ApiGatewayV2Api1
+          Stage: test_api_stage
+        - ApiId: !Ref ApiGatewayV2Api2
+          Stage: test_api_stage
+      UsagePlanName: testusageplan1
+
+  ApiGatewayUsagePlan2:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: !Ref ApiGatewayV2Api3
+          Stage: test_api_stage
+        - ApiId: !Ref ApiGatewayV2Api4
+          Stage: test_api_stage
+      UsagePlanName: testusageplan1
+
+  ApiGatewayV2Api1:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_1
+      ProtocolType: WEBSOCKET
+
+  ApiGatewayV2Api2:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_2
+      ProtocolType: WEBSOCKET
+
+  ApiGatewayV2Api3:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_3
+      ProtocolType: WEBSOCKET
+
+  ApiGatewayV2Api4:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_4
+      ProtocolType: WEBSOCKET
+
+  ApiGatewayV2Api5:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_3
+      ProtocolType: HTTP
+
+  ApiGatewayV2Api6:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: test_api_4
+      ProtocolType: HTTP
