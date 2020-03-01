@@ -17,12 +17,12 @@ class VpcHasFlowLogRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_policies = cfn_model.resources_by_type('AWS::EC2::VPC')
+    violating_vpcs = cfn_model.resources_by_type('AWS::EC2::VPC')
                                   .select do |vpc|
       flowlog_for_vpc(cfn_model, vpc).nil?
     end
 
-    violating_policies.map(&:logical_resource_id)
+    violating_vpcs.map(&:logical_resource_id)
   end
 
   def flowlog_for_vpc(cfn_model, vpc)
