@@ -13,7 +13,7 @@ class VpcHasFlowLogRule < BaseRule
   end
 
   def rule_id
-    'W58'
+    'W60'
   end
 
   def audit_impl(cfn_model)
