@@ -1,29 +1,28 @@
 #!/bin/bash -ex
 set -o pipefail
-export minor_version="0.5"
 
-set +x
-if [[ -z ${rubygems_api_key} ]];
-then
-  echo rubygems_api_key must be set in the environment
-  exit 1
-fi
-if [[ -z ${docker_user} ]];
-then
-  echo docker_user must be set in the environment
-  exit 1
-fi
-if [[ -z ${docker_password} ]];
-then
-  echo docker_password must be set in the environment
-  exit 1
-fi
-if [[ -z ${docker_org} ]];
-then
-  echo $docker_org must be set in the environment
-  exit 1
-fi
-set -x
+# set +x
+# if [[ -z ${rubygems_api_key} ]];
+# then
+#   echo rubygems_api_key must be set in the environment
+#   exit 1
+# fi
+# if [[ -z ${docker_user} ]];
+# then
+#   echo docker_user must be set in the environment
+#   exit 1
+# fi
+# if [[ -z ${docker_password} ]];
+# then
+#   echo docker_password must be set in the environment
+#   exit 1
+# fi
+# if [[ -z ${docker_org} ]];
+# then
+#   echo $docker_org must be set in the environment
+#   exit 1
+# fi
+# set -x
 
 git config --global user.email "build@build.com"
 git config --global user.name "build"
@@ -35,17 +34,41 @@ echo :rubygems_api_key: ${rubygems_api_key} > ~/.gem/credentials
 set -ex
 chmod 0600 ~/.gem/credentials
 
-current_version=$(ruby -e 'tags=`git tag -l v#{ENV["minor_version"]}.*`' \
-                       -e 'p tags.lines.map { |tag| tag.sub(/v#{ENV["minor_version"]}./, "").chomp.to_i }.max')
+# git describe returns the latest tag
+current_tag=$(git describe)
+echo "current_tag=$current_tag"
+
+# Check if '-' in git describe. If so, we
+# have advanced past the latest tag (and will
+# need to compute new version)
+tagged_commit=1
+if echo $current_tag | grep -q '-'; then
+  tagged_commit=0
+fi
+echo "tagged_commit=$tagged_commit"
+
+# strip off initial 'v' and everything after digits and .
+current_version=$(git describe | sed 's/^\(v\)\([0-9.]*\).*$/\2/')
+# strip .### from end to get major.minor version
+current_minor=$(echo $current_version | sed 's/\.\([0-9]*\)$//')
+# get third dotted field for patch version
+current_patch=$(echo $current_version | cut -f 3 -d . )
+echo "current_version=$current_version"
+git tag
 
 if [[ ${current_version} == nil ]];
 then
-  new_version="${minor_version}.0"
+  # No version determined from tag, assume 0.0.0
+  GEM_VERSION='0.0.0'
+elif [ $tagged_commit = 1 ]; then
+  # Current commit was tagged with version, use it
+  GEM_VERSION=$current_version
 else
-  new_version="${minor_version}.$((current_version+1))"
+  # Current commit was goes past a tag, increment patch
+  GEM_VERSION="$current_minor."$((current_patch + 1))
 fi
 
-sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
+export GEM_VERSION
 
 #on circle ci - head is ambiguous for reasons that i don't grok
 #we haven't made the new tag and we can't if we are going to annotate
@@ -58,27 +81,28 @@ if [[ ${current_version} == nil ]];
 then
   log_rev_range=${head}
 else
-  log_rev_range="v${minor_version}.${current_version}..${head}"
+  log_rev_range="v${current_version}..${head}"
 fi
 
-git log ${log_rev_range} --pretty="format:%s"
-issues=$(git log ${log_rev_range} --pretty="format:%s" | \
-         egrep "${issue_prefix}" | \
-         cut -d " " -f 1 | sort | uniq)
+export issues=""$(git log ${log_rev_range} --oneline | awk '{print $2}' | grep "${issue_prefix}" | uniq)
 
-git tag -a v${new_version} -m "${new_version}" -m "Issues with commits, not necessarily closed: ${issues}"
+# if [ $tagged_commit = 0 ]; then
+#   git tag -a "v${GEM_VERSION}" -m "${GEM_VERSION}" -m "Issues with commits, not necessarily closed: ${issues}"
+#   git push --tags
+# fi
 
-git push --tags
+# # gemspec respects GEM_VERSION envvar
+# gem build cfn-nag.gemspec
+# gem push cfn-nag-${GEM_VERSION}.gem
+#
+# # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
+# docker build -t $docker_org/cfn_nag:${GEM_VERSION} .
+# set +x
+# echo $docker_password | docker login -u $docker_user --password-stdin
+# set -x
+# docker tag $docker_org/cfn_nag:${GEM_VERSION} $docker_org/cfn_nag:latest
+# docker push $docker_org/cfn_nag:${GEM_VERSION}
+# docker push $docker_org/cfn_nag:latest
 
-gem build cfn-nag.gemspec
-gem push cfn-nag-${new_version}.gem
-
-# publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-docker build -t $docker_org/cfn_nag:${new_version} .
-set +x
-echo $docker_password | docker login -u $docker_user --password-stdin
-set -x
-docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
-docker push $docker_org/cfn_nag:${new_version}
-docker push $docker_org/cfn_nag:latest
-
+echo "::set-output name=cfn_nag_version::${GEM_VERSION}"
+echo "::set-output name=gem_exec_path::$(gem environment | grep EXECUTABLE.DIRECTORY | sed 's/.*: //g')"
