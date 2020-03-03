@@ -13,7 +13,7 @@ class EMRClusterSecurityConfigurationAttachedRule < BaseRule
   end
 
   def rule_id
-    'W60'
+    'W63'
   end
 
   def audit_impl(cfn_model)
