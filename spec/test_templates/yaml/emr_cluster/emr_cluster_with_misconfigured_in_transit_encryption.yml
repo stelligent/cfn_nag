@@ -1,18 +1,12 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Creates an EMR cluster with properly configured encryption.
+Description: Creates EMR cluster with misconfigured in transit encryption.
 
 Parameters:
-  CertZipLocation:
-    Type: String
-    Description: S3 location of the encryption certificates.
   JobFlowRoleName:
     Type: String
     Description: Name of role to use for JobFlowRole.
     Default: EMR_EC2_DefaultRole
-  KMSKeyArn:
-    Type: String
-    Description: ARN of KMS key to use with encryption
   ServiceRoleName:
     Type: String
     Description: Name of EMR service role.
@@ -22,7 +16,7 @@ Parameters:
     Description: Subnet ID where the cluster should be launched.
 
 Resources:
-  EMRClusterWithProperlyConfiguredEncryption:
+  EMRClusterWithMisconfiguredInTransitEncryption:
     Type: AWS::EMR::Cluster
     Properties:
       Instances:
@@ -38,11 +32,11 @@ Resources:
           Name: CoreInstanceGroup
         Ec2SubnetId: !Ref SubnetId
       JobFlowRole: !Ref JobFlowRoleName
-      Name: EMRClusterWithDisabledAtRestEncryption
+      Name: EMRClusterWithMisconfiguredInTransitEncryption
       ReleaseLabel: emr-5.29.0
-      SecurityConfiguration: !Ref EMRGoodSecurityConfig
+      SecurityConfiguration: !Ref EMRSecurityConfigWithMisconfiguredInTransitEncryption
       ServiceRole: !Ref ServiceRoleName
-  EMRGoodSecurityConfig:
+  EMRSecurityConfigWithMisconfiguredInTransitEncryption:
     Type: AWS::EMR::SecurityConfiguration
     Properties:
       SecurityConfiguration:
@@ -52,10 +46,5 @@ Resources:
           AtRestEncryptionConfiguration:
             S3EncryptionConfiguration:
               EncryptionMode: SSE-S3
-            LocalDiskEncryptionConfiguration:
-              EncryptionKeyProviderType: AwsKms
-              AwsKmsKey: !Ref KMSKeyArn
           InTransitEncryptionConfiguration:
-            TLSCertificateConfiguration:
-              CertificateProviderType: PEM
-              S3Object: !Ref CertZipLocation
+            WrongKey: true

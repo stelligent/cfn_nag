@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Creates EMR clusters with misconfigured encryption.
+Description: Creates EMR cluster with misconfigured at rest encryption.
 
 Parameters:
   JobFlowRoleName:
@@ -41,33 +41,10 @@ Resources:
     Properties:
       SecurityConfiguration:
         EncryptionConfiguration:
-          EnableAtRestEncryption: false
-          EnableInTransitEncryption: true
-
-  EMRClusterWithMisconfiguredInTransitEncryption:
-    Type: AWS::EMR::Cluster
-    Properties:
-      Instances:
-        MasterInstanceGroup:
-          InstanceCount: 1
-          InstanceType: m1.medium
-          Market: ON_DEMAND
-          Name: MasterInstanceGroup
-        CoreInstanceGroup:
-          InstanceCount: 1
-          InstanceType: m1.medium
-          Market: ON_DEMAND
-          Name: CoreInstanceGroup
-        Ec2SubnetId: !Ref SubnetId
-      JobFlowRole: !Ref JobFlowRoleName
-      Name: EMRClusterWithMisconfiguredInTransitEncryption
-      ReleaseLabel: emr-5.29.0
-      SecurityConfiguration: !Ref EMRSecurityConfigWithMisconfiguredInTransitEncryption
-      ServiceRole: !Ref ServiceRoleName
-  EMRSecurityConfigWithMisconfiguredInTransitEncryption:
-    Type: AWS::EMR::SecurityConfiguration
-    Properties:
-      SecurityConfiguration:
-        EncryptionConfiguration:
           EnableAtRestEncryption: true
-          EnableInTransitEncryption: false
+          EnableInTransitEncryption: true
+          AtRestEncryptionConfiguration:
+            WrongKey: true
+          InTransitEncryptionConfiguration:
+            TLSCertificateConfiguration:
+              CertificateProviderType: PEM

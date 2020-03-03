@@ -35,8 +35,7 @@ class EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule < BaseRule
     # Either encryption type disabled
     return true unless encryption_config['EnableAtRestEncryption'] && encryption_config['EnableInTransitEncryption']
 
-    bad_at_rest_encryption?(encryption_config)
-    bad_in_transit_encryption?(encryption_config)
+    bad_at_rest_encryption?(encryption_config) || bad_in_transit_encryption?(encryption_config)
   end
 
   def bad_at_rest_encryption?(config)
@@ -46,9 +45,9 @@ class EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule < BaseRule
     # AtRest encryptions misconfigured
     return true unless \
       (config['AtRestEncryptionConfiguration'].key?('LocalDiskEncryptionConfiguration') &&
-       config['AtRestEncryptionConfiguration']['LocalDiskEncryptionConfiguration'].is_a?(Hash)) ||
+       config['AtRestEncryptionConfiguration']['LocalDiskEncryptionConfiguration'].key?('EncryptionKeyProviderType')) ||
       (config['AtRestEncryptionConfiguration'].key?('S3EncryptionConfiguration') &&
-       config['AtRestEncryptionConfiguration']['S3EncryptionConfiguration'].is_a?(Hash))
+       config['AtRestEncryptionConfiguration']['S3EncryptionConfiguration'].key?('EncryptionMode'))
 
     false
   end
@@ -58,7 +57,9 @@ class EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule < BaseRule
     return true unless config.key?('InTransitEncryptionConfiguration')
 
     # InTransit encryptions misconfigured
-    return true unless config['InTransitEncryptionConfiguration'].key?('CertificateProviderType')
+    return true unless \
+      config['InTransitEncryptionConfiguration'].key?('TLSCertificateConfiguration') &&
+      config['InTransitEncryptionConfiguration']['TLSCertificateConfiguration'].key?('CertificateProviderType')
 
     false
   end

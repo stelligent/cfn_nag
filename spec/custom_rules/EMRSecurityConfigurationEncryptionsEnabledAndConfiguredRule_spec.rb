@@ -25,15 +25,21 @@ describe EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule do
       end
     end
 
-    context 'when both at rest and in transit encryptions are enabled but misconfigured' do
+    context 'when at rest encryption is enabled but misconfigured' do
       it 'returns an offending logical resource id' do
-        cfn_model = CfnParser.new.parse read_test_template('yaml/emr_cluster/emr_cluster_with_misconfigured_encryption.yml')
+        cfn_model = CfnParser.new.parse read_test_template('yaml/emr_cluster/emr_cluster_with_misconfigured_at_rest_encryption.yml')
         actual_logical_resource_ids = EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule.new.audit_impl cfn_model
 
-        expect(actual_logical_resource_ids).to eq %w[
-          EMRSecurityConfigWithMisconfiguredAtRestEncryption
-          EMRSecurityConfigWithMisconfiguredInTransitEncryption
-        ]
+        expect(actual_logical_resource_ids).to eq %w[EMRSecurityConfigWithMisconfiguredAtRestEncryption]
+      end
+    end
+
+    context 'when in transit encryption is enabled but misconfigured' do
+      it 'returns an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('yaml/emr_cluster/emr_cluster_with_misconfigured_in_transit_encryption.yml')
+        actual_logical_resource_ids = EMRSecurityConfigurationEncryptionsEnabledAndConfiguredRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq %w[EMRSecurityConfigWithMisconfiguredInTransitEncryption]
       end
     end
   end

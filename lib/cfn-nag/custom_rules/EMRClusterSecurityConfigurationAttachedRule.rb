@@ -18,12 +18,8 @@ class EMRClusterSecurityConfigurationAttachedRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_emr_clusters = cfn_model.resources_by_type('AWS::EMR::Cluster').select do |cluster|
-      # Warn if SecurityConfiguration property is not set...
-      next cluster unless cluster.securityConfiguration
-
-      # ...or does not exist in this template
-      security_config_object = cfn_model.resource_by_ref(cluster.securityConfiguration, 'Arn')
-      security_config_object.nil?
+      # Warn if SecurityConfiguration property is not set or does not exist in this template
+      cluster.securityConfiguration.nil? || cfn_model.resource_by_ref(cluster.securityConfiguration, 'Arn').nil?
     end
 
     violating_emr_clusters.map(&:logical_resource_id)
