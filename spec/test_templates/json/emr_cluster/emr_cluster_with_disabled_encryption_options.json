@@ -1,0 +1,110 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Creates EMR clusters with disabled encryption at rest or in transit.",
+    "Parameters": {
+        "JobFlowRoleName": {
+            "Type": "String",
+            "Description": "Name of role to use for JobFlowRole.",
+            "Default": "EMR_EC2_DefaultRole"
+        },
+        "ServiceRoleName": {
+            "Type": "String",
+            "Description": "Name of EMR service role.",
+            "Default": "EMR_DefaultRole"
+        },
+        "SubnetId": {
+            "Type": "AWS::EC2::Subnet::Id",
+            "Description": "Subnet ID where the cluster should be launched."
+        }
+    },
+    "Resources": {
+        "EMRClusterWithDisabledAtRestEncryption": {
+            "Type": "AWS::EMR::Cluster",
+            "Properties": {
+                "Instances": {
+                    "MasterInstanceGroup": {
+                        "InstanceCount": 1,
+                        "InstanceType": "m1.medium",
+                        "Market": "ON_DEMAND",
+                        "Name": "MasterInstanceGroup"
+                    },
+                    "CoreInstanceGroup": {
+                        "InstanceCount": 1,
+                        "InstanceType": "m1.medium",
+                        "Market": "ON_DEMAND",
+                        "Name": "CoreInstanceGroup"
+                    },
+                    "Ec2SubnetId": {
+                        "Ref": "SubnetId"
+                    }
+                },
+                "JobFlowRole": {
+                    "Ref": "JobFlowRoleName"
+                },
+                "Name": "EMRClusterWithDisabledAtRestEncryption",
+                "ReleaseLabel": "emr-5.29.0",
+                "SecurityConfiguration": {
+                    "Ref": "EMRSecurityConfigWithDisabledAtRestEncryption"
+                },
+                "ServiceRole": {
+                    "Ref": "ServiceRoleName"
+                }
+            }
+        },
+        "EMRSecurityConfigWithDisabledAtRestEncryption": {
+            "Type": "AWS::EMR::SecurityConfiguration",
+            "Properties": {
+                "SecurityConfiguration": {
+                    "EncryptionConfiguration": {
+                        "EnableAtRestEncryption": false,
+                        "EnableInTransitEncryption": true
+                    }
+                }
+            }
+        },
+        "EMRClusterWithDisabledInTransitEncryption": {
+            "Type": "AWS::EMR::Cluster",
+            "Properties": {
+                "Instances": {
+                    "MasterInstanceGroup": {
+                        "InstanceCount": 1,
+                        "InstanceType": "m1.medium",
+                        "Market": "ON_DEMAND",
+                        "Name": "MasterInstanceGroup"
+                    },
+                    "CoreInstanceGroup": {
+                        "InstanceCount": 1,
+                        "InstanceType": "m1.medium",
+                        "Market": "ON_DEMAND",
+                        "Name": "CoreInstanceGroup"
+                    },
+                    "Ec2SubnetId": {
+                        "Ref": "SubnetId"
+                    }
+                },
+                "JobFlowRole": {
+                    "Ref": "JobFlowRoleName"
+                },
+                "Name": "EMRClusterWithDisabledInTransitEncryption",
+                "ReleaseLabel": "emr-5.29.0",
+                "SecurityConfiguration": {
+                    "Ref": "EMRSecurityConfigWithDisabledInTransitEncryption"
+                },
+                "ServiceRole": {
+                    "Ref": "ServiceRoleName"
+                }
+            }
+        },
+        "EMRSecurityConfigWithDisabledInTransitEncryption": {
+            "Type": "AWS::EMR::SecurityConfiguration",
+            "Properties": {
+                "SecurityConfiguration": {
+                    "EncryptionConfiguration": {
+                        "EnableAtRestEncryption": true,
+                        "EnableInTransitEncryption": false
+                    }
+                }
+            }
+        }
+    }
+}
