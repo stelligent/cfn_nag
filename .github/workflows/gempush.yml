@@ -5,7 +5,7 @@ on:
     branches:
       - master
 env:
-  docker_org: stelligent
+  docker_org: pshelby
 
 jobs:
   commit:
@@ -57,10 +57,6 @@ jobs:
       - run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           git fetch --prune --unshallow
-      - name: Set up Ruby 2.5
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.5.x
       - name: Publish to RubyGems and DockerHub
         id: publish
         run: bash ./scripts/publish.sh
@@ -68,39 +64,48 @@ jobs:
           rubygems_api_key: ${{secrets.rubygems_api_key}}
           docker_user: ${{secrets.docker_user}}
           docker_password: ${{secrets.docker_password}}
-      - name: Create binary artifact
+      # - name: Create binary artifact
+      #   run: |
+      #     gem install cfn-nag
+      #     gem list
+      #     echo $GITHUB_REF
+      #     cd ${{ steps.publish.outputs.gem_exec_path }}
+      #     zip cfn_nag cfn_nag cfn_nag_rules cfn_nag_scan
+      - name: Create release with changelog
+        id: gh_release
+        uses: release-drafter/release-drafter@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          publish: true
+          version: ${{ steps.publish.outputs.cfn_nag_version }}
+      # - name: Upload Release Asset
+      #   id: upload-release-asset
+      #   uses: actions/upload-release-asset@v1.0.1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     # `upload_url` pulls from the CREATE RELEASE step above, referencing its ID to get the outputs object, which includes a `upload_url`.
+      #     # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: ${{ steps.publish.outputs.gem_exec_path }}/cfn_nag.zip
+      #     asset_name: cfn_nag.zip
+      #     asset_content_type: application/zip
+      - name: Trigger cfn_nag for CodePipeline SAR publish
         run: |
-          gem install cfn-nag
-          gem list
-          echo $GITHUB_REF
-          cd ${{ steps.publish.outputs.gem_exec_path }}
-          zip cfn_nag cfn_nag cfn_nag_rules cfn_nag_scan
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.publish.outputs.cfn_nag_version }}
-          release_name: v${{ steps.publish.outputs.cfn_nag_version }}
-          draft: false
-          prerelease: false
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          # `upload_url` pulls from the CREATE RELEASE step above, referencing its ID to get the outputs object, which includes a `upload_url`.
-          # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ steps.publish.outputs.gem_exec_path }}/cfn_nag.zip
-          asset_name: cfn_nag.zip
-          asset_content_type: application/zip
+          curl -s \
+               -XPOST \
+               -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
+               -H "Accept: application/vnd.github.everest-preview+json" \
+               -H "Content-Type: application/json" \
+               https://api.github.com/repos/${{ env.docker_org }}/cfn-nag-pipeline/dispatches \
+               --data '{"event_type": "build_application"}'
       - name: Trigger homebrew-tap repo workflow
         run: |
-          curl -s -XPOST -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
-          -H "Accept: application/vnd.github.everest-preview+json" \
-          -H "Content-Type: application/json" \
-          https://api.github.com/repos/stelligent/homebrew-tap/dispatches \
-          --data '{"event_type": "build_application"}'
+          curl -s \
+               -XPOST \
+               -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
+               -H "Accept: application/vnd.github.everest-preview+json" \
+               -H "Content-Type: application/json" \
+               https://api.github.com/repos/${{ env.docker_org }}/homebrew-tap/dispatches \
+               --data '{"event_type": "build_application"}'
