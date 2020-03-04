@@ -1,0 +1,22 @@
+---
+Resources:
+  ApiGatewayUsagePlan1:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: !Ref ApiGatewayStage1
+      UsagePlanName: testusageplan1
+
+  ApiGatewayUsagePlan2:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: !Ref ApiGatewayStage1
+      UsagePlanName: testusageplan2
+
+  ApiGatewayStage1:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi

@@ -1,0 +1,49 @@
+---
+Parameters:
+  ApiGatewayRestApiTestingParam:
+    Type: String
+    Default: TestingRestApi
+  ApiGatewayRestApiTestingParam2:
+    Type: String
+    Default: TestingRestApi2
+
+Resources:
+  ApiGatewayUsagePlan1:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: testapistage
+        - ApiId: testapi
+          Stage: testapistage
+      UsagePlanName: testusageplan1
+
+  ApiGatewayUsagePlan2:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: testapistage
+        - ApiId: testapi
+          Stage: testapistage
+      UsagePlanName: testusageplan2
+
+  ApiGatewayStage1:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi
+
+  ApiGatewayStage2:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi
+
+  ApiGatewayStage3:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi
+
+  ApiGatewayStage4:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi
