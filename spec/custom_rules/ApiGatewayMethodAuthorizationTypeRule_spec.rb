@@ -57,7 +57,7 @@ describe ApiGatewayMethodAuthorizationTypeRule do
     end
   end
 
-  context "AWS::ApiGateway::Method has AuthorizationType is Nil. " do
+  context "AWS::ApiGateway::Method AuthorizationType is Nil. " do
     it 'Returns offending logical resource ids.' do
       cfn_model = CfnParser.new.parse read_test_template(
                                           'yaml/api_gateway/api_gateway_method_authorization_type_nil_value.yaml'
@@ -65,6 +65,20 @@ describe ApiGatewayMethodAuthorizationTypeRule do
 
       actual_logical_resource_ids = ApiGatewayMethodAuthorizationTypeRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[ApiGatewayMethod1 ApiGatewayMethod2]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context "AWS::ApiGateway::Method AuthorizationType is NONE but has HttpMethod: OPTIONS. " do
+    it 'An empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                          'yaml/api_gateway/api_gateway_method_with_httpmethod_options.yaml'
+                                      ),
+                                      parameter_values_json='[]'
+
+      actual_logical_resource_ids = ApiGatewayMethodAuthorizationTypeRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
