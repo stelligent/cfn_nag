@@ -66,11 +66,33 @@
         "Runtime": "nodejs6.10"
       }
     },
-    "FunctionWithPutLogEventRoleByRef": {
+    "FunctionWithPutLogEventsRoleByRef": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Handler": "index.handler",
-        "Role": {"Ref": "RoleWithPutLogEvent"},
+        "Role": {"Ref": "RoleWithPutLogEvents"},
+        "Code": {
+          "ZipFile": {
+            "Fn::Join": [
+              "",
+              [
+                "var response = require('cfn-response');",
+                "exports.handler = function(event, context) {",
+                "var responseData = {Value: event.ResourceProperties.List};",
+                "responseData.Value.push(event.ResourceProperties.AppendedItem);",
+                "response.send(event, context, response.SUCCESS, responseData);}"
+              ]
+            ]
+          }
+        },
+        "Runtime": "nodejs6.10"
+      }
+    },
+    "FunctionWithCreateLogAndPutLogEventsRoleByRef": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Handler": "index.handler",
+        "Role": {"Ref": "RoleWithWildcardCreateLogAndPutLogEvents"},
         "Code": {
           "ZipFile": {
             "Fn::Join": [
@@ -154,7 +176,7 @@
         ]
       }
     },
-    "RoleWithPutLogEvent": {
+    "RoleWithPutLogEvents": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -178,7 +200,7 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvent"],
+                  "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"],
                   "Resource": "*"
                 }
               ]
@@ -187,7 +209,7 @@
         ]
       }
     },
-    "RoleWithWildcardCreateLogAndPutLogEvent": {
+    "RoleWithWildcardCreateLogAndPutLogEvents": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -211,7 +233,7 @@
               "Statement": [
                 {
                   "Effect": "Allow",
-                  "Action": ["logs:CreateLog*", "logs:PutLogEvent"],
+                  "Action": ["logs:CreateLog*", "logs:PutLogEvents"],
                   "Resource": "*"
                 }
               ]

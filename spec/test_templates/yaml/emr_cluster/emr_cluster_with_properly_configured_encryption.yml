@@ -1,0 +1,61 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Creates an EMR cluster with properly configured encryption.
+
+Parameters:
+  CertZipLocation:
+    Type: String
+    Description: S3 location of the encryption certificates.
+  JobFlowRoleName:
+    Type: String
+    Description: Name of role to use for JobFlowRole.
+    Default: EMR_EC2_DefaultRole
+  KMSKeyArn:
+    Type: String
+    Description: ARN of KMS key to use with encryption
+  ServiceRoleName:
+    Type: String
+    Description: Name of EMR service role.
+    Default: EMR_DefaultRole
+  SubnetId:
+    Type: AWS::EC2::Subnet::Id
+    Description: Subnet ID where the cluster should be launched.
+
+Resources:
+  EMRClusterWithProperlyConfiguredEncryption:
+    Type: AWS::EMR::Cluster
+    Properties:
+      Instances:
+        MasterInstanceGroup:
+          InstanceCount: 1
+          InstanceType: m1.medium
+          Market: ON_DEMAND
+          Name: MasterInstanceGroup
+        CoreInstanceGroup:
+          InstanceCount: 1
+          InstanceType: m1.medium
+          Market: ON_DEMAND
+          Name: CoreInstanceGroup
+        Ec2SubnetId: !Ref SubnetId
+      JobFlowRole: !Ref JobFlowRoleName
+      Name: EMRClusterWithDisabledAtRestEncryption
+      ReleaseLabel: emr-5.29.0
+      SecurityConfiguration: !Ref EMRGoodSecurityConfig
+      ServiceRole: !Ref ServiceRoleName
+  EMRGoodSecurityConfig:
+    Type: AWS::EMR::SecurityConfiguration
+    Properties:
+      SecurityConfiguration:
+        EncryptionConfiguration:
+          EnableAtRestEncryption: true
+          EnableInTransitEncryption: true
+          AtRestEncryptionConfiguration:
+            S3EncryptionConfiguration:
+              EncryptionMode: SSE-S3
+            LocalDiskEncryptionConfiguration:
+              EncryptionKeyProviderType: AwsKms
+              AwsKmsKey: !Ref KMSKeyArn
+          InTransitEncryptionConfiguration:
+            TLSCertificateConfiguration:
+              CertificateProviderType: PEM
+              S3Object: !Ref CertZipLocation
