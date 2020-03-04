@@ -4,6 +4,10 @@ require 'cfn-nag/cfn_nag_logging'
 require 'cfn-nag/cfn_nag_executor'
 
 describe CfnNagExecutor do
+  # Method of suppressing stderr and stdout was found on StackOverflow here:
+  # https://stackoverflow.com/a/22777806
+  original_stderr = nil
+  original_stdout = nil
 
   before(:all) do
     CfnNagLogging.configure_logging(debug: false)
@@ -17,6 +21,18 @@ describe CfnNagExecutor do
       output_format: 'json',
       rule_repository: []
     }
+
+    original_stderr = $stderr  # capture previous value of $stderr
+    original_stdout = $stdout  # capture previous value of $stdout
+    $stderr = StringIO.new     # assign a string buffer to $stderr
+    $stdout = StringIO.new     # assign a string buffer to $stdout
+    # $stderr.string             # return the contents of the string buffer if needed
+    # $stdout.string             # return the contents of the string buffer if needed
+  end
+
+  after(:all) do
+    $stderr = original_stderr  # restore $stderr to its previous value
+    $stdout = original_stdout  # restore $stdout to its previous value
   end
 
   context 'single file cfn_nag with fail on warnings' do

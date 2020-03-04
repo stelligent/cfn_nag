@@ -60,7 +60,7 @@ describe ProfileLoader do
       it 'should raise an error' do
         expect do
           ProfileLoader.new(@rule_registry).load profile_definition: 'FAKEID1'
-        end.to raise_error # 'FAKEID is not a legal rule identifier'
+        end.to raise_error RuntimeError, /FAKEID1 is not a legal rule identifier/
       end
     end
 
