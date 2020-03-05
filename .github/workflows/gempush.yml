@@ -5,7 +5,7 @@ on:
     branches:
       - master
 env:
-  docker_org: pshelby
+  docker_org: stelligent
 
 jobs:
   commit:
@@ -64,13 +64,6 @@ jobs:
           rubygems_api_key: ${{secrets.rubygems_api_key}}
           docker_user: ${{secrets.docker_user}}
           docker_password: ${{secrets.docker_password}}
-      # - name: Create binary artifact
-      #   run: |
-      #     gem install cfn-nag
-      #     gem list
-      #     echo $GITHUB_REF
-      #     cd ${{ steps.publish.outputs.gem_exec_path }}
-      #     zip cfn_nag cfn_nag cfn_nag_rules cfn_nag_scan
       - name: Create release with changelog
         id: gh_release
         uses: release-drafter/release-drafter@master
@@ -79,18 +72,6 @@ jobs:
         with:
           publish: true
           version: ${{ steps.publish.outputs.cfn_nag_version }}
-      # - name: Upload Release Asset
-      #   id: upload-release-asset
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     # `upload_url` pulls from the CREATE RELEASE step above, referencing its ID to get the outputs object, which includes a `upload_url`.
-      #     # See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
-      #     asset_path: ${{ steps.publish.outputs.gem_exec_path }}/cfn_nag.zip
-      #     asset_name: cfn_nag.zip
-      #     asset_content_type: application/zip
       - name: Trigger cfn_nag for CodePipeline SAR publish
         run: |
           curl -s \

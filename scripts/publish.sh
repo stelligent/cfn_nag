@@ -2,28 +2,28 @@
 set -o pipefail
 export minor_version="0.5"
 
-# set +x
-# if [[ -z ${rubygems_api_key} ]];
-# then
-#   echo rubygems_api_key must be set in the environment
-#   exit 1
-# fi
-# if [[ -z ${docker_user} ]];
-# then
-#   echo docker_user must be set in the environment
-#   exit 1
-# fi
-# if [[ -z ${docker_password} ]];
-# then
-#   echo docker_password must be set in the environment
-#   exit 1
-# fi
-# if [[ -z ${docker_org} ]];
-# then
-#   echo $docker_org must be set in the environment
-#   exit 1
-# fi
-# set -x
+set +x
+if [[ -z ${rubygems_api_key} ]];
+then
+  echo rubygems_api_key must be set in the environment
+  exit 1
+fi
+if [[ -z ${docker_user} ]];
+then
+  echo docker_user must be set in the environment
+  exit 1
+fi
+if [[ -z ${docker_password} ]];
+then
+  echo docker_password must be set in the environment
+  exit 1
+fi
+if [[ -z ${docker_org} ]];
+then
+  echo $docker_org must be set in the environment
+  exit 1
+fi
+set -x
 
 git config --global user.email "build@build.com"
 git config --global user.name "build"
@@ -47,17 +47,17 @@ fi
 
 sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 
-# # publish rubygem to rubygems.org, https://rubygems.org/gems/cfn-nag
-# gem build cfn-nag.gemspec
-# gem push cfn-nag-${new_version}.gem
-#
-# # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-# docker build -t $docker_org/cfn_nag:${new_version} .
-# set +x
-# echo $docker_password | docker login -u $docker_user --password-stdin
-# set -x
-# docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
-# docker push $docker_org/cfn_nag:${new_version}
-# docker push $docker_org/cfn_nag:latest
+# publish rubygem to rubygems.org, https://rubygems.org/gems/cfn-nag
+gem build cfn-nag.gemspec
+gem push cfn-nag-${new_version}.gem
+
+# publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
+docker build -t $docker_org/cfn_nag:${new_version} .
+set +x
+echo $docker_password | docker login -u $docker_user --password-stdin
+set -x
+docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
+docker push $docker_org/cfn_nag:${new_version}
+docker push $docker_org/cfn_nag:latest
 
 echo "::set-output name=cfn_nag_version::${new_version}"
