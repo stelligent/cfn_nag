@@ -1,0 +1,147 @@
+################################
+# THIS IS FOR FUTURE USAGE #
+################################
+#
+#---
+#Parameters:
+#  ApiGatewayDeploymentStageName3:
+#    Type: String
+#    Default: hardcoded-stage-3
+#  ApiGatewayDeploymentStageName4:
+#    Type: String
+#    Default: hardcoded-stage-4
+#  ApiGatewayDeploymentStageName5:
+#    Type: String
+#    Default: hardcoded-stage-5
+#  ApiGatewayDeploymentStageName6:
+#    Type: String
+#    Default: hardcoded-stage-6
+#  ApiGatewayDeploymentStageName7:
+#    Type: String
+#    Default: hardcoded-stage-7
+#  ApiGatewayDeploymentStageName8:
+#    Type: String
+#    Default: hardcoded-stage-8
+#
+#Resources:
+##  ApiGatewayUsagePlan1:
+##    Type: AWS::ApiGateway::UsagePlan
+##    Properties:
+###      ApiStages:
+###        - !Ref ApiGatewayDeploymentStageName8
+##      ApiStages: !Ref ApiGatewayDeploymentStageName8
+###      ApiStages:
+###        - ApiId: test_api1
+###          Stage: !Ref ApiGatewayDeploymentStageName8
+###        - ApiId: test_api2
+###          Stage: !Ref ApiGatewayDeploymentStageName7
+###      UsagePlanName: testusageplan1
+#  ApiGatewayUsagePlan1:
+#    Type: AWS::ApiGateway::UsagePlan
+#    Properties:
+#      ApiStages:
+#        - ApiId: test_api1
+#          Stage: hardcoded-stage-1
+#        - ApiId: test_api2
+#          Stage: hardcoded-stage-2
+#      UsagePlanName: testusageplan1
+#
+#  ApiGatewayUsagePlan2:
+#    Type: AWS::ApiGateway::UsagePlan
+#    Properties:
+#      ApiStages:
+#        - ApiId: test_api3
+#          Stage: !Ref ApiGatewayDeploymentStageName3
+#        - ApiId: test_api4
+#          Stage: !Ref ApiGatewayDeploymentStageName4
+#      UsagePlanName: testusageplan1
+#
+#  ApiGatewayUsagePlan3:
+#    Type: AWS::ApiGateway::UsagePlan
+#    Properties:
+#      ApiStages:
+#        - ApiId: test_api5
+#          Stage: hardcoded-stage-5
+#        - ApiId: test_api6
+#          Stage: hardcoded-stage-6
+#      UsagePlanName: testusageplan1
+#
+#  ApiGatewayUsagePlan4:
+#    Type: AWS::ApiGateway::UsagePlan
+#    Properties:
+#      ApiStages:
+#        - ApiId: test_api7
+#          Stage: !Ref ApiGatewayDeploymentStageName7
+#        - ApiId: test_api8
+#          Stage: !Ref ApiGatewayDeploymentStageName8
+#      UsagePlanName: testusageplan1
+#
+#  ApiGatewayDeployment1:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api1
+#      StageName: hardcoded-stage-1
+#
+#  ApiGatewayDeployment2:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api2
+#      StageName: 'hardcoded-stage-2'
+#
+#  ApiGatewayDeployment3:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api3
+#      StageName: hardcoded-stage-3
+#
+#  ApiGatewayDeployment4:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api4
+#      StageName: hardcoded-stage-4
+#
+#  ApiGatewayDeployment5:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api5
+#      StageName: !Ref ApiGatewayDeploymentStageName5
+#
+#  ApiGatewayDeployment6:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api6
+#      StageName: !Ref ApiGatewayDeploymentStageName6
+#
+#  ApiGatewayDeployment7:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api7
+#      StageName: !Ref ApiGatewayDeploymentStageName7
+#
+#  ApiGatewayDeployment8:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api8
+#      StageName: !Ref ApiGatewayDeploymentStageName8
+#
+#  ApiGatewayDeployment9:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api9
+#      StageName: !Ref ApiGatewayStage1
+#
+#  ApiGatewayDeployment10:
+#    Type: AWS::ApiGateway::Deployment
+#    Properties:
+#      RestApiId: test_api10
+#      StageName: !Ref ApiGatewayStage2
+#
+#  ApiGatewayStage1:
+#    Type: AWS::ApiGateway::Stage
+#    Properties:
+#      RestApiId: testapi
+#
+#  ApiGatewayStage2:
+#    Type: AWS::ApiGateway::Stage
+#    Properties:
+#      RestApiId: testapi

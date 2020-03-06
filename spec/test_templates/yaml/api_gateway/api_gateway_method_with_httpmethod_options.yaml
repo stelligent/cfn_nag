@@ -1,0 +1,53 @@
+---
+Parameters:
+  ApiGatewayMethodAuthorizationType1:
+    Type: String
+    Default: NONE
+  ApiGatewayMethodAuthorizationType2:
+    Type: String
+    Default: None
+  ApiGatewayHttpMethod1:
+    Type: String
+    Default: OPTIONS
+  ApiGatewayHttpMethod2:
+    Type: String
+    Default: Options
+
+Resources:
+  ApiGatewayMethod1:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+
+  ApiGatewayMethod2:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: OPTIONS
+
+  ApiGatewayMethod3:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: !Ref ApiGatewayMethodAuthorizationType1
+      HttpMethod: OPTIONS
+
+  ApiGatewayMethod4:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: !Ref ApiGatewayMethodAuthorizationType2
+      HttpMethod: OPTIONS
+
+  ApiGatewayMethod5:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod:
+        Ref: ApiGatewayHttpMethod1
+
+  ApiGatewayMethod6:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod:
+        Ref: ApiGatewayHttpMethod2

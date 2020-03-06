@@ -1,0 +1,15 @@
+{
+  "Resources": {
+    "sg5444": {
+      "Type" : "AWS::EC2::SecurityGroup",
+      "Properties" : {
+        "GroupDescription" : "some_group_desc",
+        "SecurityGroupEgress" : {
+          "CidrIpv6": "::1/128",
+          "IpProtocol": "-1"
+        },
+        "VpcId" : "vpc-9f8e9dfa"
+      }
+    }
+  }
+}

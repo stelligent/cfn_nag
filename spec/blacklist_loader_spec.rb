@@ -90,7 +90,7 @@ END
 
         expect do
           BlackListLoader.new(@rule_registry).load blacklist_definition: blacklist_definition
-        end.to raise_error # 'FAKEID is not a legal rule identifier'
+        end.to raise_error RuntimeError, /FAKEID1 is not a legal rule identifier/
       end
     end
 

@@ -3,6 +3,14 @@
 require 'netaddr'
 
 module IpAddr
+  def ip4_localhost?(egress)
+    egress.cidrIp.is_a?(String) && egress.cidrIp == '127.0.0.1/32'
+  end
+
+  def ip6_localhost?(egress)
+    egress.cidrIpv6.is_a?(String) && egress.cidrIpv6 == '::1/128'
+  end
+
   def ip4_open?(ingress)
     # only care about literals.  if a Hash/Ref not going to chase it down
     # given likely a Parameter with external val
