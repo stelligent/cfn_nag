@@ -16,41 +16,41 @@ Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      # BucketEncryption:
-      #   ServerSideEncryptionConfiguration:
-      #     - ServerSideEncryptionByDefault:
-      #         SSEAlgorithm: AES256
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
       BucketName: !Sub ${Owner}-${Project}
-      # PublicAccessBlockConfiguration:
-      #   BlockPublicAcls: true
-      #   BlockPublicPolicy: true
-      #   IgnorePublicAcls: true
-      #   RestrictPublicBuckets: true
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
 
-  # S3BucketPolicy:
-  #   Type: AWS::S3::BucketPolicy
-  #   Properties:
-  #     Bucket: !Ref S3Bucket
-  #     PolicyDocument:
-  #       Version: 2012-10-17
-  #       Id: GameLiftPolicy
-  #       Statement:
-  #         - Sid: GameLiftBucketAccess
-  #           Effect: Allow
-  #           Principal:
-  #             Service: gamelift.amazonaws.com
-  #           Action:
-  #             - s3:ListBucket
-  #           Resource:
-  #             - !GetAtt S3Bucket.Arn
-  #         - Sid: GameLiftObjectAccess
-  #           Effect: Allow
-  #           Principal:
-  #             Service: gamelift.amazonaws.com
-  #           Action:
-  #             - s3:GetObject
-  #           Resource:
-  #             - !Sub ${S3Bucket.Arn}/*
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Id: GameLiftPolicy
+        Statement:
+          - Sid: GameLiftBucketAccess
+            Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action:
+              - s3:ListBucket
+            Resource:
+              - !GetAtt S3Bucket.Arn
+          - Sid: GameLiftObjectAccess
+            Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub ${S3Bucket.Arn}/*
 
   IamRole:
     Type: AWS::IAM::Role
@@ -69,18 +69,6 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              # - Sid: BucketRead
-              #   Effect: Allow
-              #   Action:
-              #     - s3:ListBucket
-              #   Resource:
-              #     - !GetAtt S3Bucket.Arn
-              # - Sid: ObjectRead
-              #   Effect: Allow
-              #   Action:
-              #     - s3:GetObject
-              #   Resource:
-              #     - !Sub ${S3Bucket.Arn}/*
               - Sid: FullS3Access
                 Effect: Allow
                 Action:
