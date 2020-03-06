@@ -47,29 +47,7 @@ fi
 
 sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 
-#on circle ci - head is ambiguous for reasons that i don't grok
-#we haven't made the new tag and we can't if we are going to annotate
-head=$(git rev-parse HEAD)
-
-issue_prefix='^#'
-echo "Remember! You need to start your commit messages with #{issue_prefix}x, where x is the issue number your commit resolves."
-
-if [[ ${current_version} == nil ]];
-then
-  log_rev_range=${head}
-else
-  log_rev_range="v${minor_version}.${current_version}..${head}"
-fi
-
-git log ${log_rev_range} --pretty="format:%s"
-issues=$(git log ${log_rev_range} --pretty="format:%s" | \
-         egrep "${issue_prefix}" | \
-         cut -d " " -f 1 | sort | uniq)
-
-git tag -a v${new_version} -m "${new_version}" -m "Issues with commits, not necessarily closed: ${issues}"
-
-git push --tags
-
+# publish rubygem to rubygems.org, https://rubygems.org/gems/cfn-nag
 gem build cfn-nag.gemspec
 gem push cfn-nag-${new_version}.gem
 
@@ -82,3 +60,4 @@ docker tag $docker_org/cfn_nag:${new_version} $docker_org/cfn_nag:latest
 docker push $docker_org/cfn_nag:${new_version}
 docker push $docker_org/cfn_nag:latest
 
+echo "::set-output name=cfn_nag_version::${new_version}"

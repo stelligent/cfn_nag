@@ -3,7 +3,7 @@
 
 ![cfn_nag](https://github.com/stelligent/cfn_nag/workflows/cfn_nag/badge.svg)
 
-# Background 
+# Background
 
 The cfn-nag tool looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
 Roughly speaking, it will look for:
@@ -20,7 +20,7 @@ For more background on the tool, please see:
 
 # Installation
 
-## Gem Install 
+## Gem Install
 Presuming Ruby >= 2.5.x is installed, installation is just a matter of:
 
 ```bash
@@ -271,9 +271,9 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 
 # Controlling the Behavior of Conditions
 
-Up until version 0.4.66 of cfn_nag, the underlying model did not do any processing of Fn::If within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the Fn::If.  Given that an Fn::If could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.  
+Up until version 0.4.66 of cfn_nag, the underlying model did not do any processing of Fn::If within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the Fn::If.  Given that an Fn::If could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.
 
-In order to address this issue, the default behavior for cfn_nag is now to substitute Fn::If with the true outcome.  This means by default that rules will not inspect the false outcomes for security violations.  
+In order to address this issue, the default behavior for cfn_nag is now to substitute Fn::If with the true outcome.  This means by default that rules will not inspect the false outcomes for security violations.
 
 In addition to substituting Fn::If at the property value level, the same behavior is applied to Fn::If at the top-level of Properties.  For example:
 
@@ -319,7 +319,7 @@ generalized such that custom rule repositories can be used to discover rules.
 1. A bunch of "rule files" sitting around on a filesystem isn't great from a traditional software development perspective.
 There is no version or traceability on these files, so 0.5.x introduces the notion of a "cfn_nag rule gem".  A developer
 can develop custom rules as part of a separate gem, version it and install it... and those rules are referenced from cfn_nag
-as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hipaa-rules", any \*.rb under 
+as long as the gem metadata includes `cfn_nag_rules => true`.  For a gem named like "cfn-nag-hipaa-rules", any \*.rb under
 lib/cfn-nag-hipaa-rules will be loaded.  Any custom rules should derive from CfnNag::BaseRule in cfn-nag/base_rule (*not* cfn-nag/custom-rules/base).  If the rule must derive from something else, defining a method `cfn_nag_rule?` that returns true will also cause it to be loaded as a rule.
 
 2. When cfn_nag is running in an AWS Lambda - there isn't really a filesystem (besides /tmp) in the traditional sense.
@@ -336,9 +336,9 @@ repo_class_name: S3BucketBasedRuleRepo
 repo_arguments:
   s3_bucket_name: cfn-nag-rules-my-enterprise
   prefix: /rules
-``` 
+```
 
-To apply *Rule.rb files in the bucket cfn-nag-rules-my-enterprise with the prefix /rules (e.g. /rules/MyNewRule.rb), 
+To apply *Rule.rb files in the bucket cfn-nag-rules-my-enterprise with the prefix /rules (e.g. /rules/MyNewRule.rb),
 specify this file on the command line to cfn_nag as such:
 
 ```yaml
@@ -348,7 +348,7 @@ cat my_cfn_template.yml | cfn_nag --rule-repository s3.yml
 If rules are in more than one bucket, then create multiple s3*.yml files and specify them in the `--rule-repository` argument.
 
 If the ambient AWS credentials have permission to access the bucket `cfn-nag-rules-enterprise` then it will find all rules
-like `/rules/*Rule.rb`. If a particular aws_profile should be used, add it as a key under `repo_arguments`, e.g 
+like `/rules/*Rule.rb`. If a particular aws_profile should be used, add it as a key under `repo_arguments`, e.g
 `aws_profile: my_aws_profile`
 
 Beyond the filesystem, gem installs and S3 - the new architecture theoretically supports developing other "rule repositories"

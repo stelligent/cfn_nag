@@ -57,16 +57,21 @@ jobs:
       - run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           git fetch --prune --unshallow
-      - name: Set up Ruby 2.5
-        uses: actions/setup-ruby@v1
-        with:
-          ruby-version: 2.5.x
       - name: Publish to RubyGems and DockerHub
+        id: publish
         run: bash ./scripts/publish.sh
         env:
           rubygems_api_key: ${{secrets.rubygems_api_key}}
           docker_user: ${{secrets.docker_user}}
           docker_password: ${{secrets.docker_password}}
+      - name: Create release with changelog
+        id: gh_release
+        uses: release-drafter/release-drafter@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          publish: true
+          version: ${{ steps.publish.outputs.cfn_nag_version }}
       - name: Trigger cfn_nag for CodePipeline SAR publish
         run: |
           curl -s \
@@ -74,7 +79,7 @@ jobs:
                -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
                -H "Accept: application/vnd.github.everest-preview+json" \
                -H "Content-Type: application/json" \
-               https://api.github.com/repos/stelligent/cfn-nag-pipeline/dispatches \
+               https://api.github.com/repos/${{ env.docker_org }}/cfn-nag-pipeline/dispatches \
                --data '{"event_type": "build_application"}'
       - name: Trigger homebrew-tap repo workflow
         run: |
@@ -83,5 +88,5 @@ jobs:
                -u "cfn_nag-bot:${{secrets.homebrew_tap_bot}}" \
                -H "Accept: application/vnd.github.everest-preview+json" \
                -H "Content-Type: application/json" \
-               https://api.github.com/repos/stelligent/homebrew-tap/dispatches \
+               https://api.github.com/repos/${{ env.docker_org }}/homebrew-tap/dispatches \
                --data '{"event_type": "build_application"}'
