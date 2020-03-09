@@ -13,7 +13,7 @@ class GameLiftFleetInboundPortRangeRule < BaseRule
   end
 
   def rule_id
-    'W58'
+    'W65'
   end
 
   def audit_impl(cfn_model)
