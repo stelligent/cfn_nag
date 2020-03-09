@@ -19,7 +19,8 @@ class GameLiftFleetInboundPortRangeRule < BaseRule
   def audit_impl(cfn_model)
     violating_gamelift_fleets = cfn_model.resources_by_type('AWS::GameLift::Fleet').select do |gamelift_fleet|
       violating_permissions = gamelift_fleet.eC2InboundPermissions.select do |permission|
-        permission['FromPort'] != permission['ToPort']
+        # Cast to strings incase template provided mixed types
+        permission['FromPort'].to_s != permission['ToPort'].to_s
       end
 
       !violating_permissions.empty?

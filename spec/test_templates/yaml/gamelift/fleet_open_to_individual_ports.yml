@@ -23,7 +23,7 @@ Resources:
           IpRange: 10.1.0.0/24
           Protocol: TCP
           ToPort: 22
-        - FromPort: 1122
+        - FromPort: '1122'
           IpRange: 10.1.0.0/24
           Protocol: TCP
           ToPort: 1122

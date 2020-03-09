@@ -23,7 +23,7 @@
             "Protocol": "TCP"
           },
           {
-            "FromPort": 1122,
+            "FromPort": "1122",
             "ToPort": 1122,
             "IpRange": "10.1.0.0/24",
             "Protocol": "TCP"

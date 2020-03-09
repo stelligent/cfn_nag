@@ -17,7 +17,7 @@
       "Properties": {
         "EC2InboundPermissions": [
           {
-            "FromPort": 5758,
+            "FromPort": "5758",
             "ToPort": 60000,
             "IpRange": "10.1.0.0/24",
             "Protocol": "TCP"

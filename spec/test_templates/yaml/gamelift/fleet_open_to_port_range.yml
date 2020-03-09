@@ -26,7 +26,7 @@ Resources:
         #   - Port range (4081-60000) cannot contain restricted port 5757.
         #     (Service: AmazonGameLift; Status Code: 400; Error Code: InvalidRequestException;
         #     Request ID: 782ac772-dfe1-4fb3-8f4e-16a7e7b25b91)
-        - FromPort: 5758
+        - FromPort: '5758'
           IpRange: 10.1.0.0/24
           Protocol: TCP
           ToPort: 60000
