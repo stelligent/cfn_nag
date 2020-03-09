@@ -3,6 +3,7 @@
 require 'aws-sdk-s3'
 require 'lightly'
 require 'json'
+require 'logging'
 require_relative '../rule_registry'
 require_relative '../rule_repo_exception'
 
@@ -42,9 +43,13 @@ class S3BucketBasedRuleRepo
   end
 
   def discover_rules
+    Logging.logger['log'].debug "S3BucketBasedRuleRepo.discover_rules in #{@s3_bucket_name}, #{@prefix}"
+
     rule_registry = RuleRegistry.new
 
     index = index(@s3_bucket_name, @prefix)
+    Logging.logger['log'].debug "index: #{index}"
+
     index.each do |rule_object_key|
       rule_code = @rule_cache.get(rule_object_key) do
         cache_miss(rule_object_key)
@@ -71,6 +76,8 @@ class S3BucketBasedRuleRepo
   private
 
   def cache_miss(key)
+    Logging.logger['log'].debug "cache_miss: #{key}"
+
     rule_code_record = s3_object_content(@s3_bucket_name, key)
     rule_code_record.body.read
   end
@@ -111,6 +118,7 @@ class S3BucketBasedRuleRepo
     rule_objects = objects.select do |object|
       object.key.match(/.*Rule\.rb/)
     end
+    Logging.logger['log'].debug "Found rule objects: #{rule_objects}"
     rule_objects.map(&:key)
   rescue Aws::S3::Errors::NoSuchBucket
     raise RuleRepoException.new(msg: "Rule bucket not found: #{s3_bucket_name}")
