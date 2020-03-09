@@ -1,0 +1,90 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Setup IAM role and S3 bucket for GameLift testing.
+
+Parameters:
+  Owner:
+    Type: String
+    Description: Owner of these resources.
+    # Default: pshelby
+  Project:
+    Type: String
+    Description: For what these resources were created.
+    # Default: gamelift-testing
+
+Resources:
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      BucketName: !Sub ${Owner}-${Project}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref S3Bucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Id: GameLiftPolicy
+        Statement:
+          - Sid: GameLiftBucketAccess
+            Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action:
+              - s3:ListBucket
+            Resource:
+              - !GetAtt S3Bucket.Arn
+          - Sid: GameLiftObjectAccess
+            Effect: Allow
+            Principal:
+              Service: gamelift.amazonaws.com
+            Action:
+              - s3:GetObject
+            Resource:
+              - !Sub ${S3Bucket.Arn}/*
+
+  IamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - gamelift.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: S3Access
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: FullS3Access
+                Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - !GetAtt S3Bucket.Arn
+                  - !Sub ${S3Bucket.Arn}/*
+
+Outputs:
+  GameLiftSourceCodeBucketName:
+    Description: Name of the S3 bucket for GameLift source code.
+    Value: !Ref S3Bucket
+    Export:
+      Name: !Sub ${Owner}-${Project}-GameLiftSourceCodeBucketName
+  GameLiftSupportRoleArn:
+    Description: ARN of the IAM Role for GameLift to access the source code S3 bucket.
+    Value: !GetAtt IamRole.Arn
+    Export:
+      Name: !Sub ${Owner}-${Project}-GameLiftSupportRoleArn
