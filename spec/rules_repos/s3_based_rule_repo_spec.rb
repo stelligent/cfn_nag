@@ -38,6 +38,13 @@ describe S3BucketBasedRuleRepo do
     @s3_bucket_based_rule_repo.nuke_cache
   end
 
+  context 'prefix with leading slash' do
+    # Bucket.objects(prefix: '/foo') won't match foo/whatever
+    it 'strips the leading slash' do
+      expect(@s3_bucket_based_rule_repo.prefix).to eq 'rules'
+    end
+  end
+
   context 'empty bucket' do
     it 'returns no rules' do
       expect(@s3_bucket_based_rule_repo).to receive(:index).and_return([])
@@ -50,7 +57,7 @@ describe S3BucketBasedRuleRepo do
   context 'bucket with *Rule.rb in prefix' do
     context 'cache miss' do
       it 'returns file from S3' do
-        expect(@s3_bucket_based_rule_repo).to receive(:index).and_return(%w[/rules/FooRule.rb])
+        expect(@s3_bucket_based_rule_repo).to receive(:index).and_return(%w[rules/FooRule.rb])
         expect(@s3_bucket_based_rule_repo).to receive(:cache_miss).and_return(class_code)
 
         rule_registry = @s3_bucket_based_rule_repo.discover_rules
@@ -62,7 +69,7 @@ describe S3BucketBasedRuleRepo do
 
     context 'cache hit' do
       it 'returns local file' do
-        expect(@s3_bucket_based_rule_repo).to receive(:index).exactly(2).times.and_return(%w[/rules/FooRule.rb])
+        expect(@s3_bucket_based_rule_repo).to receive(:index).exactly(2).times.and_return(%w[rules/FooRule.rb])
         expect(@s3_bucket_based_rule_repo).to receive(:cache_miss).and_return(class_code)
 
         @s3_bucket_based_rule_repo.discover_rules

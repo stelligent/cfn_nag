@@ -23,9 +23,11 @@ class Object
 end
 
 class S3BucketBasedRuleRepo
+  attr_reader :prefix, :s3_bucket_name, :index_life_time, :aws_profile
+
   def initialize(s3_bucket_name:, prefix:, index_lifetime: '1h', aws_profile: nil)
     @s3_bucket_name = s3_bucket_name
-    @prefix = prefix
+    @prefix = remove_leading_slash(prefix)
     @index_cache = Lightly.new(
       dir: cache_path('cfn_nag_s3_index_cache', s3_bucket_name),
       life: index_lifetime,
@@ -122,5 +124,9 @@ class S3BucketBasedRuleRepo
     rule_objects.map(&:key)
   rescue Aws::S3::Errors::NoSuchBucket
     raise RuleRepoException.new(msg: "Rule bucket not found: #{s3_bucket_name}")
+  end
+
+  def remove_leading_slash(s3_key)
+    s3_key.start_with?('/') ? s3_key[1..-1] : s3_key
   end
 end
