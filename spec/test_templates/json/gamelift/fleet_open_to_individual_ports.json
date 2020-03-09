@@ -1,0 +1,66 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Create a GameLift Fleet with individual ports open.",
+  "Parameters": {
+    "Owner": {
+      "Type": "String",
+      "Description": "Owner of these resources."
+    },
+    "Project": {
+      "Type": "String",
+      "Description": "For what these resources were created."
+    }
+  },
+  "Resources": {
+    "SecureGameLiftFleet": {
+      "Type": "AWS::GameLift::Fleet",
+      "Properties": {
+        "EC2InboundPermissions": [
+          {
+            "FromPort": 22,
+            "ToPort": 22,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          },
+          {
+            "FromPort": "1122",
+            "ToPort": 1122,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          },
+          {
+            "FromPort": 10623,
+            "ToPort": 10623,
+            "IpRange": "10.1.0.0/24",
+            "Protocol": "TCP"
+          }
+        ],
+        "EC2InstanceType": "t2.micro",
+        "Name": "SecureGameLiftFleet",
+        "RuntimeConfiguration": {
+          "ServerProcesses": [
+            {
+              "ConcurrentExecutions": 2,
+              "LaunchPath": "/local/game/rt_servers.js"
+            }
+          ]
+        },
+        "ScriptId": {"Fn::GetAtt": ["RealTimeScript", "Id"]}
+      }
+    },
+    "RealTimeScript": {
+      "Type": "AWS::GameLift::Script",
+      "Properties": {
+        "StorageLocation": {
+          "Bucket": {
+            "Fn::ImportValue": {"Fn::Sub": "${Owner}-${Project}-GameLiftSourceCodeBucketName"}
+          },
+          "Key": "rt_servers.zip",
+          "RoleArn": {
+            "Fn::ImportValue": {"Fn::Sub": "${Owner}-${Project}-GameLiftSupportRoleArn"}
+          }
+        }
+      }
+    }
+  }
+}
