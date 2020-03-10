@@ -1,0 +1,17 @@
+---
+Resources:
+  ApiGatewayStage1:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi1
+      AccessLogSetting:
+        DestinationArn: arn:aws:iam::123456789012:log-group/api-gateway-stage
+        Format: $context.requestId
+
+  ApiGatewayStage2:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi2
+      AccessLogSetting:
+        DestinationArn: arn:aws:iam::123456789012:log-group/api-gateway-stage
+        Format: $context.requestId
