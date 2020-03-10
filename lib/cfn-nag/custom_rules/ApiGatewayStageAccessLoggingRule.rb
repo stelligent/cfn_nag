@@ -5,7 +5,7 @@ require_relative 'base'
 
 class ApiGatewayStageAccessLoggingRule < BaseRule
   def rule_text
-    'AWS::ApiGateway::Stage should have an AccessLogSetting defined.'
+    'AWS::ApiGateway::Stage should have the AccessLogSetting property defined.'
   end
 
   def rule_type
