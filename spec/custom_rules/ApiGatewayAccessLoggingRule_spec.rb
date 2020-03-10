@@ -35,4 +35,17 @@ describe ApiGatewayAccessLoggingRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+ context 'Api Gateway with stage access logging configured' do
+    it 'returns empty' do
+      cfn_model = CfnParser.new.parse read_test_template('json/apigateway_accesslogging/apigateway_with_stage_access_logging.json')
+
+      actual_logical_resource_ids = ApiGatewayAccessLoggingRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+  
+  
 end

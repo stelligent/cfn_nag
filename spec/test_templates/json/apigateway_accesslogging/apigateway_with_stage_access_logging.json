@@ -1,0 +1,20 @@
+{
+	"Resources": {
+		"ApiGatewayWithNoAccessLogging": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+			}
+		},
+		"Stage": {
+			"Type: AWS::ApiGateway::Stage": {
+				"Properties": {
+					"RestApiId": { "Ref" : "ApiGatewayWithNoAccessLogging" },
+					"AccessLogSetting": {
+						"DestinationArn": "arn",
+						"Format": "format"
+					}
+				}
+			}
+		}
+	}
+}
