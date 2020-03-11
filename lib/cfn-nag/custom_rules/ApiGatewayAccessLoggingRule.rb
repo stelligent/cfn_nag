@@ -29,10 +29,10 @@ class ApiGatewayAccessLoggingRule < BaseRule
   private
 
   def violating_deployment?(deployment, stage_deployment_ids)
-    if !deployment.stageDescription.nil?
-      deployment.stageDescription['AccessLogSetting'].nil?
-    else
+    if deployment.stageDescription.nil?
       !stage_deployment_ids.include?(deployment.logical_resource_id)
+    else
+      deployment.stageDescription['AccessLogSetting'].nil?
     end
   end
 

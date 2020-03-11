@@ -18,6 +18,7 @@ Resources:
         DestinationArn: arn:aws:iam::123456789012:log-group/api-gateway-stage
         Format: $context.requestId
 
+
   ApiGatewayDeployment1:
     Type: AWS::ApiGateway::Deployment
     Properties:
@@ -29,9 +30,3 @@ Resources:
       RestApiId: test_api1
       StageDescription:
 
-  ApiGatewayDeployment3:
-    Type: AWS::ApiGateway::Deployment
-    Properties:
-      RestApiId: test_api1
-      StageDescription:
-        AccessLogSetting:
