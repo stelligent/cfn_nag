@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
+require 'cfn-nag/ip_addr'
 require_relative 'base'
 
 class SecurityGroupEgressAllProtocolsRule < BaseRule
+  include IpAddr
+
   def rule_text
     'Security Groups egress with an IpProtocol of -1 found'
   end
@@ -37,11 +40,15 @@ class SecurityGroupEgressAllProtocolsRule < BaseRule
 
   private
 
-  def violating_egress(egress)
+  def negative_1_protocol?(egress)
     if egress.ipProtocol.is_a?(Integer) || egress.ipProtocol.is_a?(String)
       egress.ipProtocol.to_i == -1
     else
       false
     end
+  end
+
+  def violating_egress(egress)
+    negative_1_protocol?(egress) && !ip4_localhost?(egress) && !ip6_localhost?(egress)
   end
 end

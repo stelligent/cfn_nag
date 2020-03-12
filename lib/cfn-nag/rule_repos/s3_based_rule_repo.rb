@@ -3,6 +3,7 @@
 require 'aws-sdk-s3'
 require 'lightly'
 require 'json'
+require 'logging'
 require_relative '../rule_registry'
 require_relative '../rule_repo_exception'
 
@@ -22,9 +23,11 @@ class Object
 end
 
 class S3BucketBasedRuleRepo
+  attr_reader :prefix, :s3_bucket_name, :index_life_time, :aws_profile
+
   def initialize(s3_bucket_name:, prefix:, index_lifetime: '1h', aws_profile: nil)
     @s3_bucket_name = s3_bucket_name
-    @prefix = prefix
+    @prefix = remove_leading_slash(prefix)
     @index_cache = Lightly.new(
       dir: cache_path('cfn_nag_s3_index_cache', s3_bucket_name),
       life: index_lifetime,
@@ -42,9 +45,13 @@ class S3BucketBasedRuleRepo
   end
 
   def discover_rules
+    Logging.logger['log'].debug "S3BucketBasedRuleRepo.discover_rules in #{@s3_bucket_name}, #{@prefix}"
+
     rule_registry = RuleRegistry.new
 
     index = index(@s3_bucket_name, @prefix)
+    Logging.logger['log'].debug "index: #{index}"
+
     index.each do |rule_object_key|
       rule_code = @rule_cache.get(rule_object_key) do
         cache_miss(rule_object_key)
@@ -71,6 +78,8 @@ class S3BucketBasedRuleRepo
   private
 
   def cache_miss(key)
+    Logging.logger['log'].debug "cache_miss: #{key}"
+
     rule_code_record = s3_object_content(@s3_bucket_name, key)
     rule_code_record.body.read
   end
@@ -111,8 +120,13 @@ class S3BucketBasedRuleRepo
     rule_objects = objects.select do |object|
       object.key.match(/.*Rule\.rb/)
     end
+    Logging.logger['log'].debug "Found rule objects: #{rule_objects}"
     rule_objects.map(&:key)
   rescue Aws::S3::Errors::NoSuchBucket
     raise RuleRepoException.new(msg: "Rule bucket not found: #{s3_bucket_name}")
+  end
+
+  def remove_leading_slash(s3_key)
+    s3_key.start_with?('/') ? s3_key[1..-1] : s3_key
   end
 end
