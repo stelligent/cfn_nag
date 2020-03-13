@@ -13,7 +13,7 @@ class EC2NetworkAclEntryPortRangeRule < BaseRule
   end
 
   def rule_id
-    'W58'
+    'W67'
   end
 
   def audit_impl(cfn_model)

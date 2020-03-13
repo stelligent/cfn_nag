@@ -5,16 +5,16 @@ require_relative 'base'
 
 class EC2NetworkAclEntryProtocolRule < BaseRule
   def rule_text
-    'EC2 NetworkACL Entry Protocol must be either 6 (for TCP), 17 (for UDP), 1 (for ICMP), or 58' \
-    '(for ICMPv6, which must include an IPv6 CIDR block, ICMP type, and code).'
+    'To avoid opening all ports for Allow rules, EC2 NetworkACL Entry Protocol should be either 6 (for TCP), 17 ' \
+    '(for UDP), 1 (for ICMP), or 58 (for ICMPv6, which must include an IPv6 CIDR block, ICMP type, and code).'
   end
 
   def rule_type
-    Violation::FAILING_VIOLATION
+    Violation::WARNING
   end
 
   def rule_id
-    'F79'
+    'W66'
   end
 
   def audit_impl(cfn_model)
@@ -37,6 +37,10 @@ class EC2NetworkAclEntryProtocolRule < BaseRule
   # specify. If you specify protocol "58" (ICMPv6) and specify an IPv6 CIDR
   # block, you must specify an ICMP type and code.
 
+  def rule_action_allow?(network_acl_entry)
+    network_acl_entry.ruleAction == 'allow'
+  end
+
   def tcp_udp_icmp_protocol?(network_acl_entry)
     %w[1 6 17].include?(network_acl_entry.protocol)
   end
@@ -48,11 +52,13 @@ class EC2NetworkAclEntryProtocolRule < BaseRule
   end
 
   def violating_network_acl_entries?(network_acl_entry)
-    if tcp_udp_icmp_protocol?(network_acl_entry) ||
-       icmpv6_protocol?(network_acl_entry)
-      false
-    else
-      true
+    if rule_action_allow?(network_acl_entry)
+      if tcp_udp_icmp_protocol?(network_acl_entry) ||
+         icmpv6_protocol?(network_acl_entry)
+        false
+      else
+        true
+      end
     end
   end
 end
