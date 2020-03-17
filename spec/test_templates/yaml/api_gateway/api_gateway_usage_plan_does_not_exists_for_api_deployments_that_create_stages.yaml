@@ -1,0 +1,51 @@
+---
+Parameters:
+  ApiGatewayDeploymentStageName:
+    Type: String
+    Default: test-stage-3
+
+  ApiGatewayDeploymentStageNameNoUsagePlan:
+    Type: String
+    Default: no-usage-plan-test-stage-3
+
+Resources:
+  ApiGatewayUsagePlan1:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: ' no-usage-plan-test-stage-1'
+      UsagePlanName: testusageplan1
+
+  ApiGatewayUsagePlan2:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage: ' no-usage-plan-test-stage-2'
+      UsagePlanName: testusageplan2
+
+  ApiGatewayUsagePlan3:
+    Type: AWS::ApiGateway::UsagePlan
+    Properties:
+      ApiStages:
+        - ApiId: testapi
+          Stage:
+            Ref: ApiGatewayDeploymentStageNameNoUsagePlan
+      UsagePlanName: testusageplan3
+
+  ApiGatewayDeployment1:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      StageName: 'test-stage-1'
+
+  ApiGatewayDeployment2:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      StageName: 'test-stage-2'
+
+  ApiGatewayDeployment3:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      StageName:
+        Ref: ApiGatewayDeploymentStageName
