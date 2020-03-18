@@ -46,6 +46,15 @@ describe LambdaFunctionCloudWatchLogsRule do
       end
     end
 
+    context 'when function\'s role contains AWSLambdaDynamoDBExecutionRole managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_dynamodb_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
     context 'when function\'s role contains managed policy without CloudWatch Logs access' do
       it 'returns an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_other_managed_policies.json')
