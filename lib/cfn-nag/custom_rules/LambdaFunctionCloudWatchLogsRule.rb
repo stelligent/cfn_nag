@@ -32,7 +32,12 @@ class LambdaFunctionCloudWatchLogsRule < BaseRule
 
   def managed_policies_include_cw_logs_access?(managed_policies)
     !(managed_policies & ['arn:aws:iam::aws:policy/CloudWatchLogsFullAccess',
-                          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole']
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole',
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole',
+                          'arn:aws:iam::aws:policy/AWSLambdaExecute',
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaKinesisExecutionRole',
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaSQSQueueExecutionRole',
+                          'arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole']
      ).empty?
   end
 
