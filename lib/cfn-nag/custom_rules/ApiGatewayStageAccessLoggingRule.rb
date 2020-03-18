@@ -13,7 +13,7 @@ class ApiGatewayStageAccessLoggingRule < BaseRule
   end
 
   def rule_id
-    'W66'
+    'W69'
   end
 
   def audit_impl(cfn_model)
