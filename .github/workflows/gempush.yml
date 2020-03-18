@@ -66,7 +66,7 @@ jobs:
           docker_password: ${{secrets.docker_password}}
       - name: Create release with changelog
         id: gh_release
-        uses: release-drafter/release-drafter@master
+        uses: release-drafter/release-drafter@f677696
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
