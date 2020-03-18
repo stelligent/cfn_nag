@@ -55,6 +55,42 @@ describe LambdaFunctionCloudWatchLogsRule do
       end
     end
 
+    context 'when function\'s role contains AWSLambdaExecute managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_execute_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
+    context 'when function\'s role contains AWSLambdaKinesisExecutionRole managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_kinesis_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
+    context 'when function\'s role contains AWSLambdaSQSQueueExecutionRole managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_sqs_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
+    context 'when function\'s role contains AWSLambdaVPCAccessExecutionRole managed policy' do
+      it 'does not return an offending logical resource id' do
+        cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_lambda_vpc_managed_policy.json')
+        actual_logical_resource_ids = LambdaFunctionCloudWatchLogsRule.new.audit_impl cfn_model
+
+        expect(actual_logical_resource_ids).to eq []
+      end
+    end
+
     context 'when function\'s role contains managed policy without CloudWatch Logs access' do
       it 'returns an offending logical resource id' do
         cfn_model = CfnParser.new.parse read_test_template('json/lambda_function/lambda_with_other_managed_policies.json')
