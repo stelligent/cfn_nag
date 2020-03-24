@@ -1,5 +1,6 @@
 require 'spec_helper'
-require 'password_rule_spec_helper'
+require 'custom_rule_spec_helper'
+require 'custom_rule_test_sets'
 require 'cfn-model'
 
 resource_type = 'AWS::Redshift::Cluster'

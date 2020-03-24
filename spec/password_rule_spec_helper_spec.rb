@@ -1,7 +1,8 @@
 require 'spec_helper'
-require 'password_rule_spec_helper'
+require 'custom_rule_spec_helper'
+require 'custom_rule_test_sets'
 
-describe 'password_rule_spec_helper' do
+describe 'custom_rule_spec_helper' do
   before(:all) do
     @resource_type = 'AWS::Foo::Bar'
     @password_property = 'Baz'
