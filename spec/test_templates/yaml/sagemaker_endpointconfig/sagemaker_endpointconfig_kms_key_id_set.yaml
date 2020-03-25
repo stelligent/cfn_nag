@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: 2010-09-09
-Description: Define a SageMaker EndpointConfig without the requisite KmsKeyId property.
+Description: Define a SageMaker EndpointConfig with the requisite KmsKeyId property.
 
 Resources:
   SageMakerEndpointConfig:
