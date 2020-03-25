@@ -1,0 +1,25 @@
+---
+Resources:
+
+  ApiGatewayStage1:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi1
+      DeploymentId: !Ref ApiGatewayDeployment1
+
+  ApiGatewayStage2:
+    Type: AWS::ApiGateway::Stage
+    Properties:
+      RestApiId: testapi1
+      DeploymentId: !Ref ApiGatewayDeployment2
+
+  ApiGatewayDeployment1:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: test_api2
+
+  ApiGatewayDeployment2:
+    Type: AWS::ApiGateway::Deployment
+    Properties:
+      RestApiId: test_api2
+
