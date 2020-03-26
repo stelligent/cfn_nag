@@ -1,0 +1,15 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Define a SageMaker EndpointConfig with the requisite KmsKeyId property.
+
+Resources:
+  SageMakerEndpointConfig:
+    Type: AWS::SageMaker::EndpointConfig
+    Properties:
+      KmsKeyId: alias/SuperSecureKey
+      ProductionVariants:
+        - ModelName: Model1
+          VariantName: Variant1
+          InitialInstanceCount: 1
+          InstanceType: ml.t2.medium
+          InitialVariantWeight: 1.0
