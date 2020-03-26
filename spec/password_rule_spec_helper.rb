@@ -26,6 +26,15 @@ def password_rule_test_sets
   }
 end
 
+# Name of the boolean tests to run, matching the test teplates file names
+# States whether the test should be a pass or fail
+def boolean_rule_test_sets
+  {
+    'not set': 'fail',
+    'set': 'pass'
+  }
+end
+
 # Returns a string based on the value result of the password_rule_test_sets
 def context_return_value(desired_test_result)
   raise 'desired_test_result value must be either "pass" or "fail"' unless
