@@ -92,6 +92,38 @@ describe CfnNagExecutor do
     end
   end
 
+  context 'single UTF-8 file cfn_nag' do
+    test_file = 'spec/test_templates/yaml/template_with_non-US-ASCII_characters.yml'
+
+    it 'returns a successful zero exit code when read with UTF-8 encoding' do
+      expect(Options).to receive(:file_options).and_return(@default_cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file, encoding: Encoding::UTF_8))
+      expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
+      expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+      expect(cfn_nag_executor).to receive(:argf_filename).and_return(test_file)
+
+      result = cfn_nag_executor.scan(options_type: 'file')
+
+      expect(result).to eq 0
+    end
+
+    it 'returns a non-zero exit code when read with US-ASCII encoding' do
+      expect(Options).to receive(:file_options).and_return(@default_cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:argf_read).and_return(IO.read(test_file, encoding: Encoding::US_ASCII))
+      expect(cfn_nag_executor).to receive(:argf_close).and_return(nil)
+      expect(cfn_nag_executor).to receive(:argf_finished?).and_return(false, true)
+      expect(cfn_nag_executor).to receive(:argf_filename).and_return(test_file)
+
+      result = cfn_nag_executor.scan(options_type: 'file')
+
+      expect(result).to eq 1
+    end
+  end
+
   # this one triggers a trollop 'system exit' mid-flow :(
   context 'no input path specified' do
     it 'throws error on nil input_path' do
