@@ -121,6 +121,7 @@ class CfnNagExecutor
   end
 
   def argf_read
+    ARGF.set_encoding(Encoding::UTF_8)
     ARGF.file.read
   end
 
