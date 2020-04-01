@@ -1,0 +1,10 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Define a SageMaker NotebookInstance without the requisite KmsKeyId property.
+
+Resources:
+  SageMakerNotebookInstance:
+    Type: AWS::SageMaker::NotebookInstance
+    Properties:
+      InstanceType: ml.t2.large
+      RoleArn: arn:aws:iam::012345678910:role/MLUserRole
