@@ -1,0 +1,18 @@
+{
+	"Resources": {
+		"ApiGatewayWithNoTLSConfg": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"Origins": [
+						{
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+					}
+				}
+			}
+		}
+	}
+}

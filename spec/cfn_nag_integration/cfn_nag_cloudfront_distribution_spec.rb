@@ -25,6 +25,12 @@ describe CfnNag do
                 line_numbers: [46]
               ),
               Violation.new(
+                id: 'W70', type: Violation::WARNING,
+                message: 'Cloudfront should use minimum protocol version TLS 1.2',
+                logical_resource_ids: ["rDistribution1", "rDistribution2"],
+                line_numbers: [4,46]
+              ),
+              Violation.new(
                 id: 'W51', type: Violation::WARNING,
                 message: 'S3 bucket should likely have a bucket policy',
                 logical_resource_ids: %w[S3Bucket],
