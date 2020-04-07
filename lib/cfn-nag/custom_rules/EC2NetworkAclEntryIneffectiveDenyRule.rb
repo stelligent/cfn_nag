@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
+require 'cfn-nag/util/truthy'
 require_relative 'base'
 
 class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
@@ -17,30 +18,37 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_egress_entries = []
-    violating_ingress_entries = []
-    cfn_model.resources_by_type('AWS::EC2::NetworkAcl')
-             .select do |nacl|
-      violating_egress_entries = deny_does_not_cover_all_cidrs?(cfn_model, nacl.network_acl_egress_entries) ||
-                                 reused_ports?(cfn_model, nacl.network_acl_egress_entries)
-      violating_ingress_entries = deny_does_not_cover_all_cidrs?(cfn_model, nacl.network_acl_ingress_entries) ||
-                                  reused_ports?(cfn_model, nacl.network_acl_ingress_entries)
+    violating_nacl_egress_entries = []
+    violating_nacl_ingress_entries = []
+    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').select do |nacl|
+      egress_entries = egress?(nacl.network_acl_entries)
+      ingress_entries = ingress?(nacl.network_acl_entries)
+      violating_nacl_egress_entries += deny_does_not_cover_all_cidrs?(egress_entries)
+      violating_nacl_ingress_entries += deny_does_not_cover_all_cidrs?(ingress_entries)
     end
 
-    violating_egress_entries.map(&:logical_resource_id) + violating_ingress_entries.map(&:logical_resource_id)
+    violating_nacl_egress_entries.map(&:logical_resource_id) + violating_nacl_ingress_entries.map(&:logical_resource_id)
   end
 
   private
 
-  def deny_does_not_cover_all_cidrs?(cfn_model, nacl_entries)
-    nacl_entry_resources = []
+  def deny_does_not_cover_all_cidrs?(nacl_entries)
     nacl_entries.select do |nacl_entry|
-      nacl_entry_resources << cfn_model.resource_by_id(nacl_entry)
+      nacl_entry.ruleAction == 'deny' && ((!nacl_entry.cidrBlock.nil? &&
+        nacl_entry.cidrBlock != '0.0.0.0/0') ||
+        (!nacl_entry.ipv6CidrBlock.nil? && nacl_entry.ipv6CidrBlock != '::/0'))
     end
-    nacl_entry_resources.select do |nacl_entry_resource|
-      nacl_entry_resource.ruleAction == 'deny' && ((!nacl_entry_resource.cidrBlock.nil? &&
-        nacl_entry_resource.cidrBlock != '0.0.0.0/0') ||
-        (!nacl_entry_resource.ipv6CidrBlock.nil? && nacl_entry_resource.ipv6CidrBlock != '::/0'))
+  end
+
+  def egress?(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      truthy?(nacl_entry.egress)
+    end
+  end
+
+  def ingress?(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      not_truthy?(nacl_entry.egress)
     end
   end
 end

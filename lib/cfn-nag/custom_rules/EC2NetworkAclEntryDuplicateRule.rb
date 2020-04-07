@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
+require 'cfn-nag/util/truthy'
 require_relative 'base'
 
 class EC2NetworkAclEntryDuplicateRule < BaseRule
@@ -17,31 +18,41 @@ class EC2NetworkAclEntryDuplicateRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    nacl_violating_egress_entries = []
-    nacl_violating_ingress_entries = []
+    violating_nacl_egress_entries = []
+    violating_nacl_ingress_entries = []
     cfn_model.resources_by_type('AWS::EC2::NetworkAcl').select do |nacl|
-      nacl_violating_egress_entries += duplicate_rule_numbers?(cfn_model, nacl.network_acl_egress_entries)
-      nacl_violating_ingress_entries += duplicate_rule_numbers?(cfn_model, nacl.network_acl_ingress_entries)
+      egress_entries = egress?(nacl.network_acl_entries)
+      ingress_entries = ingress?(nacl.network_acl_entries)
+      violating_nacl_egress_entries += duplicate_rule_numbers?(egress_entries)
+      violating_nacl_ingress_entries += duplicate_rule_numbers?(ingress_entries)
     end
 
-    nacl_violating_egress_entries.map(&:logical_resource_id) + nacl_violating_ingress_entries.map(&:logical_resource_id)
+    violating_nacl_egress_entries.map(&:logical_resource_id) + violating_nacl_ingress_entries.map(&:logical_resource_id)
   end
 
   private
 
-  def duplicate_rule_numbers?(cfn_model, nacl_entries)
-    nacl_entry_resources = []
+  def duplicate_rule_numbers?(nacl_entries)
     rule_numbers = []
     duplicates = []
     nacl_entries.select do |nacl_entry|
-      nacl_entry_resources << cfn_model.resource_by_id(nacl_entry)
-    end
-    nacl_entry_resources.select do |nacl_entry_resource|
-      if rule_numbers.include?(nacl_entry_resource.ruleNumber)
-        duplicates << nacl_entry_resource
+      if rule_numbers.include?(nacl_entry.ruleNumber)
+        duplicates << nacl_entry
       end
-      rule_numbers << nacl_entry_resource.ruleNumber
+      rule_numbers << nacl_entry.ruleNumber
     end
     duplicates
+  end
+
+  def egress?(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      truthy?(nacl_entry.egress)
+    end
+  end
+
+  def ingress?(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      not_truthy?(nacl_entry.egress)
+    end
   end
 end
