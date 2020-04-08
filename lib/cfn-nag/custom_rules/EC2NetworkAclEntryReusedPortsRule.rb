@@ -14,12 +14,12 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
   end
 
   def rule_id
-    'W71'
+    'W72'
   end
 
   def audit_impl(cfn_model)
     violating_nacl_entries = []
-    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').select do |nacl|
+    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
       egress_entries = egress?(nacl.network_acl_entries)
       ingress_entries = ingress?(nacl.network_acl_entries)
       violating_nacl_entries += reused_ports?(egress_entries) && reused_ports?(ingress_entries) &&
@@ -34,7 +34,7 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
   def reused_ports?(nacl_entries)
     ports = []
     reused = []
-    nacl_entries.select do |nacl_entry|
+    nacl_entries.each do |nacl_entry|
       if ports.include?(nacl_entry.portRange)
         reused << nacl_entry
       end
@@ -47,7 +47,7 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
     port_min = -1
     port_max = -1
     overlaps = []
-    nacl_entries.select do |nacl_entry|
+    nacl_entries.each do |nacl_entry|
       nacl_from = nacl_entry.portRange['From'].to_i
       nacl_to = nacl_entry.portRange['To'].to_i
       if port_min == -1 || port_max == -1

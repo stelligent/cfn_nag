@@ -14,13 +14,13 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
   end
 
   def rule_id
-    'W70'
+    'W71'
   end
 
   def audit_impl(cfn_model)
     violating_nacl_egress_entries = []
     violating_nacl_ingress_entries = []
-    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').select do |nacl|
+    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
       egress_entries = egress?(nacl.network_acl_entries)
       ingress_entries = ingress?(nacl.network_acl_entries)
       violating_nacl_egress_entries += deny_does_not_cover_all_cidrs?(egress_entries)
@@ -34,10 +34,14 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
 
   def deny_does_not_cover_all_cidrs?(nacl_entries)
     nacl_entries.select do |nacl_entry|
-      nacl_entry.ruleAction == 'deny' && ((!nacl_entry.cidrBlock.nil? &&
-        nacl_entry.cidrBlock != '0.0.0.0/0') ||
-        (!nacl_entry.ipv6CidrBlock.nil? && nacl_entry.ipv6CidrBlock != '::/0'))
+      nacl_entry.ruleAction == 'deny' && not_all_cidrs_covered?(nacl_entry)
     end
+  end
+
+  def not_all_cidrs_covered?(nacl_entry)
+    (!nacl_entry.cidrBlock.nil? &&
+      nacl_entry.cidrBlock != '0.0.0.0/0') ||
+      (!nacl_entry.ipv6CidrBlock.nil? && nacl_entry.ipv6CidrBlock != '::/0')
   end
 
   def egress?(nacl_entries)

@@ -20,7 +20,7 @@ class EC2NetworkAclEntryDuplicateRule < BaseRule
   def audit_impl(cfn_model)
     violating_nacl_egress_entries = []
     violating_nacl_ingress_entries = []
-    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').select do |nacl|
+    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
       egress_entries = egress?(nacl.network_acl_entries)
       ingress_entries = ingress?(nacl.network_acl_entries)
       violating_nacl_egress_entries += duplicate_rule_numbers?(egress_entries)
@@ -35,7 +35,7 @@ class EC2NetworkAclEntryDuplicateRule < BaseRule
   def duplicate_rule_numbers?(nacl_entries)
     rule_numbers = []
     duplicates = []
-    nacl_entries.select do |nacl_entry|
+    nacl_entries.each do |nacl_entry|
       if rule_numbers.include?(nacl_entry.ruleNumber)
         duplicates << nacl_entry
       end
