@@ -1,0 +1,99 @@
+{
+	"Resources": {
+		"ApiGatewayWithSSLv3": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "SSLv3"
+					},
+					"Origins": [
+						{
+
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+
+					}
+				}
+			}
+		},
+		"ApiGatewayWithTLS10": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1"
+					},
+					"Origins": [
+						{
+
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+
+					}
+				}
+			}
+		},
+		"ApiGatewayWithTLS11": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1.1"
+					},
+					"Origins": [
+						{
+
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+
+					}
+				}
+			}
+		},
+		"ApiGatewayWithTLS12016": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1_2016"
+					},
+					"Origins": [
+						{
+
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+
+					}
+				}
+			}
+		},
+		"ApiGatewayWithDefaultTLS": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+
+					},
+					"Origins": [
+						{
+
+						}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {
+
+					}
+				}
+			}
+		}
+	}
+}
