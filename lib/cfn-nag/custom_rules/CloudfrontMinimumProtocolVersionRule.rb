@@ -18,10 +18,24 @@ class CloudfrontMinimumProtocolVersionRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_distributions = cfn_model.resources_by_type('AWS::CloudFront::Distribution')
-                                       .select do |distribution|
-      distribution.distributionConfig['ViewerCertificate'].nil? || distribution.distributionConfig['ViewerCertificate']['MinimumProtocolVersion'].nil? || distribution.distributionConfig['ViewerCertificate']['MinimumProtocolVersion'] != 'TLSv1.2_2018' || !distribution.distributionConfig['ViewerCertificate']['CloudFrontDefaultCertificate'].nil? || distribution.distributionConfig['ViewerCertificate']['CloudFrontDefaultCertificate']
+                                       .select do |dist|
+      dist.distributionConfig['ViewerCertificate'].nil? || tls_version?(dist.distributionConfig['ViewerCertificate'])
     end
 
     violating_distributions.map(&:logical_resource_id)
+  end
+
+  private
+
+  def tls_version?(viewer_certificate)
+    cert_has_bad_tls_version?(viewer_certificate) || override_tls_config?(viewer_certificate)
+  end
+
+  def cert_has_bad_tls_version?(viewer_certificate)
+    viewer_certificate['MinimumProtocolVersion'].nil? || viewer_certificate['MinimumProtocolVersion'] != 'TLSv1.2_2018'
+  end
+
+  def override_tls_config?(viewer_certificate)
+    !viewer_certificate['CloudFrontDefaultCertificate'].nil? && viewer_certificate['CloudFrontDefaultCertificate']
   end
 end
