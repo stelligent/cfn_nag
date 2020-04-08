@@ -14,7 +14,7 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
   end
 
   def rule_id
-    'W68'
+    'W71'
   end
 
   def audit_impl(cfn_model)

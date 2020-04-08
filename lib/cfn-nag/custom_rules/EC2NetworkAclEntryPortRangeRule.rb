@@ -33,7 +33,7 @@ class EC2NetworkAclEntryPortRangeRule < BaseRule
   end
 
   def port_range_params_not_exist?(network_acl_entry)
-    network_acl_entry.portRange.empty? ||
+    network_acl_entry.portRange.nil? ||
       network_acl_entry.portRange['From'].nil? || network_acl_entry.portRange['To'].nil?
   end
 

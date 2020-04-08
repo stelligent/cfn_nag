@@ -14,7 +14,7 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
   end
 
   def rule_id
-    'W69'
+    'W70'
   end
 
   def audit_impl(cfn_model)

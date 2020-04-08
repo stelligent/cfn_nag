@@ -47,7 +47,7 @@ class EC2NetworkAclEntryProtocolRule < BaseRule
 
   def icmpv6_protocol?(network_acl_entry)
     network_acl_entry.protocol == '58' && !network_acl_entry.ipv6CidrBlock.nil? &&
-      !network_acl_entry.icmp.empty? && !network_acl_entry.icmp['Code'].nil? &&
+      !network_acl_entry.icmp.nil? && !network_acl_entry.icmp['Code'].nil? &&
       !network_acl_entry.icmp['Type'].nil?
   end
 
