@@ -1,0 +1,35 @@
+{
+	"Resources": {
+		"ApiGatewayWithTls12": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1.2_2018"
+					},
+					"Origins": [
+						{}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {}
+				}
+			}
+		},
+		"ApiGatewayWithTls12OverridebyCloudFrontDefaultCertificateUsage": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1.2_2018",
+						"CloudFrontDefaultCertificate" : true
+					},
+					"Origins": [
+						{}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {}
+				}
+			}
+		}
+	}
+}
