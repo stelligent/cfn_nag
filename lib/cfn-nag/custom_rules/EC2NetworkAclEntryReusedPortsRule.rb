@@ -20,50 +20,42 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
   def audit_impl(cfn_model)
     violating_nacl_entries = []
     cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
-      egress_entries = egress?(nacl.network_acl_entries)
-      ingress_entries = ingress?(nacl.network_acl_entries)
-      violating_nacl_entries += reused_ports?(egress_entries) && reused_ports?(ingress_entries) &&
-                                ports_overlap?(egress_entries) && ports_overlap?(ingress_entries)
+      violating_nacl_entries += violating_nacl_entries(nacl)
     end
 
-    violating_nacl_entries.uniq.map(&:logical_resource_id)
+    violating_nacl_entries.map(&:logical_resource_id)
   end
 
   private
 
   def reused_ports?(nacl_entries)
     ports = []
-    reused = []
-    nacl_entries.each do |nacl_entry|
+    nacl_entries.select do |nacl_entry|
       if ports.include?(nacl_entry.portRange)
-        reused << nacl_entry
+        ports << nacl_entry.portRange && nacl_entry
+      else
+        ports << nacl_entry.portRange && next
       end
-      ports << nacl_entry.portRange
     end
-    reused
   end
 
   def ports_overlap?(nacl_entries)
     port_min = -1
     port_max = -1
-    overlaps = []
-    nacl_entries.each do |nacl_entry|
+    nacl_entries.select do |nacl_entry|
       nacl_from = nacl_entry.portRange['From'].to_i
       nacl_to = nacl_entry.portRange['To'].to_i
       if port_min == -1 || port_max == -1
         port_min = nacl_from
         port_max = nacl_to
         next
+      elsif nacl_from.between?(port_min, port_max) ||
+            nacl_to.between?(port_min, port_max)
+        port_min = port_min_reset(port_min, nacl_from)
+        port_max = port_max_reset(port_max, nacl_to)
+        nacl_entry
       end
-
-      if nacl_from.between?(port_min, port_max) ||
-         nacl_to.between?(port_min, port_max)
-        overlaps << nacl_entry
-      end
-      port_min = port_min_reset(port_min, nacl_from)
-      port_max = port_max_reset(port_max, nacl_to)
     end
-    overlaps
   end
 
   def port_min_reset(port_min, nacl_from)
@@ -84,5 +76,12 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
     nacl_entries.select do |nacl_entry|
       not_truthy?(nacl_entry.egress)
     end
+  end
+
+  def violating_nacl_entries(nacl)
+    reused_ports?(egress?(nacl.network_acl_entries)) &&
+      ports_overlap?(egress?(nacl.network_acl_entries)) &&
+      reused_ports?(ingress?(nacl.network_acl_entries)) &&
+      ports_overlap?(ingress?(nacl.network_acl_entries))
   end
 end

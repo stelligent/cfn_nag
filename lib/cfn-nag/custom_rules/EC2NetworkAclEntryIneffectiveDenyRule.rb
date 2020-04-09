@@ -18,16 +18,12 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_nacl_egress_entries = []
-    violating_nacl_ingress_entries = []
+    violating_nacl_entries = []
     cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
-      egress_entries = egress?(nacl.network_acl_entries)
-      ingress_entries = ingress?(nacl.network_acl_entries)
-      violating_nacl_egress_entries += deny_does_not_cover_all_cidrs?(egress_entries)
-      violating_nacl_ingress_entries += deny_does_not_cover_all_cidrs?(ingress_entries)
+      violating_nacl_entries += violating_nacl_entries(nacl)
     end
 
-    violating_nacl_egress_entries.map(&:logical_resource_id) + violating_nacl_ingress_entries.map(&:logical_resource_id)
+    violating_nacl_entries.map(&:logical_resource_id)
   end
 
   private
@@ -54,5 +50,10 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
     nacl_entries.select do |nacl_entry|
       not_truthy?(nacl_entry.egress)
     end
+  end
+
+  def violating_nacl_entries(nacl)
+    deny_does_not_cover_all_cidrs?(egress?(nacl.network_acl_entries)) &&
+      deny_does_not_cover_all_cidrs?(ingress?(nacl.network_acl_entries))
   end
 end
