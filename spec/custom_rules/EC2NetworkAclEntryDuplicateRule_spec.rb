@@ -10,7 +10,7 @@ describe EC2NetworkAclEntryDuplicateRule do
       )
 
       actual_logical_resource_ids = EC2NetworkAclEntryDuplicateRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[myNetworkAclEntry2 myNetworkAclEntry4]
+      expected_logical_resource_ids = %w[myNetworkAclEntry myNetworkAclEntry2 myNetworkAclEntry3 myNetworkAclEntry4]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
@@ -35,6 +35,18 @@ describe EC2NetworkAclEntryDuplicateRule do
 
       actual_logical_resource_ids = EC2NetworkAclEntryDuplicateRule.new.audit_impl cfn_model
       expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+  context 'EC2 Network ACL entries duplicate some rule numbers within and between egress, ingress, and acls' do
+    it 'returns an empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/ec2_networkaclentry/ec2_networkaclentry_some_duplicate_rule_numbers.yml'
+      )
+
+      actual_logical_resource_ids = EC2NetworkAclEntryDuplicateRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[myNetworkAclEntry2 myNetworkAclEntry3]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

@@ -10,7 +10,7 @@ describe EC2NetworkAclEntryReusedPortsRule do
       )
 
       actual_logical_resource_ids = EC2NetworkAclEntryReusedPortsRule.new.audit_impl cfn_model
-      expected_logical_resource_ids = %w[myNetworkAclEntry2 myNetworkAclEntry4]
+      expected_logical_resource_ids = %w[myNetworkAclEntry myNetworkAclEntry2 myNetworkAclEntry3 myNetworkAclEntry4]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

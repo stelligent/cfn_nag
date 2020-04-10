@@ -28,31 +28,24 @@ class EC2NetworkAclEntryDuplicateRule < BaseRule
 
   private
 
-  def duplicate_rule_numbers?(nacl_entries)
-    rule_numbers = []
-    nacl_entries.select do |nacl_entry|
-      if rule_numbers.include?(nacl_entry.ruleNumber)
-        rule_numbers << nacl_entry.ruleNumber && nacl_entry
-      else
-        rule_numbers << nacl_entry.ruleNumber && next
-      end
-    end
+  def duplicate_rule_numbers(nacl_entries)
+    nacl_entries.group_by(&:ruleNumber).select { |_, entries| entries.size > 1 }.map { |_, entries| entries }.flatten
   end
 
-  def egress?(nacl_entries)
+  def egress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       truthy?(nacl_entry.egress)
     end
   end
 
-  def ingress?(nacl_entries)
+  def ingress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       not_truthy?(nacl_entry.egress)
     end
   end
 
   def violating_nacl_entries(nacl)
-    duplicate_rule_numbers?(egress?(nacl.network_acl_entries)) &&
-      duplicate_rule_numbers?(ingress?(nacl.network_acl_entries))
+    duplicate_rule_numbers(egress(nacl.network_acl_entries)) +
+      duplicate_rule_numbers(ingress(nacl.network_acl_entries))
   end
 end

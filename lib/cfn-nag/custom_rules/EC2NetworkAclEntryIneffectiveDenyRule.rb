@@ -28,7 +28,7 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
 
   private
 
-  def deny_does_not_cover_all_cidrs?(nacl_entries)
+  def deny_does_not_cover_all_cidrs(nacl_entries)
     nacl_entries.select do |nacl_entry|
       nacl_entry.ruleAction == 'deny' && not_all_cidrs_covered?(nacl_entry)
     end
@@ -40,20 +40,20 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
       (!nacl_entry.ipv6CidrBlock.nil? && nacl_entry.ipv6CidrBlock != '::/0')
   end
 
-  def egress?(nacl_entries)
+  def egress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       truthy?(nacl_entry.egress)
     end
   end
 
-  def ingress?(nacl_entries)
+  def ingress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       not_truthy?(nacl_entry.egress)
     end
   end
 
   def violating_nacl_entries(nacl)
-    deny_does_not_cover_all_cidrs?(egress?(nacl.network_acl_entries)) &&
-      deny_does_not_cover_all_cidrs?(ingress?(nacl.network_acl_entries))
+    deny_does_not_cover_all_cidrs(egress(nacl.network_acl_entries)) +
+      deny_does_not_cover_all_cidrs(ingress(nacl.network_acl_entries))
   end
 end

@@ -23,23 +23,16 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
       violating_nacl_entries += violating_nacl_entries(nacl)
     end
 
-    violating_nacl_entries.map(&:logical_resource_id)
+    violating_nacl_entries.uniq.map(&:logical_resource_id)
   end
 
   private
 
-  def reused_ports?(nacl_entries)
-    ports = []
-    nacl_entries.select do |nacl_entry|
-      if ports.include?(nacl_entry.portRange)
-        ports << nacl_entry.portRange && nacl_entry
-      else
-        ports << nacl_entry.portRange && next
-      end
-    end
+  def reused_ports(nacl_entries)
+    nacl_entries.group_by(&:portRange).select { |_, entries| entries.size > 1 }.map { |_, entries| entries }.flatten
   end
 
-  def ports_overlap?(nacl_entries)
+  def ports_overlap(nacl_entries)
     port_min = -1
     port_max = -1
     nacl_entries.select do |nacl_entry|
@@ -66,22 +59,22 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
     nacl_to > port_max ? nacl_to : port_max
   end
 
-  def egress?(nacl_entries)
+  def egress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       truthy?(nacl_entry.egress)
     end
   end
 
-  def ingress?(nacl_entries)
+  def ingress(nacl_entries)
     nacl_entries.select do |nacl_entry|
       not_truthy?(nacl_entry.egress)
     end
   end
 
   def violating_nacl_entries(nacl)
-    reused_ports?(egress?(nacl.network_acl_entries)) &&
-      ports_overlap?(egress?(nacl.network_acl_entries)) &&
-      reused_ports?(ingress?(nacl.network_acl_entries)) &&
-      ports_overlap?(ingress?(nacl.network_acl_entries))
+    reused_ports(egress(nacl.network_acl_entries)) +
+      ports_overlap(egress(nacl.network_acl_entries)) +
+      reused_ports(ingress(nacl.network_acl_entries)) +
+      ports_overlap(ingress(nacl.network_acl_entries))
   end
 end
