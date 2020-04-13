@@ -32,31 +32,32 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
     nacl_entries.group_by(&:portRange).select { |_, entries| entries.size > 1 }.map { |_, entries| entries }.flatten
   end
 
-  def ports_overlap(nacl_entries)
-    port_min = -1
-    port_max = -1
+  def overlapping_port_entries(nacl_entries)
+    ports = nil
     nacl_entries.select do |nacl_entry|
-      nacl_from = nacl_entry.portRange['From'].to_i
-      nacl_to = nacl_entry.portRange['To'].to_i
-      if port_min == -1 || port_max == -1
-        port_min = nacl_from
-        port_max = nacl_to
-        next
-      elsif nacl_from.between?(port_min, port_max) ||
-            nacl_to.between?(port_min, port_max)
-        port_min = port_min_reset(port_min, nacl_from)
-        port_max = port_max_reset(port_max, nacl_to)
+      nacl_entry_range = nacl_entry.portRange['From'].to_i..nacl_entry.portRange['To'].to_i
+      current_port_range = ports
+      ports = update_overlapping_port_range(nacl_entry_range, current_port_range)
+      if nacl_entry_ports_overlap?(nacl_entries, nacl_entry, nacl_entry_range, current_port_range)
         nacl_entry
       end
     end
   end
 
-  def port_min_reset(port_min, nacl_from)
-    nacl_from < port_min ? nacl_from : port_min
+  def update_overlapping_port_range(nacl_entry_range, ports)
+    if ports.nil?
+      nacl_entry_range
+    else
+      port_min = nacl_entry_range.min < ports.min ? nacl_entry_range.min : ports.min
+      port_max = nacl_entry_range.max > ports.max ? nacl_entry_range.max : ports.max
+      port_min..port_max
+    end
   end
 
-  def port_max_reset(port_max, nacl_to)
-    nacl_to > port_max ? nacl_to : port_max
+  def nacl_entry_ports_overlap?(nacl_entries, nacl_entry, nacl_entry_range, ports)
+    if nacl_entry != nacl_entries.detect.first
+      nacl_entry_range.min.between?(ports.min, ports.max) || nacl_entry_range.max.between?(ports.min, ports.max)
+    end
   end
 
   def egress(nacl_entries)
@@ -73,8 +74,8 @@ class EC2NetworkAclEntryReusedPortsRule < BaseRule
 
   def violating_nacl_entries(nacl)
     reused_ports(egress(nacl.network_acl_entries)) +
-      ports_overlap(egress(nacl.network_acl_entries)) +
+      overlapping_port_entries(egress(nacl.network_acl_entries)) +
       reused_ports(ingress(nacl.network_acl_entries)) +
-      ports_overlap(ingress(nacl.network_acl_entries))
+      overlapping_port_entries(ingress(nacl.network_acl_entries))
   end
 end
