@@ -1,0 +1,30 @@
+---
+Resources:
+  myVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      InstanceTenancy: "default"
+  myVPCIpv6CidrBlock:
+    Type: AWS::EC2::VPCCidrBlock
+    Properties: 
+      AmazonProvidedIpv6CidrBlock: true
+      VpcId: !Ref myVPC
+  myNetworkAcl:
+    Type: AWS::EC2::NetworkAcl
+    Properties:
+      VpcId: !Ref myVPC
+  myNetworkAclEntry:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref myNetworkAcl
+      Protocol: "58"
+      RuleAction: "deny"
+      RuleNumber: "100"
+      Ipv6CidrBlock: '::/0'
+      Egress: false
+      Icmp:
+        Code: "0"
+        Type: "0"
