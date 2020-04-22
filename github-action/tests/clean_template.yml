@@ -1,0 +1,162 @@
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Create a Data Lake and the surrounding infrastructure for SiC Lightning Talk.
+
+Parameters:
+  DataBucketName:
+    Type: String
+    Description: Name of S3 bucket which stores data to be parsed
+    # Default: pshelby-data-lake-lt-data
+  Owner:
+    Type: String
+    Description: Name of owner of these resources
+    # Default: pshelby
+  Prefix:
+    Type: String
+    Description: Unique identifier for these resources
+    # Default: data-lake-lt
+
+Resources:
+  DataLakeWorkflowRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: glue.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: Data lake workflow role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole
+      Policies:
+        - PolicyName: !Sub ${Owner}-${Prefix}-LakeFormationPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: Lakeformation
+                Effect: Allow
+                Action:
+                  - lakeformation:GetDataAccess
+                  - lakeformation:GrantPermissions
+                Resource:
+                  - glue:*
+              - Sid: IAM
+                Effect: Allow
+                Action:
+                  - iam:PassRole
+                Resource:
+                  - !Sub arn:aws:iam::${AWS::AccountId}:role/${Owner}-${Prefix}-LakeFormationWorkflowRole
+              - Sid: S3
+                Effect: Allow
+                Action:
+                  - s3:Get*
+                  - s3:Put*
+                Resource:
+                  - !Sub arn:aws:s3:::${DataBucketName}
+                  - !Sub arn:aws:s3:::${DataBucketName}/*
+      Tags:
+        - Key: Owner
+          Value: !Ref Owner
+        - Key: Prefix
+          Value: !Ref Prefix
+
+  DataLakeSettings:
+    Type: AWS::LakeFormation::DataLakeSettings
+    Properties:
+      Admins:
+        - DataLakePrincipalIdentifier: !GetAtt DataLakeWorkflowRole.Arn
+
+  DataLakeDatabase:
+    Type: AWS::Glue::Database
+    Properties:
+      CatalogId: !Ref AWS::AccountId
+      DatabaseInput:
+        Description: Testing Glue database creation via CloudFormation.
+        Name: !Sub ${Owner}-${Prefix}-lakeformationdb
+
+  DataLakeS3Bucket:
+    Type: AWS::LakeFormation::Resource
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      ResourceArn: !Sub arn:aws:s3:::${DataBucketName}
+      UseServiceLinkedRole: true
+
+  # CloudFormationRoleToS3Permission:
+  #   Type: AWS::LakeFormation::Permissions
+  #   Properties:
+  #     DataLakePrincipal:
+  #       DataLakePrincipalIdentifier: !ImportValue DataLakeCloudFormationRoleArn
+  #     Permissions:
+  #       - DATA_LOCATION_ACCESS
+  #     Resource:
+  #       DataLocationResource:
+  #         S3Resource: !Ref DataLakeS3Bucket
+
+  WorkflowRoleToDBPermission:
+    Type: AWS::LakeFormation::Permissions
+    Properties:
+      DataLakePrincipal:
+        DataLakePrincipalIdentifier: !GetAtt DataLakeWorkflowRole.Arn
+      Permissions:
+        - CREATE_TABLE
+        - ALTER
+        - DROP
+      Resource:
+        DatabaseResource:
+          Name: !Ref DataLakeDatabase
+
+  WorkflowRoleToS3Permission:
+    Type: AWS::LakeFormation::Permissions
+    Properties:
+      DataLakePrincipal:
+        DataLakePrincipalIdentifier: !GetAtt DataLakeWorkflowRole.Arn
+      Permissions:
+        - DATA_LOCATION_ACCESS
+      Resource:
+        DataLocationResource:
+          S3Resource: !Ref DataLakeS3Bucket
+
+  EnergyDataWorkflow:
+    Type: AWS::Glue::Workflow
+    Properties:
+      Description: Testing Glue workflow creation via CloudFormation.
+
+  EnergyDataCrawler:
+    Type: AWS::Glue::Crawler
+    Properties:
+      DatabaseName: !Ref DataLakeDatabase
+      Description: Parses energy usage data for pshelby.
+      Role: !GetAtt DataLakeWorkflowRole.Arn
+      Targets:
+        S3Targets:
+          - Path: !Sub s3://${DataBucketName}/
+            Exclusions:
+              - '*.json'
+              - '*.md'
+              - '*.txt'
+              - '*.yml'
+
+  EnergyDataTrigger:
+    Type: AWS::Glue::Trigger
+    Properties:
+      Actions:
+        - CrawlerName: !Ref EnergyDataCrawler
+      Description: Kicks off the EnergyDataCrawler.
+      Type: ON_DEMAND
+      WorkflowName: !Ref EnergyDataWorkflow
+
+Outputs:
+  DataLakeDatabaseName:
+    Description: Name of the data lake database.
+    Value: !Ref DataLakeDatabase
+    Export:
+      Name: !Sub ${Owner}DataLakeDatabaseName
+  EnergyDataWorkflowName:
+    Description: Name of the EnergyData Glue workflow.
+    Value: !Ref EnergyDataWorkflow
+    Export:
+      Name: EnergyDataWorkflowName
