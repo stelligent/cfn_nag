@@ -51,6 +51,18 @@ describe EC2NetworkAclEntryOverlappingPortsRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+  context 'EC2 Network ACLs entries ports overlap for non TCP/UDP protocols' do
+    it 'returns an empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+        'yaml/ec2_networkaclentry/ec2_networkaclentry_port_overlap_non_tcp_udp.yml'
+      )
+
+      actual_logical_resource_ids = EC2NetworkAclEntryOverlappingPortsRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
   context 'EC2 Network ACLs entries ports do not overlap' do
     it 'returns an empty list' do
       cfn_model = CfnParser.new.parse read_test_template(
