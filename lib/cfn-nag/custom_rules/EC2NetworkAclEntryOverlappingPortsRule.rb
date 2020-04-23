@@ -29,8 +29,12 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
 
   def overlapping_port_entries(nacl_entries)
     unique_pairs(nacl_entries).select do |nacl_entry_pair|
-      overlap?(nacl_entry_pair[0], nacl_entry_pair[1])
+      tcp_or_udp_protocol?(nacl_entry_pair[0], nacl_entry_pair[1]) && overlap?(nacl_entry_pair[0], nacl_entry_pair[1])
     end
+  end
+
+  def tcp_or_udp_protocol?(entry1, entry2)
+    %w[6 17].include?(entry1.protocol) && %w[6 17].include?(entry2.protocol)
   end
 
   def unique_pairs(arr)
