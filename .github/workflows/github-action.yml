@@ -1,0 +1,38 @@
+---
+name: github-action
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - .github/workflows/github-action.yml
+      - action.yml
+      - github-action/**
+
+jobs:
+  e2e:
+    name: E2E test
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@master
+      - name: Simple test
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: github-action/tests
+      - name: Test not showing suppression
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: github-action/tests
+          extra_args: ''
+      - name: Test with JSON output
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: github-action/tests
+          extra_args: -o json
+      - name: Test multiple extra args
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: github-action/tests
+          extra_args: -o json --template-pattern clean
