@@ -1,0 +1,16 @@
+---
+name: 'Stelligent cfn_nag'
+description: Execute cfn_nag_scan against the code in the repository where the GitHub Action workflow is run.
+branding:
+  icon: search
+  color: orange
+inputs:
+  input_path:
+    description: 'Where cfn_nag_scan should scan for violations (default: $GITHUB_WORKSPACE).'
+    default: '.'
+  extra_args:
+    description: 'Additional arguments to pass to cfn_nag_scan, separated by space (default: "--print-suppression").'
+    default: '--print-suppression'
+runs:
+  using: docker
+  image: github-action/Dockerfile

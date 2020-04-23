@@ -106,6 +106,20 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/
 }
 ```
 
+## Running as a GitHub Action
+
+`cfn_nag_scan` can be run as part of a GitHub Workflow to evaluate code during continuous integration pipelines.  
+
+In your GitHub Workflow file, create a step which uses the cfn_nag Action:
+```
+      - name: Simple test
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: tests
+```
+
+More information about the [GitHub Action can be found here](github-action/README.md).
+
 ## Results Filtering
 
 ### Profiles
