@@ -9,3 +9,8 @@ Resources:
         Privileged: false
         Vcpus: 1
         Image: amazon/amazon-ecs-agent
+
+  BatchJobDefinition1:
+    Type: AWS::Batch::JobDefinition
+    Properties:
+      Type: container

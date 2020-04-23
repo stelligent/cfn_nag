@@ -19,7 +19,11 @@ class BatchJobDefinitionContainerPropertiesPrivilegedRule < BaseRule
   def audit_impl(cfn_model)
     violating_job_definitions = cfn_model.resources_by_type('AWS::Batch::JobDefinition')
                                          .select do |job_definition|
-      truthy?(job_definition.containerProperties['Privileged'])
+      if job_definition.containerProperties
+        truthy?(job_definition.containerProperties['Privileged'])
+      else
+        false
+      end
     end
 
     violating_job_definitions.map(&:logical_resource_id)
