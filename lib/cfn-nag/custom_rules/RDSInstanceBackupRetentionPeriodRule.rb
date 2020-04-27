@@ -26,8 +26,6 @@ class RDSInstanceBackupRetentionPeriodRule < BaseRule
     violating_rdsinstances.map(&:logical_resource_id)
   end
 
-
-
   def violating_period(backup_retention_period)
     if backup_retention_period.nil?
       false
