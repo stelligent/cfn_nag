@@ -55,7 +55,7 @@ status_code=404
 until [ ${status_code} == 200 ]
 do
   status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://rubygems.org/gems/cfn-nag/versions/${new_version})
-  sleep 15
+  sleep 30
 done
 
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
