@@ -11,3 +11,9 @@ Resources:
       DBInstanceClass: db.m5.large
       Engine: mysql
       BackupRetentionPeriod: 0
+  RDSDBInstanceWithStringZeroBackupRetentionPeriod:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m5.large
+      Engine: mysql
+      BackupRetentionPeriod: "0"

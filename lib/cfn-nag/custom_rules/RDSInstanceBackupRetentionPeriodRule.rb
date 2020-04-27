@@ -20,9 +20,23 @@ class RDSInstanceBackupRetentionPeriodRule < BaseRule
     rds_dbinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance')
 
     violating_rdsinstances = rds_dbinstances.select do |instance|
-      instance.backupRetentionPeriod && instance.backupRetentionPeriod == 0
+      violating_period(instance.backupRetentionPeriod)
     end
 
     violating_rdsinstances.map(&:logical_resource_id)
+  end
+
+
+
+  def violating_period(backup_retention_period)
+    if !backup_retention_period
+      false
+    end
+
+    if backup_retention_period.is_a?(Integer) || backup_retention_period.is_a?(String)
+      backup_retention_period.to_i == 0
+    else
+      false
+    end
   end
 end
