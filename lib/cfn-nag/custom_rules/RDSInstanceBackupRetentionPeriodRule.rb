@@ -29,7 +29,7 @@ class RDSInstanceBackupRetentionPeriodRule < BaseRule
 
 
   def violating_period(backup_retention_period)
-    if !backup_retention_period
+    if backup_retention_period.nil?
       false
     end
 
