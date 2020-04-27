@@ -1,12 +1,19 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require 'cfn-nag/util/truthy'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class RDSInstanceDeletionProtectionRule < BaseRule
+class RDSInstanceDeletionProtectionRule < BooleanBaseRule
   def rule_text
     'RDS instance should have deletion protection enabled'
+  end
+
+  def resource_type
+    'AWS::RDS::DBInstance'
+  end
+
+  def boolean_property
+    :deletionProtection
   end
 
   def rule_type
@@ -15,15 +22,5 @@ class RDSInstanceDeletionProtectionRule < BaseRule
 
   def rule_id
     'F80'
-  end
-
-  def audit_impl(cfn_model)
-    rds_dbinstances = cfn_model.resources_by_type('AWS::RDS::DBInstance')
-
-    violating_rdsinstances = rds_dbinstances.select do |instance|
-      instance.deletionProtection.nil? || !truthy?(instance.deletionProtection.to_s)
-    end
-
-    violating_rdsinstances.map(&:logical_resource_id)
   end
 end
