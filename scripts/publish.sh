@@ -54,7 +54,7 @@ gem push cfn-nag-${new_version}.gem
 status_code=404
 until [ ${status_code} == 200 ]
 do
-  status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://rubygems.org/gemsn-nag/versions/${new_version})
+  status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://rubygems.org/gems/cfn-nag/versions/${new_version})
   sleep 5
 done
 
