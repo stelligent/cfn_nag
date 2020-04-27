@@ -51,8 +51,15 @@ sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 gem build cfn-nag.gemspec
 gem push cfn-nag-${new_version}.gem
 
+status_code=404
+until [ ${status_code} == 200 ]
+do
+  status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://rubygems.org/gemsn-nag/versions/${new_version})
+  sleep 5
+done
+
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
-docker build -t $docker_org/cfn_nag:${new_version} .
+docker build -t $docker_org/cfn_nag:${new_version} . --build-arg version=${new_version}
 set +x
 echo $docker_password | docker login -u $docker_user --password-stdin
 set -x
