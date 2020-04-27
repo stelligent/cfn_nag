@@ -5,7 +5,8 @@
             "Properties": {
                 "SourceDBInstanceIdentifier": "sampleDbInstance",
                 "PubliclyAccessible": true,
-                "StorageEncrypted": "true"
+                "StorageEncrypted": "true",
+                "DeletionProtection": true
             }
         }
     }
