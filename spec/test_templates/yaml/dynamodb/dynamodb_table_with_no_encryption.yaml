@@ -1,0 +1,18 @@
+---
+Resources:
+  DynamodbNoEncryption:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      KeySchema: 
+        - KeySchema
+      TableName: String
+  DynamodbEncryptionDisabled:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      KeySchema: 
+        - KeySchema
+      TableName: String
+      SSESpecification:
+        KMSMasterKeyId: String
+        SSEEnabled: False
+        SSEType: String
