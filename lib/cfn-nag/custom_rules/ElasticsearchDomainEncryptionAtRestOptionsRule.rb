@@ -27,6 +27,6 @@ class ElasticsearchDomainEncryptionAtRestOptionsRule < BaseRule
   private
 
   def encryption_not_enabled?(encryption_at_rest_options)
-    encryption_at_rest_options['Enabled'].nil? || encryption_at_rest_options['Enabled'].to_s.casecmp?('false')
+    encryption_at_rest_options['Enabled'].nil? || encryption_at_rest_options['Enabled'].to_s.casecmp('false').zero?
   end
 end
