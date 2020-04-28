@@ -6,7 +6,8 @@
                 "SourceDBInstanceIdentifier": "sampleDbInstance",
                 "PubliclyAccessible": true,
                 "StorageEncrypted": "true",
-                "DeletionProtection": true
+                "DeletionProtection": true,
+                "BackupRetentionPeriod": 2
             }
         }
     }

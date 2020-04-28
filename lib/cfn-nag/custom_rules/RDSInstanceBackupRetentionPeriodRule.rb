@@ -27,14 +27,8 @@ class RDSInstanceBackupRetentionPeriodRule < BaseRule
   end
 
   def violating_period(backup_retention_period)
-    if backup_retention_period.nil?
-      false
-    end
+    return false if backup_retention_period.nil?
 
-    if backup_retention_period.is_a?(Integer) || backup_retention_period.is_a?(String)
-      backup_retention_period.to_i == 0
-    else
-      false
-    end
+    backup_retention_period.to_i.zero?
   end
 end
