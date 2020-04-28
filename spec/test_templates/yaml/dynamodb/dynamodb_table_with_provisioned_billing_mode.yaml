@@ -1,0 +1,9 @@
+---
+Resources:
+  DynamodbProvisionedBillingMode:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      BillingMode: PROVISIONED
+      KeySchema: 
+        - KeySchema
+      TableName: String

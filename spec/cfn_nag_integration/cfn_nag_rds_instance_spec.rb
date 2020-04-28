@@ -81,13 +81,13 @@ describe CfnNag do
                 id: 'F23', type: Violation::FAILING_VIOLATION,
                 message: 'RDS instance master user password must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.',
                 logical_resource_ids: %w[BadDb1 BadDb2],
-                line_numbers: [14, 28]
+                line_numbers: [14, 30]
               ),
               Violation.new(
                 id: 'F24', type: Violation::FAILING_VIOLATION,
                 message: 'RDS instance master username must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.',
                 logical_resource_ids: %w[BadDb1 BadDb2],
-                line_numbers: [14, 28]
+                line_numbers: [14, 30]
               )
             ]
           }

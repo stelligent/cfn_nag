@@ -1,0 +1,7 @@
+---
+Resources:
+  RDSDBInstanceWithoutBackupRetentionPeriod:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m5.large
+      Engine: mysql

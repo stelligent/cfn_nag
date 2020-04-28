@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'cfn-nag/util/truthy'
 require 'cfn-nag/violation'
 require 'cfn-nag/util/truthy'
 require_relative 'base'

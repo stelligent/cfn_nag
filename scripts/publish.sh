@@ -51,11 +51,11 @@ sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
 gem build cfn-nag.gemspec
 gem push cfn-nag-${new_version}.gem
 
-status_code=404
-until [ ${status_code} == 200 ]
+latest_version=0.0.0
+until [ ${latest_version} == ${new_version} ]
 do
-  status_code=$(curl -s -o /dev/null -I -w "%{http_code}" https://rubygems.org/gems/cfn-nag/versions/${new_version})
-  sleep 30
+  latest_version=$(curl -s https://rubygems.org/api/v1/versions/cfn-nag/latest.json | ruby -e 'require "json"' -e 'puts JSON.parse(STDIN.read)["version"]')
+  sleep 35
 done
 
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag
