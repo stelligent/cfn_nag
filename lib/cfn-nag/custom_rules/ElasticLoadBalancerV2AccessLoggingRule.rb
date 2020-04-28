@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
+require 'cfn-nag/util/truthy'
 require_relative 'base'
 
 class ElasticLoadBalancerV2AccessLoggingRule < BaseRule
@@ -29,14 +30,14 @@ class ElasticLoadBalancerV2AccessLoggingRule < BaseRule
 
   def access_logging_is_false?(load_balancer)
     false_access_log_attribute = load_balancer.loadBalancerAttributes.find do |load_balancer_attribute|
-      load_balancer_attribute['Key'] ==  'access_logs.s3.enabled' && load_balancer_attribute['Value'].casecmp?('false')
+      load_balancer_attribute['Key'] == 'access_logs.s3.enabled' && not_truthy?(load_balancer_attribute['Value'])
     end
     false_access_log_attribute
   end
 
   def missing_access_logs?(load_balancer)
     access_log_attribute = load_balancer.loadBalancerAttributes.find do |load_balancer_attribute|
-      load_balancer_attribute['Key'] ==  'access_logs.s3.enabled'
+      load_balancer_attribute['Key'] == 'access_logs.s3.enabled'
     end
     access_log_attribute.nil?
   end
