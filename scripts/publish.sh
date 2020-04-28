@@ -55,7 +55,7 @@ latest_version=0.0.0
 until [ ${latest_version} == ${new_version} ]
 do
   latest_version=$(curl -s https://rubygems.org/api/v1/versions/cfn-nag/latest.json | ruby -e 'require "json"' -e 'puts JSON.parse(STDIN.read)["version"]')
-  sleep 35
+  sleep 90
 done
 
 # publish docker image to DockerHub, https://hub.docker.com/r/stelligent/cfn_nag

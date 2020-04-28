@@ -29,6 +29,6 @@ class RDSInstanceBackupRetentionPeriodRule < BaseRule
   def violating_period(backup_retention_period)
     return false if backup_retention_period.nil?
 
-    backup_retention_period.to_i.zero?
+    backup_retention_period.to_s == '0'
   end
 end
