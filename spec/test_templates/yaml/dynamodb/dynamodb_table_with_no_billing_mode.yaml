@@ -1,0 +1,15 @@
+---
+Resources:
+  DynamodbNoBillingMode:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      KeySchema: 
+        - KeySchema
+      TableName: String
+  DynamodbInvalidBillingMode:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: INVALID
+      KeySchema: 
+        - KeySchema
+      TableName: String
