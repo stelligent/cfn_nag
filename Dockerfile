@@ -6,7 +6,9 @@ LABEL org.opencontainers.image.authors="eric.kascic@stelligent.com"
 # override here for a real build process
 ARG version=''
 
-RUN gem install cfn-nag --version "$version"
+RUN gem install cfn-nag --version "$version" || true
+RUN sleep 30; gem install cfn-nag --version "$version" || true
+RUN sleep 30; gem install cfn-nag --version "$version" || true
 
 ENTRYPOINT ["cfn_nag"]
 CMD ["--help"]
