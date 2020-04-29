@@ -4,7 +4,7 @@ LABEL org.opencontainers.image.authors="eric.kascic@stelligent.com"
 
 ARG version
 
-ADD cfn-nag-${version}.gem
+COPY cfn-nag-${version}.gem /
 
 RUN gem install cfn-nag-${version}.gem
 
