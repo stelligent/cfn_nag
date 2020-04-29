@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class EbsVolumeEncryptionKeyRule < BaseRule
+class EbsVolumeEncryptionKeyRule < BooleanBaseRule
   def rule_text
     'EBS Volume should specify a KmsKeyId value'
+  end
+
+  def resource_type
+    'AWS::EC2::Volume'
   end
 
   def rule_type
@@ -16,12 +20,7 @@ class EbsVolumeEncryptionKeyRule < BaseRule
     'W37'
   end
 
-  def audit_impl(cfn_model)
-    violating_volumes = cfn_model.resources_by_type('AWS::EC2::Volume')
-                                 .select do |volume|
-      volume.kmsKeyId.nil? || volume.kmsKeyId == { 'Ref' => 'AWS::NoValue' }
-    end
-
-    violating_volumes.map(&:logical_resource_id)
+  def boolean_property
+    :kmsKeyId
   end
 end

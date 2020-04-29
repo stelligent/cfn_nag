@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class SqsQueueKmsMasterKeyIdRule < BaseRule
+class SqsQueueKmsMasterKeyIdRule < BooleanBaseRule
   def rule_text
     'SQS Queue should specify KmsMasterKeyId property'
+  end
+
+  def resource_type
+    'AWS::SQS::Queue'
   end
 
   def rule_type
@@ -16,11 +20,7 @@ class SqsQueueKmsMasterKeyIdRule < BaseRule
     'W48'
   end
 
-  def audit_impl(cfn_model)
-    violating_sqs_queues = cfn_model.resources_by_type('AWS::SQS::Queue').select do |sqs_queue|
-      sqs_queue.kmsMasterKeyId.nil?
-    end
-
-    violating_sqs_queues.map(&:logical_resource_id)
+  def boolean_property
+    :kmsMasterKeyId
   end
 end

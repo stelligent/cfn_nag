@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  RestoreSecretString:
+    Type: String
+    NoEcho: true
+    Default: none
+
+Resources:
+  Key:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: An example CMK
+      EnableKeyRotation: true
+      KeyPolicy:
+        Version: 2012-10-17
+        Id: key-default-1
+        Statement:
+          - Sid: Enable IAM User Permissions
+            Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::111122223333:root
+            Action: kms:*
+            Resource: '*'
+          - Sid: Allow administration of the key
+            Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::123456789012:user/Alice
+            Action:
+              - kms:Create*
+              - kms:CancelKeyDeletion
+            Resource: '*'
+          - Sid: Allow use of the key
+            Effect: Allow
+            Principal:
+              AWS: arn:aws:iam::123456789012:user/Bob
+            Action:
+              - kms:GenerateDataKey
+              - kms:GenerateDataKeyWithoutPlaintext
+            Resource: '*'
+
+  AppDbSecret:
+    Type: AWS::SecretsManager::Secret
+    DeletionPolicy: Retain
+    Properties:
+      Description: 'Restore'
+      SecretString: !Ref 'RestoreSecretString'
+      KmsKeyId: !Ref Key
