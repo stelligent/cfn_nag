@@ -11,3 +11,8 @@ Resources:
       DBInstanceClass: db.m5.large
       Engine: mysql
       DeletionProtection: False
+  Aurora:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceClass: db.m5.large
+      Engine: aurora
