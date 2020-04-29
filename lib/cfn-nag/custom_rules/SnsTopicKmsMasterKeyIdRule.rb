@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 require 'cfn-nag/violation'
-require_relative 'base'
+require_relative 'boolean_base_rule'
 
-class SnsTopicKmsMasterKeyIdRule < BaseRule
+class SnsTopicKmsMasterKeyIdRule < BooleanBaseRule
   def rule_text
     'SNS Topic should specify KmsMasterKeyId property'
+  end
+
+  def resource_type
+    'AWS::SNS::Topic'
   end
 
   def rule_type
@@ -16,11 +20,7 @@ class SnsTopicKmsMasterKeyIdRule < BaseRule
     'W47'
   end
 
-  def audit_impl(cfn_model)
-    violating_sns_topics = cfn_model.resources_by_type('AWS::SNS::Topic').select do |topic|
-      topic.kmsMasterKeyId.nil?
-    end
-
-    violating_sns_topics.map(&:logical_resource_id)
+  def boolean_property
+    :kmsMasterKeyId
   end
 end

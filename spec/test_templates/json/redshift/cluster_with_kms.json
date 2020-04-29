@@ -1,0 +1,21 @@
+{
+  "Resources": {
+    "myCluster": {
+      "Type": "AWS::Redshift::Cluster",
+      "Properties": {
+        "DBName": "mydb",
+        "MasterUsername": "master",
+        "NodeType": "ds2.xlarge",
+        "ClusterType": "single-node",
+        "Encrypted": "true",
+        "KmsKeyId": "arn:aws:kms:us-east-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab",
+        "Tags": [
+          {
+            "Key": "foo",
+            "Value": "bar"
+          }
+        ]
+      }
+    }
+  }
+}
