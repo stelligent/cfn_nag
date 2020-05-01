@@ -29,7 +29,7 @@ class EC2NetworkAclEntryPortRangeRule < BaseRule
 
   # Port Range is required for protocols "6" (TCP) and "17" (UDP)
   def tcp_or_udp_protocol?(network_acl_entry)
-    %w[6 17].include?(network_acl_entry.protocol)
+    %w[6 17].include?(network_acl_entry.protocol.to_s)
   end
 
   def port_range_params_not_exist?(network_acl_entry)
@@ -38,7 +38,7 @@ class EC2NetworkAclEntryPortRangeRule < BaseRule
   end
 
   def full_port_range?(network_acl_entry)
-    network_acl_entry.portRange['From'] == '0' && network_acl_entry.portRange['To'] == '65535'
+    network_acl_entry.portRange['From'].to_s == '0' && network_acl_entry.portRange['To'].to_s == '65535'
   end
 
   def violating_network_acl_entries?(network_acl_entry)

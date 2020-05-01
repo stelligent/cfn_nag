@@ -37,7 +37,7 @@ class EC2NetworkAclEntryIneffectiveDenyRule < BaseRule
   def not_all_cidrs_covered?(nacl_entry)
     (!nacl_entry.cidrBlock.nil? &&
       nacl_entry.cidrBlock != '0.0.0.0/0') ||
-      (!nacl_entry.ipv6CidrBlock.nil? && nacl_entry.ipv6CidrBlock != '::/0')
+      (!nacl_entry.ipv6CidrBlock.nil? && (nacl_entry.ipv6CidrBlock != '::/0' && nacl_entry.ipv6CidrBlock != ':/0'))
   end
 
   def egress(nacl_entries)

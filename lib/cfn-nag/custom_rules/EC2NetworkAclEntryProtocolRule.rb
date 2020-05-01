@@ -42,11 +42,11 @@ class EC2NetworkAclEntryProtocolRule < BaseRule
   end
 
   def tcp_udp_icmp_protocol?(network_acl_entry)
-    %w[1 6 17].include?(network_acl_entry.protocol)
+    %w[1 6 17].include?(network_acl_entry.protocol.to_s)
   end
 
   def icmpv6_protocol?(network_acl_entry)
-    network_acl_entry.protocol == '58' && !network_acl_entry.ipv6CidrBlock.nil? &&
+    network_acl_entry.protocol.to_s == '58' && !network_acl_entry.ipv6CidrBlock.nil? &&
       !network_acl_entry.icmp.nil? && !network_acl_entry.icmp['Code'].nil? &&
       !network_acl_entry.icmp['Type'].nil?
   end
