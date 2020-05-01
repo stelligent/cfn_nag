@@ -283,6 +283,50 @@ the same JSON across all the templates).
 
 If the JSON is malformed or doesn't meet the above specification, then parsing will fail with a FATAL violation.
 
+# Mappings
+
+Prior to 0.5.55, calls to Fn::FindInMap were effectively ignored.  The underlying model would
+leave them be, and so they would appear as Hash values to rules.  For example: `{ "Fn::FindInMap" => [map1, key1, key2]}`
+
+Starting in 0.5.55, the model will attempt to compute the value for a call to FindInMap and present that value to the 
+rules.  This evaluation supports keys that are:
+* static text
+* references to parameters (with parameter substitution)
+* references to AWS pseudofunctions (see next section)
+* nested maps
+
+If the evaluation logic can't figure out the value for a key, it will default to the old behavior of returning the
+Hash for the whole expression.
+
+## AWS Pseudofunctions
+
+Also prior to 0.5.55, calls to AWS pseudofunctions were effectively ignored.  The underlying model would
+leave them be, and so they would appear as Hash values to rules.  For example: `{"Ref"=>"AWS::Region"}`.
+A common use case is to organize mappings by region, so pseudofunction evaluation is important to better supporting
+map evaluation.
+
+Starting in 0.5.55, the model will present the following AWS pseudofunctions to rules with the default values:
+
+```
+'AWS::URLSuffix' => 'amazonaws.com',
+'AWS::Partition' => 'aws',
+'AWS::NotificationARNs' => '',
+'AWS::AccountId' => '111111111111',
+'AWS::Region' => 'us-east-1',
+'AWS::StackId' => 'arn:aws:cloudformation:us-east-1:111111111111:stack/stackname/51af3dc0-da77-11e4-872e-1234567db123',
+'AWS::StackName' => 'stackname'
+```
+
+Additionally, the end user can override the value supplied via the traditional parameter substitution mechanism.  For example:
+
+```
+{
+  "Parameters": {
+    "AWS::Region": eu-west-1"
+  }
+}
+```
+
 # Controlling the Behavior of Conditions
 
 Up until version 0.4.66 of cfn_nag, the underlying model did not do any processing of Fn::If within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the Fn::If.  Given that an Fn::If could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.
