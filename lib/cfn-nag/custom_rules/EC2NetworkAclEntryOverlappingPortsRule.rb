@@ -34,7 +34,7 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
   end
 
   def tcp_or_udp_protocol?(entry1, entry2)
-    %w[6 17].include?(entry1.protocol) && %w[6 17].include?(entry2.protocol)
+    %w[6 17].include?(entry1.protocol.to_s) && %w[6 17].include?(entry2.protocol.to_s)
   end
 
   def unique_pairs(arr)
