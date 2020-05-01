@@ -68,8 +68,29 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
     end
   end
 
+  def ip6_entries(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      !nacl_entry.ipv6CidrBlock.nil?
+    end
+  end
+
+  def ip4_entries(nacl_entries)
+    nacl_entries.select do |nacl_entry|
+      nacl_entry.ipv6CidrBlock.nil?
+    end
+  end
+
   def violating_nacl_entries(nacl)
-    overlapping_port_entries(egress_entries(nacl.network_acl_entries)).flatten.uniq &&
-      overlapping_port_entries(ingress_entries(nacl.network_acl_entries)).flatten.uniq
+    violating_ip4_nacl_entries(nacl) || violating_ip6_nacl_entries(nacl)
+  end
+
+  def violating_ip4_nacl_entries(nacl)
+    overlapping_port_entries(egress_entries(ip4_entries(nacl.network_acl_entries))).flatten.uniq &&
+      overlapping_port_entries(ingress_entries(ip4_entries(nacl.network_acl_entries))).flatten.uniq
+  end
+
+  def violating_ip6_nacl_entries(nacl)
+    overlapping_port_entries(egress_entries(ip6_entries(nacl.network_acl_entries))).flatten.uniq &&
+      overlapping_port_entries(ingress_entries(ip6_entries(nacl.network_acl_entries))).flatten.uniq
   end
 end

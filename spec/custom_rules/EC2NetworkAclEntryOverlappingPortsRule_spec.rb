@@ -75,4 +75,18 @@ describe EC2NetworkAclEntryOverlappingPortsRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+
+  context 'EC2 Network ACLs entries ports overlap but across IP4/IP6' do
+    it 'returns an empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/ec2_networkaclentry/ip6_and_ip4_nacl.yml'
+                                      )
+
+      actual_logical_resource_ids = EC2NetworkAclEntryOverlappingPortsRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
