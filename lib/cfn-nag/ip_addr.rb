@@ -8,7 +8,7 @@ module IpAddr
   end
 
   def ip6_localhost?(egress)
-    egress.cidrIpv6.is_a?(String) && (egress.cidrIpv6 == '::1/128' || egress.cidrIpv6 == ':1/128')
+    egress.cidrIpv6.to_s == '::1/128' || egress.cidrIpv6.to_s == ':1/128'
   end
 
   def ip4_open?(ingress)
