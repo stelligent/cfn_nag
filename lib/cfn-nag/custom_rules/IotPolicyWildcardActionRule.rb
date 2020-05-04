@@ -19,7 +19,7 @@ class IotPolicyWildcardActionRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_policies = cfn_model.resources_by_type('AWS::IoT::Policy').select do |policy|
-      policy.policy_document = PolicyDocumentParser.new.parse(policy.policyDocument)
+      policy.policy_document = PolicyDocumentParser.new.parse(cfn_model, policy.policyDocument)
       !policy.policy_document.wildcard_allowed_actions.empty?
     end
 

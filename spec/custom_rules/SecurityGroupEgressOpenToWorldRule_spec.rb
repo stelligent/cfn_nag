@@ -35,4 +35,15 @@ describe SecurityGroupEgressOpenToWorldRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'egress with cidrip of 0.0.0.0/0 in a pesky if with a FindInMap' do
+    it 'returns offending logical resource id' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/security_group/pesky_if.yml')
+
+      actual_logical_resource_ids = SecurityGroupEgressOpenToWorldRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[SG]
+      #puts cfn_model.resources['SG'].securityGroupEgress
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
