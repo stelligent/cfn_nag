@@ -3,7 +3,7 @@ PATH
   specs:
     cfn-nag (0.0.0)
       aws-sdk-s3 (~> 1.60.1)
-      cfn-model (= 0.4.29)
+      cfn-model (= 0.4.31)
       lightly (~> 0.3.2)
       logging (~> 2.2.2)
       netaddr (~> 2.0.4)
@@ -29,7 +29,7 @@ GEM
       aws-sigv4 (~> 1.1)
     aws-sigv4 (1.1.1)
       aws-eventstream (~> 1.0, >= 1.0.2)
-    cfn-model (0.4.29)
+    cfn-model (0.4.31)
       kwalify (= 0.7.2)
       psych (~> 3)
     diff-lcs (1.3)

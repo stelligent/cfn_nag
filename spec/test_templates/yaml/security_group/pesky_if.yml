@@ -1,0 +1,36 @@
+---
+Parameters:
+  VpcId:
+    Type: "AWS::EC2::VPC::Id"
+  ExtraIngress:
+    Type: String
+    Default: "true"
+
+Conditions:
+  MicroInt: true
+
+Mappings:
+  AccountTypeCIDRMap:
+    micro-int:
+      California: 0.0.0.0/0
+Resources:
+  SG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: foo
+      VpcId:
+        Ref: VpcId
+      SecurityGroupEgress:
+        - IpProtocol: icmp
+          FromPort: 3
+          ToPort: 3
+          CidrIp: 1.1.1.1/32
+        - !If
+            - MicroInt
+            - IpProtocol: '-1'
+              FromPort: '-1'
+              ToPort: '-1'
+              CidrIp: !FindInMap [AccountTypeCIDRMap, micro-int, California]
+            - {}
+
+
