@@ -1,0 +1,41 @@
+Parameters:
+  Action:
+    Type: String
+  Resource:
+    Type: String
+  Principal:
+    Type: String
+
+Conditions:
+  Internal: true
+
+Resources:
+  HelperRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: !If
+              - Internal
+              - !Sub "${Principal}"
+              - { Service: lambda.amazonaws.com }
+            Action: sts:AssumeRole
+            Path: /
+      Policies:
+        - PolicyName: awstestingLambdaExecutePolicies
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - tag:TagResources
+                  - tag:UntagResources
+                  - !Sub elasticloadbalancing:${Action}
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - s3:PutBucketPolicy
+                Resource: !Ref Resource
+
