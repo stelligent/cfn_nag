@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.license       = 'MIT'
   s.version       = ENV['GEM_VERSION'] || '0.0.0'
   s.bindir        = 'bin'
-  s.executables   = %w[cfn_nag cfn_nag_rules cfn_nag_scan]
+  s.executables   = %w[cfn_nag cfn_nag_rules cfn_nag_scan spcm_scan]
   s.authors       = ['Eric Kascic']
   s.summary       = 'cfn-nag'
   s.description   = 'Auditing tool for CloudFormation templates'

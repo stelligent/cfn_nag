@@ -87,6 +87,7 @@ class CfnNag
                                       parameter_values_string,
                                       true,
                                       condition_values_string
+      CustomRuleLoader.rule_arguments = @config.rule_arguments
       violations += @config.custom_rule_loader.execute_custom_rules(
         cfn_model,
         @config.custom_rule_loader.rule_definitions

@@ -1,6 +1,6 @@
 #!/bin/bash -ex
 set -o pipefail
-export minor_version="0.5"
+export minor_version="0.6"
 
 set +x
 if [[ -z ${rubygems_api_key} ]];
