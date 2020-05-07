@@ -372,8 +372,8 @@ The basis for SPCM is described in the blog post: https://stelligent.com/2020/03
 Starting in version 0.6.0 of cfn_nag:
 * `spcm_scan` can scan a directory of CloudFormation templates (like cfn_nag_scan) and generate a report with the SPCM
    metrics in either JSON or HTML format
-* A rule is added to warn on an IAM::Policy or IAM::Role with a SPCM score of >= 50 (default)
-* The rule threshold can be controlled via the command line: `--rule-arguments spcm_threshold:100`
+* A rule is added (to cfn_nag) to warn on an IAM::Policy or IAM::Role with a SPCM score of >= 50 (default)
+* The rule threshold can be controlled via the command line: `cfn_nag_scan --rule-arguments spcm_threshold:100`
 * Custom rule developers can now develop rules to accept end user values for settings via the same `--rule-arguments` mechanism.  
   The Rule object only needs to declare an `attr_accessor`, e.g. `attr_accessor :spcm_threshold` and cfn_nag
   will take care of the details to inject values from the `--rule-arguments`
