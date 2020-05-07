@@ -11,6 +11,7 @@ class CfnNagExecutor
     @parameter_values_string = nil
     @condition_values_string = nil
     @rule_repository_definitions = []
+    @rule_arguments_string = nil
   end
 
   def scan(options_type:)
@@ -77,6 +78,12 @@ class CfnNagExecutor
       Optimist.die(:output_format,
                    'Must be colortxt, txt, or json')
     end
+
+    opts[:rule_arguments]&.each do |rule_argument|
+      unless rule_argument.include?(':')
+        Optimist.die(:rule_arguments, 'Must be of form name:value')
+      end
+    end
   end
 
   def execute_io_options(opts)
@@ -87,6 +94,8 @@ class CfnNagExecutor
     @parameter_values_string = read_conditionally(opts[:parameter_values_path])
 
     @condition_values_string = read_conditionally(opts[:condition_values_path])
+
+    @rule_arguments_string = read_conditionally(opts[:rule_arguments_path])
 
     opts[:rule_repository]&.each do |rule_repository|
       @rule_repository_definitions << IO.read(rule_repository)
@@ -99,6 +108,17 @@ class CfnNagExecutor
     end
   end
 
+  def merge_rule_arguments(opts)
+    rule_arguments = {}
+    rule_arguments = JSON.parse(@rule_arguments_string) if @rule_arguments_string
+    opts[:rule_arguments]&.each do |rule_argument|
+      name = rule_argument.split(':')[0]
+      value = rule_argument.split(':')[1]
+      rule_arguments[name] = value
+    end
+    rule_arguments
+  end
+
   def cfn_nag_config(opts)
     CfnNagConfig.new(
       profile_definition: @profile_definition,
@@ -108,7 +128,8 @@ class CfnNagExecutor
       print_suppression: opts[:print_suppression],
       isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions],
       fail_on_warnings: opts[:fail_on_warnings],
-      rule_repository_definitions: @rule_repository_definitions
+      rule_repository_definitions: @rule_repository_definitions,
+      rule_arguments: merge_rule_arguments(opts)
     )
   end
 

@@ -5,15 +5,16 @@ require_relative 'boolean_base_rule'
 
 class SecretsManagerSecretKmsKeyIdRule < BooleanBaseRule
   def rule_text
-    'Secrets Manager Secret should explicitly specify KmsKeyId'
+    'Secrets Manager Secret should explicitly specify KmsKeyId.' \
+    ' Besides control of the key this will allow the secret to be shared cross-account'
   end
 
   def rule_type
-    Violation::FAILING_VIOLATION
+    Violation::WARNING
   end
 
   def rule_id
-    'F81'
+    'W77'
   end
 
   def resource_type

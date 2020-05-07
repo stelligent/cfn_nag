@@ -1,0 +1,69 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'cfn-nag/iam_complexity_metric/spcm'
+require 'cfn-nag/iam_complexity_metric/html_results_renderer'
+require 'optimist'
+require 'json'
+
+# rubocop:disable Metrics/BlockLength
+opts = Optimist.options do
+  opt :parameter_values_path,
+      'Path to a JSON file to pull Parameter values from',
+      type: :string,
+      required: false,
+      default: nil
+  opt :condition_values_path,
+      'Path to a JSON file to pull Condition values from',
+      type: :string,
+      required: false,
+      default: nil
+  opt :input_path,
+      'CloudFormation template to measure SPCM on or directory of templates.',
+      type: :string,
+      required: true
+  opt :template_pattern,
+      'Within the --input-path, match files to scan against this regular expression',
+      type: :string,
+      required: false,
+      default: '..*\.json|..*\.yaml|..*\.yml|..*\.template'
+  opt :ignore_templates_without_iam,
+      'Within the --input-path ignore files without IAM role/policy resources',
+      type: :boolean,
+      required: false,
+      default: true
+  opt :output_format,
+      'Format of results: [json, html]',
+      type: :string,
+      default: 'json'
+end
+# rubocop:enable Metrics/BlockLength
+
+def read_conditionally(path)
+  unless path.nil?
+    IO.read(path)
+  end
+end
+
+parameter_values_string = read_conditionally(opts[:parameter_values_path])
+
+condition_values_string = read_conditionally(opts[:condition_values_path])
+
+metrics = SPCM.new.aggregate_metrics(
+  input_path: opts[:input_path],
+  parameter_values_path: parameter_values_string,
+  condition_values_path: condition_values_string,
+  template_pattern: opts[:template_pattern]
+)
+
+if opts[:ignore_templates_without_iam]
+  metrics = metrics.select do |metric|
+    metric[:file_results]['AWS::IAM::Role'] != {} || metric[:file_results]['AWS::IAM::Policy'] != {}
+  end
+end
+
+if opts[:output_format] == 'json'
+  puts JSON.generate(metrics)
+else
+  puts HtmlRenderer.new.render(results: metrics)
+end

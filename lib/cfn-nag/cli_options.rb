@@ -91,6 +91,15 @@ class Options
           'Path(s) to a rule repository to include in rule discovery',
           type: :strings,
           required: false
+      opt :rule_arguments,
+          'Rule arguments to inject into interested rules',
+          type: :strings,
+          required: false
+      opt :rule_arguments_path,
+          'Path to a rule arguments to inject into interested rules',
+          type: :string,
+          required: false,
+          default: nil
     end
   end
 
@@ -175,6 +184,15 @@ class Options
           'Path(s)s to rule repository to include in rule discovery',
           type: :strings,
           required: false
+      opt :rule_arguments,
+          'Rule arguments to inject into interested rules',
+          type: :strings,
+          required: false
+      opt :rule_arguments_path,
+          'Path to a rule arguments to inject into interested rules',
+          type: :string,
+          required: false,
+          default: nil
     end
   end
   # rubocop:enable Metrics/BlockLength
