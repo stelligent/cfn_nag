@@ -6,8 +6,9 @@ require_relative 'password_base_rule'
 class KinesisFirehoseDeliveryStreamRedshiftDestinationConfigurationPasswordRule < PasswordBaseRule
   def rule_text
     'Kinesis Firehose DeliveryStream RedshiftDestinationConfiguration Password ' \
-    'must not be a plaintext string or a Ref to a NoEcho Parameter with a ' \
-    'Default value.'
+    'must not be a plaintext string or a Ref to a Parameter with a ' \
+    'Default value.  ' \
+    'Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.'
   end
 
   def rule_type

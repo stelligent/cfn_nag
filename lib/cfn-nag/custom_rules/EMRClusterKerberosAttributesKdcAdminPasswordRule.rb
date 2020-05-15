@@ -6,7 +6,8 @@ require_relative 'password_base_rule'
 class EMRClusterKerberosAttributesKdcAdminPasswordRule < PasswordBaseRule
   def rule_text
     'EMR Cluster KerberosAttributes KdcAdmin Password must not be a ' \
-    'plaintext string or a Ref to a NoEcho Parameter with a Default value.'
+    'plaintext string or a Ref to a Parameter with a Default value.  ' \
+    'Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.'
   end
 
   def rule_type
