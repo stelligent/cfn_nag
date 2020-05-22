@@ -1,0 +1,6 @@
+-   id: cfn-nag
+    name: Cloudformation Nag
+    description: This hook Alerts on Cloudformation insecurities 
+    entry: cfn_nag_scan --input-path
+    language: ruby
+    files: \.(json|yaml|yml|template)$
