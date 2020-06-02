@@ -102,7 +102,12 @@ class CfnNag
       violations << fatal_violation(error)
     end
 
+    violations = prune_fatal_violations(violations) if @config.ignore_fatal
     audit_result(violations)
+  end
+
+  def prune_fatal_violations(violations)
+    violations.reject { |violation| violation.type == Violation::FAILING_VIOLATION }
   end
 
   def render_results(aggregate_results:,

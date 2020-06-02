@@ -6,7 +6,6 @@ require 'cfn-nag/violation'
 class ColoredStdoutResults < StdoutResults
   private
 
-  # rubocop:disable Metrics/AbcSize
   def message(message_type:,
               color:,
               message:,
@@ -24,7 +23,6 @@ class ColoredStdoutResults < StdoutResults
     puts colorize(color, '|') unless line_numbers.empty? && logical_resource_ids.nil?
     puts colorize(color, "| #{message}")
   end
-  # rubocop:enable Metrics/AbcSize
 
   def color_code(color_symbol)
     case color_symbol

@@ -23,10 +23,10 @@ Style/InverseMethods:
   Enabled: false
 
 Metrics/MethodLength:
-  Max: 20
+  Max: 25
 
 Metrics/AbcSize:
-  Max: 19
+  Max: 21
 
 Style/StderrPuts:
   Enabled: false
@@ -39,7 +39,7 @@ Gemspec/RequiredRubyVersion:
   Enabled: false
 
 Metrics/ClassLength:
-  Max: 115
+  Max: 120
 
 Style/HashEachMethods:
   Enabled: true

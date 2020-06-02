@@ -9,6 +9,7 @@ class CfnNagConfig
                  print_suppression: false,
                  isolate_custom_rule_exceptions: false,
                  fail_on_warnings: false,
+                 ignore_fatal: false,
                  rule_repository_definitions: [],
                  rule_arguments: {})
     @rule_directory = rule_directory
@@ -24,6 +25,7 @@ class CfnNagConfig
     @fail_on_warnings = fail_on_warnings
     @rule_repositories = rule_repositories
     @rule_arguments = rule_arguments
+    @ignore_fatal = ignore_fatal
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -34,4 +36,5 @@ class CfnNagConfig
   attr_reader :blacklist_definition
   attr_reader :fail_on_warnings
   attr_reader :rule_repositories
+  attr_reader :ignore_fatal
 end
