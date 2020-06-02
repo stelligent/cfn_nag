@@ -100,6 +100,11 @@ class Options
           type: :string,
           required: false,
           default: nil
+      opt :ignore_fatal,
+          'Ignore files with fatal violations.  Useful for ignoring non-Cloudformation yaml/yml/json in a path',
+          type: :boolean,
+          required: false,
+          default: false
     end
   end
 
@@ -193,6 +198,12 @@ class Options
           type: :string,
           required: false,
           default: nil
+      opt :ignore_fatal,
+          'Ignore files with fatal violations.  Useful for ignoring non-Cloudformation yaml/yml/json in a path',
+          short: 'g',
+          type: :boolean,
+          required: false,
+          default: false
     end
   end
   # rubocop:enable Metrics/BlockLength

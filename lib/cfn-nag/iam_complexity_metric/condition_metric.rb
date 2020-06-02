@@ -6,7 +6,6 @@ require 'set'
 class ConditionMetric
   include Weights
 
-  # rubocop:disable Metrics/AbcSize
   def metric(statement)
     return 0 if statement.condition.nil?
 
@@ -18,7 +17,6 @@ class ConditionMetric
     aggregate += values_with_policy_tags(statement.condition)
     aggregate
   end
-  # rubocop:enable Metrics/AbcSize
 
   private
 

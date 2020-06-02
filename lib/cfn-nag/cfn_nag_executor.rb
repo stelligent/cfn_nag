@@ -129,6 +129,7 @@ class CfnNagExecutor
       isolate_custom_rule_exceptions: opts[:isolate_custom_rule_exceptions],
       fail_on_warnings: opts[:fail_on_warnings],
       rule_repository_definitions: @rule_repository_definitions,
+      ignore_fatal: opts[:ignore_fatal],
       rule_arguments: merge_rule_arguments(opts)
     )
   end
