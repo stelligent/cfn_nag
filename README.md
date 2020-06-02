@@ -77,20 +77,20 @@ A Dockerfile is provided for convenience. It is published on DockerHub as `stell
 You can also build it locally.
 
 ```bash
-docker build -t cfn_nag .
+docker build -t stelligent/cfn_nag .
 ```
 
 You can mount a local directory containing templates into the Docker container and then call cfn_nag in the container. This example uses the test templates used in unit testing cfn_nag:
 
 ```bash
-$ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_encryption.json
+$ docker run -v `pwd`/spec/test_templates:/templates -t stelligent/cfn_nag /templates/json/efs/filesystem_with_encryption.json
 {
   "failure_count": 0,
   "violations": [
 
   ]
 }
-$ docker run -v `pwd`/spec/test_templates:/templates -t cfn_nag /templates/json/efs/filesystem_with_no_encryption.json
+$ docker run -v `pwd`/spec/test_templates:/templates -t stelligent/cfn_nag /templates/json/efs/filesystem_with_no_encryption.json
 {
   "failure_count": 1,
   "violations": [
