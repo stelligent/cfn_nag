@@ -3,7 +3,7 @@
 		"ApiGatewayWithAccessLogging": {
 			"Type": "AWS::ApiGatewayV2::Stage",
 			"Properties": {
-					"AccessLogSetting": {
+					"AccessLogSettings": {
 						"DestinationArn": "arn",
 						"Format": "format"
 					}
