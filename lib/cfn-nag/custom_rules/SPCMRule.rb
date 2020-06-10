@@ -30,7 +30,6 @@ class SPCMRule < BaseRule
         'AWS::IAM::Policy' => {},
         'AWS::IAM::Role' => {}
       }
-
     end
 
     threshold = spcm_threshold.nil? ? DEFAULT_THRESHOLD : spcm_threshold.to_i
