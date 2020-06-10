@@ -26,7 +26,11 @@ class SPCMRule < BaseRule
       policy_documents = SPCM.new.metric_impl(cfn_model)
     rescue StandardError => catch_all_exception
       puts "Experimental SPCM rule is failing. Please report #{catch_all_exception} with the violating template"
-      policy_documents = {}
+      policy_documents = {
+        'AWS::IAM::Policy' => {},
+        'AWS::IAM::Role' => {}
+      }
+
     end
 
     threshold = spcm_threshold.nil? ? DEFAULT_THRESHOLD : spcm_threshold.to_i
