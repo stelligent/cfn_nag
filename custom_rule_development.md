@@ -30,7 +30,7 @@
 3. Define the `audit_impl` method to do the actual work of the analysis.  This method should return an array of
    logical resource identifiers from the CloudFormation template:
 
-      ```ruby
+     ```ruby
      def audit_impl(cfn_model)
        violating_policies = cfn_model.resources_by_type('AWS::IAM::ManagedPolicy').select do |policy|
          !policy.policy_document.allows_not_action.empty?
@@ -38,6 +38,7 @@
 
        violating_policies.map { |policy| policy.logical_resource_id }
      end
+     ```
 
 4. The cfn_model object passed into the `audit_impl` method is where a majority of the improvement lies.  When
    a CloudFormation document is parsed, it is mapped into a collection of objects that mirror the resource types.
@@ -48,6 +49,7 @@
      * Attributes/properties are returned in camelCase.
      * For example, if dealing with an object type of 'AWS::RDS::DBCluster', and needing to write logic against the 'StorageEncrypted' property, then an example `audit_impl` might look like this:
 
+          ```ruby
            def audit_impl(cfn_model)
              violating_rdscluster = cfn_model.resources_by_type('AWS::RDS::DBCluster').select do |cluster|
                cluster.storageEncrypted.nil? || cluster.storageEncrypted.to_s.downcase == 'false'
@@ -55,6 +57,7 @@
 
              violating_rdscluster.map { |cluster| cluster.logical_resource_id }
            end
+          ```
 
    * cfn-model provides special handling for a subset of objects whereby properties may be transformed into something
      simpler and/or objects may be linked together.  
