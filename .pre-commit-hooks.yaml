@@ -1,0 +1,5 @@
+-   id: cfn_nag
+    name: cfn_nag
+    entry: cfn_nag
+    language: ruby
+    files: \.(json|template|yaml|yml)$
