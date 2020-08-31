@@ -148,7 +148,7 @@ The blacklist is basically the opposite of the profile: it's a list of rules to 
 `--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
 in the file.
 
-In case a rule is specified in both, the blacklist will take priority over the profile, and the rule will not be applieed.
+In case a rule is specified in both, the blacklist will take priority over the profile, and the rule will not be applied.
 
 The format is as follows.  The only two salient fields are `RulesToSuppress` and the `id` per item.  The `reason` won't
 be interpreted by cfn-nag, but it is recommended to justify and document why the rule should never be applied.
@@ -285,14 +285,14 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 
 # Mappings
 
-Prior to 0.5.55, calls to Fn::FindInMap were effectively ignored.  The underlying model would
+Prior to [0.5.55](https://github.com/stelligent/cfn_nag/releases/tag/v0.5.55), calls to [`Fn::FindInMap`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) were effectively ignored.  The underlying model would
 leave them be, and so they would appear as Hash values to rules.  For example: `{ "Fn::FindInMap" => [map1, key1, key2]}`
 
-Starting in 0.5.55, the model will attempt to compute the value for a call to FindInMap and present that value to the 
+Starting in [0.5.55](https://github.com/stelligent/cfn_nag/releases/tag/v0.5.55), the model will attempt to compute the value for a call to [`FindInMap`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-findinmap.html) and present that value to the 
 rules.  This evaluation supports keys that are:
 * static text
 * references to parameters (with parameter substitution)
-* references to AWS pseudofunctions (see next section)
+* references to [AWS pseudoparameters](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html) (see next section)
 * nested maps
 
 If the evaluation logic can't figure out the value for a key, it will default to the old behavior of returning the
@@ -300,12 +300,12 @@ Hash for the whole expression.
 
 ## AWS Pseudofunctions
 
-Also prior to 0.5.55, calls to AWS pseudofunctions were effectively ignored.  The underlying model would
+Also prior to [0.5.55](https://github.com/stelligent/cfn_nag/releases/tag/v0.5.55), calls to [pseudoparameters](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html) were effectively ignored.  The underlying model would
 leave them be, and so they would appear as Hash values to rules.  For example: `{"Ref"=>"AWS::Region"}`.
-A common use case is to organize mappings by region, so pseudofunction evaluation is important to better supporting
+A common use case is to organize mappings by region, so [pseudoparameter](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html) evaluation is important to better supporting
 map evaluation.
 
-Starting in 0.5.55, the model will present the following AWS pseudofunctions to rules with the default values:
+Starting in [0.5.55](https://github.com/stelligent/cfn_nag/releases/tag/v0.5.55), the model will present the following [pseudoparameters](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/pseudo-parameter-reference.html) to rules with the default values:
 
 ```
 'AWS::URLSuffix' => 'amazonaws.com',
@@ -329,11 +329,11 @@ Additionally, the end user can override the value supplied via the traditional p
 
 # Controlling the Behavior of Conditions
 
-Up until version 0.4.66 of cfn_nag, the underlying model did not do any processing of Fn::If within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the Fn::If.  Given that an Fn::If could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.
+Up until version [0.4.66](https://github.com/stelligent/cfn_nag/releases/tag/v0.4.66) of cfn_nag, the underlying model did not do any processing of [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) within a template.  This meant that if a property had a conditional value, it was up to the rule to parse the [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if).  Given that an [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) could appear just about anywhere, it created a whack-a-mole situation for rule developers.  At best, the rule logic could ignore values that were Hash presuming the value wasn't a Hash in the first place.
 
-In order to address this issue, the default behavior for cfn_nag is now to substitute Fn::If with the true outcome.  This means by default that rules will not inspect the false outcomes for security violations.
+In order to address this issue, the default behavior for cfn_nag is now to substitute [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) with the true outcome.  This means by default that rules will not inspect the false outcomes for security violations.
 
-In addition to substituting Fn::If at the property value level, the same behavior is applied to Fn::If at the top-level of Properties.  For example:
+In addition to substituting [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) at the property value level, the same behavior is applied to [`Fn::If`](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-conditions.html#intrinsic-function-reference-conditions-if) at the top-level of Properties.  For example:
 
 ```yaml
 Resource1:
