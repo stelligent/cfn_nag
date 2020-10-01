@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   # this is NOT an invitation to make requests to AWS...
   # this dependency is here only to optionally retrieve rules from s3
   # cfn_nag is a static analysis tool that must be workable with NO network connectivity
-  s.add_runtime_dependency('aws-sdk-s3', '~> 1.60.1')
+  s.add_runtime_dependency('aws-sdk-s3', '~> 1.76')
   s.add_runtime_dependency('lightly', '~> 0.3.2')
 
   # WARNING: don't add any gems with poisonous GPL licenses
