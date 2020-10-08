@@ -18,23 +18,63 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
   end
 
   def audit_impl(cfn_model)
+    nacl_entries = cfn_model.resources_by_type('AWS::EC2::NetworkAclEntry')
+
+    # Select nacl entries that can be evaluated
+    nacl_entries.select! do |nacl_entry|
+      tcp_or_udp_protocol?(nacl_entry) && valid_ports?(nacl_entry)
+    end
+
     violating_nacl_entries = []
-    cfn_model.resources_by_type('AWS::EC2::NetworkAcl').each do |nacl|
-      violating_nacl_entries += violating_nacl_entries(nacl)
+
+    # Group entries by nacl id, ip type, and egress/ingress
+    grouped_nacl_entries = group_nacl_entries(nacl_entries)
+
+    grouped_nacl_entries.each do |grouping|
+      violating_nacl_entries += overlapping_port_entries(grouping)
     end
     violating_nacl_entries.map(&:logical_resource_id)
   end
 
   private
 
-  def overlapping_port_entries(nacl_entries)
-    unique_pairs(nacl_entries).select do |nacl_entry_pair|
-      tcp_or_udp_protocol?(nacl_entry_pair[0], nacl_entry_pair[1]) && overlap?(nacl_entry_pair[0], nacl_entry_pair[1])
-    end
+  def tcp_or_udp_protocol?(entry)
+    %w[6 17].include?(entry.protocol.to_s)
   end
 
-  def tcp_or_udp_protocol?(entry1, entry2)
-    %w[6 17].include?(entry1.protocol.to_s) && %w[6 17].include?(entry2.protocol.to_s)
+  def valid_ports?(entry)
+    valid_port_number?(entry.portRange['From']) && valid_port_number?(entry.portRange['To'])
+  end
+
+  def valid_port_number?(port)
+    port.is_a?(Numeric) || (port.is_a?(String) && port.to_i(10) != 0)
+  end
+
+  def group_nacl_entries(nacl_entries)
+    grouped_nacl_entries = []
+
+    # Group by NaclID
+    nacl_entries.group_by(&:networkAclId).each_value do |entries|
+      # Split entries by ip type
+      ipv4_entries, ipv6_entries = entries.partition { |nacl_entry| nacl_entry.ipv6CidrBlock.nil? }
+
+      # Split entries by egress/ingress
+      egress4, ingress4 = ipv4_entries.partition { |nacl_entry| truthy?(nacl_entry.egress) }
+      egress6, ingress6 = ipv6_entries.partition { |nacl_entry| truthy?(nacl_entry.egress) }
+
+      grouped_nacl_entries << egress4
+      grouped_nacl_entries << ingress4
+      grouped_nacl_entries << egress6
+      grouped_nacl_entries << ingress6
+    end
+
+    grouped_nacl_entries
+  end
+
+  def overlapping_port_entries(nacl_entries)
+    unique_pairs(nacl_entries).select do |nacl_entry_pair|
+      overlap?(nacl_entry_pair[0], nacl_entry_pair[1])
+    end.flatten.uniq
   end
 
   def unique_pairs(arr)
@@ -43,54 +83,15 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
   end
 
   def overlap?(entry1, entry2)
-    roverlap?(entry1, entry2) || loverlap?(entry1, entry2)
+    port_overlap?(entry1.portRange, entry2.portRange) || port_overlap?(entry2.portRange, entry1.portRange)
   end
 
-  def roverlap?(entry1, entry2)
-    entry1.portRange['From'].between?(entry2.portRange['From'], entry2.portRange['To']) ||
-      entry1.portRange['To'].between?(entry2.portRange['From'], entry2.portRange['To'])
+  def port_overlap?(port_range1, port_range2)
+    port_number(port_range1['From']).between?(port_number(port_range2['From']), port_number(port_range2['To'])) ||
+      port_number(port_range1['To']).between?(port_number(port_range2['From']), port_number(port_range2['To']))
   end
 
-  def loverlap?(entry1, entry2)
-    entry2.portRange['From'].between?(entry1.portRange['From'], entry1.portRange['To']) ||
-      entry2.portRange['To'].between?(entry1.portRange['From'], entry1.portRange['To'])
-  end
-
-  def egress_entries(nacl_entries)
-    nacl_entries.select do |nacl_entry|
-      truthy?(nacl_entry.egress)
-    end
-  end
-
-  def ingress_entries(nacl_entries)
-    nacl_entries.select do |nacl_entry|
-      not_truthy?(nacl_entry.egress)
-    end
-  end
-
-  def ip6_entries(nacl_entries)
-    nacl_entries.select do |nacl_entry|
-      !nacl_entry.ipv6CidrBlock.nil?
-    end
-  end
-
-  def ip4_entries(nacl_entries)
-    nacl_entries.select do |nacl_entry|
-      nacl_entry.ipv6CidrBlock.nil?
-    end
-  end
-
-  def violating_nacl_entries(nacl)
-    violating_ip4_nacl_entries(nacl) || violating_ip6_nacl_entries(nacl)
-  end
-
-  def violating_ip4_nacl_entries(nacl)
-    overlapping_port_entries(egress_entries(ip4_entries(nacl.network_acl_entries))).flatten.uniq &&
-      overlapping_port_entries(ingress_entries(ip4_entries(nacl.network_acl_entries))).flatten.uniq
-  end
-
-  def violating_ip6_nacl_entries(nacl)
-    overlapping_port_entries(egress_entries(ip6_entries(nacl.network_acl_entries))).flatten.uniq &&
-      overlapping_port_entries(ingress_entries(ip6_entries(nacl.network_acl_entries))).flatten.uniq
+  def port_number(port)
+    port.to_i
   end
 end

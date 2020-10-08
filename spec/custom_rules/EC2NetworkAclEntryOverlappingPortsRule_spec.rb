@@ -89,4 +89,42 @@ describe EC2NetworkAclEntryOverlappingPortsRule do
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end
   end
+
+  context 'EC2 Network ACLs entries contain references' do
+    it 'returns an empty list' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/ec2_networkaclentry/ref_ports.yml'
+                                      )
+
+      actual_logical_resource_ids = EC2NetworkAclEntryOverlappingPortsRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+
+    it 'returns warnings when provided conflicting parameter values' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/ec2_networkaclentry/ref_ports.yml'
+                                      ),
+                                      JSON.generate({Parameters: { NaclPort: 80 }})
+
+      actual_logical_resource_ids = EC2NetworkAclEntryOverlappingPortsRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[InboundHTTPPublicNetworkAclEntry InboundHTTPPublicNetworkAclEntry2]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
+
+  context 'EC2 Network ACLs entries without direct nacl resource' do
+    it 'returns expected duplicates' do
+      cfn_model = CfnParser.new.parse read_test_template(
+                                        'yaml/ec2_networkaclentry/overlapping_ports_no_nacl.yml'
+                                      )
+
+      actual_logical_resource_ids = EC2NetworkAclEntryOverlappingPortsRule.new.audit_impl cfn_model
+      expected_logical_resource_ids = %w[BadNaclEntry1 BadNaclEntry2]
+
+      expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
+    end
+  end
 end
