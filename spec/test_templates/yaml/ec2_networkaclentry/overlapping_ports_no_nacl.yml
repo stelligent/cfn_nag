@@ -1,0 +1,47 @@
+---
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Test
+Parameters:
+    NaclIdOne:
+      Type: String
+      Description: 'Id for first Nacl'
+    NaclIdTwo:
+      Type: String
+      Description: 'Id for first Nacl'
+Resources:
+  BadNaclEntry1:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref 'NaclIdOne'
+      RuleNumber: 100
+      Protocol: 6
+      RuleAction: 'allow'
+      Egress: false
+      CidrBlock: '0.0.0.0/0'
+      PortRange:
+        From: 80
+        To:  80
+  BadNaclEntry2:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref 'NaclIdOne'
+      RuleNumber: 101
+      Protocol: 6
+      RuleAction: 'allow'
+      Egress: false
+      CidrBlock: '0.0.0.0/0'
+      PortRange:
+        From: 80
+        To:  80
+  GoodNaclEntry1:
+    Type: AWS::EC2::NetworkAclEntry
+    Properties:
+      NetworkAclId: !Ref 'NaclIdTwo'
+      RuleNumber: 101
+      Protocol: 6
+      RuleAction: 'allow'
+      Egress: false
+      CidrBlock: '0.0.0.0/0'
+      PortRange:
+        From: 80
+        To:  80
