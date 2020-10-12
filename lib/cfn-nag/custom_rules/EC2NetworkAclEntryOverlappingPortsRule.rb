@@ -43,7 +43,7 @@ class EC2NetworkAclEntryOverlappingPortsRule < BaseRule
   end
 
   def valid_ports?(entry)
-    valid_port_number?(entry.portRange['From']) && valid_port_number?(entry.portRange['To'])
+    !entry.portRange.nil? && valid_port_number?(entry.portRange['From']) && valid_port_number?(entry.portRange['To'])
   end
 
   def valid_port_number?(port)
