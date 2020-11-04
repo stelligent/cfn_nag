@@ -93,7 +93,7 @@ class CustomRuleLoader
       rescue ScriptError, StandardError => rule_error
         raise rule_error unless @isolate_custom_rule_exceptions
 
-        STDERR.puts rule_error
+        $stderr.puts rule_error
       end
     end
   end

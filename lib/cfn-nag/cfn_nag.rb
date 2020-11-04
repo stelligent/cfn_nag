@@ -135,12 +135,11 @@ class CfnNag
     )
 
     # this must come after - blacklist should always win
-    violations = filter_violations_by_blacklist(
+    filter_violations_by_blacklist(
       blacklist_definition: @config.blacklist_definition,
       rule_definitions: @config.custom_rule_loader.rule_definitions,
       violations: violations
     )
-    violations
   rescue StandardError => blacklist_or_profile_parse_error
     violations << fatal_violation(blacklist_or_profile_parse_error.to_s)
     violations

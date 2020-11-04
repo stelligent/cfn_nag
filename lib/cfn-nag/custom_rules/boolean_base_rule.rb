@@ -2,7 +2,7 @@
 
 require 'cfn-nag/violation'
 require_relative 'base'
-require 'cfn-nag/util/truthy.rb'
+require 'cfn-nag/util/truthy'
 
 ##
 # Derive from this rule to ensure that a resource

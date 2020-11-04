@@ -29,10 +29,9 @@ class ElasticLoadBalancerV2AccessLoggingRule < BaseRule
   private
 
   def access_logging_is_false?(load_balancer)
-    false_access_log_attribute = load_balancer.loadBalancerAttributes.find do |load_balancer_attribute|
+    load_balancer.loadBalancerAttributes.find do |load_balancer_attribute|
       load_balancer_attribute['Key'] == 'access_logs.s3.enabled' && not_truthy?(load_balancer_attribute['Value'])
     end
-    false_access_log_attribute
   end
 
   def missing_access_logs?(load_balancer)

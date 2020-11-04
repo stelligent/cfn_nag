@@ -16,3 +16,4 @@ test-cfn-model.rb
 .idea
 .DS_Store
 tmp
+.rake_tasks

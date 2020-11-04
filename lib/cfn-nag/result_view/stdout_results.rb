@@ -27,7 +27,7 @@ class StdoutResults
   def render(results)
     results.each do |result|
       60.times { print '-' }
-      puts "\n" + result[:filename]
+      puts "\n#{result[:filename]}"
       60.times { print '-' }
 
       violations = result[:file_results][:violations]
@@ -45,6 +45,6 @@ class StdoutResults
   end
 
   def indent_multiline_string_with_prefix(prefix, multiline_string)
-    prefix + ' ' + multiline_string.gsub(/\n/, "\n#{prefix} ")
+    "#{prefix} #{multiline_string.gsub(/\n/, "\n#{prefix} ")}"
   end
 end

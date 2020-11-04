@@ -53,7 +53,7 @@ class GemBasedRuleRepo
     require rule_gem_name
     true
   rescue LoadError
-    STDERR.puts "Could not require #{rule_gem_name} - does the rule gem have a top level entry point?"
+    $stderr.puts "Could not require #{rule_gem_name} - does the rule gem have a top level entry point?"
     false
   end
 

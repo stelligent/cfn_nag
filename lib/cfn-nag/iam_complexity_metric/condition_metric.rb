@@ -41,9 +41,10 @@ class ConditionMetric
     result = []
     conditions.each do |_, expression|
       expression.each do |_, value|
-        if value.is_a? String
+        case value
+        when String
           result << value
-        elsif value.is_a? Array
+        when Array
           result += value
         end
       end

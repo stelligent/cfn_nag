@@ -3,7 +3,7 @@
 require 'cfn-nag/violation'
 require_relative 'base'
 require 'cfn-nag/ip_addr'
-require 'cfn-nag/util/blank.rb'
+require 'cfn-nag/util/blank'
 
 class SecurityGroupRuleDescriptionRule < BaseRule
   def rule_text

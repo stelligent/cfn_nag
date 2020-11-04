@@ -5,7 +5,7 @@ require_relative 'base'
 require 'cfn-nag/util/wildcard_patterns'
 
 class PassRoleBaseRule < BaseRule
-  IAM_ACTION_PATTERNS = wildcard_patterns('PassRole').map { |pattern| 'iam:' + pattern } + ['*']
+  IAM_ACTION_PATTERNS = wildcard_patterns('PassRole').map { |pattern| "iam:#{pattern}" } + ['*']
 
   def policy_type
     raise 'must implement in subclass'

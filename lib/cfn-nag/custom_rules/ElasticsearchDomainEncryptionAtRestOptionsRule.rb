@@ -2,7 +2,6 @@
 
 require 'cfn-nag/util/truthy'
 require 'cfn-nag/violation'
-require 'cfn-nag/util/truthy'
 require_relative 'base'
 
 class ElasticsearchDomainEncryptionAtRestOptionsRule < BaseRule

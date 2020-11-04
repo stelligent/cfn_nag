@@ -6,6 +6,7 @@ require_relative 'base'
 
 class SPCMRule < BaseRule
   attr_accessor :spcm_threshold
+
   DEFAULT_THRESHOLD = 25
 
   def rule_text
