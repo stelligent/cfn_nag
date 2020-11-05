@@ -6,7 +6,7 @@ require_relative 'base'
 
 class DynamoDBBackupRule < BaseRule
   def rule_text
-    'DynamoDB table should have backup enabled using PointInTimeRecoveryEnabled'
+    'DynamoDB table should have backup enabled, should be set using PointInTimeRecoveryEnabled'
   end
 
   def rule_type
