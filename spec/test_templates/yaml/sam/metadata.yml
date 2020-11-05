@@ -1,0 +1,41 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+Parameters:
+  Site:
+    Type: String
+  FunctionRoleArn:
+    Type: String
+Globals:
+  Api:
+    EndpointConfiguration: REGIONAL
+  Function:
+    Runtime: java8
+    MemorySize: 1408
+    Timeout: 30
+    CodeUri:
+      Bucket: !Sub "bucket.lambda.${Site}"
+      Key: !Sub "lambda/code/${Site}/jar-with-dependencies.jar"
+Resources:
+  SomeFunction:
+    Type: 'AWS::Serverless::Function'
+    Metadata:
+      cfn_nag:
+        rules_to_suppress:
+          - id: W58
+            reason: I know what I am doing
+    Properties:
+      FunctionName: !Sub "${Site}-Function"
+      Handler: "com.test.Function::handleRequest"
+      Tracing: Active
+      Role: !Ref FunctionRoleArn
+      Tags:
+        warmup: 'True'
+  SomeFunction2:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: !Sub "${Site}-Function"
+      Handler: "com.test.Function::handleRequest"
+      Tracing: Active
+      Role: !Ref FunctionRoleArn
+      Tags:
+        warmup: 'True'
