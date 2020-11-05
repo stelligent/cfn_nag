@@ -5,7 +5,7 @@ require_relative 'base'
 require 'cfn-nag/util/wildcard_patterns'
 
 class IamRolePassRoleWildcardResourceRule < BaseRule
-  IAM_ACTION_PATTERNS = wildcard_patterns('PassRole').map! { |x| 'iam:' + x } + ['*']
+  IAM_ACTION_PATTERNS = wildcard_patterns('PassRole').map! { |x| "iam:#{x}" } + ['*']
 
   def rule_text
     'IAM role should not allow * resource with PassRole action on its permissions policy'

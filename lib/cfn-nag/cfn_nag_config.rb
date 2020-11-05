@@ -29,12 +29,6 @@ class CfnNagConfig
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :rule_arguments
-  attr_reader :rule_directory
-  attr_reader :custom_rule_loader
-  attr_reader :profile_definition
-  attr_reader :blacklist_definition
-  attr_reader :fail_on_warnings
-  attr_reader :rule_repositories
-  attr_reader :ignore_fatal
+  attr_reader :rule_arguments, :rule_directory, :custom_rule_loader, :profile_definition, :blacklist_definition, \
+              :fail_on_warnings, :rule_repositories, :ignore_fatal
 end

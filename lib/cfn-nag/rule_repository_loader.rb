@@ -33,7 +33,7 @@ class RuleRepositoryLoader
     end
 
     repo_class = class_from_name(rule_repository_definition['repo_class_name'])
-    if rule_repository_definition['repo_arguments']&.is_a?(Hash)
+    if rule_repository_definition['repo_arguments'].is_a?(Hash)
       repo_class.new(**to_sym_keys(rule_repository_definition['repo_arguments']))
     else
       repo_class.new

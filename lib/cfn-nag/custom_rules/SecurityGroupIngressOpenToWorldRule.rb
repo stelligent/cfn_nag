@@ -26,16 +26,22 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
   def audit_impl(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_ingresses = security_group.ingresses.select do |ingress|
-        ip4_open?(ingress) || ip6_open?(ingress)
+        violating_ingress(ingress)
       end
 
       !violating_ingresses.empty?
     end
 
     violating_ingresses = cfn_model.standalone_ingress.select do |standalone_ingress|
-      ip4_open?(standalone_ingress) || ip6_open?(standalone_ingress)
+      violating_ingress(standalone_ingress)
     end
 
     violating_security_groups.map(&:logical_resource_id) + violating_ingresses.map(&:logical_resource_id)
+  end
+
+  private
+
+  def violating_ingress(ingress)
+    ip4_open?(ingress) || ip6_open?(ingress)
   end
 end

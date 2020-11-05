@@ -26,7 +26,7 @@ Metrics/MethodLength:
   Max: 25
 
 Metrics/AbcSize:
-  Max: 21
+  Max: 22
 
 Style/StderrPuts:
   Enabled: false

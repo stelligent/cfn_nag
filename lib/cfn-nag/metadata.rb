@@ -13,7 +13,7 @@ module Metadata
       logical_resource_id = mangled_metadata.first
       mangled_rules = mangled_metadata[1]
 
-      STDERR.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
+      $stderr.puts "#{logical_resource_id} has missing cfn_nag suppression rule id: #{mangled_rules}"
     end
   end
 
@@ -46,7 +46,7 @@ module Metadata
     end
     if found_suppression_rule && print_suppression
       message = "Suppressing #{rule_id} on #{logical_resource_id} for reason: #{found_suppression_rule['reason']}"
-      STDERR.puts message
+      $stderr.puts message
     end
     !found_suppression_rule.nil?
   end

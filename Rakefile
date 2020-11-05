@@ -6,8 +6,7 @@
 def docker_command
   docker_cmd = 'sudo docker'
   local_cmd = 'docker'
-  cmd_prefix = File.file?('/.dockerenv') ? docker_cmd : local_cmd
-  cmd_prefix
+  File.file?('/.dockerenv') ? docker_cmd : local_cmd
 end
 
 # Returns a docker run prefix based on the environment that you are running in, determined by the file '/.dockerenv'
@@ -20,8 +19,7 @@ def docker_run_prefix
     '--workdir /usr/src/app cfn-nag-dev:latest'
   local_env = "#{docker_command} run --tty --rm --mount source=#{Dir.pwd},target=/usr/src/app,type=bind " \
     '--workdir /usr/src/app cfn-nag-dev:latest'
-  prefix = File.file?('/.dockerenv') ? docker_env : local_env
-  prefix
+  File.file?('/.dockerenv') ? docker_env : local_env
 end
 
 def ensure_local_dev_image

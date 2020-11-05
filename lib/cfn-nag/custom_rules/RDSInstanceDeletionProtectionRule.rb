@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'base'
-require 'cfn-nag/util/truthy.rb'
+require 'cfn-nag/util/truthy'
 require 'cfn-nag/violation'
 
 class RDSInstanceDeletionProtectionRule < BaseRule

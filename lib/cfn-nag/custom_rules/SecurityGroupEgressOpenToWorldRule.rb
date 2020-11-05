@@ -25,16 +25,22 @@ class SecurityGroupEgressOpenToWorldRule < BaseRule
   def audit_impl(cfn_model)
     violating_security_groups = cfn_model.security_groups.select do |security_group|
       violating_egresses = security_group.egresses.select do |egress|
-        ip4_open?(egress) || ip6_open?(egress)
+        violating_egress(egress)
       end
 
       !violating_egresses.empty?
     end
 
     violating_egresses = cfn_model.standalone_egress.select do |standalone_egress|
-      ip4_open?(standalone_egress) || ip6_open?(standalone_egress)
+      violating_egress(standalone_egress)
     end
 
     violating_security_groups.map(&:logical_resource_id) + violating_egresses.map(&:logical_resource_id)
+  end
+
+  private
+
+  def violating_egress(egress)
+    ip4_open?(egress) || ip6_open?(egress)
   end
 end

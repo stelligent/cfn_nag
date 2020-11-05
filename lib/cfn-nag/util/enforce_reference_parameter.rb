@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'cfn-nag/util/truthy.rb'
+require 'cfn-nag/util/truthy'
 
 # Returns false if the provided key_to_check is a no-echo parameter without a
 # default value, or pseudo parameter reference to 'AWS::NoValue'; true otherwise.
