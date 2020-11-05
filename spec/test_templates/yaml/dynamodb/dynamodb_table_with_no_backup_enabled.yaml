@@ -1,0 +1,25 @@
+---
+Resources:
+  DynamodbNoBackupEnabled:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - KeySchema
+      TableName: String
+      PointInTimeRecoverySpecification:
+        PointInTimeRecoveryEnabled: False
+      SSESpecification:
+        KMSMasterKeyId: String
+        SSEEnabled: True
+        SSEType: String
+
+  DynamodbNoBackupEnabled2:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      KeySchema:
+        - KeySchema
+      TableName: String
+      SSESpecification:
+        KMSMasterKeyId: String
+        SSEEnabled: True
+        SSEType: String
