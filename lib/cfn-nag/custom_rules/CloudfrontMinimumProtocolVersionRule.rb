@@ -5,7 +5,7 @@ require_relative 'base'
 
 class CloudfrontMinimumProtocolVersionRule < BaseRule
   def rule_text
-    'Cloudfront should use minimum protocol version TLS 1.2'
+    'Cloudfront should use the most advanced available TLS protocol version'
   end
 
   def rule_type
