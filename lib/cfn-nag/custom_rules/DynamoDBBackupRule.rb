@@ -19,7 +19,8 @@ class DynamoDBBackupRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_ddb_tables = cfn_model.resources_by_type('AWS::DynamoDB::Table').select do |table|
-      table.pointInTimeRecoverySpecification.nil? || !truthy?(table.pointInTimeRecoverySpecification['PointInTimeRecoveryEnabled'].to_s)
+      table.pointInTimeRecoverySpecification.nil? ||
+        !truthy?(table.pointInTimeRecoverySpecification['PointInTimeRecoveryEnabled'].to_s)
     end
 
     violating_ddb_tables.map(&:logical_resource_id)
