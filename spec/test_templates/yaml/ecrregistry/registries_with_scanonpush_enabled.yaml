@@ -1,0 +1,8 @@
+---
+Resources:
+  MyRepositoryWithScanEnabled: 
+    Type: AWS::ECR::Repository
+    Properties: 
+      RepositoryName: "test-repository"
+      ImageScanningConfiguration: 
+        scanOnPush: "true"
