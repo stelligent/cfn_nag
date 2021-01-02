@@ -1,0 +1,15 @@
+---
+Resources:
+  DLMLifeCyclePolicy:
+    Type: AWS::DLM::LifecyclePolicy
+    Properties:
+      Description: Lifecycle Policy using CloudFormation
+      State: ENABLED
+      ExecutionRoleArn: arn:aws:iam::123456789012:role/AWSDataLifecycleManagerDefaultRole
+      PolicyDetails:
+        Actions:
+          - Name: CrossRegionCopyActionWithEncryptionEnabled
+            CrossRegionCopy:
+              - EncryptionConfiguration:
+                  Encrypted: True
+                Target: us-east-1
