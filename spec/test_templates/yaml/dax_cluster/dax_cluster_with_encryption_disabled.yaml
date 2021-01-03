@@ -1,0 +1,10 @@
+---
+Resources:
+  DAXCluster:
+    Type: AWS::DAX::Cluster
+    Properties:
+      NodeType: dax.r3.large
+      ReplicationFactor: 1
+      IAMRoleARN: arn:aws:iam::012345678912:role/DaxAccess
+      SSESpecification:
+        SSEEnabled: False
