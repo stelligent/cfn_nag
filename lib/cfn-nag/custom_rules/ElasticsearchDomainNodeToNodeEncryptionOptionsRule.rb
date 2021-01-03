@@ -14,7 +14,7 @@ class ElasticsearchDomainNodeToNodeEncryptionOptionsRule < BaseRule
   end
 
   def rule_id
-    'W83'
+    'W85'
   end
 
   def audit_impl(cfn_model)
