@@ -14,18 +14,18 @@ Gem::Specification.new do |s|
 
   s.require_paths << 'lib'
 
-  s.required_ruby_version = '>= 2.2'
+  s.required_ruby_version = '>= 2.5'
 
   s.add_development_dependency('rake')
   s.add_development_dependency('rspec', '~> 3.4')
   s.add_development_dependency('rubocop')
-  s.add_development_dependency('simplecov', '~> 0.11')
+  s.add_development_dependency('simplecov', '~> 0.21')
 
   # don't relax this, i don't want different versions of cfn-model being installed after the fact
   # versus what we used to run tests in cfn-nag before publishing cfn-nag
   # they are coupled and we are doing a good bit of experimenting in cfn-model
   # i might consider collapsing them again....
-  s.add_runtime_dependency('cfn-model', '0.5.4')
+  s.add_runtime_dependency('cfn-model', '0.6.0')
   s.add_runtime_dependency('logging', '~> 2.2.2')
   s.add_runtime_dependency('netaddr', '~> 2.0.4')
   s.add_runtime_dependency('optimist', '~> 3.0.0')
