@@ -1,0 +1,10 @@
+---
+Resources:
+  KendraIndex:
+    Type: AWS::Kendra::Index
+    Properties:
+      Edition: ENTERPRISE_EDITION
+      Name: KendraIndexWithoutKmsKeyId
+      RoleArn: arn:aws:iam::123456789012:role/KendraIndex-foobar
+      ServerSideEncryptionConfiguration:
+        FooBar: foobar

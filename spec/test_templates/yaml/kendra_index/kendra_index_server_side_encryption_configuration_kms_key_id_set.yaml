@@ -1,0 +1,10 @@
+---
+Resources:
+  KendraIndex:
+    Type: AWS::Kendra::Index
+    Properties:
+      Edition: ENTERPRISE_EDITION
+      Name: KendraIndexWithKmsKeyId
+      RoleArn: arn:aws:iam::123456789012:role/KendraIndex-foobar
+      ServerSideEncryptionConfiguration:
+        KmsKeyId: alias/SuperSecureKey
