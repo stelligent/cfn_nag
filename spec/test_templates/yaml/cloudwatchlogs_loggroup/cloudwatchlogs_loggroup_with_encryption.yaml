@@ -1,0 +1,7 @@
+---
+Resources:
+  CWLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      KmsKeyId: alias/SuperSecureKey
+      RetentionInDays: 7
