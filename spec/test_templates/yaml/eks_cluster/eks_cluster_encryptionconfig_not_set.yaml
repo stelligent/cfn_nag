@@ -1,0 +1,15 @@
+---
+Resources:
+  EKSCluster:
+    Type: AWS::EKS::Cluster
+    Properties:
+      Name: foobar
+      Version: '1.14'
+      RoleArn: >-
+        arn:aws:iam::012345678910:role/eks-service-role-AWSServiceRoleForAmazonEKS-EXAMPLEBQ4PI
+      ResourcesVpcConfig:
+        SecurityGroupIds:
+          - sg-foobar12
+        SubnetIds:
+          - subnet-foobar12
+          - subnet-foobar34
