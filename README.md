@@ -35,9 +35,9 @@ brew install ruby brew-gem
 brew gem install cfn-nag
 ```
 
-# Pipeline
+# CodePipeline
 
-To run `cfn_nag` as an action in CodePipeline, you can deploy via the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/arn:aws:serverlessrepo:us-east-1:923120264911:applications~cfn-nag-pipeline).
+To run `cfn_nag` as an action in CodePipeline, you can deploy via the [AWS Serverless Application Repository](https://serverlessrepo.aws.amazon.com/applications/us-east-1/275155842945/cfn-nag-pipeline).
 
 # Usage
 
@@ -108,7 +108,7 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t stelligent/cfn_nag /temp
 
 ## Running as a GitHub Action
 
-`cfn_nag_scan` can be run as part of a GitHub Workflow to evaluate code during continuous integration pipelines.  
+`cfn_nag_scan` can be run as part of a GitHub Workflow to evaluate code during continuous integration pipelines.
 
 In your GitHub Workflow file, create a step which uses the cfn_nag Action:
 ```
@@ -288,7 +288,7 @@ If the JSON is malformed or doesn't meet the above specification, then parsing w
 Prior to 0.5.55, calls to Fn::FindInMap were effectively ignored.  The underlying model would
 leave them be, and so they would appear as Hash values to rules.  For example: `{ "Fn::FindInMap" => [map1, key1, key2]}`
 
-Starting in 0.5.55, the model will attempt to compute the value for a call to FindInMap and present that value to the 
+Starting in 0.5.55, the model will attempt to compute the value for a call to FindInMap and present that value to the
 rules.  This evaluation supports keys that are:
 * static text
 * references to parameters (with parameter substitution)
@@ -374,10 +374,10 @@ Starting in version 0.6.0 of cfn_nag:
    metrics in either JSON or HTML format
 * A rule is added (to cfn_nag) to warn on an IAM::Policy or IAM::Role with a SPCM score of >= 50 (default)
 * The rule threshold can be controlled via the command line: `cfn_nag_scan --rule-arguments spcm_threshold:100`
-* Custom rule developers can now develop rules to accept end user values for settings via the same `--rule-arguments` mechanism.  
+* Custom rule developers can now develop rules to accept end user values for settings via the same `--rule-arguments` mechanism.
   The Rule object only needs to declare an `attr_accessor`, e.g. `attr_accessor :spcm_threshold` and cfn_nag
   will take care of the details to inject values from the `--rule-arguments`
-   
+
 # Distribution of Custom Rules
 
 The release of 0.5.x includes some major changes in how custom rules (can) be distributed and loaded.  Before this release,
