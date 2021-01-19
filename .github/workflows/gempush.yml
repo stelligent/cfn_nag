@@ -77,7 +77,7 @@ jobs:
           curl -s \
                -XPOST \
                -u "stelligent-releasebot:${{secrets.GITHUB_TOKEN}}" \
-               -H "Accept: application/vnd.github.everest-preview+json" \
+               -H "Accept: application/vnd.github.v3+json" \
                -H "Content-Type: application/json" \
                https://api.github.com/repos/${{ env.docker_org }}/cfn-nag-pipeline/dispatches \
                --data '{"event_type": "build_application"}'
@@ -86,7 +86,7 @@ jobs:
           curl -s \
                -XPOST \
                -u "stelligent-releasebot:${{secrets.GITHUB_TOKEN}}" \
-               -H "Accept: application/vnd.github.everest-preview+json" \
+               -H "Accept: application/vnd.github.v3+json" \
                -H "Content-Type: application/json" \
                https://api.github.com/repos/${{ env.docker_org }}/homebrew-tap/dispatches \
                --data '{"event_type": "build_application"}'
