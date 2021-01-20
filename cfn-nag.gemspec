@@ -35,6 +35,8 @@ Gem::Specification.new do |s|
   # cfn_nag is a static analysis tool that must be workable with NO network connectivity
   s.add_runtime_dependency('aws-sdk-s3', '~> 1.76')
   s.add_runtime_dependency('lightly', '~> 0.3.2')
+  # Undeclared dependency of aws-sdk-core needed explicity for Ruby 3+ support
+  s.add_runtime_dependency('rexml', '>= 0')
 
   # WARNING: don't add any gems with poisonous GPL licenses
 end
