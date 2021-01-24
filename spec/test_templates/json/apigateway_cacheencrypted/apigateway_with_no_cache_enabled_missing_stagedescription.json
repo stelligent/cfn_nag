@@ -1,0 +1,10 @@
+{
+	"Resources": {
+		"ApiGatewayNoCacheEnabled": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				
+			}
+		}
+	}
+}

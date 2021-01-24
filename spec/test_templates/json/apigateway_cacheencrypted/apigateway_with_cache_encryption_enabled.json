@@ -1,0 +1,13 @@
+{
+	"Resources": {
+		"ApiGatewayWithCacheEncryption": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				"StageDescription": {
+						"CachingEnabled": "true",
+						"CacheDataEncrypted": "true"
+				}
+			}
+		}
+	}
+}
