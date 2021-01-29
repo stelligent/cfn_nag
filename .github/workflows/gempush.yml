@@ -11,19 +11,18 @@ jobs:
   commit:
     name: Commit
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Allows both ruby versions to run before failing
+      matrix:
+        ruby: ['2.5', '3.0']
 
     steps:
     - uses: actions/checkout@master
-    - name: Set up Ruby 2.5
-      uses: actions/setup-ruby@v1
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.5.x
-    - name: Install Bundler
-      run: gem install bundler
-    - name: Which bundler?
-      run: bundle -v
-    - name: Bundle install
-      run: bundle check || bundle install
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
     - name: Rubocop lint
       run: bundle exec rubocop -D
     - name: Rspec tests
@@ -34,16 +33,18 @@ jobs:
   acceptance:
     name: Acceptance
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Allows both ruby versions to run before failing
+      matrix:
+        ruby: ['2.5', '3.0']
 
     steps:
     # is this the same commit hash we saw in commit?
     - uses: actions/checkout@master
-    - name: Set up Ruby 2.5
-      uses: actions/setup-ruby@v1
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.5.x
-    - name: Install Bundler
-      run: gem install bundler
+        ruby-version: ${{ matrix.ruby }}
     - name: e2e
       run: bash ./scripts/setup_and_run_end_to_end_tests.sh
 
@@ -72,10 +73,11 @@ jobs:
         with:
           publish: true
           version: ${{ steps.publish.outputs.cfn_nag_version }}
+
       - name: Trigger cfn_nag for CodePipeline SAR publish
         run: |
           curl -s \
-               -XPOST \
+               -X POST \
                -u "stelligent-releasebot:${{secrets.GITHUB_TOKEN}}" \
                -H "Accept: application/vnd.github.v3+json" \
                -H "Content-Type: application/json" \
@@ -84,7 +86,7 @@ jobs:
       - name: Trigger homebrew-tap repo workflow
         run: |
           curl -s \
-               -XPOST \
+               -X POST \
                -u "stelligent-releasebot:${{secrets.GITHUB_TOKEN}}" \
                -H "Accept: application/vnd.github.v3+json" \
                -H "Content-Type: application/json" \
