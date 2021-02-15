@@ -1,0 +1,20 @@
+---
+Resources:
+  DeliveryStream1:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamType: DirectPut
+      ExtendedS3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::foobar-bucket
+        RoleARN: arn:aws:iam::123456789012:role/KinesisFirehose-foobar
+
+  DeliveryStream2:
+    Type: AWS::KinesisFirehose::DeliveryStream
+    Properties:
+      DeliveryStreamType: KinesisStreamAsSource
+      ExtendedS3DestinationConfiguration:
+        BucketARN: arn:aws:s3:::foobar-bucket
+        RoleARN: arn:aws:iam::123456789012:role/KinesisFirehose-foobar
+      KinesisStreamSourceConfiguration:
+        KinesisStreamARN: arn:aws:kinesis:us-east-1:123456789012:stream/test-stream
+        RoleARN: arn:aws:iam::123456789012:role/KinesisFirehose-foobar
