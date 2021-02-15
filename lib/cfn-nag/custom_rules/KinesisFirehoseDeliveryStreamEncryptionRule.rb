@@ -17,9 +17,10 @@ class KinesisFirehoseDeliveryStreamEncryptionRule < BaseRule
   end
 
   def audit_impl(cfn_model)
-    violating_delivery_streams = cfn_model.resources_by_type('AWS::KinesisFirehose::DeliveryStream').select do |delivery_stream|
-      violating_delivery_stream?(delivery_stream)
-    end
+    violating_delivery_streams =
+      cfn_model.resources_by_type('AWS::KinesisFirehose::DeliveryStream').select do |delivery_stream|
+        violating_delivery_stream?(delivery_stream)
+      end
 
     violating_delivery_streams.map(&:logical_resource_id)
   end
