@@ -15,7 +15,7 @@ describe ApiGatewayCacheEncryptedRule do
   end
 
   context 'Api Gateway has no cache configured' do
-    it 'returns offending logical resource id' do
+    it 'returns no violating resources' do
       cfn_model = CfnParser.new.parse read_test_template('json/apigateway_cacheencrypted/apigateway_with_no_cache_enabled_missing_stagedescription.json')
 
       actual_logical_resource_ids = ApiGatewayCacheEncryptedRule.new.audit_impl cfn_model
