@@ -1,0 +1,21 @@
+{
+	"Resources": {
+		"ApiGatewayWithCacheEncryptionDisabled": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				"StageDescription": {
+						"CachingEnabled": "true",
+						"CacheDataEncrypted": "false"
+				}
+			}
+		},
+		"ApiGatewayWithDefaultCacheEncryption": {
+			"Type": "AWS::ApiGateway::Deployment",
+			"Properties": {
+				"StageDescription": {
+						"CachingEnabled": "true"
+				}
+			}
+		}
+	}
+}
