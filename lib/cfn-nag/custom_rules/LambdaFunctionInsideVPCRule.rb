@@ -19,10 +19,9 @@ class LambdaFunctionInsideVPCRule < BaseRule
   def audit_impl(cfn_model)
     lambda_functions = cfn_model.resources_by_type('AWS::Lambda::Function')
     violating_lambda_functions = lambda_functions.select do |lambda_function|
-      lambda_funcion.vpcConfig.nil?
+      lambda_function.vpcConfig.nil?
     end
-	
+
     violating_lambda_functions.map(&:logical_resource_id)
   end
-
 end
