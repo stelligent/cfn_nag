@@ -22,6 +22,6 @@ class DMSReplicationInstanceNotPublicRule < BaseRule
       replication.publiclyAccessible.nil? || truthy?(replication.publiclyAccessible)
     end
 
-    violating_domains.map(&:logical_resource_id)
+    violating_replications.map(&:logical_resource_id)
   end
 end
