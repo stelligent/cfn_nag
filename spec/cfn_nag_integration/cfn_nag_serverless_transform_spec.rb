@@ -26,6 +26,12 @@ describe CfnNag do
                 message: LambdaFunctionCloudWatchLogsRule.new.rule_text,
                 logical_resource_ids: %w[SomeFunction2],
                 line_numbers: [-1]
+              ),
+              Violation.new(
+                id: 'W92', type: Violation::WARNING,
+                message: LambdaFunctionReservedConcurrentExecutionsRule.new.rule_text,
+                logical_resource_ids: ["SomeFunction","SomeFunction2"],
+                line_numbers: [-1,-1]
               )
             ]
           }

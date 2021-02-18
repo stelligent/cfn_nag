@@ -22,22 +22,22 @@ describe CfnNag do
                             type: Violation::FAILING_VIOLATION,
                             message: 'IAM role should not allow * resource with PassRole action on its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [49]),
+                            line_numbers: [50]),
               Violation.new(id: 'F3',
                             type: Violation::FAILING_VIOLATION,
                             message: 'IAM role should not allow * action on its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [49]),
+                            line_numbers: [50]),
               Violation.new(id: 'W11',
                             type: Violation::WARNING,
                             message: 'IAM role should not allow * resource on its permissions policy',
                             logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [49]),
+                            line_numbers: [50]),
               Violation.new(id: 'F13',
                             type: Violation::FAILING_VIOLATION,
                             message: 'Lambda permission principal should not be wildcard',
                             logical_resource_ids: %w[lambdaPermission],
-                            line_numbers: [23])
+                            line_numbers: [24])
             ]
           }
         }

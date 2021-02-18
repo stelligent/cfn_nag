@@ -5,6 +5,7 @@
       "Properties": {
         "Handler": "index.handler",
         "Role": { "Fn::GetAtt" : ["LambdaExecutionRole", "Arn"] },
+        "ReservedConcurrentExecutions": "1",
         "Code": {
           "ZipFile":  { "Fn::Join": ["", [
             "var response = require('cfn-response');",
