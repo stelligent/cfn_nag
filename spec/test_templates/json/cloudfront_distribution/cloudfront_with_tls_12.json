@@ -15,6 +15,21 @@
 				}
 			}
 		},
+		"ApiGatewayWithTls12NewPolicy": {
+			"Type": "AWS::CloudFront::Distribution",
+			"Properties": {
+				"DistributionConfig": {
+					"ViewerCertificate": {
+						"MinimumProtocolVersion": "TLSv1.2_2019"
+					},
+					"Origins": [
+						{}
+					],
+					"Enabled": "false",
+					"DefaultCacheBehavior": {}
+				}
+			}
+		},		
 		"ApiGatewayWithTls12OverridebyCloudFrontDefaultCertificateUsage": {
 			"Type": "AWS::CloudFront::Distribution",
 			"Properties": {
