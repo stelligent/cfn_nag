@@ -6,7 +6,7 @@ require_relative 'base'
 
 class ECRRepositoryScanOnPushRule < BaseRule
   def rule_text
-    'ECR Repository should have scanOnPush enabled'
+    'ECR Repository should have ScanOnPush enabled'
   end
 
   def rule_type
@@ -20,7 +20,7 @@ class ECRRepositoryScanOnPushRule < BaseRule
   def audit_impl(cfn_model)
     violating_ecr_registries = cfn_model.resources_by_type('AWS::ECR::Repository').select do |registry|
       registry.imageScanningConfiguration.nil? ||
-        !truthy?(registry.imageScanningConfiguration['scanOnPush'].to_s)
+        !truthy?(registry.imageScanningConfiguration['ScanOnPush'].to_s)
     end
 
     violating_ecr_registries.map(&:logical_resource_id)

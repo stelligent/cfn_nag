@@ -5,4 +5,4 @@ Resources:
     Properties: 
       RepositoryName: "test-repository"
       ImageScanningConfiguration: 
-        scanOnPush: "true"
+        ScanOnPush: "true"
