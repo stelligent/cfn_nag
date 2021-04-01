@@ -1,10 +1,9 @@
 We're no strangers to code
+You know the rules and so does nag
+A full commit hook is what I'm thinking of
+You wouldn't get this from any other scan
 
-You know the rules and so do I
-A full commit scan is what I'm thinking of
-You wouldn't get this from any other nag
 I just wanna tell you what I'm seeing
-
 Gotta make you understand
 
 ```
