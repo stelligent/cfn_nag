@@ -3,4 +3,4 @@
     description:  Looks for patterns in CloudFormation templates that may indicate insecure infrastructure.
     entry: cfn_nag_scan --input-path
     language: ruby
-    files: \.(json|ya?ml)$
+    files: \.(json|ya?ml|template)$
