@@ -35,7 +35,7 @@ describe CfnNag do
                             line_numbers: [49]),
               Violation.new(id: 'W89',
                             type: Violation::WARNING,
-                            message: 'Lambda functions should be deployed inside a VPC, miss VpcConfig property',
+                            message: 'Lambda functions should be deployed inside a VPC',
                             logical_resource_ids: %w[AppendItemToListFunction],
                             line_numbers: [4]),                            
               Violation.new(id: 'F13',
