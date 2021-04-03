@@ -5,7 +5,7 @@ require_relative 'base'
 
 class LambdaFunctionInsideVPCRule < BaseRule
   def rule_text
-    'Lambda functions should be deployed inside a VPC, miss VpcConfig property'
+    'Lambda functions should be deployed inside a VPC'
   end
 
   def rule_type
