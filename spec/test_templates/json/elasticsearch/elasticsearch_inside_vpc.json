@@ -1,0 +1,14 @@
+{
+	"Resources": {
+		"ElasticsearchDomainInVPC": {
+			"Type": "AWS::Elasticsearch::Domain",
+			"Properties": {
+				"DomainName": "nameddomain",
+				"VPCOptions" : {
+					"SecurityGroupIds": ["secgroup"],
+					"SubnetIds": ["subnetid"]
+				}
+			}
+		}
+	}
+}
