@@ -1,4 +1,4 @@
-FROM ruby:2.5
+FROM ruby:2.7
 
 # Avoid warnings by switching to noninteractive
 ENV DEBIAN_FRONTEND=noninteractive
@@ -58,7 +58,7 @@ RUN echo 'export GPG_TTY="$(tty)"' >> /home/$USERNAME/.bashrc \
   && chown -R $USERNAME /home/$USERNAME/.gnupg
 
 # Add non-root user to gems and bundle
-RUN chown -R $USERNAME /usr/local/lib/ruby/gems/2.5.0 \
+RUN chown -R $USERNAME /usr/local/lib/ruby/gems/2.7.0 \
   && chown -R $USERNAME /usr/local/bundle
 
 # Enter container as non-root user

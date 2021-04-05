@@ -28,11 +28,12 @@ class CloudfrontMinimumProtocolVersionRule < BaseRule
   private
 
   def tls_version?(viewer_certificate)
-    cert_has_bad_tls_version?(viewer_certificate) || override_tls_config?(viewer_certificate)
+    cert_has_bad_tls_version?(viewer_certificate['MinimumProtocolVersion']) || override_tls_config?(viewer_certificate)
   end
 
-  def cert_has_bad_tls_version?(viewer_certificate)
-    viewer_certificate['MinimumProtocolVersion'].nil? || viewer_certificate['MinimumProtocolVersion'] != 'TLSv1.2_2018'
+  def cert_has_bad_tls_version?(min_protocol_version)
+    min_protocol_version.nil? ||
+      (min_protocol_version.is_a?(String) && !min_protocol_version.start_with?('TLSv1.2'))
   end
 
   def override_tls_config?(viewer_certificate)
