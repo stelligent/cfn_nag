@@ -52,7 +52,7 @@ class FileBasedRuleRepo
 
     rule_filenames = discover_rule_filenames(rule_directory)
     rule_filenames.each do |rule_filename|
-      require(rule_filename)
+      require(File.absolute_path(rule_filename))
       rule_classname = File.basename(rule_filename, '.rb')
 
       rule_classes << Object.const_get(rule_classname)
