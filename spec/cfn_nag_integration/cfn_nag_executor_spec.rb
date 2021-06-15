@@ -140,7 +140,6 @@ describe CfnNagExecutor do
       cli_options = @default_cli_options.clone
       cli_options[:input_path] = 'spec/test_templates/json/neptune'
       expect(Options).to receive(:scan_options).and_return(cli_options)
-      puts cli_options
 
       cfn_nag_executor = CfnNagExecutor.new
 
@@ -198,6 +197,36 @@ describe CfnNagExecutor do
   context 'invalid Options types' do
     it 'raises errors' do
       expect {Options.for('invalid')}.to raise_error(RuntimeError)
+    end
+  end
+
+  context 'multi file cfn_nag with ignore fatal' do
+    it 'returns failed result' do
+      cli_options = @default_cli_options.clone
+      cli_options[:input_path] = 'spec/test_templates/yaml/ignore_fatal'
+      cli_options[:ignore_fatal] = true
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+
+      result = cfn_nag_executor.scan(options_type: 'scan')
+
+      expect(result).to eq 1
+    end
+  end
+
+  context 'multi file cfn_nag not ignornig fatal errors' do
+    it 'returns two failed results' do
+      cli_options = @default_cli_options.clone
+      cli_options[:input_path] = 'spec/test_templates/yaml/ignore_fatal'
+      cli_options[:ignore_fatal] = false
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+
+      result = cfn_nag_executor.scan(options_type: 'scan')
+
+      expect(result).to eq 2
     end
   end
 end
