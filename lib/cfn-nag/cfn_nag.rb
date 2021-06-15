@@ -107,7 +107,7 @@ class CfnNag
   end
 
   def prune_fatal_violations(violations)
-    violations.reject { |violation| violation.type == Violation::FAILING_VIOLATION }
+    violations.reject { |violation| violation.id == 'FATAL' }
   end
 
   def render_results(aggregate_results:,
