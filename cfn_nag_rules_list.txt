@@ -1,0 +1,156 @@
+WARNING VIOLATIONS:
+W1 Specifying credentials in the template itself is probably not the safest thing
+W2 Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB
+W5 Security Groups found with cidr open to world on egress
+W9 Security Groups found with ingress cidr that is not /32
+W10 CloudFront Distribution should enable access logging
+W11 IAM role should not allow * resource on its permissions policy
+W12 IAM policy should not allow * resource
+W13 IAM managed policy should not allow * resource
+W14 IAM role should not allow Allow+NotAction on trust permissions
+W15 IAM role should not allow Allow+NotAction
+W16 IAM policy should not allow Allow+NotAction
+W17 IAM managed policy should not allow Allow+NotAction
+W18 SQS Queue policy should not allow Allow+NotAction
+W19 SNS Topic policy should not allow Allow+NotAction
+W20 S3 Bucket policy should not allow Allow+NotAction
+W21 IAM role should not allow Allow+NotResource
+W22 IAM policy should not allow Allow+NotResource
+W23 IAM managed policy should not allow Allow+NotResource
+W24 Lambda permission beside InvokeFunction might not be what you want? Not sure!?
+W26 Elastic Load Balancer should have access logging enabled
+W27 Security Groups found ingress with port range instead of just a single port
+W28 Resource found with an explicit name, this disallows updates that require replacement of this resource
+W29 Security Groups found egress with port range instead of just a single port
+W31 S3 Bucket likely should not have a public read acl
+W32 CodeBuild project should specify an EncryptionKey value
+W33 EC2 Subnet should not have MapPublicIpOnLaunch set to true
+W34 Batch Job Definition Container Properties should not have Privileged set to true
+W35 S3 Bucket should have access logging configured
+W36 Security group rules without a description obscure their purpose and may lead to bad practices in ensuring they only allow traffic from the ports and sources/destinations required.
+W37 EBS Volume should specify a KmsKeyId value
+W38 IOT policy should not allow * action
+W39 IoT policy should not allow * resource
+W40 Security Groups egress with an IpProtocol of -1 found
+W41 S3 Bucket should have encryption option set
+W42 Security Groups ingress with an ipProtocol of -1 found 
+W43 IAM role should not have AdministratorAccess policy
+W44 IAM role should not have Elevated Managed policy
+W45 ApiGateway Deployment resource should have AccessLogSetting property configured when creating an API Stage itself (through specifying the StageName and StageDescription properties).
+W46 ApiGateway V2 should have access logging configured
+W47 SNS Topic should specify KmsMasterKeyId property
+W48 SQS Queue should specify KmsMasterKeyId property
+W49 Kinesis Stream should specify StreamEncryption. EncryptionType should be KMS and specify KMS Key Id.
+W50 IAM User Login Profile should exist and have PasswordResetRequired property set to true
+W51 S3 bucket should likely have a bucket policy
+W52 Elastic Load Balancer V2 should have access logging enabled
+W53 AmazonMQ Broker should specify EncryptionOptions
+W54 ElasticsearchcDomain should specify EncryptionAtRestOptions
+W55 Elastic Load Balancer V2 Listener SslPolicy should use TLS 1.2
+W56 Elastic Load Balancer V2 Listener Protocol should use HTTPS for ALBs
+W57 AWS::Cognito::IdentityPool AllowUnauthenticatedIdentities property should be false but CAN be true if proper restrictive IAM roles and permissions are established for unauthenticated users.
+W58 Lambda functions require permission to write CloudWatch Logs
+W59 AWS::ApiGateway::Method should not have AuthorizationType set to 'NONE' unless it is of HttpMethod: OPTIONS.
+W60 VPC should have a flow log attached
+W61 EMR SecurityConfiguration should enable and properly configure encryption at rest and in transit.
+W62 ApiGateway SecurityPolicy should use TLS 1.2
+W63 EMR Cluster should specify SecurityConfiguration.
+W64 AWS::ApiGateway::Stage resources should be associated with an AWS::ApiGateway::UsagePlan. 
+W65 GameLift fleet EC2InboundPermissions found with port range instead of just a single port
+W66 To avoid opening all ports for Allow rules, EC2 NetworkACL Entry Protocol should be either 6 (for TCP), 17 (for UDP), 1 (for ICMP), or 58 (for ICMPv6, which must include an IPv6 CIDR block, ICMP type, and code).
+W67 TCP/UDP protocol NetworkACL entries possibly should not allow all ports.
+W68 AWS::ApiGateway::Deployment resources should be associated with an AWS::ApiGateway::UsagePlan. 
+W69 AWS::ApiGateway::Stage should have the AccessLogSetting property defined.
+W70 Cloudfront should use minimum protocol version TLS 1.2
+W71 NetworkACL Entry Deny rules should affect all CIDR ranges.
+W72 NetworkACL Entries are reusing or overlapping ports which may create ineffective rules.
+W73 DynamoDB table should have billing mode set to either PAY_PER_REQUEST or PROVISIONED
+W74 DynamoDB table should have encryption enabled using a CMK stored in KMS
+W75 RDS instance should have backup retention period greater than 0
+W76 SPCM for IAM policy document is higher than 25
+W77 Secrets Manager Secret should explicitly specify KmsKeyId. Besides control of the key this will allow the secret to be shared cross-account
+W78 DynamoDB table should have backup enabled, should be set using PointInTimeRecoveryEnabled
+W79 ECR Repository should have scanOnPush enabled
+W1200 SageMaker EndpointConfig should have a KmsKeyId property set.
+W1201 SageMaker NotebookInstance should have a KmsKeyId property set.
+
+FAILING VIOLATIONS:
+F1 EBS volume should have server-side encryption enabled
+F2 IAM role should not allow * action on its trust policy
+F3 IAM role should not allow * action on its permissions policy
+F4 IAM policy should not allow * action
+F5 IAM managed policy should not allow * action
+F6 IAM role should not allow Allow+NotPrincipal in its trust policy
+F7 SQS Queue policy should not allow Allow+NotPrincipal
+F8 SNS Topic policy should not allow Allow+NotPrincipal
+F9 S3 Bucket policy should not allow Allow+NotPrincipal
+F10 IAM user should not have any inline policies.  Should be centralized Policy object on group
+F11 IAM policy should not apply directly to users.  Should be on group
+F12 IAM managed policy should not apply directly to users.  Should be on group
+F13 Lambda permission principal should not be wildcard
+F14 S3 Bucket should not have a public read-write acl
+F15 S3 Bucket policy should not allow * action
+F16 S3 Bucket policy should not allow * principal
+F18 SNS topic policy should not allow * principal
+F19 EnableKeyRotation should not be false or absent on KMS::Key resource
+F20 SQS Queue policy should not allow * action
+F21 SQS Queue policy should not allow * principal
+F22 RDS instance should not be publicly accessible
+F23 RDS instance master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F24 RDS instance master username must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F25 ElastiCache ReplicationGroup should have encryption enabled for at rest
+F26 RDS DBCluster should have StorageEncrypted enabled
+F27 RDS DBInstance should have StorageEncrypted enabled
+F28 Redshift Cluster should have encryption enabled
+F29 Workspace should have encryption enabled
+F30 Neptune database cluster storage should have encryption enabled
+F31 DirectoryService SimpleAD password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F32 EFS FileSystem should have encryption enabled
+F33 ElastiCache ReplicationGroup should have encryption enabled for in transit
+F34 RDS DB Cluster master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F35 Redshift Cluster master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F36 Directory Service Microsoft AD password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F37 DMS Endpoint password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F38 IAM role should not allow * resource with PassRole action on its permissions policy
+F39 IAM policy should not allow * resource with PassRole action
+F40 IAM managed policy should not allow a * resource with PassRole action
+F41 Amplify App AccessToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F42 Pinpoint APNSSandboxChannel PrivateKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F43 Pinpoint APNSSandboxChannel TokenKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F44 ElastiCache ReplicationGroup AuthToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F45 Lambda Permission EventSourceToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F46 Pinpoint APNSVoipSandboxChannel PrivateKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F47 Pinpoint APNSVoipSandboxChannel TokenKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F48 Pinpoint APNSVoipChannel PrivateKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F49 Pinpoint APNSChannel TokenKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F50 Amplify App BasicAuthConfig Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F51 IAM User LoginProfile Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F52 AmazonMQ Broker Users Password must not be a plaintext string or a Ref to a Parameter with a Default value. Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F53 AppStream DirectoryConfig ServiceAccountCredentials AccountPassword must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F54 OpsWorks Stack RDS DbInstance DbPassword must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F55 DMS Endpoint MongoDbSettings Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F56 Pinpoint APNSChannel TokenKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F57 Pinpoint APNSChannel PrivateKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F58 Amplify App OauthToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F60 Amplify Branch BasicAuthConfig Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F61 OpsWorks App SslConfiguration PrivateKey must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F62 OpsWorks Stack CustomCookbooksSource Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F63 EMR Cluster KerberosAttributes AD Domain JoinPassword must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F64 EMR Cluster KerberosAttributes CrossRealmTrustPrincipal Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F65 EMR Cluster KerberosAttributes KdcAdmin Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F66 Kinesis Firehose DeliveryStream RedshiftDestinationConfiguration Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F67 OpsWorks App AppSource Password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.
+F68 Kinesis Firehose DeliveryStream SplunkDestinationConfiguration HECToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F69 CodePipeline Webhook AuthenticationConfiguration SecretToken must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F70 DocDB DB Cluster master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.
+F71 ManagedBlockchain Member MemberFabricConfiguration AdminPasswordRule must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.
+F74 Alexa ASK Skill AuthenticationConfiguration ClientSecret must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.
+F75 Alexa ASK Skill AuthenticationConfiguration RefreshToken must not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.
+F76 KMS key should not allow * principal (https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)
+F77 SimpleDB Domain should not be a declared resource
+F78 AWS Cognito UserPool should have MfaConfiguration set to 'ON' (MUST be wrapped in quotes) or at least 'OPTIONAL'
+F79 A NetworkACL's rule numbers cannot be repeated unless one is egress and one is ingress.
+F80 RDS instance should have deletion protection enabled
+F665 WebAcl DefaultAction should not be ALLOW
+F1000 Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration
+F2000 User is not assigned to a group

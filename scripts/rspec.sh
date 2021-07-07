@@ -15,3 +15,6 @@ gem install simplecov -v '~> 0.11' --no-document
 echo "begin all rspec tests..."
 # Execute end-to-end tests
 rspec
+
+echo "updating cfn_nag_rules plaintext list"
+cfn_nag_rules > cfn_nag_rules_list.txt
