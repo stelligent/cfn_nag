@@ -157,7 +157,6 @@ The format is as follows.  The only two salient fields are `RulesToSuppress` and
 be interpreted by cfn-nag, but it is recommended to justify and document why the rule should never be applied.
 
 ```yaml
----
 RulesToSuppress:
 - id: W3
   reason: W3 is something we never care about at enterprise X
@@ -326,7 +325,7 @@ Additionally, the end user can override the value supplied via the traditional p
 ```json
 {
   "Parameters": {
-    "AWS::Region": eu-west-1"
+    "AWS::Region": "eu-west-1"
   }
 }
 ```
@@ -371,7 +370,7 @@ The format of the JSON is a a dictionary with each key/value pair mapping to the
 
 # Stelligent Policy Complexity Metrics (spcm)
 
-The basis for SPCM is described in the blog post [Thought Experiment Proposed Complexity Metric for IAM Policy Documnets](https://stelligent.com/2020/03/27/thought-experiment-proposed-complexity-metric-for-iam-policy-documents/).
+The basis for SPCM is described in the blog post [Thought Experiment Proposed Complexity Metric for IAM Policy Documents](https://stelligent.com/2020/03/27/thought-experiment-proposed-complexity-metric-for-iam-policy-documents/).
 
 Starting in version 0.6.0 of cfn_nag:
 
@@ -468,8 +467,8 @@ There is a complete remote development environment created and setup with all th
 
 * Install the VS Code [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
 * Open the repo in VS Code
-* When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
-* When opening in the future use the "`[Dev Container] cfn_nag Development`" option
+* When prompted `Folder contains a dev container configuration file. Reopen folder to develop in a container` click the `Reopen in Container` button
+* When opening in the future use the `[Dev Container] cfn_nag Development` option
 
 More information about the VS Code Remote Development setup can be found here, [VS Code Remote Development](vscode_remote_development.md).
 
