@@ -21,6 +21,7 @@ For more background on the tool, please see this post at Stelligent's blog:
 # Installation
 
 ## Gem Install
+
 Presuming Ruby >= 2.5.x is installed, installation is just a matter of:
 
 ```bash
@@ -28,6 +29,7 @@ gem install cfn-nag
 ```
 
 ## Brew Install
+
 On MacOS or Linux you can alternatively install with brew:
 
 ```bash
@@ -111,11 +113,12 @@ $ docker run -v `pwd`/spec/test_templates:/templates -t stelligent/cfn_nag /temp
 `cfn_nag_scan` can be run as part of a GitHub Workflow to evaluate code during continuous integration pipelines.
 
 In your GitHub Workflow file, create a step which uses the cfn_nag Action:
-```
-      - name: Simple test
-        uses: stelligent/cfn_nag@master
-        with:
-          input_path: tests
+
+```yaml
+- name: Simple test
+  uses: stelligent/cfn_nag@master
+  with:
+    input_path: tests
 ```
 
 More information about the [GitHub Action can be found here](github-action/README.md).
@@ -134,7 +137,7 @@ IAM resources and therefore not care about those rules.
 
 Here is an example profile:
 
-```
+```text
 F1
 F2
 F27
@@ -290,6 +293,7 @@ leave them be, and so they would appear as Hash values to rules.  For example: `
 
 Starting in 0.5.55, the model will attempt to compute the value for a call to FindInMap and present that value to the
 rules.  This evaluation supports keys that are:
+
 * static text
 * references to parameters (with parameter substitution)
 * references to AWS pseudofunctions (see next section)
@@ -307,7 +311,7 @@ map evaluation.
 
 Starting in 0.5.55, the model will present the following AWS pseudofunctions to rules with the default values:
 
-```
+```text
 'AWS::URLSuffix' => 'amazonaws.com',
 'AWS::Partition' => 'aws',
 'AWS::NotificationARNs' => '',
@@ -319,7 +323,7 @@ Starting in 0.5.55, the model will present the following AWS pseudofunctions to 
 
 Additionally, the end user can override the value supplied via the traditional parameter substitution mechanism.  For example:
 
-```
+```json
 {
   "Parameters": {
     "AWS::Region": eu-west-1"
@@ -367,9 +371,10 @@ The format of the JSON is a a dictionary with each key/value pair mapping to the
 
 # Stelligent Policy Complexity Metrics (spcm)
 
-The basis for SPCM is described in the blog post: https://stelligent.com/2020/03/27/thought-experiment-proposed-complexity-metric-for-iam-policy-documents/
+The basis for SPCM is described in the blog post [Thought Experiment Proposed Complexity Metric for IAM Policy Documnets](https://stelligent.com/2020/03/27/thought-experiment-proposed-complexity-metric-for-iam-policy-documents/).
 
 Starting in version 0.6.0 of cfn_nag:
+
 * `spcm_scan` can scan a directory of CloudFormation templates (like cfn_nag_scan) and generate a report with the SPCM
    metrics in either JSON or HTML format
 * A rule is added (to cfn_nag) to warn on an IAM::Policy or IAM::Role with a SPCM score of >= 50 (default)
@@ -438,7 +443,8 @@ A screencast demonstrating soup-to-nuts TDD custom rule development is available
 ## Specs
 
 To run the specs, you need to ensure you have Docker installed and cfn_nag dependencies installed via
-```
+
+```bash
 gem install bundle
 bundle install
 ```
@@ -448,23 +454,25 @@ Then, to run all of the specs, just run `rake test:all`.
 To run the end-to-end tests, run `rake test:e2e`. The script will bundle all gems in the Gemfile, build and install the cfn_nag gem locally, install spec dependencies, and then executes tests tagged with 'end_to_end'. It will also pull down sample templates provided by Amazon and run cfn_nag_scan against them, to see if any known-good templates cause exceptions within cfn-nag.
 
 ## Local Install
+
 To install the current git branch locally:
-```
+
+```bash
 bundle install
 scripts/deploy_local.sh
 ```
 
 ## VS Code Remote Development
+
 There is a complete remote development environment created and setup with all the tools and settings pre-configured for ease in rule development and creation. You can enable this by using the VS Code Remote development functionality.
 
-- Install the VS Code [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
-- Open the repo in VS Code
-- When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
-- When opening in the future use the "`[Dev Container] cfn_nag Development`" option
+* Install the VS Code [Remote Development extension pack](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.vscode-remote-extensionpack)
+* Open the repo in VS Code
+* When prompted "`Folder contains a dev container configuration file. Reopen folder to develop in a container`" click the "`Reopen in Container`" button
+* When opening in the future use the "`[Dev Container] cfn_nag Development`" option
 
 More information about the VS Code Remote Development setup can be found here, [VS Code Remote Development](vscode_remote_development.md).
 
 # Support
 
 To report a bug or request a feature, submit an issue through the GitHub repository via: <https://github.com/stelligent/cfn_nag/issues/new>
-
