@@ -93,7 +93,7 @@ class CfnNag
         @config.custom_rule_loader.rule_definitions
       )
 
-      violations = filter_violations_by_blacklist_and_profile(violations)
+      violations = filter_violations_by_deny_list_and_profile(violations)
       violations = mark_line_numbers(violations, cfn_model)
     rescue RuleRepoException, Psych::SyntaxError, ParserError => fatal_error
       violations << fatal_violation(fatal_error.to_s)
@@ -127,21 +127,21 @@ class CfnNag
     violations
   end
 
-  def filter_violations_by_blacklist_and_profile(violations)
+  def filter_violations_by_deny_list_and_profile(violations)
     violations = filter_violations_by_profile(
       profile_definition: @config.profile_definition,
       rule_definitions: @config.custom_rule_loader.rule_definitions,
       violations: violations
     )
 
-    # this must come after - blacklist should always win
-    filter_violations_by_blacklist(
-      blacklist_definition: @config.blacklist_definition,
+    # this must come after - deny list should always win
+    filter_violations_by_deny_list(
+      deny_list_definition: @config.deny_list_definition,
       rule_definitions: @config.custom_rule_loader.rule_definitions,
       violations: violations
     )
-  rescue StandardError => blacklist_or_profile_parse_error
-    violations << fatal_violation(blacklist_or_profile_parse_error.to_s)
+  rescue StandardError => deny_list_or_profile_parse_error
+    violations << fatal_violation(deny_list_or_profile_parse_error.to_s)
     violations
   end
 

@@ -58,8 +58,8 @@ class Options
           type: :string,
           required: false,
           default: nil
-      opt :blacklist_path,
-          'Path to a blacklist file',
+      opt :deny_list_path,
+          'Path to a deny list file',
           type: :string,
           required: false,
           default: nil
@@ -145,8 +145,8 @@ class Options
           type: :string,
           required: false,
           default: nil
-      opt :blacklist_path,
-          'Path to a blacklist file',
+      opt :deny_list_path,
+          'Path to a deny list file',
           type: :string,
           required: false,
           default: nil

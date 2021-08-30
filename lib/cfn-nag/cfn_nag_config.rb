@@ -3,7 +3,7 @@
 class CfnNagConfig
   # rubocop:disable Metrics/ParameterLists
   def initialize(profile_definition: nil,
-                 blacklist_definition: nil,
+                 deny_list_definition: nil,
                  rule_directory: nil,
                  allow_suppression: true,
                  print_suppression: false,
@@ -21,7 +21,7 @@ class CfnNagConfig
       rule_repository_definitions: rule_repository_definitions
     )
     @profile_definition = profile_definition
-    @blacklist_definition = blacklist_definition
+    @deny_list_definition = deny_list_definition
     @fail_on_warnings = fail_on_warnings
     @rule_repositories = rule_repositories
     @rule_arguments = rule_arguments
@@ -29,6 +29,6 @@ class CfnNagConfig
   end
   # rubocop:enable Metrics/ParameterLists
 
-  attr_reader :rule_arguments, :rule_directory, :custom_rule_loader, :profile_definition, :blacklist_definition, \
+  attr_reader :rule_arguments, :rule_directory, :custom_rule_loader, :profile_definition, :deny_list_definition, \
               :fail_on_warnings, :rule_repositories, :ignore_fatal
 end

@@ -127,7 +127,7 @@ More information about the [GitHub Action can be found here](github-action/READM
 
 ### Profiles
 
-cfn-nag supports the notion of a "profile" which is effectively a whitelist of rules to apply.  The profile is a text file
+cfn-nag supports the notion of a "profile" which is effectively an allow list of rules to apply.  The profile is a text file
 that must contain a rule identifier per line.  When specified via the `--profile-path` command line argument,
 cfn-nag will ONLY return violations from those particular rules.
 
@@ -145,13 +145,13 @@ W3
 W5
 ```
 
-### Global Blacklist
+### Global Deny List
 
-The blacklist is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the
-`--blacklist-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
+The deny list is basically the opposite of the profile: it's a list of rules to NEVER apply.  When specified via the
+`--deny-list-path` command line argument, cfn-nag will NEVER return violations from those particular rules specified
 in the file.
 
-In case a rule is specified in both, the blacklist will take priority over the profile, and the rule will not be applieed.
+In case a rule is specified in both, the deny list will take priority over the profile, and the rule will not be applied.
 
 The format is as follows.  The only two salient fields are `RulesToSuppress` and the `id` per item.  The `reason` won't
 be interpreted by cfn-nag, but it is recommended to justify and document why the rule should never be applied.

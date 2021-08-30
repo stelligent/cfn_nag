@@ -3,7 +3,7 @@ require 'cfn-nag/violation_filtering'
 require 'cfn-nag/violation'
 require 'cfn-nag/rule_id_set'
 require 'cfn-nag/profile_loader'
-require 'cfn-nag/blacklist_loader'
+require 'cfn-nag/deny_list_loader'
 
 include ViolationFiltering
 
@@ -41,13 +41,13 @@ describe ViolationFiltering do
     end
   end
 
-  context 'nil blacklist' do
+  context 'nil deny list' do
     it 'filters nothing' do
-      blacklist_definition = nil
+      deny_list_definition = nil
       dontcare = nil
 
-      actual_violations = filter_violations_by_blacklist(
-        blacklist_definition: blacklist_definition,
+      actual_violations = filter_violations_by_deny_list(
+        deny_list_definition: deny_list_definition,
         rule_definitions: dontcare,
         violations: @violations
       )
@@ -89,17 +89,17 @@ describe ViolationFiltering do
       end
     end
 
-    context 'blacklist with Y,Z' do
+    context 'deny list with Y,Z' do
       it 'returns violations X' do
-        blacklist = RuleIdSet.new
-        blacklist.add_rule 'F2'
-        blacklist.add_rule 'F3'
+        deny_list = RuleIdSet.new
+        deny_list.add_rule 'F2'
+        deny_list.add_rule 'F3'
 
-        mocked_blacklist_loader = double('blacklist_loader')
-        expect(BlackListLoader).to receive(:new).and_return(mocked_blacklist_loader)
-        expect(mocked_blacklist_loader).to receive(:load).and_return(blacklist)
+        mocked_deny_list_loader = double('deny_list_loader')
+        expect(DenyListLoader).to receive(:new).and_return(mocked_deny_list_loader)
+        expect(mocked_deny_list_loader).to receive(:load).and_return(deny_list)
 
-        blacklist_definition = 'dontcare'
+        deny_list_definition = 'dontcare'
         dontcare = nil
         expected_violations = [
           Violation.new(id: 'F1',
@@ -107,8 +107,8 @@ describe ViolationFiltering do
                         message: 'EBS volume should have server-side encryption enabled',
                         logical_resource_ids: %w[NewVolume1 NewVolume2])
         ]
-        actual_violations = filter_violations_by_blacklist(
-          blacklist_definition: blacklist_definition,
+        actual_violations = filter_violations_by_deny_list(
+          deny_list_definition: deny_list_definition,
           rule_definitions: dontcare,
           violations: @violations
         )

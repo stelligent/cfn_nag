@@ -178,10 +178,10 @@ describe CfnNagExecutor do
     end
   end
 
-  context 'use profile, blacklist, and parameter path options' do
+  context 'use profile, deny list, and parameter path options' do
     it 'raises a TypeError once it tries to read the invalid files' do
       cli_options = @default_cli_options.clone
-      cli_options[:blacklist_definition] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:deny_list_definition] = 'spec/cfn_nag_integration/test_path.txt'
       cli_options[:parameter_values_path] = 'spec/cfn_nag_integration/test_path.txt'
       cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
       expect(Options).to receive(:scan_options).and_return(cli_options)
