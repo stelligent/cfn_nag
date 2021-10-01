@@ -3,6 +3,7 @@ AllCops:
   Exclude:
     - 'spec/**/*'
     - 'vendor/**/*'
+  NewCops: enable
 
 Style/IfUnlessModifier:
   Enabled: false

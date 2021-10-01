@@ -9,7 +9,7 @@ class SecurityGroupIngressOpenToWorldRule < BaseRule
 
   def rule_text
     'Security Groups found with cidr open to world on ingress.  This should ' \
-    'never be true on instance.  Permissible on ELB'
+      'never be true on instance.  Permissible on ELB'
   end
 
   def rule_type

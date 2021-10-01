@@ -6,7 +6,7 @@ require_relative 'base'
 class LambdaPermissionInvokeFunctionActionRule < BaseRule
   def rule_text
     'Lambda permission beside InvokeFunction might not be what you want? ' \
-    'Not sure!?'
+      'Not sure!?'
   end
 
   def rule_type

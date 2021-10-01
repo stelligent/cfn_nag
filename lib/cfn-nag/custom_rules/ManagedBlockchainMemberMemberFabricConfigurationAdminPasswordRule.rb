@@ -8,7 +8,7 @@ require_relative 'base'
 class ManagedBlockchainMemberMemberFabricConfigurationAdminPasswordRule < BaseRule
   def rule_text
     'ManagedBlockchain Member MemberFabricConfiguration AdminPasswordRule must ' \
-    'not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
+      'not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type
@@ -42,14 +42,11 @@ class ManagedBlockchainMemberMemberFabricConfigurationAdminPasswordRule < BaseRu
   #   'MemberFabricConfiguration'
   #   'AdminPassword'
   def password_property_does_not_exist(member)
-    if member.memberConfiguration['MemberFrameworkConfiguration'].nil?
-      true
-    elsif member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration'].nil?
-      true
-    elsif member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration']['AdminPassword'].nil?
+    if member.memberConfiguration['MemberFrameworkConfiguration'].nil? ||
+       member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration'].nil?
       true
     else
-      false
+      member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration']['AdminPassword'].nil?
     end
   end
 end

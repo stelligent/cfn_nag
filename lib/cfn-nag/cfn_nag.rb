@@ -55,8 +55,8 @@ class CfnNag
                                    parameter_values_path: nil,
                                    condition_values_path: nil,
                                    template_pattern: DEFAULT_TEMPLATE_PATTERN)
-    parameter_values_string = parameter_values_path.nil? ? nil : IO.read(parameter_values_path)
-    condition_values_string = condition_values_path.nil? ? nil : IO.read(condition_values_path)
+    parameter_values_string = parameter_values_path.nil? ? nil : File.read(parameter_values_path)
+    condition_values_string = condition_values_path.nil? ? nil : File.read(condition_values_path)
 
     templates = TemplateDiscovery.new.discover_templates(input_json_path: input_path,
                                                          template_pattern: template_pattern)
@@ -64,7 +64,7 @@ class CfnNag
     templates.each do |template|
       aggregate_results << {
         filename: template,
-        file_results: audit(cloudformation_string: IO.read(template),
+        file_results: audit(cloudformation_string: File.read(template),
                             parameter_values_string: parameter_values_string,
                             condition_values_string: condition_values_string)
       }

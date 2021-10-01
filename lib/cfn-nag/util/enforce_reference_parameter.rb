@@ -29,5 +29,5 @@ end
 # is not present; otherwise returns true
 def no_echo_and_no_default_parameter_check(cfn_model, key_to_check)
   parameter = cfn_model.parameters[key_to_check['Ref']]
-  truthy?(parameter.noEcho) && parameter.default.nil? ? false : true
+  !(truthy?(parameter.noEcho) && parameter.default.nil?)
 end

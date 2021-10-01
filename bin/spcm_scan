@@ -41,7 +41,7 @@ end
 
 def read_conditionally(path)
   unless path.nil?
-    IO.read(path)
+    File.read(path)
   end
 end
 

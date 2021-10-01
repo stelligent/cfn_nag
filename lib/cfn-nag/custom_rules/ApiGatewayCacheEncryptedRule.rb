@@ -6,7 +6,7 @@ require_relative 'base'
 class ApiGatewayCacheEncryptedRule < BaseRule
   def rule_text
     'ApiGateway Deployment should have cache data encryption enabled when caching is enabled' \
-    ' in StageDescription properties'
+      ' in StageDescription properties'
   end
 
   def rule_type

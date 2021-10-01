@@ -5,8 +5,8 @@ require 'optimist'
 # rubocop:disable Metrics/ClassLength
 class Options
   @custom_rule_exceptions_message = 'Isolate custom rule exceptions - just ' \
-                                   'emit the exception without stack trace ' \
-                                   'and keep chugging'
+                                    'emit the exception without stack trace ' \
+                                    'and keep chugging'
 
   @version = Gem::Specification.find_by_name('cfn-nag').version
 
@@ -25,7 +25,7 @@ class Options
   # rubocop:disable Metrics/MethodLength
   def self.file_options
     options_message = '[options] <cloudformation template path ...>|' \
-                        '<cloudformation template in STDIN>'
+                      '<cloudformation template in STDIN>'
     custom_rule_exceptions_message = @custom_rule_exceptions_message
     version = @version
 

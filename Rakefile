@@ -16,9 +16,9 @@ end
 # If the command is run outside a Docker container then it will just use the regular local '$(pwd)' as the mount source.
 def docker_run_prefix
   docker_env = "#{docker_command} run --tty --rm --mount source=$DND_PWD,target=/usr/src/app,type=bind " \
-    '--workdir /usr/src/app cfn-nag-dev:latest'
+               '--workdir /usr/src/app cfn-nag-dev:latest'
   local_env = "#{docker_command} run --tty --rm --mount source=#{Dir.pwd},target=/usr/src/app,type=bind " \
-    '--workdir /usr/src/app cfn-nag-dev:latest'
+              '--workdir /usr/src/app cfn-nag-dev:latest'
   File.file?('/.dockerenv') ? docker_env : local_env
 end
 
