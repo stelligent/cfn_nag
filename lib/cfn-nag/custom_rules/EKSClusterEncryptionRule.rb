@@ -18,9 +18,7 @@ class EKSClusterEncryptionRule < BaseRule
 
   def audit_impl(cfn_model)
     violating_clusters = cfn_model.resources_by_type('AWS::EKS::Cluster').select do |cluster|
-      if cluster.encryptionConfig.nil?
-        true
-      elsif violating_configs?(cluster)
+      if cluster.encryptionConfig.nil? || violating_configs?(cluster)
         true
       else
         violating_providers?(cluster)

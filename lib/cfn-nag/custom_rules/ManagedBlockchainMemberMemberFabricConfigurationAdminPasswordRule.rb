@@ -42,9 +42,8 @@ class ManagedBlockchainMemberMemberFabricConfigurationAdminPasswordRule < BaseRu
   #   'MemberFabricConfiguration'
   #   'AdminPassword'
   def password_property_does_not_exist(member)
-    if member.memberConfiguration['MemberFrameworkConfiguration'].nil?
-      true
-    elsif member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration'].nil?
+    if member.memberConfiguration['MemberFrameworkConfiguration'].nil? ||
+       member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration'].nil?
       true
     else
       member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration']['AdminPassword'].nil?

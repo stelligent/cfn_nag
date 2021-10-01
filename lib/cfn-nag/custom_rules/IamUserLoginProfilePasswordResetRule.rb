@@ -29,9 +29,7 @@ class IamUserLoginProfilePasswordResetRule < BaseRule
 
   def iam_user_password_reset_required_key?(login_profile)
     if login_profile.key? 'PasswordResetRequired'
-      if login_profile['PasswordResetRequired'].nil?
-        true
-      elsif not_truthy?(login_profile['PasswordResetRequired'])
+      if login_profile['PasswordResetRequired'].nil? || not_truthy?(login_profile['PasswordResetRequired'])
         true
       end
     else
