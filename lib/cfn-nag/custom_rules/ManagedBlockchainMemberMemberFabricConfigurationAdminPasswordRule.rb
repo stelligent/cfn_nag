@@ -46,10 +46,8 @@ class ManagedBlockchainMemberMemberFabricConfigurationAdminPasswordRule < BaseRu
       true
     elsif member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration'].nil?
       true
-    elsif member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration']['AdminPassword'].nil?
-      true
     else
-      false
+      member.memberConfiguration['MemberFrameworkConfiguration']['MemberFabricConfiguration']['AdminPassword'].nil?
     end
   end
 end

@@ -53,12 +53,8 @@ class EC2NetworkAclEntryProtocolRule < BaseRule
 
   def violating_network_acl_entries?(network_acl_entry)
     if rule_action_allow?(network_acl_entry)
-      if tcp_udp_icmp_protocol?(network_acl_entry) ||
-         icmpv6_protocol?(network_acl_entry)
-        false
-      else
-        true
-      end
+      !(tcp_udp_icmp_protocol?(network_acl_entry) ||
+         icmpv6_protocol?(network_acl_entry))
     end
   end
 end
