@@ -40,10 +40,10 @@ class IamUserLoginProfilePasswordResetRule < BaseRule
   end
 
   def violating_iam_users?(iam_user)
-    if !iam_user.loginProfile.nil?
-      iam_user_password_reset_required_key?(iam_user.loginProfile)
-    else
+    if iam_user.loginProfile.nil?
       false
+    else
+      iam_user_password_reset_required_key?(iam_user.loginProfile)
     end
   end
 end

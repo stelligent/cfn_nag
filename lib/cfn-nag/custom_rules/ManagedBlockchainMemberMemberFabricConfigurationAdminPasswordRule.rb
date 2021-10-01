@@ -8,7 +8,7 @@ require_relative 'base'
 class ManagedBlockchainMemberMemberFabricConfigurationAdminPasswordRule < BaseRule
   def rule_text
     'ManagedBlockchain Member MemberFabricConfiguration AdminPasswordRule must ' \
-    'not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
+      'not be a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type

@@ -6,7 +6,7 @@ require_relative 'base'
 class ApiGatewayMethodAuthorizationTypeRule < BaseRule
   def rule_text
     "AWS::ApiGateway::Method should not have AuthorizationType set to 'NONE' unless it is of " \
-    'HttpMethod: OPTIONS.'
+      'HttpMethod: OPTIONS.'
   end
 
   def rule_type

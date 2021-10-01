@@ -6,7 +6,7 @@ require_relative 'base'
 class KMSKeyWildcardPrincipalRule < BaseRule
   def rule_text
     'KMS key should not allow * principal ' \
-    '(https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)'
+      '(https://docs.aws.amazon.com/kms/latest/developerguide/key-policies.html)'
   end
 
   def rule_type

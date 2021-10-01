@@ -6,7 +6,7 @@ require_relative 'base'
 class EC2NetworkAclEntryProtocolRule < BaseRule
   def rule_text
     'To avoid opening all ports for Allow rules, EC2 NetworkACL Entry Protocol should be either 6 (for TCP), 17 ' \
-    '(for UDP), 1 (for ICMP), or 58 (for ICMPv6, which must include an IPv6 CIDR block, ICMP type, and code).'
+      '(for UDP), 1 (for ICMP), or 58 (for ICMPv6, which must include an IPv6 CIDR block, ICMP type, and code).'
   end
 
   def rule_type

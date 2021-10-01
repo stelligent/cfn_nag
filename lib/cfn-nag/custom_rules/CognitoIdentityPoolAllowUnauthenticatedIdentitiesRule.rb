@@ -7,7 +7,7 @@ require_relative 'base'
 class CognitoIdentityPoolAllowUnauthenticatedIdentitiesRule < BaseRule
   def rule_text
     'AWS::Cognito::IdentityPool AllowUnauthenticatedIdentities property should be false ' \
-    'but CAN be true if proper restrictive IAM roles and permissions are established for unauthenticated users.'
+      'but CAN be true if proper restrictive IAM roles and permissions are established for unauthenticated users.'
   end
 
   def rule_type

@@ -6,7 +6,7 @@ require_relative 'base'
 class SecurityGroupIngressPortRangeRule < BaseRule
   def rule_text
     'Security Groups found ingress with port range instead of just a single ' \
-    'port'
+      'port'
   end
 
   def rule_type
