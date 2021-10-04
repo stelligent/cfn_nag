@@ -27,12 +27,12 @@ end
 
 profile_definition = nil
 unless opts[:profile_path].nil?
-  profile_definition = IO.read(opts[:profile_path])
+  profile_definition = File.read(opts[:profile_path])
 end
 
 rule_repository_definitions = []
 opts[:rule_repository]&.each do |rule_repository|
-  rule_repository_definitions << IO.read(rule_repository)
+  rule_repository_definitions << File.read(rule_repository)
 end
 
 rule_dumper = CfnNagRuleDumper.new(profile_definition: profile_definition,

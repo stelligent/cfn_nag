@@ -8,8 +8,8 @@ require 'cfn-nag/util/blank'
 class SecurityGroupRuleDescriptionRule < BaseRule
   def rule_text
     'Security group rules without a description obscure their purpose and may '\
-    'lead to bad practices in ensuring they only allow traffic from the ports '\
-    'and sources/destinations required.'
+      'lead to bad practices in ensuring they only allow traffic from the ports '\
+      'and sources/destinations required.'
   end
 
   def rule_type

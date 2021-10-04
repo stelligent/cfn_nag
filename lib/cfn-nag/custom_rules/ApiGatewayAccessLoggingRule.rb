@@ -6,7 +6,7 @@ require_relative 'base'
 class ApiGatewayAccessLoggingRule < BaseRule
   def rule_text
     'ApiGateway Deployment resource should have AccessLogSetting property configured when creating an ' \
-    'API Stage itself (through specifying the StageName and StageDescription properties).'
+      'API Stage itself (through specifying the StageName and StageDescription properties).'
   end
 
   def rule_type

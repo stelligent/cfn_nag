@@ -27,11 +27,9 @@ class KinesisStreamStreamEncryptionRule < BaseRule
   private
 
   def violating_kinesis_streams?(kinesis_stream)
-    if kinesis_stream.streamEncryption.nil?
-      true
-    elsif kinesis_stream.streamEncryption['EncryptionType'].nil?
-      true
-    elsif kinesis_stream.streamEncryption['KeyId'].nil?
+    if kinesis_stream.streamEncryption.nil? ||
+       kinesis_stream.streamEncryption['EncryptionType'].nil? ||
+       kinesis_stream.streamEncryption['KeyId'].nil?
       true
     else
       kinesis_stream.streamEncryption['EncryptionType'] == 'NONE'

@@ -98,13 +98,13 @@ class CfnNagExecutor
     @rule_arguments_string = read_conditionally(opts[:rule_arguments_path])
 
     opts[:rule_repository]&.each do |rule_repository|
-      @rule_repository_definitions << IO.read(rule_repository)
+      @rule_repository_definitions << File.read(rule_repository)
     end
   end
 
   def read_conditionally(path)
     unless path.nil?
-      IO.read(path)
+      File.read(path)
     end
   end
 

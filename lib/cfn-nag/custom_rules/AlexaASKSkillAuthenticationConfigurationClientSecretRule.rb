@@ -8,7 +8,7 @@ require_relative 'base'
 class AlexaASKSkillAuthenticationConfigurationClientSecretRule < BaseRule
   def rule_text
     'Alexa ASK Skill AuthenticationConfiguration ClientSecret must not be ' \
-    'a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
+      'a plaintext string or a Ref to a NoEcho Parameter with a Default value.'
   end
 
   def rule_type

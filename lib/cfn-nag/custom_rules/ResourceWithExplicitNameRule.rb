@@ -26,7 +26,7 @@ class ResourceWithExplicitNameRule < BaseRule
 
   def rule_text
     'Resource found with an explicit name, this disallows updates that ' \
-    'require replacement of this resource'
+      'require replacement of this resource'
   end
 
   def rule_type
