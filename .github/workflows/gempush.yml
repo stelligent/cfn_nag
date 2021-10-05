@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
 env:
   docker_org: stelligent
 
@@ -49,6 +52,7 @@ jobs:
       run: bash ./scripts/setup_and_run_end_to_end_tests.sh
 
   release:
+    if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     name: Release
     runs-on: ubuntu-latest
     needs: [commit, acceptance]
