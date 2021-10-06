@@ -89,7 +89,7 @@ class CfnNagExecutor
   def execute_io_options(opts)
     @profile_definition = read_conditionally(opts[:profile_path])
 
-    @deny_list_definition = read_conditionally(opts[:deny_list_path])
+    @deny_list_definition = read_conditionally(opts[:deny_list_path]) || read_conditionally(opts[:blacklist_path])
 
     @parameter_values_string = read_conditionally(opts[:parameter_values_path])
 

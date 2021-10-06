@@ -63,6 +63,11 @@ class Options
           type: :string,
           required: false,
           default: nil
+      opt :blacklist_path,
+          '(Deprecated) Path to a deny list file',
+          type: :string,
+          required: false,
+          default: nil
       opt :parameter_values_path,
           'Path to a JSON file to pull Parameter values from',
           type: :string,
@@ -147,6 +152,11 @@ class Options
           default: nil
       opt :deny_list_path,
           'Path to a deny list file',
+          type: :string,
+          required: false,
+          default: nil
+      opt :blacklist_path,
+          '(Deprecated) Path to a deny list file',
           type: :string,
           required: false,
           default: nil
