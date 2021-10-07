@@ -25,4 +25,14 @@ describe GameLiftFleetInboundPortRangeRule do
       expect(actual_logical_resource_ids).to eq []
     end
   end
+
+  context 'GameLift fleet without ip permissions' do
+    it 'does not return logical resource id' do
+      cfn_model = CfnParser.new.parse read_test_template('yaml/gamelift/fleet_without.yml')
+
+      actual_logical_resource_ids = GameLiftFleetInboundPortRangeRule.new.audit_impl cfn_model
+
+      expect(actual_logical_resource_ids).to eq []
+    end
+  end
 end
