@@ -178,10 +178,10 @@ describe CfnNagExecutor do
     end
   end
 
-  context 'use profile, blacklist, and parameter path options' do
+  context 'use profile, deny list, and parameter path options' do
     it 'raises a TypeError once it tries to read the invalid files' do
       cli_options = @default_cli_options.clone
-      cli_options[:blacklist_definition] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:deny_list_path] = 'spec/cfn_nag_integration/test_path.txt'
       cli_options[:parameter_values_path] = 'spec/cfn_nag_integration/test_path.txt'
       cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
       expect(Options).to receive(:scan_options).and_return(cli_options)
@@ -191,6 +191,41 @@ describe CfnNagExecutor do
 
         _ = cfn_nag_executor.scan(options_type: 'scan')
       }.to raise_error(TypeError)
+    end
+  end
+
+  context 'with deny list and blacklist  path options' do
+    it 'loads the deny list path within config' do
+      cli_options = @default_cli_options.clone
+      cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:deny_list_path] = 'spec/cfn_nag_integration/example_deny_list.yaml'
+      cli_options[:blacklist_path] = 'spec/cfn_nag_integration/example_blacklist.yaml'
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      expect(cfn_nag_executor).to receive(:read_conditionally).with('spec/cfn_nag_integration/example_deny_list.yaml').and_return('DummyDenyList')
+      expect(cfn_nag_executor).not_to receive(:read_conditionally).with('spec/cfn_nag_integration/example_blacklist.yaml')
+      expect(CfnNagConfig).to receive(:new).with(hash_including(deny_list_definition: 'DummyDenyList')).and_call_original
+
+      expect(cfn_nag_executor).to receive(:execute_aggregate_scan).and_return(0)
+      expect(cfn_nag_executor.scan(options_type: 'scan')).to eq 0
+    end
+  end
+
+  context 'with deprecated blacklistpath options' do
+    it 'loads the deny list path within config' do
+      cli_options = @default_cli_options.clone
+      cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
+      cli_options[:blacklist_path] = 'spec/cfn_nag_integration/example_deny_list.yaml'
+      expect(Options).to receive(:scan_options).and_return(cli_options)
+
+      cfn_nag_executor = CfnNagExecutor.new
+      allow(cfn_nag_executor).to receive(:read_conditionally).and_call_original
+      expect(cfn_nag_executor).to receive(:read_conditionally).with('spec/cfn_nag_integration/example_deny_list.yaml').and_return('DummyDenyList')
+      expect(CfnNagConfig).to receive(:new).with(hash_including(deny_list_definition: 'DummyDenyList')).and_call_original
+
+      expect(cfn_nag_executor).to receive(:execute_aggregate_scan).and_return(0)
+      expect(cfn_nag_executor.scan(options_type: 'scan')).to eq 0
     end
   end
 

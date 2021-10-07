@@ -7,7 +7,7 @@ require 'cfn-nag/cfn_nag_config'
 class CfnNagExecutor
   def initialize
     @profile_definition = nil
-    @blacklist_definition = nil
+    @deny_list_definition = nil
     @parameter_values_string = nil
     @condition_values_string = nil
     @rule_repository_definitions = []
@@ -89,7 +89,7 @@ class CfnNagExecutor
   def execute_io_options(opts)
     @profile_definition = read_conditionally(opts[:profile_path])
 
-    @blacklist_definition = read_conditionally(opts[:blacklist_path])
+    @deny_list_definition = read_conditionally(opts[:deny_list_path]) || read_conditionally(opts[:blacklist_path])
 
     @parameter_values_string = read_conditionally(opts[:parameter_values_path])
 
@@ -122,7 +122,7 @@ class CfnNagExecutor
   def cfn_nag_config(opts)
     CfnNagConfig.new(
       profile_definition: @profile_definition,
-      blacklist_definition: @blacklist_definition,
+      deny_list_definition: @deny_list_definition,
       rule_directory: opts[:rule_directory],
       allow_suppression: opts[:allow_suppression],
       print_suppression: opts[:print_suppression],
