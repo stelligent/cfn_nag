@@ -228,7 +228,7 @@ describe CfnNagExecutor do
       expect(CfnNagConfig).to receive(:new).with(hash_including(deny_list_definition: 'DummyDenyList')).and_call_original
 
       expect(cfn_nag_executor).to receive(:execute_aggregate_scan).and_return(0)
-      
+
       result = cfn_nag_executor.scan(options_type: 'scan')
 
       expect(result).to eq 0
