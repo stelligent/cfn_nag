@@ -194,7 +194,7 @@ describe CfnNagExecutor do
     end
   end
 
-  context 'with deny list and blacklist  path options' do
+  context 'with deny list and blacklist path options' do
     it 'loads the deny list path within config' do
       cli_options = @default_cli_options.clone
       cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
@@ -208,11 +208,14 @@ describe CfnNagExecutor do
       expect(CfnNagConfig).to receive(:new).with(hash_including(deny_list_definition: 'DummyDenyList')).and_call_original
 
       expect(cfn_nag_executor).to receive(:execute_aggregate_scan).and_return(0)
-      expect(cfn_nag_executor.scan(options_type: 'scan')).to eq 0
+
+      result = cfn_nag_executor.scan(options_type: 'scan')
+
+      expect(result).to eq 0
     end
   end
 
-  context 'with deprecated blacklistpath options' do
+  context 'with deprecated blacklist path options' do
     it 'loads the deny list path within config' do
       cli_options = @default_cli_options.clone
       cli_options[:profile_path] = 'spec/cfn_nag_integration/test_path.txt'
@@ -225,7 +228,10 @@ describe CfnNagExecutor do
       expect(CfnNagConfig).to receive(:new).with(hash_including(deny_list_definition: 'DummyDenyList')).and_call_original
 
       expect(cfn_nag_executor).to receive(:execute_aggregate_scan).and_return(0)
-      expect(cfn_nag_executor.scan(options_type: 'scan')).to eq 0
+      
+      result = cfn_nag_executor.scan(options_type: 'scan')
+
+      expect(result).to eq 0
     end
   end
 
