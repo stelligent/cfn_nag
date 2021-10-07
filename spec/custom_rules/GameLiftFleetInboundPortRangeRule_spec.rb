@@ -28,7 +28,7 @@ describe GameLiftFleetInboundPortRangeRule do
 
   context 'GameLift fleet without ip permissions' do
     it 'does not return logical resource id' do
-      cfn_model = CfnParser.new.parse read_test_template('yaml/gamelift/fleet_without.yml')
+      cfn_model = CfnParser.new.parse read_test_template('yaml/gamelift/fleet_without_ip_permissions.yml')
 
       actual_logical_resource_ids = GameLiftFleetInboundPortRangeRule.new.audit_impl cfn_model
 
