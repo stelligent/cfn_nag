@@ -1,0 +1,46 @@
+name: cfn_nag
+
+on: [push, pull_request]
+env:
+  docker_org: stelligent
+
+jobs:
+  tests-linting:
+    name: Tests & Linting
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Allows both ruby versions to run before failing
+      matrix:
+        ruby: ['2.5', '3.0']
+
+    steps:
+    - uses: actions/checkout@master
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
+    - name: Rubocop lint
+      run: bundle exec rubocop -D
+    - name: Rspec tests
+      run: bundle exec rspec --require spec_helper spec
+    - name: Duplicate rule check
+      run: bundle exec ./bin/cfn_nag_rules
+
+  acceptance:
+    name: Acceptance
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false # Allows both ruby versions to run before failing
+      matrix:
+        ruby: ['2.5', '3.0']
+
+    steps:
+    # is this the same commit hash we saw in commit?
+    - uses: actions/checkout@master
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+    - name: e2e
+      run: bash ./scripts/setup_and_run_end_to_end_tests.sh
