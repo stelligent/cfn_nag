@@ -25,7 +25,7 @@ module ViolationFiltering
     unless deny_list_definition.nil?
       begin
         deny_list = DenyListLoader.new(rule_definitions)
-                                   .load(deny_list_definition: deny_list_definition)
+                                  .load(deny_list_definition: deny_list_definition)
       rescue StandardError => deny_list_load_error
         raise "Deny list loading error: #{deny_list_load_error}"
       end
