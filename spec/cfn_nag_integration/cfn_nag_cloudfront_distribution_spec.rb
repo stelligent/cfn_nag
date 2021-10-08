@@ -18,24 +18,9 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W10', type: Violation::WARNING,
-                message: 'CloudFront Distribution should enable access logging',
-                logical_resource_ids: %w[rDistribution2],
-                line_numbers: [46]
-              ),
-              Violation.new(
-                id: 'W70', type: Violation::WARNING,
-                message: 'Cloudfront should use minimum protocol version TLS 1.2',
-                logical_resource_ids: ["rDistribution1", "rDistribution2"],
-                line_numbers: [4,46]
-              ),
-              Violation.new(
-                id: 'W51', type: Violation::WARNING,
-                message: 'S3 bucket should likely have a bucket policy',
-                logical_resource_ids: %w[S3Bucket],
-                line_numbers: [81]
-              )
+              CloudFrontDistributionAccessLoggingRule.new.violation(%w[rDistribution2], [46]),
+              CloudfrontMinimumProtocolVersionRule.new.violation(["rDistribution1", "rDistribution2"], [4,46]),
+              MissingBucketPolicyRule.new.violation(%w[S3Bucket], [81])
             ]
           }
         }

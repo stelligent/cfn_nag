@@ -30,10 +30,7 @@ describe PasswordBaseRule do
     end
 
     before(:all) do
-      @failing_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[RedshiftCluster])
+      @failing_violation = @base_rule.violation(%w[RedshiftCluster])
     end
 
     it 'raises an error when properties are not set' do

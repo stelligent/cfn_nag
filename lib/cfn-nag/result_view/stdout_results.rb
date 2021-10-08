@@ -24,7 +24,7 @@ class StdoutResults
     puts "Warnings count: #{Violation.count_warnings(violations)}"
   end
 
-  def render(results)
+  def render(results, _rule_definitions)
     results.each do |result|
       60.times { print '-' }
       puts "\n#{result[:filename]}"

@@ -39,10 +39,7 @@ describe BooleanBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template 'json/efs/filesystem_with_encryption_false.json'
 
-      expected_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[filesystem])
+      expected_violation = base_rule.violation(%w[filesystem])
 
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end

@@ -6,18 +6,22 @@ require_relative 'rule_definition'
 class Violation < RuleDefinition
   attr_reader :logical_resource_ids, :line_numbers
 
+  # rubocop:disable Metrics/ParameterLists
   def initialize(id:,
+                 name:,
                  type:,
                  message:,
                  logical_resource_ids: [],
                  line_numbers: [])
     super id: id,
+          name: name,
           type: type,
           message: message
 
     @logical_resource_ids = logical_resource_ids
     @line_numbers = line_numbers
   end
+  # rubocop:enable Metrics/ParameterLists
 
   def to_s
     "#{super} #{@logical_resource_ids}"
@@ -55,6 +59,13 @@ class Violation < RuleDefinition
         end
         count
       end
+    end
+
+    def fatal_violation(message)
+      Violation.new(id: 'FATAL',
+                    name: 'system',
+                    type: Violation::FAILING_VIOLATION,
+                    message: message)
     end
 
     private

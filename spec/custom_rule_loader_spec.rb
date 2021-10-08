@@ -60,6 +60,7 @@ RULE
         actual_violations = @file_base_rule_repo.execute_custom_rules cfn_model, @file_base_rule_repo.rule_definitions
         expected_violations = [
           Violation.new(id: 'W9933',
+                        name: 'FakeRule',
                         type: Violation::WARNING,
                         message: 'this is fake rule text',
                         logical_resource_ids: %w[hardwired1 hardwired2])

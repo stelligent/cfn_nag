@@ -46,6 +46,7 @@ describe FileBasedRuleRepo do
 
           # Validate that the rule was loaded by id
           expected_rule_definition = RuleDefinition.new id: 'W9933',
+                                                        name: 'ValidCustomRule',
                                                         message: 'this is fake rule text',
                                                         type: RuleDefinition::WARNING
 
@@ -74,6 +75,7 @@ describe FileBasedRuleRepo do
 
           # Validate that the rule was loaded by id
           expected_rule_definition = RuleDefinition.new id: 'W9933',
+                                                        name: 'ValidCustomRule',
                                                         message: 'this is fake rule text',
                                                         type: RuleDefinition::WARNING
 

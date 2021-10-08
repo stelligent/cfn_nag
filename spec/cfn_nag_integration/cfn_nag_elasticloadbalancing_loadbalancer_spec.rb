@@ -18,13 +18,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W26', type: Violation::WARNING,
-                message:
-                'Elastic Load Balancer should have access logging enabled',
-                logical_resource_ids: %w[elb1 elb2],
-                line_numbers: [4, 19]
-              )
+              ElasticLoadBalancerAccessLoggingRule.new.violation(%w[elb1 elb2], [4, 19])
             ]
           }
         }

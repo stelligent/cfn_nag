@@ -8,6 +8,7 @@ require_relative 'result_view/stdout_results'
 require_relative 'result_view/simple_stdout_results'
 require_relative 'result_view/colored_stdout_results'
 require_relative 'result_view/json_results'
+require_relative 'result_view/sarif_results'
 require 'cfn-model'
 
 # Top-level CfnNag class for running profiles
@@ -96,10 +97,10 @@ class CfnNag
       violations = filter_violations_by_deny_list_and_profile(violations)
       violations = mark_line_numbers(violations, cfn_model)
     rescue RuleRepoException, Psych::SyntaxError, ParserError => fatal_error
-      violations << fatal_violation(fatal_error.to_s)
+      violations << Violation.fatal_violation(fatal_error.to_s)
     rescue JSON::ParserError => json_parameters_error
       error = "JSON Parameter values parse error: #{json_parameters_error}"
-      violations << fatal_violation(error)
+      violations << Violation.fatal_violation(error)
     end
 
     violations = prune_fatal_violations(violations) if @config.ignore_fatal
@@ -112,7 +113,7 @@ class CfnNag
 
   def render_results(aggregate_results:,
                      output_format:)
-    results_renderer(output_format).new.render(aggregate_results)
+    results_renderer(output_format).new.render(aggregate_results, @config.custom_rule_loader.rule_definitions)
   end
 
   private
@@ -141,7 +142,7 @@ class CfnNag
       violations: violations
     )
   rescue StandardError => deny_list_or_profile_parse_error
-    violations << fatal_violation(deny_list_or_profile_parse_error.to_s)
+    violations << Violation.fatal_violation(deny_list_or_profile_parse_error.to_s)
     violations
   end
 
@@ -152,17 +153,12 @@ class CfnNag
     }
   end
 
-  def fatal_violation(message)
-    Violation.new(id: 'FATAL',
-                  type: Violation::FAILING_VIOLATION,
-                  message: message)
-  end
-
   def results_renderer(output_format)
     registry = {
       'colortxt' => ColoredStdoutResults,
       'txt' => SimpleStdoutResults,
-      'json' => JsonResults
+      'json' => JsonResults,
+      'sarif' => SarifResults
     }
     registry[output_format]
   end

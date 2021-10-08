@@ -18,31 +18,11 @@ describe CfnNag do
           file_results: {
             failure_count: 3,
             violations: [
-              Violation.new(id: 'F38',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'IAM role should not allow * resource with PassRole action on its permissions policy',
-                            logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [50]),
-              Violation.new(id: 'F3',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'IAM role should not allow * action on its permissions policy',
-                            logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [50]),
-              Violation.new(id: 'W11',
-                            type: Violation::WARNING,
-                            message: 'IAM role should not allow * resource on its permissions policy',
-                            logical_resource_ids: %w[LambdaExecutionRole],
-                            line_numbers: [50]),
-              Violation.new(id: 'W89',
-                            type: Violation::WARNING,
-                            message: 'Lambda functions should be deployed inside a VPC',
-                            logical_resource_ids: %w[AppendItemToListFunction],
-                            line_numbers: [4]),                            
-              Violation.new(id: 'F13',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'Lambda permission principal should not be wildcard',
-                            logical_resource_ids: %w[lambdaPermission],
-                            line_numbers: [24])
+              IamRolePassRoleWildcardResourceRule.new.violation(%w[LambdaExecutionRole], [50]),
+              IamRoleWildcardActionOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50]),
+              IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50]),
+              LambdaFunctionInsideVPCRule.new.violation(%w[AppendItemToListFunction], [4]),
+              LambdaPermissionWildcardPrincipalRule.new.violation(%w[lambdaPermission], [24])
             ]
           }
         }

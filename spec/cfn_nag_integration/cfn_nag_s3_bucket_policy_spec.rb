@@ -18,18 +18,8 @@ describe CfnNag do
           file_results: {
             failure_count: 3,
             violations: [
-              Violation.new(id: 'F15',
-                            type: Violation::FAILING_VIOLATION,
-                            message:
-                            'S3 Bucket policy should not allow * action',
-                            logical_resource_ids: %w[S3BucketPolicy S3BucketPolicy2],
-                            line_numbers: [61, 86]),
-              Violation.new(id: 'F16',
-                            type: Violation::FAILING_VIOLATION,
-                            message:
-                            'S3 Bucket policy should not allow * principal',
-                            logical_resource_ids: %w[S3BucketPolicy2],
-                            line_numbers: [86])
+              S3BucketPolicyWildcardActionRule.new.violation(%w[S3BucketPolicy S3BucketPolicy2], [61, 86]),
+              S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86])
             ]
           }
         }

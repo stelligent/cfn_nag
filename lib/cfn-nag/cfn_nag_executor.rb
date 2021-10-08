@@ -74,9 +74,9 @@ class CfnNagExecutor
   end
 
   def validate_options(opts)
-    unless opts[:output_format].nil? || %w[colortxt txt json].include?(opts[:output_format])
+    unless opts[:output_format].nil? || %w[colortxt txt json sarif].include?(opts[:output_format])
       Optimist.die(:output_format,
-                   'Must be colortxt, txt, or json')
+                   'Must be colortxt, txt, json or sarif')
     end
 
     opts[:rule_arguments]&.each do |rule_argument|

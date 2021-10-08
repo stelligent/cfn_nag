@@ -18,20 +18,8 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              Violation.new(
-                id: 'W37', type: Violation::WARNING,
-                message:
-                  'EBS Volume should specify a KmsKeyId value',
-                logical_resource_ids: %w[NewVolume1 NewVolume2],
-                line_numbers: [4, 13]
-              ),
-              Violation.new(
-                id: 'F1', type: Violation::FAILING_VIOLATION,
-                message:
-                'EBS volume should have server-side encryption enabled',
-                logical_resource_ids: %w[NewVolume1 NewVolume2],
-                line_numbers: [4, 13]
-              )
+              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13]),
+              EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13])
             ]
           }
         }
@@ -54,13 +42,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W37', type: Violation::WARNING,
-                message:
-                  'EBS Volume should specify a KmsKeyId value',
-                logical_resource_ids: %w[NewVolume],
-                line_numbers: [4]
-              )
+              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume], [4])
             ]
           }
         }

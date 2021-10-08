@@ -4,27 +4,30 @@ class RuleDefinition
   WARNING = 'WARN'
   FAILING_VIOLATION = 'FAIL'
 
-  attr_reader :id, :type, :message
+  attr_reader :id, :name, :type, :message
 
   def initialize(id:,
+                 name:,
                  type:,
                  message:)
     @id = id
+    @name = name
     @type = type
     @message = message
 
-    [@id, @type, @message].each do |required|
+    [@id, @type, @name, @message].each do |required|
       raise 'No parameters to Violation constructor can be nil' if required.nil?
     end
   end
 
   def to_s
-    "#{@id} #{@type} #{@message}"
+    "#{@id} #{name} #{@type} #{@message}"
   end
 
   def to_h
     {
       id: @id,
+      name: @name,
       type: @type,
       message: @message
     }

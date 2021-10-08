@@ -18,24 +18,9 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(
-                id: 'W51', type: Violation::WARNING,
-                message: 'S3 bucket should likely have a bucket policy',
-                logical_resource_ids: %w[S3BucketRead S3BucketReadWrite],
-                line_numbers: [4, 24]
-              ),
-              Violation.new(
-                id: 'W31', type: Violation::WARNING,
-                message: 'S3 Bucket likely should not have a public read acl',
-                logical_resource_ids: %w[S3BucketRead],
-                line_numbers: [4]
-              ),
-              Violation.new(id: 'F14',
-                            type: Violation::FAILING_VIOLATION,
-                            message:
-                            'S3 Bucket should not have a public read-write acl',
-                            logical_resource_ids: %w[S3BucketReadWrite],
-                            line_numbers: [24])
+              MissingBucketPolicyRule.new.violation(%w[S3BucketRead S3BucketReadWrite], [4, 24]),
+              S3BucketPublicReadAclRule.new.violation(%w[S3BucketRead], [4]),
+              S3BucketPublicReadWriteAclRule.new.violation(%w[S3BucketReadWrite], [24])
             ]
           }
         }

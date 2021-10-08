@@ -69,11 +69,13 @@ OUTPUTSTRING
 [
   {
     "id": "F1",
+    "name": "EbsVolumeHasSseRule",
     "type": "FAIL",
     "message": "EBS volume should have server-side encryption enabled"
   },
   {
     "id": "F9",
+    "name": "S3BucketPolicyNotPrincipalRule",
     "type": "FAIL",
     "message": "S3 Bucket policy should not allow Allow+NotPrincipal"
   }

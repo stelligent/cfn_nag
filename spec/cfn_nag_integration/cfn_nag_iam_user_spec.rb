@@ -19,11 +19,7 @@ describe CfnNag do
             # only increment this when Violation::FAILING (vs WARNING)
             failure_count: 1,
             violations: [
-              Violation.new(id: 'F2000',
-                            type: Violation::FAILING_VIOLATION,
-                            message: 'User is not assigned to a group',
-                            logical_resource_ids: %w[myuser2],
-                            line_numbers: [4])
+              UserMissingGroupRule.new.violation(%w[myuser2], [4])
             ]
           }
         }

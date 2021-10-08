@@ -13,11 +13,7 @@ describe CfnNag do
       template_name = 'yaml/iam_role/embedded_ref.yml'
 
       expected_violations = [
-        Violation.new(id: 'W11',
-                      type: Violation::WARNING,
-                      message: 'IAM role should not allow * resource on its permissions policy',
-                      logical_resource_ids: %w[HelperRole],
-                      line_numbers: [7])
+        IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[HelperRole], [7])
       ]
 
       actual_violations = @cfn_nag.audit(

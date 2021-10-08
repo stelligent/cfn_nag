@@ -3,7 +3,7 @@
 require 'json'
 
 class JsonResults
-  def render(results)
+  def render(results, _rule_registry)
     hashified_results = results.each do |result|
       result[:file_results][:violations] = result[:file_results][:violations].map(&:to_h)
     end

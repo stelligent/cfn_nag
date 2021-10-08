@@ -18,12 +18,7 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(id: 'F22',
-                            type: Violation::FAILING_VIOLATION,
-                            message:
-                            'RDS instance should not be publicly accessible',
-                            logical_resource_ids: %w[PublicDB],
-                            line_numbers: [4])
+              RDSInstancePubliclyAccessibleRule.new.violation(%w[PublicDB], [4])
             ]
           }
         }
@@ -44,18 +39,8 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              Violation.new(
-                id: 'F23', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.',
-                logical_resource_ids: %w[BadDb2],
-                line_numbers: [11]
-              ),
-              Violation.new(id: 'F22',
-                            type: Violation::FAILING_VIOLATION,
-                            message:
-                            'RDS instance should not be publicly accessible',
-                            logical_resource_ids: %w[BadDb2],
-                            line_numbers: [11])
+              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb2], [11]),
+              RDSInstancePubliclyAccessibleRule.new.violation(%w[BadDb2], [11])
             ]
           }
         }
@@ -77,18 +62,8 @@ describe CfnNag do
           file_results: {
             failure_count: 4,
             violations: [
-              Violation.new(
-                id: 'F23', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master user password must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager/ssm-secure value.',
-                logical_resource_ids: %w[BadDb1 BadDb2],
-                line_numbers: [14, 30]
-              ),
-              Violation.new(
-                id: 'F24', type: Violation::FAILING_VIOLATION,
-                message: 'RDS instance master username must not be a plaintext string or a Ref to a Parameter with a Default value.  Can be Ref to a NoEcho Parameter without a Default, or a dynamic reference to a secretsmanager value.',
-                logical_resource_ids: %w[BadDb1 BadDb2],
-                line_numbers: [14, 30]
-              )
+              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb1 BadDb2], [14, 30]),
+              RDSDBInstanceMasterUsernameRule.new.violation(%w[BadDb1 BadDb2], [14, 30])
             ]
           }
         }

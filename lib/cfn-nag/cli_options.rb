@@ -89,7 +89,7 @@ class Options
           required: false,
           default: false
       opt :output_format,
-          'Format of results: [txt, json, colortxt]',
+          'Format of results: [txt, json, colortxt, sarif]',
           type: :string,
           default: 'colortxt'
       opt :rule_repository,
@@ -132,7 +132,7 @@ class Options
           type: :string,
           required: true
       opt :output_format,
-          'Format of results: [txt, json, colortxt]',
+          'Format of results: [txt, json, colortxt, sarif]',
           type: :string,
           default: 'colortxt'
       opt :debug,

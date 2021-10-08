@@ -19,12 +19,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W1', type: Violation::WARNING,
-                message: 'Specifying credentials in the template itself is probably not the safest thing',
-                logical_resource_ids: %w[EC2I4LBA1],
-                line_numbers: [11]
-              )
+              CloudFormationAuthenticationRule.new.violation(%w[EC2I4LBA1], [11])
             ]
           }
         }

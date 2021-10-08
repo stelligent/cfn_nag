@@ -19,9 +19,15 @@ class BaseRule
     logical_resource_ids = audit_impl(cfn_model)
     return if logical_resource_ids.empty?
 
+    violation(logical_resource_ids)
+  end
+
+  def violation(logical_resource_ids, line_numbers = [])
     Violation.new(id: rule_id,
+                  name: self.class.name,
                   type: rule_type,
                   message: rule_text,
-                  logical_resource_ids: logical_resource_ids)
+                  logical_resource_ids: logical_resource_ids,
+                  line_numbers: line_numbers)
   end
 end
