@@ -37,8 +37,7 @@ class SarifResults
       semanticVersion: Gem.loaded_specs['cfn-nag'].version.to_s,
       rules: rules.map do |rule_definition|
         {
-          # TODO: prefix rule id with CFN_NAG_
-          id: rule_definition.id,
+          id: "CFN_NAG_#{rule_definition.id}",
           name: rule_definition.name,
           fullDescription: {
             text: rule_definition.message
