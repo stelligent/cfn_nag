@@ -64,7 +64,7 @@ describe SarifResults do
         sarif_results = SarifResults.new.sarif_result(file_name: 'bob.txt', violation: @violation, index: 0)
 
         expect(sarif_results).to include(:ruleId, :level, :message, :locations)
-        expect(sarif_results[:ruleId]).to eq(@violation.id)
+        expect(sarif_results[:ruleId]).to eq("CFN_NAG_#{@violation.id}")
         expect(sarif_results[:level]).to eq('error')
         expect(sarif_results[:message][:text]).to eq(@violation.message)
       end
@@ -98,7 +98,7 @@ describe SarifResults do
         sarif_results = SarifResults.new.sarif_result(file_name: 'bob.txt', violation: @violation, index: 1)
 
         expect(sarif_results).to include(:ruleId, :level, :message, :locations)
-        expect(sarif_results[:ruleId]).to eq(@violation.id)
+        expect(sarif_results[:ruleId]).to eq("CFN_NAG_#{@violation.id}")
         expect(sarif_results[:level]).to eq('error')
         expect(sarif_results[:message][:text]).to eq(@violation.message)
       end
@@ -135,6 +135,15 @@ describe SarifResults do
     it 'should return error type for other input' do
       expect(SarifResults.new.sarif_level(nil)).to eq('error')
       expect(SarifResults.new.sarif_level('bob')).to eq('error')
+    end
+  end
+
+  describe '#relative_path' do
+    it 'should return relative path for absolute path' do
+      expect(SarifResults.new.relative_path("#{Dir.pwd}/spec/test_templates/yaml/vulgar_bad_syntax.yml")).to eq('spec/test_templates/yaml/vulgar_bad_syntax.yml')
+    end
+    it 'should return relative path for relative path' do
+      expect(SarifResults.new.relative_path('spec/test_templates/yaml/vulgar_bad_syntax.yml')).to eq('spec/test_templates/yaml/vulgar_bad_syntax.yml')
     end
   end
 end

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'pathname'
 
 class SarifResults
   def render(results, rule_registry)
@@ -50,7 +51,7 @@ class SarifResults
   # Given a cfn_nag Violation object, and index, generates a SARIF result object for the finding
   def sarif_result(file_name:, violation:, index:)
     {
-      ruleId: violation.id,
+      ruleId: "CFN_NAG_#{violation.id}",
       level: sarif_level(violation.type),
       message: {
         text: violation.message
@@ -59,9 +60,8 @@ class SarifResults
         {
           physicalLocation: {
             artifactLocation: {
-              # TODO: possible to determine if this is a relative or absolute path?
-              # if relative, set uriBaseId
-              uri: file_name
+              uri: relative_path(file_name),
+              uriBaseId: '%SRCROOT%'
             },
             region: {
               startLine: violation.line_numbers[index]
@@ -83,6 +83,16 @@ class SarifResults
       'warning'
     else
       'error'
+    end
+  end
+
+  def relative_path(file_name)
+    file_pathname = Pathname.new(file_name)
+
+    if file_pathname.relative?
+      file_pathname.to_s
+    else
+      file_pathname.relative_path_from(Pathname.pwd).to_s
     end
   end
 end
