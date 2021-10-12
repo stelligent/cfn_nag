@@ -146,4 +146,31 @@ describe SarifResults do
       expect(SarifResults.new.relative_path('spec/test_templates/yaml/vulgar_bad_syntax.yml')).to eq('spec/test_templates/yaml/vulgar_bad_syntax.yml')
     end
   end
+
+  describe '#sarif_line_number' do
+    context 'with nil line number' do
+      it 'should return 1' do
+        expect(SarifResults.new.sarif_line_number(nil)).to eq(1)
+      end
+    end
+    context 'with empty line number' do
+      it 'should return 1' do
+        expect(SarifResults.new.sarif_line_number('')).to eq(1)
+      end
+    end
+    context 'with line number less than 1' do
+      it 'should return 1' do
+        expect(SarifResults.new.sarif_line_number(0)).to eq(1)
+        expect(SarifResults.new.sarif_line_number(-1)).to eq(1)
+        expect(SarifResults.new.sarif_line_number('-1')).to eq(1)
+      end
+    end
+    context 'with positive line number' do
+      it 'should return line number' do
+        expect(SarifResults.new.sarif_line_number(1)).to eq(1)
+        expect(SarifResults.new.sarif_line_number('10')).to eq(10)
+        expect(SarifResults.new.sarif_line_number(100)).to eq(100)
+      end
+    end
+  end
 end

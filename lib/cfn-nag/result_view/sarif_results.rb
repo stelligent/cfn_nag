@@ -64,7 +64,7 @@ class SarifResults
               uriBaseId: '%SRCROOT%'
             },
             region: {
-              startLine: violation.line_numbers[index]
+              startLine: sarif_line_number(violation.line_numbers[index])
             }
           },
           logicalLocations: [
@@ -75,6 +75,11 @@ class SarifResults
         }
       ]
     }
+  end
+
+  # Line number defaults to 1 unless provided with valid number
+  def sarif_line_number(line_number)
+    line_number.nil? || line_number.to_i < 1 ? 1 : line_number.to_i
   end
 
   def sarif_level(violation_type)
