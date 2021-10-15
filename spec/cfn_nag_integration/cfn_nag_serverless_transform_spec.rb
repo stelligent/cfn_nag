@@ -25,19 +25,19 @@ describe CfnNag do
                 id: 'W58', type: Violation::WARNING,
                 message: LambdaFunctionCloudWatchLogsRule.new.rule_text,
                 logical_resource_ids: %w[SomeFunction2],
-                line_numbers: [-1]
+                line_numbers: [34]
               ),
               Violation.new(
                 id: 'W89', type: Violation::WARNING,
                 message: LambdaFunctionInsideVPCRule.new.rule_text,
                 logical_resource_ids: ["SomeFunction", "SomeFunction2"],
-                line_numbers: [-1,-1]
+                line_numbers: [20, 34]
               ),
               Violation.new(
                 id: 'W92', type: Violation::WARNING,
                 message: LambdaFunctionReservedConcurrentExecutionsRule.new.rule_text,
                 logical_resource_ids: ["SomeFunction","SomeFunction2"],
-                line_numbers: [-1,-1]
+                line_numbers: [20, 34]
               )
             ]
           }
