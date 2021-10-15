@@ -45,7 +45,7 @@ else
   new_version="${minor_version}.$((current_version+1))"
 fi
 
-sed -i.bak "s/0\.0\.0/${new_version}/g" cfn-nag.gemspec
+sed -i.bak "s/0\.0\.0/${new_version}/g" lib/cfn-nag/version.rb
 
 # publish rubygem to rubygems.org, https://rubygems.org/gems/cfn-nag
 gem build cfn-nag.gemspec

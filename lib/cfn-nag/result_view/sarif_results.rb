@@ -35,7 +35,7 @@ class SarifResults
     {
       name: 'cfn_nag',
       informationUri: 'https://github.com/stelligent/cfn_nag',
-      semanticVersion: Gem.loaded_specs['cfn-nag'].version.to_s,
+      semanticVersion: CfnNagVersion::VERSION,
       rules: rules.map do |rule_definition|
         {
           id: "CFN_NAG_#{rule_definition.id}",

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'optimist'
+require_relative 'version'
 
 # rubocop:disable Metrics/ClassLength
 class Options
@@ -8,7 +9,7 @@ class Options
                                     'emit the exception without stack trace ' \
                                     'and keep chugging'
 
-  @version = Gem::Specification.find_by_name('cfn-nag').version
+  @version = CfnNagVersion::VERSION
 
   def self.for(type)
     case type
