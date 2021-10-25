@@ -5,7 +5,7 @@ require_relative 'lib/cfn-nag/version'
 Gem::Specification.new do |s|
   s.name          = 'cfn-nag'
   s.license       = 'MIT'
-  s.version       = ENV['GEM_VERSION'] || CfnNagVersion::VERSION
+  s.version       = CfnNagVersion::VERSION
   s.bindir        = 'bin'
   s.executables   = %w[cfn_nag cfn_nag_rules cfn_nag_scan spcm_scan]
   s.authors       = ['Eric Kascic']

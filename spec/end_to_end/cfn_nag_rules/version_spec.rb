@@ -4,7 +4,7 @@ describe 'cfn_nag_rules --version', end_to_end: true do
   context 'when ensuring the local gem is installed' do
     it 'equals 0.0.01' do
       expect { system %( cfn_nag_rules --version ) }
-        .to output(a_string_matching('0.0.01'))
+        .to output(a_string_matching('0.0.0'))
         .to_stdout_from_any_process
     end
   end
