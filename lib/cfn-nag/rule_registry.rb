@@ -43,6 +43,7 @@ class RuleRegistry
     if existing_def.nil?
       rule_definition = RuleDefinition.new(
         id: rule.rule_id,
+        name: rule_class.name,
         type: rule.rule_type,
         message: rule.rule_text
       )

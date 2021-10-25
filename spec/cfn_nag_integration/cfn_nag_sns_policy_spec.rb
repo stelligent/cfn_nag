@@ -20,13 +20,7 @@ describe CfnNag do
             # only increment this when Violation::FAILING (vs WARNING)
             failure_count: 4,
             violations: [
-              Violation.new(
-                id: 'F18', type: Violation::FAILING_VIOLATION,
-                message: 'SNS topic policy should not allow * principal',
-                logical_resource_ids: %w[mysnspolicy0 mysnspolicy1
-                                         mysnspolicy2 mysnspolicy3],
-                line_numbers: [11, 29, 55, 85]
-              )
+              SnsTopicPolicyWildcardPrincipalRule.new.violation(%w[mysnspolicy0 mysnspolicy1 mysnspolicy2 mysnspolicy3], [11, 29, 55, 85])
             ]
           }
         }

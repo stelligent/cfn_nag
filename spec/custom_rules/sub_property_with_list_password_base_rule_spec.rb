@@ -34,10 +34,7 @@ describe SubPropertyWithListPasswordBaseRule do
     end
 
     before(:all) do
-      @failing_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[OpsWorksStack])
+      @failing_violation = @base_rule_with_list.violation(%w[OpsWorksStack])
     end
 
     it 'raises an error when properties are not set' do

@@ -20,10 +20,7 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(id: 'FATAL',
-                            type: Violation::FAILING_VIOLATION,
-                            message: "Basic CloudFormation syntax error:[#<Kwalify::ValidationError: [/Resources/sg] key 'Properties:' is required.>]",
-                            logical_resource_ids: [])
+              Violation.fatal_violation("Basic CloudFormation syntax error:[#<Kwalify::ValidationError: [/Resources/sg] key 'Properties:' is required.>]")
             ]
           }
         }
@@ -48,12 +45,7 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(
-                id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sg],
-                line_numbers: [4]
-              )
+              SecurityGroupMissingEgressRule.new.violation(%w[sg], [4])
             ]
           }
         }
@@ -75,30 +67,10 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              Violation.new(
-                id: 'W9', type: Violation::WARNING,
-                message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sg2],
-                line_numbers: [18]
-              ),
-              Violation.new(
-                id: 'W2', type: Violation::WARNING,
-                message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sg2],
-                line_numbers: [18]
-              ),
-              Violation.new(
-                id: 'W27', type: Violation::WARNING,
-                message: 'Security Groups found ingress with port range instead of just a single port',
-                logical_resource_ids: %w[sg sg2],
-                line_numbers: [4, 18]
-              ),
-              Violation.new(
-                id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sg sg2],
-                line_numbers: [4, 18]
-              )
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg2], [18]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sg2], [18]),
+              SecurityGroupIngressPortRangeRule.new.violation(%w[sg sg2], [4, 18]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sg sg2], [4, 18])
             ]
           }
         }
@@ -144,13 +116,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W9', type: Violation::WARNING,
-                message:
-                'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sg],
-                line_numbers: [9]
-              )
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg], [9])
             ]
           }
         }
@@ -174,13 +140,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W9', type: Violation::WARNING,
-                message:
-                'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sg sg2],
-                line_numbers: [9, 30]
-              )
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg sg2], [9, 30])
             ]
           }
         }

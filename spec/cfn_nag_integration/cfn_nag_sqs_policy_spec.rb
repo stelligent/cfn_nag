@@ -19,13 +19,7 @@ describe CfnNag do
             # only increment this when Violation::FAILING (vs WARNING)
             failure_count: 0,
             violations: [
-              Violation.new(
-                id: 'W18', type: Violation::WARNING,
-                message: 'SQS Queue policy should not allow Allow+NotAction',
-                logical_resource_ids: %w[QueuePolicyWithNotAction
-                                         QueuePolicyWithNotAction2],
-                line_numbers: [20, 37]
-              )
+              SqsQueuePolicyNotActionRule.new.violation(%w[QueuePolicyWithNotAction QueuePolicyWithNotAction2], [20, 37])
             ]
           }
         }

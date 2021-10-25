@@ -33,7 +33,7 @@ download_and_scan_templates () {
   fi
 }
 
-# Build and install gem locally, using version 0.0.01
+# Build and install gem locally, using version 0.0.0
 /bin/sh scripts/deploy_local.sh
 
 # Install the two gems required to run end-to-end tests

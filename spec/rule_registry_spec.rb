@@ -68,6 +68,7 @@ describe RuleRegistry do
 
         expected_rules = [
           RuleDefinition.new(id: 'F444',
+                            name: 'F444Rule',
                              type: RuleDefinition::WARNING,
                              message: 'you have been warned!!')
         ]
@@ -108,6 +109,7 @@ describe RuleRegistry do
       context 'good id' do
         it 'returns the rule def' do
           expected_rule = RuleDefinition.new(id: 'W444',
+                                             name: 'W444Rule',
                                              type: RuleDefinition::WARNING,
                                              message: 'you have been warned!!')
 
@@ -120,6 +122,7 @@ describe RuleRegistry do
       it 'returns all/only warnings' do
         expected_rules = [
           RuleDefinition.new(id: 'W444',
+                             name: 'W444Rule',
                              type: RuleDefinition::WARNING,
                              message: 'you have been warned!!')
         ]
@@ -131,6 +134,7 @@ describe RuleRegistry do
       it 'returns all/only failures' do
         expected_rules = [
           RuleDefinition.new(id: 'F999',
+                             name: 'F999Rule',
                              type: RuleDefinition::FAILING_VIOLATION,
                              message: 'you have failed!!')
         ]

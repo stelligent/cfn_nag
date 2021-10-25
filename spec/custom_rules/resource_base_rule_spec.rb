@@ -34,10 +34,7 @@ describe ResourceBaseRule do
 
       cfn_model = CfnParser.new.parse read_test_template 'yaml/amazon_simpledb/simpledb_domain_resource.yml'
 
-      expected_violation = Violation.new(id: 'F3333',
-                                         type: Violation::FAILING_VIOLATION,
-                                         message: 'This is an epic fail!',
-                                         logical_resource_ids: %w[NewSimpleDB])
+      expected_violation = base_rule.violation(%w[NewSimpleDB])
 
       expect(base_rule.audit(cfn_model)).to eq expected_violation
     end

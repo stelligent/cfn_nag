@@ -93,10 +93,7 @@ describe CfnNag do
             file_results: {
               failure_count: 1,
               violations: [
-                Violation.new(id: 'FATAL',
-                              type: Violation::FAILING_VIOLATION,
-                              message: 'Illegal cfn - no Resources',
-                              logical_resource_ids: [])
+                Violation.fatal_violation('Illegal cfn - no Resources')
               ]
             }
           }
@@ -120,10 +117,7 @@ describe CfnNag do
             file_results: {
               failure_count: 1,
               violations: [
-                Violation.new(id: 'FATAL',
-                              type: Violation::FAILING_VIOLATION,
-                              message: 'Illegal cfn - no Resources',
-                              logical_resource_ids: [])
+                Violation.fatal_violation('Illegal cfn - no Resources')
               ]
             }
           }
@@ -147,12 +141,7 @@ describe CfnNag do
             file_results: {
               failure_count: 1,
               violations: [
-                Violation.new(
-                  id: 'F16', type: Violation::FAILING_VIOLATION,
-                  message: 'S3 Bucket policy should not allow * principal',
-                  logical_resource_ids: %w[S3BucketPolicy2],
-                  line_numbers: [86]
-                )
+                S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86])
               ]
             }
           }
@@ -201,24 +190,9 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(
-                id: 'W9', type: Violation::WARNING,
-                message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress],
-                line_numbers: [4]
-              ),
-              Violation.new(
-                id: 'W2', type: Violation::WARNING,
-                message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress],
-                line_numbers: [4]
-              ),
-              Violation.new(
-                id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress],
-                line_numbers: [4]
-              )
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress], [4]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress], [4]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress], [4])
             ]
           }
         }
@@ -253,24 +227,9 @@ EXPECTEDSTDERR
           file_results: {
             failure_count: 2,
             violations: [
-              Violation.new(
-                id: 'W9', type: Violation::WARNING,
-                message: 'Security Groups found with ingress cidr that is not /32',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [4, 21]
-              ),
-              Violation.new(
-                id: 'W2', type: Violation::WARNING,
-                message: 'Security Groups found with cidr open to world on ingress.  This should never be true on instance.  Permissible on ELB',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [4, 21]
-              ),
-              Violation.new(
-                id: 'F1000', type: Violation::FAILING_VIOLATION,
-                message: 'Missing egress rule means all traffic is allowed outbound.  Make this explicit if it is desired configuration',
-                logical_resource_ids: %w[sgOpenIngress sgOpenIngress2],
-                line_numbers: [4, 21]
-              )
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21])
             ]
           }
         }
@@ -307,11 +266,7 @@ EXPECTEDSTDERR
           file_results: {
             failure_count: 1,
             violations: [
-              Violation.new(
-                id: 'FATAL',
-                type: Violation::FAILING_VIOLATION,
-                message: '(<unknown>): mapping values are not allowed in this context at line 3 column 15'
-              )
+              Violation.fatal_violation('(<unknown>): mapping values are not allowed in this context at line 3 column 15')
             ]
           }
         }

@@ -4,26 +4,18 @@ require 'cfn-nag/violation'
 require 'cfn-nag/rule_id_set'
 require 'cfn-nag/profile_loader'
 require 'cfn-nag/deny_list_loader'
+require 'cfn-nag/custom_rules/EbsVolumeHasSseRule'
+require 'cfn-nag/custom_rules/SecurityGroupMissingEgressRule'
+require 'cfn-nag/custom_rules/SnsTopicPolicyWildcardPrincipalRule'
 
 include ViolationFiltering
 
 describe ViolationFiltering do
   before(:all) do
     @violations = [
-      Violation.new(id: 'F1',
-                    type: Violation::FAILING_VIOLATION,
-                    message: 'EBS volume should have server-side encryption enabled',
-                    logical_resource_ids: %w[NewVolume1 NewVolume2]),
-
-      Violation.new(id: 'F2',
-                    type: Violation::FAILING_VIOLATION,
-                    message: 'EBS volume should have server-side encryption enabled2',
-                    logical_resource_ids: %w[NewVolume1 NewVolume2]),
-
-      Violation.new(id: 'F3',
-                    type: Violation::FAILING_VIOLATION,
-                    message: 'EBS volume should have server-side encryption enabled3',
-                    logical_resource_ids: %w[NewVolume1 NewVolume2])
+      EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2]),
+      SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress sgOpenIngress2]),
+      SnsTopicPolicyWildcardPrincipalRule.new.violation(%w[topic1 topic2])
     ]
   end
 
@@ -61,7 +53,7 @@ describe ViolationFiltering do
       it 'returns violations X,Y' do
         profile = RuleIdSet.new
         profile.add_rule 'F1'
-        profile.add_rule 'F2'
+        profile.add_rule 'F1000'
 
         mocked_profile_loader = double('profile_loader')
         expect(ProfileLoader).to receive(:new).and_return(mocked_profile_loader)
@@ -70,15 +62,8 @@ describe ViolationFiltering do
         profile_definition = 'dontcare'
         dontcare = nil
         expected_violations = [
-          Violation.new(id: 'F1',
-                        type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side encryption enabled',
-                        logical_resource_ids: %w[NewVolume1 NewVolume2]),
-
-          Violation.new(id: 'F2',
-                        type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side encryption enabled2',
-                        logical_resource_ids: %w[NewVolume1 NewVolume2])
+          EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2]),
+          SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress sgOpenIngress2]),
         ]
         actual_violations = filter_violations_by_profile(
           profile_definition: profile_definition,
@@ -92,8 +77,8 @@ describe ViolationFiltering do
     context 'deny list with Y,Z' do
       it 'returns violations X' do
         deny_list = RuleIdSet.new
-        deny_list.add_rule 'F2'
-        deny_list.add_rule 'F3'
+        deny_list.add_rule 'F1000'
+        deny_list.add_rule 'F18'
 
         mocked_deny_list_loader = double('deny_list_loader')
         expect(DenyListLoader).to receive(:new).and_return(mocked_deny_list_loader)
@@ -102,10 +87,7 @@ describe ViolationFiltering do
         deny_list_definition = 'dontcare'
         dontcare = nil
         expected_violations = [
-          Violation.new(id: 'F1',
-                        type: Violation::FAILING_VIOLATION,
-                        message: 'EBS volume should have server-side encryption enabled',
-                        logical_resource_ids: %w[NewVolume1 NewVolume2])
+          EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2])
         ]
         actual_violations = filter_violations_by_deny_list(
           deny_list_definition: deny_list_definition,

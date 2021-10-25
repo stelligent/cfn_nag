@@ -46,10 +46,7 @@ describe BaseRule do
 
         dontcare = double('cfn_model')
 
-        expected_violation = Violation.new(id: 'F3333',
-                                           type: Violation::FAILING_VIOLATION,
-                                           message: 'This is an epic fail!',
-                                           logical_resource_ids: %w[r1 r2 r3])
+        expected_violation = base_rule.violation(%w[r1 r2 r3])
 
         expect(base_rule.audit(dontcare)).to eq expected_violation
       end
