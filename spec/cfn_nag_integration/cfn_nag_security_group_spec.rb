@@ -45,7 +45,7 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              SecurityGroupMissingEgressRule.new.violation(%w[sg], [4])
+              SecurityGroupMissingEgressRule.new.violation(%w[sg], [4], ["resource"])
             ]
           }
         }
@@ -67,10 +67,10 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg2], [18]),
-              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sg2], [18]),
-              SecurityGroupIngressPortRangeRule.new.violation(%w[sg sg2], [4, 18]),
-              SecurityGroupMissingEgressRule.new.violation(%w[sg sg2], [4, 18])
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg2], [18], ["resource"]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sg2], [18], ["resource"]),
+              SecurityGroupIngressPortRangeRule.new.violation(%w[sg sg2], [4, 18], ["resource", "resource"]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sg sg2], [4, 18], ["resource", "resource"])
             ]
           }
         }
@@ -116,7 +116,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg], [9])
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg], [9], ["resource"])
             ]
           }
         }
@@ -140,7 +140,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg sg2], [9, 30])
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sg sg2], [9, 30], ["resource", "resource"])
             ]
           }
         }

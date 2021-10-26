@@ -18,8 +18,8 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13]),
-              EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13])
+              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13], ["resource", "resource"]),
+              EbsVolumeHasSseRule.new.violation(%w[NewVolume1 NewVolume2], [4, 13], ["resource", "resource"])
             ]
           }
         }
@@ -42,7 +42,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume], [4])
+              EbsVolumeEncryptionKeyRule.new.violation(%w[NewVolume], [4], ["resource"])
             ]
           }
         }

@@ -4,6 +4,7 @@ AllCops:
     - 'spec/**/*'
     - 'vendor/**/*'
   NewCops: enable
+  SuggestExtensions: false
 
 Style/IfUnlessModifier:
   Enabled: false
@@ -50,3 +51,6 @@ Style/HashTransformKeys:
 
 Style/HashTransformValues:
   Enabled: true
+
+Metrics/ParameterLists:
+  Max: 6

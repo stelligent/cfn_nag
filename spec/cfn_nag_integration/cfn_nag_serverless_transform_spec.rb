@@ -21,9 +21,9 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              LambdaFunctionCloudWatchLogsRule.new.violation(%w[SomeFunction2], [34]),
-              LambdaFunctionInsideVPCRule.new.violation(["SomeFunction", "SomeFunction2"], [20, 34]),
-              LambdaFunctionReservedConcurrentExecutionsRule.new.violation(["SomeFunction","SomeFunction2"], [20, 34])
+              LambdaFunctionCloudWatchLogsRule.new.violation(%w[SomeFunction2], [34], ["resource"]),
+              LambdaFunctionInsideVPCRule.new.violation(["SomeFunction", "SomeFunction2"], [20, 34], ["resource", "resource"]),
+              LambdaFunctionReservedConcurrentExecutionsRule.new.violation(["SomeFunction","SomeFunction2"], [20, 34], ["resource", "resource"])
             ]
           }
         }

@@ -18,7 +18,7 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              RDSInstancePubliclyAccessibleRule.new.violation(%w[PublicDB], [4])
+              RDSInstancePubliclyAccessibleRule.new.violation(%w[PublicDB], [4], ["resource"])
             ]
           }
         }
@@ -39,8 +39,8 @@ describe CfnNag do
           file_results: {
             failure_count: 2,
             violations: [
-              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb2], [11]),
-              RDSInstancePubliclyAccessibleRule.new.violation(%w[BadDb2], [11])
+              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb2], [11], ["resource"]),
+              RDSInstancePubliclyAccessibleRule.new.violation(%w[BadDb2], [11], ["resource"])
             ]
           }
         }
@@ -62,8 +62,8 @@ describe CfnNag do
           file_results: {
             failure_count: 4,
             violations: [
-              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb1 BadDb2], [14, 30]),
-              RDSDBInstanceMasterUsernameRule.new.violation(%w[BadDb1 BadDb2], [14, 30])
+              RDSDBInstanceMasterUserPasswordRule.new.violation(%w[BadDb1 BadDb2], [14, 30], ["resource", "resource"]),
+              RDSDBInstanceMasterUsernameRule.new.violation(%w[BadDb1 BadDb2], [14, 30], ["resource", "resource"])
             ]
           }
         }

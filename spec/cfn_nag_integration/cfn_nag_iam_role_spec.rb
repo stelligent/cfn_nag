@@ -13,7 +13,7 @@ describe CfnNag do
       template_name = 'yaml/iam_role/embedded_ref.yml'
 
       expected_violations = [
-        IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[HelperRole], [7])
+        IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[HelperRole], [7], ["resource"])
       ]
 
       actual_violations = @cfn_nag.audit(

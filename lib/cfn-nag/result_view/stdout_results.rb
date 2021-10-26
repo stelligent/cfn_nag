@@ -12,7 +12,8 @@ class StdoutResults
               color: color,
               message: violation.message,
               logical_resource_ids: violation.logical_resource_ids,
-              line_numbers: violation.line_numbers
+              line_numbers: violation.line_numbers,
+              element_types: violation.element_types
     end
   end
 

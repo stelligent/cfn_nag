@@ -18,8 +18,8 @@ describe CfnNag do
           file_results: {
             failure_count: 3,
             violations: [
-              S3BucketPolicyWildcardActionRule.new.violation(%w[S3BucketPolicy S3BucketPolicy2], [61, 86]),
-              S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86])
+              S3BucketPolicyWildcardActionRule.new.violation(%w[S3BucketPolicy S3BucketPolicy2], [61, 86], ["resource", "resource"]),
+              S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86], ["resource"])
             ]
           }
         }

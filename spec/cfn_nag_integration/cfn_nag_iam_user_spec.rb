@@ -19,7 +19,7 @@ describe CfnNag do
             # only increment this when Violation::FAILING (vs WARNING)
             failure_count: 1,
             violations: [
-              UserMissingGroupRule.new.violation(%w[myuser2], [4])
+              UserMissingGroupRule.new.violation(%w[myuser2], [4], ["resource"])
             ]
           }
         }

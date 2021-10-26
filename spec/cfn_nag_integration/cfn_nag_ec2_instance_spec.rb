@@ -19,7 +19,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              CloudFormationAuthenticationRule.new.violation(%w[EC2I4LBA1], [11])
+              CloudFormationAuthenticationRule.new.violation(%w[EC2I4LBA1], [11], ["resource"])
             ]
           }
         }

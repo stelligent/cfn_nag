@@ -18,11 +18,11 @@ describe CfnNag do
           file_results: {
             failure_count: 3,
             violations: [
-              IamRolePassRoleWildcardResourceRule.new.violation(%w[LambdaExecutionRole], [50]),
-              IamRoleWildcardActionOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50]),
-              IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50]),
-              LambdaFunctionInsideVPCRule.new.violation(%w[AppendItemToListFunction], [4]),
-              LambdaPermissionWildcardPrincipalRule.new.violation(%w[lambdaPermission], [24])
+              IamRolePassRoleWildcardResourceRule.new.violation(%w[LambdaExecutionRole], [50], ["resource"]),
+              IamRoleWildcardActionOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50], ["resource"]),
+              IamRoleWildcardResourceOnPermissionsPolicyRule.new.violation(%w[LambdaExecutionRole], [50], ["resource"]),
+              LambdaFunctionInsideVPCRule.new.violation(%w[AppendItemToListFunction], [4], ["resource"]),
+              LambdaPermissionWildcardPrincipalRule.new.violation(%w[lambdaPermission], [24], ["resource"])
             ]
           }
         }
