@@ -22,12 +22,13 @@ class BaseRule
     violation(logical_resource_ids)
   end
 
-  def violation(logical_resource_ids, line_numbers = [])
+  def violation(logical_resource_ids, line_numbers = [], element_types = [])
     Violation.new(id: rule_id,
                   name: self.class.name,
                   type: rule_type,
                   message: rule_text,
                   logical_resource_ids: logical_resource_ids,
-                  line_numbers: line_numbers)
+                  line_numbers: line_numbers,
+                  element_types: element_types)
   end
 end

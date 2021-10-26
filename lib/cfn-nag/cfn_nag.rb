@@ -95,7 +95,7 @@ class CfnNag
       )
 
       violations = filter_violations_by_deny_list_and_profile(violations)
-      violations = mark_line_numbers(violations, cfn_model)
+      violations = mark_line_numbers_and_element_types(violations, cfn_model)
     rescue RuleRepoException, Psych::SyntaxError, ParserError => fatal_error
       violations << Violation.fatal_violation(fatal_error.to_s)
     rescue JSON::ParserError => json_parameters_error
@@ -118,10 +118,11 @@ class CfnNag
 
   private
 
-  def mark_line_numbers(violations, cfn_model)
+  def mark_line_numbers_and_element_types(violations, cfn_model)
     violations.each do |violation|
       violation.logical_resource_ids.each do |logical_resource_id|
         violation.line_numbers << cfn_model.line_numbers[logical_resource_id]
+        violation.element_types << cfn_model.element_types[logical_resource_id]
       end
     end
 

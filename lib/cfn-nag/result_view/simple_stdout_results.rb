@@ -11,7 +11,8 @@ class SimpleStdoutResults < StdoutResults
               message:,
               color:,
               logical_resource_ids: nil,
-              line_numbers: [])
+              line_numbers: [],
+              element_types: [])
 
     logical_resource_ids = nil if logical_resource_ids == []
 
@@ -19,10 +20,18 @@ class SimpleStdoutResults < StdoutResults
     puts
     puts "| #{message_type.upcase}"
     puts '|'
-    puts "| Resources: #{logical_resource_ids}" unless logical_resource_ids.nil?
+    puts "| #{element_type(element_types)}: #{logical_resource_ids}" unless logical_resource_ids.nil?
     puts "| Line Numbers: #{line_numbers}" unless line_numbers.empty?
     puts '|' unless line_numbers.empty? && logical_resource_ids.nil?
     puts "| #{message}"
   end
   # rubocop:enable Lint/UnusedMethodArgument
+
+  def element_type(element_types)
+    if element_types == [] || element_types.first.nil?
+      'Element'
+    elsif !element_types.first.nil?
+      element_types.first.capitalize
+    end
+  end
 end

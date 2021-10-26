@@ -141,7 +141,7 @@ describe CfnNag do
             file_results: {
               failure_count: 1,
               violations: [
-                S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86])
+                S3BucketPolicyWildcardPrincipalRule.new.violation(%w[S3BucketPolicy2], [86], ["resource"])
               ]
             }
           }
@@ -190,9 +190,9 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress], [4]),
-              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress], [4]),
-              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress], [4])
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress], [4], ["resource"]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress], [4], ["resource"]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress], [4], ["resource"])
             ]
           }
         }
@@ -227,9 +227,9 @@ EXPECTEDSTDERR
           file_results: {
             failure_count: 2,
             violations: [
-              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21]),
-              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21]),
-              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21])
+              SecurityGroupIngressCidrNon32Rule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21], ["resource", "resource"]),
+              SecurityGroupIngressOpenToWorldRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21], ["resource", "resource"]),
+              SecurityGroupMissingEgressRule.new.violation(%w[sgOpenIngress sgOpenIngress2], [4, 21], ["resource", "resource"])
             ]
           }
         }

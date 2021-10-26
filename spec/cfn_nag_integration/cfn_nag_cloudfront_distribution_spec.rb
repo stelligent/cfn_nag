@@ -18,9 +18,9 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              CloudFrontDistributionAccessLoggingRule.new.violation(%w[rDistribution2], [46]),
-              CloudfrontMinimumProtocolVersionRule.new.violation(["rDistribution1", "rDistribution2"], [4,46]),
-              MissingBucketPolicyRule.new.violation(%w[S3Bucket], [81])
+              CloudFrontDistributionAccessLoggingRule.new.violation(%w[rDistribution2], [46], ["resource"]),
+              CloudfrontMinimumProtocolVersionRule.new.violation(["rDistribution1", "rDistribution2"], [4,46], ["resource", "resource"]),
+              MissingBucketPolicyRule.new.violation(%w[S3Bucket], [81], ["resource"])
             ]
           }
         }

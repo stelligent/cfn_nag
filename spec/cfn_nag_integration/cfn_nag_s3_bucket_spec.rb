@@ -18,9 +18,9 @@ describe CfnNag do
           file_results: {
             failure_count: 1,
             violations: [
-              MissingBucketPolicyRule.new.violation(%w[S3BucketRead S3BucketReadWrite], [4, 24]),
-              S3BucketPublicReadAclRule.new.violation(%w[S3BucketRead], [4]),
-              S3BucketPublicReadWriteAclRule.new.violation(%w[S3BucketReadWrite], [24])
+              MissingBucketPolicyRule.new.violation(%w[S3BucketRead S3BucketReadWrite], [4, 24], ["resource", "resource"]),
+              S3BucketPublicReadAclRule.new.violation(%w[S3BucketRead], [4], ["resource"]),
+              S3BucketPublicReadWriteAclRule.new.violation(%w[S3BucketReadWrite], [24], ["resource"])
             ]
           }
         }

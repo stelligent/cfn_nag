@@ -10,7 +10,8 @@ class ColoredStdoutResults < StdoutResults
               color:,
               message:,
               logical_resource_ids: nil,
-              line_numbers: [])
+              line_numbers: [],
+              element_types: [])
 
     logical_resource_ids = nil if logical_resource_ids == []
 
@@ -18,7 +19,7 @@ class ColoredStdoutResults < StdoutResults
     puts
     puts colorize(color, "| #{message_type.upcase}")
     puts colorize(color, '|')
-    puts colorize(color, "| Resources: #{logical_resource_ids}") unless logical_resource_ids.nil?
+    puts colorize(color, "| #{element_type(element_types)}: #{logical_resource_ids}") unless logical_resource_ids.nil?
     puts colorize(color, "| Line Numbers: #{line_numbers}") unless line_numbers.empty?
     puts colorize(color, '|') unless line_numbers.empty? && logical_resource_ids.nil?
     puts colorize(color, "| #{message}")
@@ -37,5 +38,13 @@ class ColoredStdoutResults < StdoutResults
 
   def colorize(color_symbol, str)
     "\e[#{color_code(color_symbol)}m#{str}\e[0m"
+  end
+
+  def element_type(element_types)
+    if element_types == [] || element_types.first.nil?
+      'Element'
+    elsif !element_types.first.nil?
+      element_types.first.capitalize
+    end
   end
 end

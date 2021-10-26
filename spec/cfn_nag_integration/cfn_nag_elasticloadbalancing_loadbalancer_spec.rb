@@ -18,7 +18,7 @@ describe CfnNag do
           file_results: {
             failure_count: 0,
             violations: [
-              ElasticLoadBalancerAccessLoggingRule.new.violation(%w[elb1 elb2], [4, 19])
+              ElasticLoadBalancerAccessLoggingRule.new.violation(%w[elb1 elb2], [4, 19], ["resource", "resource"])
             ]
           }
         }

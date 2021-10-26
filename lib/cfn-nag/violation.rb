@@ -4,7 +4,7 @@ require_relative 'rule_definition'
 
 # Rule definition for violations
 class Violation < RuleDefinition
-  attr_reader :logical_resource_ids, :line_numbers
+  attr_reader :logical_resource_ids, :line_numbers, :element_types
 
   # rubocop:disable Metrics/ParameterLists
   def initialize(id:,
@@ -12,7 +12,8 @@ class Violation < RuleDefinition
                  type:,
                  message:,
                  logical_resource_ids: [],
-                 line_numbers: [])
+                 line_numbers: [],
+                 element_types: [])
     super id: id,
           name: name,
           type: type,
@@ -20,6 +21,7 @@ class Violation < RuleDefinition
 
     @logical_resource_ids = logical_resource_ids
     @line_numbers = line_numbers
+    @element_types = element_types
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -30,7 +32,8 @@ class Violation < RuleDefinition
   def to_h
     super.to_h.merge(
       logical_resource_ids: @logical_resource_ids,
-      line_numbers: @line_numbers
+      line_numbers: @line_numbers,
+      element_types: @element_types
     )
   end
 
