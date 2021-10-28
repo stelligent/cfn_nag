@@ -13,7 +13,7 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
-    needs: [commit, acceptance]
+    needs: [tests-linting]
     steps:
       # is this the same commit hash we saw in commit?
       - uses: actions/checkout@v2
