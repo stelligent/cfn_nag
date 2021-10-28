@@ -1,6 +1,10 @@
 name: test-lint
 
 on:
+  workflow_call:
+    secrets:
+      token:
+        required: true
   push:
     branches: [ master ]
   pull_request:
