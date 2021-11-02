@@ -11,6 +11,9 @@ inputs:
   extra_args:
     description: 'Additional arguments to pass to cfn_nag_scan, separated by space (default: "--print-suppression").'
     default: '--print-suppression'
+  output_path:
+    description: 'Destination file path for cfn_nag_scan output'
+    default: 'cfn_nag.out'
 runs:
   using: docker
   image: github-action/Dockerfile

@@ -20,6 +20,9 @@ The directory of the repo to search for violations. Default: `$GITHUB_WORKSPACE`
 
 Additional arguments to pass to `cfn_nag_scan`. See the [usage for `cfn_nag_scan`](https://github.com/stelligent/cfn_nag#usage) for more options. Default: `--print-suppression`
 
+### `output_path`
+
+Destination file path for cfn_nag_scan output. Default: `cfn_nag.out`
 ## Example Usages
 
 ### Basic

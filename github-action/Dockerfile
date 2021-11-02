@@ -1,9 +1,5 @@
 FROM stelligent/cfn_nag:latest
 
-ARG INPUT_EXTRA_ARGS=''
-ENV INPUT_EXTRA_ARGS="${INPUT_EXTRA_ARGS}"
+COPY entrypoint.sh /entrypoint.sh
 
-ARG INPUT_INPUT_PATH=''
-ENV INPUT_INPUT_PATH="${INPUT_INPUT_PATH}"
-
-ENTRYPOINT ["sh", "-c", "cfn_nag_scan $INPUT_EXTRA_ARGS --input-path $INPUT_INPUT_PATH"]
+ENTRYPOINT [ "/entrypoint.sh" ]
