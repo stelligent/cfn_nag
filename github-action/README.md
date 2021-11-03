@@ -65,6 +65,21 @@ Search the `templates` directory within the GitHub runner's workspace and remove
     extra_args: ''
 ```
 
+### Define path to search and upload to code scanning
+
+Search the `templates` directory and upload the results to GitHub's Code Scanning.
+
+```
+- uses: stelligent/cfn_nag@master
+  with:
+    input_path: templates
+    extra_args: -o sarif
+    output_path: cfn_nag.sarif
+- uses: github/codeql-action/upload-sarif@v1
+  with:
+    sarif_file: cfn_nag.sarif
+```
+
 ## Support
 
 To report a bug or request a feature, submit an issue through the GitHub repository via: https://github.com/stelligent/cfn_nag/issues/new
