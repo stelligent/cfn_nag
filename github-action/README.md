@@ -20,6 +20,9 @@ The directory of the repo to search for violations. Default: `$GITHUB_WORKSPACE`
 
 Additional arguments to pass to `cfn_nag_scan`. See the [usage for `cfn_nag_scan`](https://github.com/stelligent/cfn_nag#usage) for more options. Default: `--print-suppression`
 
+### `output_path`
+
+Destination file path for cfn_nag_scan output. Default: `cfn_nag.out`
 ## Example Usages
 
 ### Basic
@@ -60,6 +63,21 @@ Search the `templates` directory within the GitHub runner's workspace and remove
   with:
     input_path: templates
     extra_args: ''
+```
+
+### Define path to search and upload to code scanning
+
+Search the `templates` directory and upload the results to GitHub's Code Scanning.
+
+```
+- uses: stelligent/cfn_nag@master
+  with:
+    input_path: templates
+    extra_args: -o sarif
+    output_path: cfn_nag.sarif
+- uses: github/codeql-action/upload-sarif@v1
+  with:
+    sarif_file: cfn_nag.sarif
 ```
 
 ## Support

@@ -12,8 +12,10 @@ on:
 
 jobs:
   e2e:
-    name: E2E test
+    name: Action E2E test
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
 
     steps:
       - uses: actions/checkout@master
@@ -36,3 +38,13 @@ jobs:
         with:
           input_path: github-action/tests
           extra_args: -o json --template-pattern clean
+      - name: Test with SARIF output
+        id: sarif
+        uses: stelligent/cfn_nag@master
+        with:
+          input_path: github-action/tests
+          extra_args: -o sarif
+          output_path: cfn_nag.sarif
+      - uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: cfn_nag.sarif
