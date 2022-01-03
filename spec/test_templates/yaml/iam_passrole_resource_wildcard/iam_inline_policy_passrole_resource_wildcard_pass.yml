@@ -3,7 +3,7 @@ Resources:
 
   GenericGroup:
     Type: AWS::IAM::Group
-    Properties: 
+    Properties:
       GroupName: GenericGroup
 
   InlinePolicyPass:
@@ -15,7 +15,7 @@ Resources:
         Statement:
           -
             Effect: "Allow"
-            Action: 
+            Action:
               - "s3:ListBucket"
               - "s3:GetBucketLocation"
             Resource: "arn:aws:s3:::*"
@@ -29,5 +29,31 @@ Resources:
             Effect: Allow
             Action: "iam:PassRole"
             Resource: "arn:aws:s3:::*"
+      Groups:
+        - !Ref GenericGroup
+
+  InlinePolicyDenyPass:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: WildcardDenyResourcePolicy
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: "Allow"
+            Action:
+              - "s3:ListBucket"
+              - "s3:GetBucketLocation"
+            Resource: "arn:aws:s3:::*"
+          -
+            Effect: Allow
+            Action:
+              - "s3:ListBucket"
+              - "s3:GetBucketLocation"
+            Resource: "*"
+          -
+            Effect: Deny
+            Action: "iam:PassRole"
+            Resource: "*"
       Groups:
         - !Ref GenericGroup

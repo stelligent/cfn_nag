@@ -23,7 +23,7 @@ class IamRolePassRoleWildcardResourceRule < BaseRule
     violating_roles = cfn_model.resources_by_type('AWS::IAM::Role').select do |role|
       violating_policies = role.policy_objects.select do |policy|
         violating_statements = policy.policy_document.statements.select do |statement|
-          passrole_action?(statement) && wildcard_resource?(statement)
+          statement.effect == 'Allow' && passrole_action?(statement) && wildcard_resource?(statement)
         end
         !violating_statements.empty?
       end
