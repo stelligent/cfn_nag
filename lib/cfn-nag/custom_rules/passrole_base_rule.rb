@@ -16,7 +16,7 @@ class PassRoleBaseRule < BaseRule
 
     violating_policies = policies.select do |policy|
       violating_statements = policy.policy_document.statements.select do |statement|
-        passrole_action?(statement) && wildcard_resource?(statement)
+        statement.effect == 'Allow' && passrole_action?(statement) && wildcard_resource?(statement)
       end
       !violating_statements.empty?
     end

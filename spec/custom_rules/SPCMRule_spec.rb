@@ -38,7 +38,7 @@ describe SPCMRule do
       rule = SPCMRule.new
       rule.spcm_threshold = 1
       actual_logical_resource_ids = rule.audit_impl cfn_model
-      expected_logical_resource_ids = %w[InlinePolicyPass]
+      expected_logical_resource_ids = %w[InlinePolicyPass InlinePolicyDenyPass]
 
       expect(actual_logical_resource_ids).to eq expected_logical_resource_ids
     end

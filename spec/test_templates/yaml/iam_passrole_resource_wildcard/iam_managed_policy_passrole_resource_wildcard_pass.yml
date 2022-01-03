@@ -3,7 +3,7 @@ Resources:
 
   GenericGroup:
     Type: AWS::IAM::Group
-    Properties: 
+    Properties:
       GroupName: GenericGroup
 
   ManagedPolicyPass1:
@@ -14,7 +14,7 @@ Resources:
         Statement:
           -
             Effect: "Allow"
-            Action: 
+            Action:
               - "s3:ListBucket"
               - "s3:GetBucketLocation"
             Resource: "arn:aws:s3:::*"
@@ -31,7 +31,7 @@ Resources:
               - "s3:ListBucket"
               - "s3:GetBucketLocation"
             Resource: "*"
-            
+
   ManagedPolicyPass3:
     Type: "AWS::IAM::ManagedPolicy"
     Properties:
@@ -44,3 +44,14 @@ Resources:
             Resource: "arn:aws:s3:::*"
       Groups:
         - !Ref GenericGroup
+
+  ManagedPolicyPass4:
+    Type: "AWS::IAM::ManagedPolicy"
+    Properties:
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          -
+            Effect: Deny
+            Action: "iam:PassRole"
+            Resource: "*"
