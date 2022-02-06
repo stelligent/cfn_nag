@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o pipefail
+
 echo "::debug::Using input path: ${INPUT_INPUT_PATH}"
 echo "::debug::Using output path: ${INPUT_OUTPUT_PATH}"
 
