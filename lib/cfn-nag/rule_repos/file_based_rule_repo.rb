@@ -8,8 +8,9 @@ require 'logging'
 # client's choosing
 #
 class FileBasedRuleRepo
-  def initialize(rule_directory)
+  def initialize(rule_directory, rule_directory_recursive: false)
     @rule_directory = rule_directory
+    @rule_directory_recursive = rule_directory_recursive
     validate_extra_rule_directory rule_directory
   end
 
@@ -19,7 +20,8 @@ class FileBasedRuleRepo
     # we look on the file system, and we load from the file system into a Class
     # that the runtime can refer back to later from the registry which is effectively
     # just a set of rule definitons
-    discover_rule_classes(@rule_directory).each do |rule_class|
+    discover_rule_classes(@rule_directory,
+                          rule_directory_recursive: @rule_directory_recursive).each do |rule_class|
       rule_registry.definition(rule_class)
     end
 
@@ -34,12 +36,18 @@ class FileBasedRuleRepo
     raise "Not a real directory #{rule_directory}"
   end
 
-  def discover_rule_filenames(rule_directory)
+  def locate_rule_files(rule_directory, rule_directory_recursive)
+    return Dir.glob(File.join(rule_directory, '**/*Rule.rb')).sort if rule_directory_recursive
+
+    Dir[File.join(rule_directory, '*Rule.rb')].sort
+  end
+
+  def discover_rule_filenames(rule_directory, rule_directory_recursive: false)
     rule_filenames = []
     unless rule_directory.nil?
-      rule_filenames += Dir[File.join(rule_directory, '*Rule.rb')].sort
+      rule_filenames += locate_rule_files(rule_directory, rule_directory_recursive)
     end
-    rule_filenames += Dir[File.join(__dir__, '..', 'custom_rules', '*Rule.rb')].sort
+    rule_filenames += locate_rule_files(File.join(__dir__, '..', 'custom_rules'), rule_directory_recursive)
 
     # Windows fix when running ruby from Command Prompt and not bash
     rule_filenames.reject! { |filename| filename =~ /_rule.rb$/ }
@@ -47,10 +55,13 @@ class FileBasedRuleRepo
     rule_filenames
   end
 
-  def discover_rule_classes(rule_directory)
+  def discover_rule_classes(rule_directory, rule_directory_recursive: false)
     rule_classes = []
 
-    rule_filenames = discover_rule_filenames(rule_directory)
+    rule_filenames = discover_rule_filenames(
+      rule_directory,
+      rule_directory_recursive: rule_directory_recursive
+    )
     rule_filenames.each do |rule_filename|
       require(File.absolute_path(rule_filename))
       rule_classname = File.basename(rule_filename, '.rb')

@@ -54,6 +54,11 @@ class Options
           type: :string,
           required: false,
           default: nil
+      opt :rule_directory_recursive,
+          'Recursively search extra rule directory',
+          type: :boolean,
+          required: false,
+          default: false
       opt :profile_path,
           'Path to a profile file',
           type: :string,

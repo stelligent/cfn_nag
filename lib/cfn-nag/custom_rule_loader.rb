@@ -27,12 +27,14 @@ class CustomRuleLoader
                  allow_suppression: true,
                  print_suppression: false,
                  isolate_custom_rule_exceptions: false,
-                 rule_repository_definitions: [])
+                 rule_repository_definitions: [],
+                 rule_directory_recursive: false)
     @rule_directory = rule_directory
     @allow_suppression = allow_suppression
     @print_suppression = print_suppression
     @isolate_custom_rule_exceptions = isolate_custom_rule_exceptions
     @rule_repository_definitions = rule_repository_definitions
+    @rule_directory_recursive = rule_directory_recursive
     @registry = nil
   end
 
@@ -43,7 +45,8 @@ class CustomRuleLoader
   #
   def rule_definitions(force_refresh: false)
     if @registry.nil? || force_refresh
-      @registry = FileBasedRuleRepo.new(@rule_directory).discover_rules
+      @registry = FileBasedRuleRepo.new(@rule_directory,
+                                        rule_directory_recursive: @rule_directory_recursive).discover_rules
       @registry.merge! GemBasedRuleRepo.new.discover_rules
 
       @registry = RuleRepositoryLoader.new.merge(@registry, @rule_repository_definitions)

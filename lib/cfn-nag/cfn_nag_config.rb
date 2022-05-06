@@ -11,14 +11,16 @@ class CfnNagConfig
                  fail_on_warnings: false,
                  ignore_fatal: false,
                  rule_repository_definitions: [],
-                 rule_arguments: {})
+                 rule_arguments: {},
+                 rule_directory_recursive: false)
     @rule_directory = rule_directory
     @custom_rule_loader = CustomRuleLoader.new(
       rule_directory: rule_directory,
       allow_suppression: allow_suppression,
       print_suppression: print_suppression,
       isolate_custom_rule_exceptions: isolate_custom_rule_exceptions,
-      rule_repository_definitions: rule_repository_definitions
+      rule_repository_definitions: rule_repository_definitions,
+      rule_directory_recursive: rule_directory_recursive
     )
     @profile_definition = profile_definition
     @deny_list_definition = deny_list_definition
