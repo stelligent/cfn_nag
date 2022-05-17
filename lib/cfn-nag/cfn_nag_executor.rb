@@ -130,7 +130,8 @@ class CfnNagExecutor
       fail_on_warnings: opts[:fail_on_warnings],
       rule_repository_definitions: @rule_repository_definitions,
       ignore_fatal: opts[:ignore_fatal],
-      rule_arguments: merge_rule_arguments(opts)
+      rule_arguments: merge_rule_arguments(opts),
+      rule_directory_recursive: opts[:rule_directory_recursive]
     )
   end
 
