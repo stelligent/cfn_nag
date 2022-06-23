@@ -8,4 +8,5 @@ if [ -n "${INPUT_EXTRA_ARGS}" ]; then
   EXTRA_ARGS="${INPUT_EXTRA_ARGS}"
 fi
 
+set -o pipefail
 cfn_nag_scan ${EXTRA_ARGS} --input-path "${INPUT_INPUT_PATH}" | tee "${INPUT_OUTPUT_PATH}"
