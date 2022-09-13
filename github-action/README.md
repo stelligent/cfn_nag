@@ -75,7 +75,7 @@ Search the `templates` directory and upload the results to GitHub's Code Scannin
     input_path: templates
     extra_args: -o sarif
     output_path: cfn_nag.sarif
-- uses: github/codeql-action/upload-sarif@v1
+- uses: github/codeql-action/upload-sarif@v2
   with:
     sarif_file: cfn_nag.sarif
 ```
