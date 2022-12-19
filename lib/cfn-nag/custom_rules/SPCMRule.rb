@@ -26,7 +26,7 @@ class SPCMRule < BaseRule
     begin
       policy_documents = SPCM.new.metric_impl(cfn_model)
     rescue StandardError => catch_all_exception
-      puts "Experimental SPCM rule is failing. Please report #{catch_all_exception} with the violating template"
+      $stderr.puts "Experimental SPCM rule is failing. Please report #{catch_all_exception} with the violating template"
       policy_documents = {
         'AWS::IAM::Policy' => {},
         'AWS::IAM::Role' => {}
