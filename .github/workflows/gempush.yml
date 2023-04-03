@@ -16,7 +16,7 @@ jobs:
     needs: [tests-linting]
     steps:
       # is this the same commit hash we saw in commit?
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: |
           git fetch --depth=1 origin +refs/tags/*:refs/tags/*
           git fetch --prune --unshallow
