@@ -52,7 +52,8 @@ GEM
     rainbow (3.0.0)
     rake (13.0.1)
     regexp_parser (2.1.1)
-    rexml (3.2.5)
+    rexml (3.2.8)
+      strscan (>= 3.0.9)
     rspec (3.10.0)
       rspec-core (~> 3.10.0)
       rspec-expectations (~> 3.10.0)
@@ -84,6 +85,7 @@ GEM
       simplecov_json_formatter (~> 0.1)
     simplecov-html (0.12.3)
     simplecov_json_formatter (0.1.2)
+    strscan (3.1.0)
     unicode-display_width (2.1.0)
 
 PLATFORMS
