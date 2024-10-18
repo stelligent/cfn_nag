@@ -67,7 +67,7 @@ cfn_nag_rules
 
 * The results are dumped to stdout
 * A failing violation will return a non-zero exit code.
-* A warning will return a zero/success exit code.
+* A warning will return a zero/success exit code, unless you provide the `--fail-on-warnings` flag
 * A fatal violation stops analysis (per file) because the template is malformed in some severe way
 
 ## Running in Docker
