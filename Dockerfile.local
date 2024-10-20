@@ -1,4 +1,12 @@
+# syntax=docker/dockerfile:1
+
 FROM ruby:2.7-alpine
+
+LABEL org.opencontainers.image.authors='Stelligent'
+LABEL org.opencontainers.image.licenses='MIT'
+LABEL org.opencontainers.image.source='https://github.com/stelligent/cfn_nag'
+LABEL org.opencontainers.image.title='cfn_nag'
+LABEL org.opencontainers.image.vendor='Stelligent'
 
 ARG version
 

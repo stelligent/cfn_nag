@@ -1,11 +1,20 @@
+# syntax=docker/dockerfile:1
+
 FROM ruby:2.7-alpine
+
+LABEL org.opencontainers.image.authors='Stelligent'
+LABEL org.opencontainers.image.licenses='MIT'
+LABEL org.opencontainers.image.source='https://github.com/stelligent/cfn_nag'
+LABEL org.opencontainers.image.title='cfn_nag for development'
+LABEL org.opencontainers.image.vendor='Stelligent'
 
 COPY . /
 
-RUN apk add --update build-base \
-    curl \
-    git
-
-RUN gem install bundler
-RUN gem install rubocop
-RUN bundle install
+RUN apk add --update --no-cache \
+        build-base \
+        curl \
+        git \
+    && gem install \
+        'bundler:2.4.22' \
+        'rubocop:~>1.67' \
+    && bundle install
